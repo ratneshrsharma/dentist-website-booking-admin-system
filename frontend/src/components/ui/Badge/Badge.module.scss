@@ -1,0 +1,70 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-1;
+  font-family: var(--font-family-sans);
+  font-weight: $font-weight-semibold;
+  border-radius: $radius-full;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+    svg {
+      width: 0.85em;
+      height: 0.85em;
+    }
+  }
+}
+
+.size_sm {
+  font-size: 0.6875rem;
+  padding: 0.25rem 0.625rem;
+}
+
+.size_md {
+  font-size: $font-size-xs;
+  padding: 0.375rem 0.75rem;
+}
+
+.variant_primary {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary-hover);
+  border: 1px solid rgba(13, 148, 136, 0.2);
+}
+
+.variant_accent {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #B45309;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.variant_success {
+  background-color: rgba(16, 185, 129, 0.12);
+  color: #065F46;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.variant_warning {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #92400E;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.variant_emergency {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #B91C1C;
+  border: 1px solid rgba(220, 38, 38, 0.25);
+}
+
+.variant_outline {
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}

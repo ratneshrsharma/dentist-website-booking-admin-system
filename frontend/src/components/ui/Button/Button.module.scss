@@ -1,0 +1,111 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.button {
+  @include button-base;
+
+  .icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 0;
+
+    svg {
+      width: 1.15em;
+      height: 1.15em;
+    }
+  }
+
+  .label {
+    display: inline-block;
+  }
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+// Sizes
+.size_sm {
+  padding: $spacing-2 $spacing-3;
+  font-size: $font-size-xs;
+  border-radius: $radius-md;
+}
+
+.size_md {
+  padding: $spacing-3 $spacing-5;
+  font-size: $font-size-sm;
+  border-radius: $radius-lg;
+}
+
+.size_lg {
+  padding: $spacing-4 $spacing-8;
+  font-size: $font-size-base;
+  border-radius: $radius-xl;
+}
+
+// Variants
+.variant_primary {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  border-color: var(--color-primary);
+  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+
+  &:hover {
+    background-color: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.variant_secondary {
+  background-color: var(--color-secondary);
+  color: #FFFFFF;
+  border-color: var(--color-secondary);
+
+  &:hover {
+    opacity: 0.92;
+    transform: translateY(-2px);
+  }
+}
+
+.variant_accent {
+  background-color: var(--color-accent);
+  color: #0F172A;
+  border-color: var(--color-accent);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+
+  &:hover {
+    filter: brightness(1.05);
+    transform: translateY(-2px);
+  }
+}
+
+.variant_outline {
+  background-color: transparent;
+  color: var(--color-text-main);
+  border-color: var(--color-border);
+
+  &:hover {
+    background-color: var(--color-surface-muted);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+  }
+}
+
+.variant_emergency {
+  background-color: $color-emergency;
+  color: #FFFFFF;
+  border-color: $color-emergency;
+  box-shadow: 0 4px 14px rgba(220, 38, 38, 0.3);
+
+  &:hover {
+    background-color: darken($color-emergency, 6%);
+    transform: translateY(-2px);
+  }
+}
