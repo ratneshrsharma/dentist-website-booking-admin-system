@@ -4,13 +4,11 @@ import styles from './Footer.module.scss';
 import {
   Sparkles,
   Phone,
-  Mail,
   MapPin,
   Clock,
   ShieldCheck,
   Award,
-  HeartHandshake,
-  CheckCircle2
+  HeartHandshake
 } from 'lucide-react';
 
 export const Footer: React.FC = () => {

@@ -11,20 +11,13 @@ import { Badge } from '@/components/ui/Badge/Badge';
 import {
   Calendar,
   Sparkles,
-  ShieldCheck,
   Star,
-  Clock,
   ArrowRight,
   CheckCircle2,
   ChevronDown,
   Stethoscope,
-  Smile,
-  Zap,
-  Award,
   PhoneCall,
   Sliders,
-  DollarSign,
-  Heart,
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -253,7 +246,7 @@ export default function HomePage() {
                       <span className={styles.priceValue}>{service.price}</span>
                     </div>
                     <Button
-                      variant={service.isEmergency ? 'danger' : 'primary'}
+                      variant={service.isEmergency ? 'emergency' : 'primary'}
                       size="sm"
                       icon={<ArrowRight size={14} />}
                       onClick={() => handleOpenBooking(service.id)}

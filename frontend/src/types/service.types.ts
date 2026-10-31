@@ -5,10 +5,12 @@ export interface Service {
   name: string;
   slug: string;
   short_description: string;
+  description?: string;
   detailed_description?: string;
   duration_minutes: number;
   base_cost: number;
   requires_xray: boolean;
+  is_emergency_service?: boolean;
 }
 
 export interface ServiceCategory {

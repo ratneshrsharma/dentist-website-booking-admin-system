@@ -1,7 +1,7 @@
 import type { Clinic } from '@/types/clinic.types';
 import type { ServiceCategory } from '@/types/service.types';
 import type { Doctor } from '@/types/doctor.types';
-import type { TimeSlot, BookingFormData, BookingConfirmation } from '@/types/booking.types';
+import type { TimeSlot, BookingFormData, BookingResponse } from '@/types/booking.types';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
 
@@ -329,7 +329,7 @@ export async function fetchAvailableSlots(
   }
 }
 
-export async function submitBooking(payload: BookingFormData): Promise<BookingConfirmation> {
+export async function submitBooking(payload: BookingFormData): Promise<BookingResponse> {
   try {
     const res = await fetch(`${API_BASE_URL}/appointments/book`, {
       method: 'POST',
@@ -344,45 +344,53 @@ export async function submitBooking(payload: BookingFormData): Promise<BookingCo
       throw new Error(err.message || 'Booking submission failed');
     }
     const json = await res.json();
-    return json.data;
+    return json;
   } catch {
-    // Simulate instant successful confirmation for static export / offline showcase
-    const clinic = MOCK_CLINICS.find(c => c.id === payload.clinic_id) || MOCK_CLINICS[0]!;
-    const doctor = MOCK_DOCTORS.find(d => d.id === payload.doctor_profile_id) || MOCK_DOCTORS[0]!;
-    const allServices = MOCK_CATEGORIES.flatMap(c => c.services);
-    const service = allServices.find(s => s.id === payload.service_id) || allServices[0]!;
+    const clinicId = payload.clinicId || payload.clinic_id || 1;
+    const doctorId = payload.doctorProfileId || payload.doctor_profile_id || 1;
+    const clinic = MOCK_CLINICS.find(c => c.id === clinicId) || MOCK_CLINICS[0]!;
+    const doctor = MOCK_DOCTORS.find(d => d.id === doctorId) || MOCK_DOCTORS[0]!;
+    const patientName = payload.patient
+      ? `${payload.patient.firstName} ${payload.patient.lastName}`.trim() || 'Valued Patient'
+      : `${payload.first_name || ''} ${payload.last_name || ''}`.trim() || 'Valued Patient';
 
     return {
-      booking_reference: 'SCD-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
-      clinic: {
-        id: clinic.id,
-        name: clinic.name,
-        phone: clinic.contact.phone,
+      success: true,
+      message: 'Appointment confirmed successfully (Simulated)',
+      data: {
+        appointment_id: 1089,
+        booking_reference: `DF-${Math.floor(100000 + Math.random() * 900000)}`,
+        patient_name: patientName,
+        doctor_name: doctor.name || 'Dr. Alexander Vance',
+        clinic_name: clinic.name,
+        appointment_date: payload.appointmentDate || payload.appointment_date || new Date().toISOString().substring(0, 10),
+        appointment_time: payload.appointmentTime || payload.start_time || '10:00 AM',
+        status: 'confirmed',
+        whatsapp_notified: true,
+        email_notified: true,
       },
-      doctor: {
-        id: doctor.id,
-        name: doctor.name,
-        specialization: doctor.specialization,
-      },
-      service: {
-        id: service.id,
-        name: service.name,
-        duration_minutes: service.duration_minutes,
-        cost: service.base_cost,
-      },
-      schedule: {
-        date: payload.appointment_date,
-        start_time: payload.start_time,
-        end_time: payload.start_time,
-      },
-      status: 'confirmed',
-      patient: {
-        first_name: payload.first_name,
-        last_name: payload.last_name,
-        phone: payload.phone,
-        email: payload.email,
-      },
-      created_at: new Date().toISOString(),
+    };
+  }
+}
+
+export async function uploadIntakeDocument(file: File, documentType: string = 'xray'): Promise<{ file_path: string; checksum: string }> {
+  try {
+    const formData = new FormData();
+    formData.append('document', file);
+    formData.append('document_type', documentType);
+
+    const res = await fetch(`${API_BASE_URL}/documents/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+    if (!res.ok) throw new Error('File upload failed');
+    const json = await res.json();
+    return json.data;
+  } catch {
+    // Offline simulated upload checksum
+    return {
+      file_path: `/storage/documents/simulated-${Date.now()}-${file.name}`,
+      checksum: 'sha256-simulated-' + Math.random().toString(36).substring(2, 10),
     };
   }
 }

@@ -8,13 +8,11 @@ import {
   fetchDoctors,
   fetchAvailableSlots,
   submitBooking,
-  uploadIntakeDocument,
 } from '@/lib/api-client';
 import { Clinic } from '@/types/clinic.types';
 import { Service } from '@/types/service.types';
 import { DoctorProfile } from '@/types/doctor.types';
 import {
-  BookingFormData,
   TimeSlot,
   BookingResponse,
 } from '@/types/booking.types';
@@ -39,6 +37,35 @@ import {
   Download,
   MessageCircle,
 } from 'lucide-react';
+
+export interface WizardFormData {
+  clinicId: number;
+  serviceId: number;
+  doctorProfileId: number;
+  appointmentDate: string;
+  appointmentTime: string;
+  patient: {
+    firstName: string;
+    lastName: string;
+    phone: string;
+    email: string;
+    dateOfBirth: string;
+    gender: string;
+  };
+  intake: {
+    chiefComplaint: string;
+    painScale: number;
+    lastDentalVisit: string;
+    hasBleedingGums: boolean;
+    hasSensitivity: boolean;
+    hasToothache: boolean;
+    systemicConditions: string[];
+    allergies: string[];
+    isPregnant: boolean;
+  };
+  uploadedDocumentIds: number[];
+  bookingChannel: string;
+}
 
 interface BookingWizardProps {
   isOpen: boolean;
@@ -65,11 +92,11 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
   const [loadingSlots, setLoadingSlots] = useState<boolean>(false);
 
   // Booking Form State
-  const [formData, setFormData] = useState<BookingFormData>({
+  const [formData, setFormData] = useState<WizardFormData>({
     clinicId: 1,
     serviceId: preselectedServiceId || 1,
     doctorProfileId: 1,
-    appointmentDate: new Date().toISOString().split('T')[0],
+    appointmentDate: new Date().toISOString().substring(0, 10),
     appointmentTime: '10:00',
     patient: {
       firstName: '',
@@ -105,10 +132,10 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
       try {
         const [cList, sList] = await Promise.all([fetchClinics(), fetchServices()]);
         setClinics(cList);
-        setServices(sList);
-        if (cList.length > 0) {
-          const defaultClinicId = cList[0].id;
-          const dList = await fetchDoctors(defaultClinicId);
+        setServices(sList.flatMap((cat) => cat.services));
+        const firstClinic = cList[0];
+        if (firstClinic) {
+          const dList = await fetchDoctors(firstClinic.id);
           setDoctors(dList);
         }
       } catch (err) {
@@ -127,8 +154,9 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
     setFormData((prev) => ({ ...prev, clinicId }));
     const dList = await fetchDoctors(clinicId);
     setDoctors(dList);
-    if (dList.length > 0) {
-      setFormData((prev) => ({ ...prev, doctorProfileId: dList[0].id }));
+    const firstDoctor = dList[0];
+    if (firstDoctor) {
+      setFormData((prev) => ({ ...prev, doctorProfileId: firstDoctor.id }));
     }
   };
 
@@ -364,9 +392,13 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                           <Badge variant="primary" size="sm">HQ</Badge>
                         )}
                       </div>
-                      <p className={styles.cardSubtext}>{clinic.address}</p>
+                      <p className={styles.cardSubtext}>
+                        {typeof clinic.address === 'string'
+                          ? clinic.address
+                          : `${clinic.address.line1}, ${clinic.address.city}`}
+                      </p>
                       <span className={styles.phonePill}>
-                        <Phone size={12} /> {clinic.phone}
+                        <Phone size={12} /> {clinic.phone || clinic.contact.phone}
                       </span>
                     </div>
                   ))}
@@ -394,7 +426,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                         <span className={styles.servicePrice}>${service.base_cost}</span>
                       </div>
                       <p className={styles.serviceDescription}>
-                        {service.description}
+                        {service.short_description || service.description}
                       </p>
                       <div className={styles.serviceMeta}>
                         <span className={styles.durationPill}>
@@ -442,7 +474,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
                           {doc.specialization}
                         </span>
                         <span className={styles.experience}>
-                          {doc.years_experience} Years Exp. | Fee: ${doc.consultation_fee}
+                          {doc.years_of_experience ?? doc.years_experience} Years Exp. | Fee: ${doc.consultation_fee}
                         </span>
                       </div>
                     </div>
@@ -860,6 +892,7 @@ export const BookingWizard: React.FC<BookingWizardProps> = ({
               <Button
                 variant="primary"
                 size="md"
+                disabled={loading}
                 onClick={handleNext}
               >
                 <span>Continue</span>

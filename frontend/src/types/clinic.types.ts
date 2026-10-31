@@ -20,13 +20,14 @@ export interface Clinic {
   slug: string;
   branch_code: string;
   tagline: string;
-  address: {
+  address: string | {
     line1: string;
     city: string;
     state: string;
     postal_code: string;
     country: string;
   };
+  phone?: string;
   contact: {
     phone: string;
     emergency_phone: string;
