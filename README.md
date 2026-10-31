@@ -12,7 +12,7 @@
 
 | Surface | Live Link | Environment & Features |
 | :--- | :--- | :--- |
-| **🚀 Patient Portal & Booking Wizard** | [**Launch Patient Portal Demo**](https://advanced-dental-clinic.vercel.app/) | Vercel Edge Global CDN • Next.js 15 • 5-Step Booking Wizard • 3 Theme Switchers • Live Slot Calculation • Smile Makeover Comparison |
+| **🚀 Patient Portal & Booking Wizard** | [**Launch Patient Portal Demo**](https://advanced-dental-clinic-demo.vercel.app/) | Vercel Edge Global CDN • Next.js 15 • 5-Step Booking Wizard • 3 Theme Switchers • Live Slot Calculation • Smile Makeover Comparison |
 | **💼 Full-Stack System (Production)** | [**https://demo.ratneshsharma.com/advanced-dental-clinic**](https://demo.ratneshsharma.com/advanced-dental-clinic) | Hostinger Shared Linux • Full-Stack Co-location • Laravel 11 REST API • AdminLTE 4 EMR • 32-Tooth SVG Odontogram • MySQL 8 Multi-Clinic |
 
 > **A commercial-grade digital healthcare platform engineered for modern dental practices, multi-location dental chains, and dental organizations.** Combines an ultra-fast patient marketing portal with switchable design templates, a real-time 5-step appointment booking wizard, an AdminLTE 4 clinical management suite with an interactive 32-tooth SVG Odontogram, and centralized multi-branch logistics.
