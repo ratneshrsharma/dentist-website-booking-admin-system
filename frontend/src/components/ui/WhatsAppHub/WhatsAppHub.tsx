@@ -11,12 +11,12 @@ interface WhatsAppHubProps {
 
 export const WhatsAppHub: React.FC<WhatsAppHubProps> = ({
   onOpenBooking,
-  phone = '+919904379260',
+  phone = '+15550192830',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const whatsappMessage = encodeURIComponent(
-    'Hello Smile Care Dental! I would like to schedule an oral consultation or inquire about a dental treatment.'
+    'Hello Advanced Dental Clinic! I would like to schedule an oral consultation or inquire about a dental treatment.'
   );
   const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`;
 
@@ -28,7 +28,7 @@ export const WhatsAppHub: React.FC<WhatsAppHubProps> = ({
             <div className={styles.headerInfo}>
               <span className={styles.statusDot} />
               <div>
-                <h4 className={styles.headerTitle}>Smile Care Support Hub</h4>
+                <h4 className={styles.headerTitle}>Advanced Dental Support Hub</h4>
                 <p className={styles.headerSubtitle}>Instant Clinical Triage & Assistance</p>
               </div>
             </div>
@@ -44,7 +44,7 @@ export const WhatsAppHub: React.FC<WhatsAppHubProps> = ({
 
           <div className={styles.popupBody}>
             <p className={styles.messageSnippet}>
-              Welcome to Smile Care. How can our patient coordination team assist your smile today?
+              Welcome to Advanced Dental Clinic. How can our patient care team assist your smile today?
             </p>
 
             <div className={styles.actionList}>

@@ -13,7 +13,7 @@ final class InventoryItemsTableSeeder extends Seeder
 {
     public function run(): void
     {
-        $hqClinic = Clinic::where('slug', 'smile-care-central-hq')->first();
+        $hqClinic = Clinic::where('slug', 'advanced-dental-central')->first();
         if (! $hqClinic) {
             return;
         }

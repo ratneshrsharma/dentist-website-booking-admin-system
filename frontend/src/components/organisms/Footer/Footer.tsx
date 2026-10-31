@@ -97,20 +97,20 @@ export const Footer: React.FC = () => {
           <div className={styles.locationsCol}>
             <h5 className={styles.colTitle}>Clinic Locations</h5>
             <div className={styles.branchItem}>
-              <strong>Metropolis Central Clinic</strong>
-              <p><MapPin size={12} /> 100 Sample Boulevard, Suite 400, Metropolis, NY 10001</p>
-              <p><Clock size={12} /> Mon-Sat: 8:00 AM - 8:00 PM</p>
+              <strong>Central Practice (Headquarters)</strong>
+              <p><MapPin size={12} /> 100 Healthcare Boulevard, Suite 400, Austin, TX 78701</p>
+              <p><Clock size={12} /> Mon-Sat: 8:00 AM - 7:00 PM</p>
             </div>
 
             <div className={styles.branchItem}>
-              <strong>Westside Dental Care</strong>
-              <p><MapPin size={12} /> 250 Practice Way, Suite 200, Metropolis, NY 10024</p>
+              <strong>Westside Cosmetic Studio</strong>
+              <p><MapPin size={12} /> 500 Medical Center Parkway, Suite 250, Denver, CO 80202</p>
               <p><Clock size={12} /> Mon-Fri: 9:00 AM - 6:00 PM</p>
             </div>
 
             <div className={styles.branchItem}>
-              <strong>Eastside Family Dentistry</strong>
-              <p><MapPin size={12} /> 720 Example Avenue, Building B, Metropolis, NY 10128</p>
+              <strong>Northside Family Center</strong>
+              <p><MapPin size={12} /> 750 Wellness Way, Building B, Charlotte, NC 28202</p>
               <p><Clock size={12} /> Tue-Sat: 8:30 AM - 5:30 PM</p>
             </div>
           </div>
@@ -128,6 +128,16 @@ export const Footer: React.FC = () => {
             <span>Privacy Policy</span>
             <span>Terms of Clinical Service</span>
             <span>Non-Discrimination Notice</span>
+          </div>
+          <div className={styles.authorCredit}>
+            Website by{' '}
+            <a
+              href="https://ratneshsharma.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ratnesh Sharma
+            </a>
           </div>
         </div>
       </div>

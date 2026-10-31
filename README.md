@@ -162,6 +162,7 @@ This platform is engineered by **Ratnesh Sharma**, Senior Full-Stack Architect &
 For commercial licensing, live demonstrations, or technical customization inquiries:
 
 - **Developer & Architect:** Ratnesh Sharma
+- **Portfolio & Website:** [https://ratneshsharma.com/](https://ratneshsharma.com/)
 - **Email:** [ratnesh.at.24@gmail.com](mailto:ratnesh.at.24@gmail.com)
 - **GitHub:** [@ratneshrsharma](https://github.com/ratneshrsharma)
 - **WhatsApp:** [+91 99043 79260 (Direct Chat)](https://wa.me/919904379260?text=Hello%20Ratnesh,%20I%20am%20interested%20in%20the%20Advanced%20Dental%20Clinic%20System)

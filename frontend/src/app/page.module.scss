@@ -225,6 +225,15 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  overflow: hidden;
+  border: 2px solid var(--color-border);
+}
+
+.avatarImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .doctorCredentials {
@@ -451,30 +460,51 @@
   user-select: none;
 }
 
+.sliderImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.imageOverlayLabel {
+  position: absolute;
+  bottom: $spacing-4;
+  left: $spacing-4;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  padding: 6px 14px;
+  border-radius: $radius-lg;
+  color: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  z-index: 2;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  strong {
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  span {
+    font-size: 0.625rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
 .simulatedSmileBefore {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #4A3E3D, #2B2625);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #F87171;
-  padding: $spacing-6;
-  text-align: center;
+  position: relative;
 }
 
 .simulatedSmileAfter {
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #0F766E, #042F2E);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #5EEAD4;
-  padding: $spacing-6;
-  text-align: center;
+  position: relative;
 }
 
 .tag {
@@ -544,8 +574,12 @@
 
 .doctorsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: $spacing-6;
+
+  @include desktop-down {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
   @include tablet-down {
     grid-template-columns: 1fr;
@@ -590,6 +624,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  border: 2px solid var(--color-border);
+  flex-shrink: 0;
 }
 
 .docRole {

@@ -40,21 +40,21 @@ final class UsersTableSeeder extends Seeder
                 'clinic_id' => $hqClinic?->id,
                 'role' => UserRole::ADMIN,
                 'first_name' => 'Sarah',
-                'last_name' => 'Jenkins',
+                'last_name' => 'Miller',
                 'phone' => '+1 (555) 010-0002',
                 'password' => Hash::make('Admin@DemoPass2026!'),
                 'is_active' => true,
             ]
         );
 
-        // 3. Lead Doctor 1: Dr. Alex Morgan (Prosthodontics & Restorations)
+        // 3. Lead Doctor 1: Dr. Ethan Caldwell (Prosthodontics & Guided Implant Surgery)
         $doc1User = User::updateOrCreate(
-            ['email' => 'dr.morgan@example.com'],
+            ['email' => 'dr.caldwell@example.com'],
             [
                 'clinic_id' => $hqClinic?->id,
                 'role' => UserRole::DOCTOR,
-                'first_name' => 'Alex',
-                'last_name' => 'Morgan',
+                'first_name' => 'Ethan',
+                'last_name' => 'Caldwell',
                 'phone' => '+1 (555) 010-0101',
                 'password' => Hash::make('Doctor@DemoPass2026!'),
                 'is_active' => true,
@@ -64,25 +64,25 @@ final class UsersTableSeeder extends Seeder
         DoctorProfile::updateOrCreate(
             ['user_id' => $doc1User->id],
             [
-                'license_number' => 'DDS-DEMO-98241',
-                'specialization' => 'Prosthodontics & Implant Surgery',
+                'license_number' => 'DDS-DEMO-00101',
+                'specialization' => 'Prosthodontics & Guided Implant Surgery',
                 'qualifications' => 'DDS, Board Certified Prosthodontist',
                 'years_of_experience' => 16,
-                'biography' => 'Dr. Alex Morgan specializes in dental implants, bone grafting, and complex restorative smile reconstructions with over 16 years of clinical experience.',
+                'biography' => 'Dr. Ethan Caldwell specializes in computer-guided dental implants, bone regeneration, and full-mouth aesthetic smile reconstructions with 16+ years of clinical mastery.',
                 'consultation_fee' => 150.00,
                 'calendar_color_code' => '#0D9488',
                 'is_accepting_new_patients' => true,
             ]
         );
 
-        // 4. Lead Doctor 2: Dr. Sarah Jenkins (Orthodontics & Clear Aligners)
+        // 4. Lead Doctor 2: Dr. Maya Lin (Orthodontics & Clear Aligners)
         $doc2User = User::updateOrCreate(
-            ['email' => 'dr.jenkins@example.com'],
+            ['email' => 'dr.lin@example.com'],
             [
                 'clinic_id' => $westsideClinic?->id ?? $hqClinic?->id,
                 'role' => UserRole::DOCTOR,
-                'first_name' => 'Sarah',
-                'last_name' => 'Jenkins',
+                'first_name' => 'Maya',
+                'last_name' => 'Lin',
                 'phone' => '+1 (555) 010-0102',
                 'password' => Hash::make('Doctor@DemoPass2026!'),
                 'is_active' => true,
@@ -92,25 +92,25 @@ final class UsersTableSeeder extends Seeder
         DoctorProfile::updateOrCreate(
             ['user_id' => $doc2User->id],
             [
-                'license_number' => 'DMD-DEMO-77312',
+                'license_number' => 'DMD-DEMO-00202',
                 'specialization' => 'Orthodontics & Clear Aligners',
                 'qualifications' => 'DMD, MS Orthodontics',
                 'years_of_experience' => 12,
-                'biography' => 'Dr. Sarah Jenkins is an experienced clear aligner provider known for gentle, accelerated orthodontic treatments for children, teens, and adults.',
+                'biography' => 'Dr. Maya Lin is a premier clear aligner provider specializing in digital 3D orthodontic planning, accelerated tooth alignment, and bite correction for teens and adults.',
                 'consultation_fee' => 120.00,
                 'calendar_color_code' => '#6366F1',
                 'is_accepting_new_patients' => true,
             ]
         );
 
-        // 5. Doctor 3: Dr. David Kim (Endodontics & Restorative Care)
+        // 5. Doctor 3: Dr. Marcus Vance (Microscopic Endodontics & Root Canal Care)
         $doc3User = User::updateOrCreate(
-            ['email' => 'dr.kim@example.com'],
+            ['email' => 'dr.vance@example.com'],
             [
                 'clinic_id' => $hqClinic?->id,
                 'role' => UserRole::DOCTOR,
-                'first_name' => 'David',
-                'last_name' => 'Kim',
+                'first_name' => 'Marcus',
+                'last_name' => 'Vance',
                 'phone' => '+1 (555) 010-0103',
                 'password' => Hash::make('Doctor@DemoPass2026!'),
                 'is_active' => true,
@@ -120,13 +120,41 @@ final class UsersTableSeeder extends Seeder
         DoctorProfile::updateOrCreate(
             ['user_id' => $doc3User->id],
             [
-                'license_number' => 'DDS-DEMO-61294',
-                'specialization' => 'Microscopic Endodontics & Conservative Dentistry',
-                'qualifications' => 'DDS, Cert. Endodontics',
-                'years_of_experience' => 9,
-                'biography' => 'Dr. David Kim utilizes high-magnification surgical operating microscopes to perform comfortable, single-visit root canal treatments and natural restorations.',
+                'license_number' => 'DDS-DEMO-00303',
+                'specialization' => 'Microscopic Endodontics & Conservative Restorations',
+                'qualifications' => 'DDS, Certified Specialist in Endodontics',
+                'years_of_experience' => 10,
+                'biography' => 'Dr. Marcus Vance utilizes high-magnification surgical operating microscopes to deliver gentle, single-visit root canal treatments, trauma rehabilitation, and natural tooth preservation.',
                 'consultation_fee' => 100.00,
                 'calendar_color_code' => '#0284C7',
+                'is_accepting_new_patients' => true,
+            ]
+        );
+
+        // 5b. Doctor 4: Dr. Olivia Harper (Pediatric Dentistry & Family Dental Wellness)
+        $doc4User = User::updateOrCreate(
+            ['email' => 'dr.harper@example.com'],
+            [
+                'clinic_id' => $hqClinic?->id,
+                'role' => UserRole::DOCTOR,
+                'first_name' => 'Olivia',
+                'last_name' => 'Harper',
+                'phone' => '+1 (555) 010-0104',
+                'password' => Hash::make('Doctor@DemoPass2026!'),
+                'is_active' => true,
+            ]
+        );
+
+        DoctorProfile::updateOrCreate(
+            ['user_id' => $doc4User->id],
+            [
+                'license_number' => 'DDS-DEMO-00404',
+                'specialization' => 'Pediatric Dentistry & Family Dental Wellness',
+                'qualifications' => 'DDS, Certificate in Pediatric Dentistry',
+                'years_of_experience' => 8,
+                'biography' => 'Dr. Olivia Harper is dedicated to calm, positive dental visits for young children and teens, specializing in pain-free preventative fluoride therapies, fissure sealants, and gentle care.',
+                'consultation_fee' => 90.00,
+                'calendar_color_code' => '#EC4899',
                 'is_accepting_new_patients' => true,
             ]
         );

@@ -15,7 +15,6 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronDown,
-  Stethoscope,
   PhoneCall,
   Sliders,
 } from 'lucide-react';
@@ -86,9 +85,9 @@ export default function HomePage() {
                   variant="outline"
                   size="lg"
                   icon={<PhoneCall size={18} />}
-                  onClick={() => (window.location.href = 'tel:+919904379260')}
+                  onClick={() => (window.location.href = 'tel:+15550192830')}
                 >
-                  Emergency Care: +91 99043 79260
+                  Emergency Care: +1 (555) 019-2830
                 </Button>
               </div>
 
@@ -121,12 +120,17 @@ export default function HomePage() {
 
                 <div className={styles.doctorGraphic}>
                   <div className={styles.doctorAvatarBox}>
-                    <Stethoscope size={56} className={styles.doctorIcon} />
+                    <img
+                      src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80"
+                      alt="Dr. Ethan Caldwell, DDS, FACP"
+                      className={styles.avatarImage}
+                      loading="lazy"
+                    />
                   </div>
                   <div className={styles.doctorCredentials}>
-                    <h3>Dr. Alexander Vance, DDS, FACP</h3>
+                    <h3>Dr. Ethan Caldwell, DDS, FACP</h3>
                     <p className={styles.doctorTitle}>Clinical Director & Board-Certified Prosthodontist</p>
-                    <span className={styles.doctorMeta}>Harvard Dental Medicine | 16+ Years Clinical Mastery</span>
+                    <span className={styles.doctorMeta}>Midwestern University | 16+ Years Clinical Mastery</span>
                   </div>
                 </div>
 
@@ -150,9 +154,9 @@ export default function HomePage() {
                   fullWidth
                   size="md"
                   icon={<Calendar size={16} />}
-                  onClick={() => handleOpenBooking(2)}
+                  onClick={() => handleOpenBooking(1)}
                 >
-                  Book with Dr. Vance
+                  Book with Dr. Caldwell
                 </Button>
               </div>
             </div>
@@ -277,15 +281,15 @@ export default function HomePage() {
                   <div className={styles.detailRow}>
                     <CheckCircle2 size={16} color="#0D9488" />
                     <div>
-                      <strong>Patient Case #3482: 8 Upper Porcelain Veneers</strong>
-                      <p>Corrected severe tetracycline staining and enamel micro-fractures in 2 visits.</p>
+                      <strong>Case #ADC-4102: Upper Arch Aesthetic Restoration</strong>
+                      <p>Corrected discoloration and enamel spacing with 8 handcrafted E-Max porcelain veneers.</p>
                     </div>
                   </div>
                   <div className={styles.detailRow}>
                     <CheckCircle2 size={16} color="#0D9488" />
                     <div>
-                      <strong>Zero Pain Sedation Protocol</strong>
-                      <p>Full restorative treatment performed under nitrous oxide conscious sedation.</p>
+                      <strong>Gentle Sedation Protocol</strong>
+                      <p>Full aesthetic treatment completed comfortably across two relaxing clinical visits.</p>
                     </div>
                   </div>
                 </div>
@@ -306,8 +310,16 @@ export default function HomePage() {
                   {/* Before (Underneath) */}
                   <div className={styles.beforeFrame}>
                     <div className={styles.simulatedSmileBefore}>
-                      <span className={styles.tag}>BEFORE TREATMENT</span>
-                      <p className={styles.clinicalNotes}>Discoloration, Enamel Erosion, Misalignment</p>
+                      <img
+                        src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80"
+                        alt="Pre-treatment dental alignment"
+                        className={styles.sliderImage}
+                        loading="lazy"
+                      />
+                      <div className={styles.imageOverlayLabel}>
+                        <strong>Before Treatment</strong>
+                        <span>Enamel Staining & Irregular Spacing</span>
+                      </div>
                     </div>
                   </div>
 
@@ -317,8 +329,16 @@ export default function HomePage() {
                     style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
                   >
                     <div className={styles.simulatedSmileAfter}>
-                      <span className={styles.tag}>AFTER CLINICAL MAKEOVER</span>
-                      <p className={styles.clinicalNotes}>Custom Hand-Layered E-Max Porcelain Veneers</p>
+                      <img
+                        src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80"
+                        alt="Post-makeover radiant smile"
+                        className={styles.sliderImage}
+                        loading="lazy"
+                      />
+                      <div className={styles.imageOverlayLabel}>
+                        <strong>After Makeover</strong>
+                        <span>Handcrafted E-Max Porcelain Veneers</span>
+                      </div>
                     </div>
                   </div>
 
@@ -363,33 +383,50 @@ export default function HomePage() {
               {[
                 {
                   id: 1,
-                  name: 'Dr. Alexander Vance, DDS, FACP',
+                  name: 'Dr. Ethan Caldwell, DDS, FACP',
                   role: 'Clinical Director & Prosthodontist',
-                  school: 'Harvard School of Dental Medicine',
+                  school: 'Midwestern University College of Dental Medicine',
                   exp: '16+ Years Experience',
+                  image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80',
                   skills: ['Implantology', 'Full-Mouth Rehabilitation', 'All-on-4'],
                 },
                 {
                   id: 2,
-                  name: 'Dr. Elena Rostova, DMD, MS',
+                  name: 'Dr. Maya Lin, DMD, MS',
                   role: 'Chief Orthodontist & Dentofacial Orthopedics',
-                  school: 'Columbia University College of Dental Medicine',
+                  school: 'Pacific University School of Dentistry',
                   exp: '12+ Years Experience',
-                  skills: ['Invisalign Diamond Provider', 'Surgical Orthodontics', 'Lingual Braces'],
+                  image: 'https://images.unsplash.com/photo-1594824813576-2916b9b1e959?auto=format&fit=crop&w=600&q=80',
+                  skills: ['Invisalign Clear Aligners', 'Interceptive Orthodontics', 'Bite Alignment'],
                 },
                 {
                   id: 3,
-                  name: 'Dr. Marcus Chen, DDS',
-                  role: 'Endodontist & Microsurgeon',
-                  school: 'Penn Dental Medicine',
+                  name: 'Dr. Marcus Vance, DDS',
+                  role: 'Endodontist & Microsurgical Specialist',
+                  school: 'American Dental Institute of Science',
                   exp: '10+ Years Experience',
-                  skills: ['Microscopic Root Canal', 'Apicoectomy', 'Trauma Management'],
+                  image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=600&q=80',
+                  skills: ['Microscopic Root Canal', 'Apicoectomy', 'Dental Trauma Management'],
+                },
+                {
+                  id: 4,
+                  name: 'Dr. Olivia Harper, DDS',
+                  role: 'Pediatric Dental & Family Specialist',
+                  school: 'National Health Dental College',
+                  exp: '8+ Years Experience',
+                  image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80',
+                  skills: ['Gentle Pediatric Care', 'Preventive Sealants', 'Biofilm Elimination'],
                 },
               ].map((doc) => (
                 <div key={doc.id} className={styles.doctorCard}>
                   <div className={styles.docAvatarHeader}>
                     <div className={styles.avatarCircle}>
-                      <Stethoscope size={36} />
+                      <img
+                        src={doc.image}
+                        alt={doc.name}
+                        className={styles.avatarImage}
+                        loading="lazy"
+                      />
                     </div>
                     <Badge variant="primary" size="sm">{doc.exp}</Badge>
                   </div>
@@ -406,7 +443,7 @@ export default function HomePage() {
                     fullWidth
                     size="sm"
                     icon={<Calendar size={14} />}
-                    onClick={() => handleOpenBooking()}
+                    onClick={() => handleOpenBooking(doc.id)}
                   >
                     View Available Slots
                   </Button>
@@ -505,24 +542,24 @@ export default function HomePage() {
             <div className={styles.reviewsGrid}>
               {[
                 {
-                  author: 'Sarah Jenkins',
-                  location: 'Metro Dental HQ',
-                  review: 'Dr. Vance transformed my confidence with 6 front veneers. The entire appointment was completely pain-free, and the 3D intraoral scan made the process so fast and comfortable.',
-                  procedure: 'Porcelain Veneers & Makeover',
+                  author: 'Jennifer Hayes',
+                  location: 'Central Practice (Austin)',
+                  review: 'Dr. Caldwell and the clinical team made my implant consultation so reassuring. The 3D imaging explained every step clearly, and the procedure was completely painless.',
+                  procedure: 'Dental Implant Consultation',
                   stars: 5,
                 },
                 {
-                  author: 'Michael Rodriguez',
-                  location: 'Downtown Smiles',
-                  review: 'I suffered a dental emergency on a Saturday evening. The 24/7 WhatsApp hub got me in within 45 minutes, and they relieved my acute pain immediately. Truly lifesavers!',
-                  procedure: 'Emergency Trauma Relief',
-                  stars: 5,
-                },
-                {
-                  author: 'Emily Watson',
-                  location: 'Westside Pediatric & Family',
-                  review: 'The staff are so warm and compassionate. I completed my Invisalign treatment in just 8 months. Transparent pricing with no surprise charges.',
+                  author: 'Robert Martinez',
+                  location: 'Westside Cosmetic Studio',
+                  review: 'I started clear aligners 6 months ago with Dr. Lin. The digital scans are so fast and the progress has been incredible. Exceptional modern clinic with transparent pricing.',
                   procedure: 'Invisalign Clear Aligners',
+                  stars: 5,
+                },
+                {
+                  author: 'Amanda Collins',
+                  location: 'Northside Family Center',
+                  review: 'Brought my two children for their routine dental cleanings. Dr. Harper has a gentle touch and made both kids feel completely at ease. Truly a warm, patient-first dental home.',
+                  procedure: 'Family Preventative Care',
                   stars: 5,
                 },
               ].map((rev, idx) => (

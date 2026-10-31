@@ -29,6 +29,12 @@
   }
 }
 
+@mixin desktop-down {
+  @media (max-width: #{$bp-wide - 1px}) {
+    @content;
+  }
+}
+
 @mixin desktop {
   @media (min-width: #{$bp-desktop}) {
     @content;

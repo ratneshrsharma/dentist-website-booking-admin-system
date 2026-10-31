@@ -13,8 +13,8 @@ final class DoctorSchedulesTableSeeder extends Seeder
 {
     public function run(): void
     {
-        $hqClinic = Clinic::where('slug', 'smile-care-central-hq')->first();
-        $westsideClinic = Clinic::where('slug', 'smile-care-westside-studio')->first();
+        $hqClinic = Clinic::where('slug', 'advanced-dental-central')->first();
+        $westsideClinic = Clinic::where('slug', 'advanced-dental-westside')->first();
 
         if (! $hqClinic) {
             return;
