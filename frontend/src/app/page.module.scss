@@ -1,0 +1,881 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.pageWrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  overflow-x: hidden;
+}
+
+.mainContent {
+  flex: 1;
+  padding-top: 100px; /* Offset for fixed topbar + navbar */
+}
+
+.container {
+  @include container;
+}
+
+.containerNarrow {
+  width: 100%;
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 $spacing-6;
+}
+
+/* SECTION HEADERS */
+.sectionTitleCenter {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto $spacing-12;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-3;
+
+  h2 {
+    font-family: var(--font-family-heading);
+    font-size: $font-size-3xl;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+
+    @include mobile {
+      font-size: $font-size-2xl;
+    }
+  }
+
+  p {
+    font-size: $font-size-base;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+/* ========================================================
+   HERO SECTION
+   ======================================================== */
+.heroSection {
+  padding: $spacing-12 0 $spacing-16;
+  background: radial-gradient(circle at 10% 20%, rgba(13, 148, 136, 0.05) 0%, transparent 40%),
+              radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.05) 0%, transparent 40%);
+}
+
+.heroContainer {
+  @include container;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: $spacing-12;
+  align-items: center;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+    gap: $spacing-8;
+  }
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+}
+
+.ratingSnippet {
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.heroHeadline {
+  font-family: var(--font-family-heading);
+  font-size: $font-size-4xl;
+  font-weight: 800;
+  color: var(--color-text-main);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+
+  @include mobile {
+    font-size: 2.125rem;
+  }
+}
+
+.gradientText {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.heroSubheadline {
+  font-size: $font-size-lg;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.heroCtaGroup {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+  flex-wrap: wrap;
+  margin-top: $spacing-2;
+}
+
+.trustGrid {
+  display: flex;
+  align-items: center;
+  gap: $spacing-6;
+  margin-top: $spacing-6;
+  padding-top: $spacing-6;
+  border-top: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.trustItem {
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-size: $font-size-xl;
+    font-weight: 800;
+    color: var(--color-text-main);
+  }
+
+  <span> {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+  }
+}
+
+.trustDivider {
+  width: 1px;
+  height: 32px;
+  background-color: var(--color-border);
+
+  @include mobile {
+    display: none;
+  }
+}
+
+/* Hero Doctor Spotlight Card */
+.heroVisual {
+  display: flex;
+  justify-content: center;
+}
+
+.doctorSpotlightCard {
+  width: 100%;
+  max-width: 380px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-6;
+  box-shadow: $shadow-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+.cardHeader {
+  @include flex-between;
+}
+
+.chairStatus {
+  font-size: 0.6875rem;
+  font-weight: $font-weight-semibold;
+  color: #10B981;
+}
+
+.doctorGraphic {
+  display: flex;
+  align-items: center;
+  gap: $spacing-4;
+}
+
+.doctorAvatarBox {
+  width: 70px;
+  height: 70px;
+  border-radius: $radius-2xl;
+  background: linear-gradient(135deg, var(--color-primary-light), rgba(13, 148, 136, 0.2));
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.doctorCredentials {
+  h3 {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+}
+
+.doctorTitle {
+  font-size: 0.6875rem;
+  color: var(--color-primary);
+  font-weight: $font-weight-medium;
+  margin: 2px 0;
+}
+
+.doctorMeta {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+}
+
+.doctorHighlights {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  background-color: var(--color-surface-muted);
+  border-radius: $radius-lg;
+  padding: $spacing-3;
+}
+
+.highlightPill {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: 0.6875rem;
+  color: var(--color-text-main);
+}
+
+/* ========================================================
+   SERVICES SECTION
+   ======================================================== */
+.servicesSection {
+  padding: $spacing-16 0;
+  background-color: var(--color-surface-muted);
+}
+
+.servicesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-6;
+
+  @include tablet-down {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.serviceCard {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: $shadow-sm;
+  transition: all 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+    border-color: var(--color-primary);
+  }
+
+  h3 {
+    font-family: var(--font-family-heading);
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: $spacing-3 0 $spacing-2;
+  }
+
+  p {
+    font-size: $font-size-xs;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0 0 $spacing-4;
+    flex: 1;
+  }
+}
+
+.emergencyCard {
+  border-left: 4px solid #DC2626;
+}
+
+.serviceHeader {
+  @include flex-between;
+}
+
+.serviceCategory {
+  font-size: 0.6875rem;
+  font-weight: $font-weight-bold;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.serviceFooter {
+  @include flex-between;
+  padding-top: $spacing-3;
+  border-top: 1px solid var(--color-border);
+}
+
+.servicePricing {
+  display: flex;
+  flex-direction: column;
+}
+
+.priceLabel {
+  font-size: 0.5625rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+}
+
+.priceValue {
+  font-size: $font-size-base;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+/* ========================================================
+   BEFORE & AFTER SMILE MAKEOVER SLIDER
+   ======================================================== */
+.makeoverSection {
+  padding: $spacing-16 0;
+  background-color: var(--color-surface);
+}
+
+.makeoverGrid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: $spacing-12;
+  align-items: center;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+.makeoverText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+
+  h2 {
+    font-family: var(--font-family-heading);
+    font-size: $font-size-2xl;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+
+  p {
+    font-size: $font-size-sm;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+}
+
+.transformationDetails {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  margin: $spacing-2 0;
+}
+
+.detailRow {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+
+  strong {
+    font-size: $font-size-xs;
+    color: var(--color-text-main);
+  }
+
+  p {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+.sliderContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.sliderWrapper {
+  position: relative;
+  width: 100%;
+  height: 340px;
+  border-radius: $radius-2xl;
+  overflow: hidden;
+  box-shadow: $shadow-xl;
+  border: 1px solid var(--color-border);
+}
+
+.beforeFrame,
+.afterFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+.simulatedSmileBefore {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #4A3E3D, #2B2625);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #F87171;
+  padding: $spacing-6;
+  text-align: center;
+}
+
+.simulatedSmileAfter {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #0F766E, #042F2E);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #5EEAD4;
+  padding: $spacing-6;
+  text-align: center;
+}
+
+.tag {
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 4px 10px;
+  border-radius: $radius-full;
+  background-color: rgba(0, 0, 0, 0.4);
+  margin-bottom: $spacing-2;
+}
+
+.clinicalNotes {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: #FFFFFF;
+}
+
+.sliderDivider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background-color: #FFFFFF;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.sliderHandle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-full;
+  background-color: #FFFFFF;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.rangeOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+.sliderHint {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+/* ========================================================
+   DOCTORS SECTION
+   ======================================================== */
+.doctorsSection {
+  padding: $spacing-16 0;
+  background-color: var(--color-surface-muted);
+}
+
+.doctorsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-6;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+.doctorCard {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  box-shadow: $shadow-sm;
+  transition: transform 0.25s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-lg;
+  }
+
+  h3 {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+}
+
+.docAvatarHeader {
+  @include flex-between;
+  margin-bottom: $spacing-2;
+}
+
+.avatarCircle {
+  width: 56px;
+  height: 56px;
+  border-radius: $radius-xl;
+  background: linear-gradient(135deg, var(--color-primary-light), rgba(13, 148, 136, 0.2));
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.docRole {
+  font-size: 0.6875rem;
+  font-weight: $font-weight-semibold;
+  color: var(--color-primary);
+}
+
+.docSchool {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.skillPills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: $spacing-2 0;
+}
+
+.skillPill {
+  font-size: 0.5625rem;
+  padding: 2px 6px;
+  border-radius: $radius-full;
+  background-color: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+
+/* ========================================================
+   PRICING & WAAS SECTION
+   ======================================================== */
+.pricingSection {
+  padding: $spacing-16 0;
+  background-color: var(--color-surface);
+}
+
+.pricingToggleGroup {
+  display: inline-flex;
+  gap: 2px;
+  background-color: var(--color-surface-muted);
+  padding: 4px;
+  border-radius: $radius-full;
+  border: 1px solid var(--color-border);
+  margin-top: $spacing-4;
+}
+
+.toggleBtn {
+  padding: 0.375rem 1rem;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-muted);
+  border-radius: $radius-full;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &.active {
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+  }
+}
+
+.pricingCardsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-8;
+  max-width: 860px;
+  margin: 0 auto;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pricingCard {
+  position: relative;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-8;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+  box-shadow: $shadow-md;
+
+  h3 {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+}
+
+.popularCard {
+  border: 2px solid var(--color-primary);
+  box-shadow: $shadow-xl;
+}
+
+.popularRibbon {
+  position: absolute;
+  top: -12px;
+  right: $spacing-6;
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+  font-size: 0.625rem;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: $radius-full;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.planBadge {
+  font-size: 0.6875rem;
+  font-weight: $font-weight-bold;
+  color: var(--color-primary);
+  text-transform: uppercase;
+}
+
+.priceRow {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.currency {
+  font-size: $font-size-xl;
+  font-weight: 800;
+  color: var(--color-text-main);
+}
+
+.amount {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-text-main);
+  line-height: 1;
+}
+
+.period {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+}
+
+.planSub {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.featureList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  margin: $spacing-2 0 $spacing-4;
+
+  li {
+    display: flex;
+    align-items: center;
+    gap: $spacing-2;
+    font-size: $font-size-xs;
+    color: var(--color-text-main);
+
+    svg {
+      color: #10B981;
+      flex-shrink: 0;
+    }
+  }
+}
+
+/* ========================================================
+   REVIEWS SECTION
+   ======================================================== */
+.reviewsSection {
+  padding: $spacing-16 0;
+  background-color: var(--color-surface-muted);
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-6;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reviewCard {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-6;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: $shadow-sm;
+}
+
+.reviewStars {
+  display: flex;
+  gap: 2px;
+  margin-bottom: $spacing-3;
+}
+
+.reviewBody {
+  font-size: $font-size-xs;
+  color: var(--color-text-main);
+  line-height: 1.6;
+  font-style: italic;
+  margin: 0 0 $spacing-4;
+}
+
+.reviewAuthor {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--color-border);
+  padding-top: $spacing-3;
+
+  strong {
+    font-size: $font-size-xs;
+    color: var(--color-text-main);
+  }
+
+  <span> {
+    font-size: 0.625rem;
+    color: var(--color-text-muted);
+  }
+}
+
+/* ========================================================
+   FAQ ACCORDION
+   ======================================================== */
+.faqSection {
+  padding: $spacing-16 0;
+  background-color: var(--color-surface);
+}
+
+.faqList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.faqItem {
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  background-color: var(--color-surface);
+  overflow: hidden;
+  transition: all 0.2s ease;
+
+  &.open {
+    border-color: var(--color-primary);
+  }
+}
+
+.faqQuestion {
+  width: 100%;
+  @include flex-between;
+  padding: $spacing-4 $spacing-5;
+  text-align: left;
+  background-color: transparent;
+  cursor: pointer;
+
+  span {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: var(--color-text-main);
+  }
+}
+
+.chevron {
+  color: var(--color-text-muted);
+  transition: transform 0.2s ease;
+
+  .open & {
+    transform: rotate(180deg);
+    color: var(--color-primary);
+  }
+}
+
+.faqAnswer {
+  padding: 0 $spacing-5 $spacing-4;
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  animation: fadeIn 0.2s ease;
+}
