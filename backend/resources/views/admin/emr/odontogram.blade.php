@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Interactive Dental Odontogram EMR - DentaFlow')
+@section('title', 'Interactive Dental Odontogram EMR - Advanced Dental Clinic')
 @section('page_title', 'Digital Dental Chart (Odontogram EMR)')
 @section('page_subtitle', 'Interactive 32-adult tooth anatomical surface mapping & staged treatment planning')
 

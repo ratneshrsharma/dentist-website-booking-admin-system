@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Clinical Scheduler & Calendar - DentaFlow')
+@section('title', 'Clinical Scheduler & Calendar - Advanced Dental Clinic')
 @section('page_title', 'Doctor Appointment Scheduler')
 @section('page_subtitle', 'FullCalendar 6 Resource TimeGrid with real-time chair concurrency')
 

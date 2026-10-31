@@ -1,6 +1,6 @@
-# 🦷 DentaFlow — Enterprise Digital Dental Practice & Multi-Clinic Management Ecosystem
+# 🦷 Advanced Dental Clinic — Digital Dental Practice & Multi-Clinic Management Ecosystem
 
-[![License: Commercial](https://img.shields.io/badge/License-Commercial%20%2F%20Turnkey-0D9488.svg)](#-commercial-licensing--rental-waas)
+[![License: Commercial](https://img.shields.io/badge/License-Commercial%20License-0D9488.svg)](#-commercial-licensing--rental-waas)
 [![Next.js 15](https://img.shields.io/badge/Frontend-Next.js%2015%20App%20Router-000000.svg?logo=nextdotjs)](https://nextjs.org/)
 [![Laravel 11](https://img.shields.io/badge/Backend-Laravel%2011.x%20API-FF2D20.svg?logo=laravel)](https://laravel.com/)
 [![AdminLTE 4](https://img.shields.io/badge/Admin%20Panel-AdminLTE%204%20(Bootstrap%205)-0D6EFD.svg)](https://adminlte.io/)
@@ -12,10 +12,10 @@
 
 | Surface | Live Link | Environment & Features |
 | :--- | :--- | :--- |
-| **🚀 Patient Portal & Booking Wizard** | [**Launch Patient Portal Demo**](https://dentist-website-booking-admin-system.vercel.app/) | Vercel Edge Global CDN • Next.js 15 • 5-Step Booking Wizard • 3 Theme Switchers • Live Slot Calculation • Smile Makeover Comparison |
-| **💼 Full-Stack System (Production)** | [**https://demo.ratneshsharma.com/DentaFlow**](https://demo.ratneshsharma.com/DentaFlow) | Hostinger Shared Linux • Full-Stack Co-location • Laravel 11 REST API • AdminLTE 4 EMR • 32-Tooth SVG Odontogram • MySQL 8 Multi-Clinic |
+| **🚀 Patient Portal & Booking Wizard** | [**Launch Patient Portal Demo**](https://advanced-dental-clinic.vercel.app/) | Vercel Edge Global CDN • Next.js 15 • 5-Step Booking Wizard • 3 Theme Switchers • Live Slot Calculation • Smile Makeover Comparison |
+| **💼 Full-Stack System (Production)** | [**https://demo.ratneshsharma.com/advanced-dental-clinic**](https://demo.ratneshsharma.com/advanced-dental-clinic) | Hostinger Shared Linux • Full-Stack Co-location • Laravel 11 REST API • AdminLTE 4 EMR • 32-Tooth SVG Odontogram • MySQL 8 Multi-Clinic |
 
-> **A turnkey, commercial-grade digital healthcare platform engineered for modern dental practices, multi-location dental chains, and medical entrepreneurs.** Combines an ultra-fast patient marketing portal with switchable design templates, a real-time 5-step appointment booking wizard, an AdminLTE 4 clinical management suite with an interactive 32-tooth SVG Odontogram, and centralized multi-branch logistics.
+> **A commercial-grade digital healthcare platform engineered for modern dental practices, multi-location dental chains, and dental organizations.** Combines an ultra-fast patient marketing portal with switchable design templates, a real-time 5-step appointment booking wizard, an AdminLTE 4 clinical management suite with an interactive 32-tooth SVG Odontogram, and centralized multi-branch logistics.
 
 ---
 
@@ -23,7 +23,7 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────────────┐
-│                             DentaFlow Ecosystem Architecture                     │
+│                   Advanced Dental Clinic Ecosystem Architecture                  │
 ├───────────────────────┬───────────────────────┬──────────────────────────────────┤
 │ 1. Patient Portal     │ 2. Real-Time Booking  │ 3. Central Clinical Admin (EMR)  │
 │ • Next.js 15 SSG      │ • Live Slot Engine    │ • AdminLTE 4 + Bootstrap 5 Blade │
@@ -139,7 +139,7 @@ Built from the ground up to comply with healthcare security standards and protec
 
 This platform is engineered by **Ratnesh Sharma**, Senior Full-Stack Architect & Engineering Team Lead (19+ years experience), and is available under flexible commercial terms:
 
-### 1. Turnkey Source Code Purchase (Outright Buy)
+### 1. Full Source Code License (Outright Buy)
 - Full ownership of the source code (Next.js frontend + Laravel backend + AdminLTE admin + MySQL migrations).
 - Unrestricted commercial license for single or multi-practice deployment.
 - Complete documentation, architectural diagrams, and deployment guides.
@@ -164,7 +164,7 @@ For commercial licensing, live demonstrations, or technical customization inquir
 - **Developer & Architect:** Ratnesh Sharma
 - **Email:** [ratnesh.at.24@gmail.com](mailto:ratnesh.at.24@gmail.com)
 - **GitHub:** [@ratneshrsharma](https://github.com/ratneshrsharma)
-- **WhatsApp:** [+91 99043 79260 (Direct Chat)](https://wa.me/919904379260?text=Hello%20Ratnesh,%20I%20am%20interested%20in%20purchasing/renting%20the%20DentaFlow%20System)
+- **WhatsApp:** [+91 99043 79260 (Direct Chat)](https://wa.me/919904379260?text=Hello%20Ratnesh,%20I%20am%20interested%20in%20the%20Advanced%20Dental%20Clinic%20System)
 
 ---
 

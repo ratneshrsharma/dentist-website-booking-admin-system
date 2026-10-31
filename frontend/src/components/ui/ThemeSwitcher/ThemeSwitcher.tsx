@@ -10,14 +10,14 @@ export const ThemeSwitcher: React.FC = () => {
   const [activeTheme, setActiveTheme] = useState<ThemeMode>('modern');
 
   useEffect(() => {
-    const savedTheme = (localStorage.getItem('dentaflow-theme') as ThemeMode) || 'modern';
+    const savedTheme = (localStorage.getItem('adc-theme') as ThemeMode) || 'modern';
     setActiveTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
 
   const handleThemeChange = (theme: ThemeMode) => {
     setActiveTheme(theme);
-    localStorage.setItem('dentaflow-theme', theme);
+    localStorage.setItem('adc-theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
   };
 

@@ -2,17 +2,17 @@ import type { Metadata } from 'next';
 import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
-  title: 'DentaFlow - Modern Digital Dental Practice & Multi-Clinic Ecosystem',
+  title: 'Advanced Dental Clinic - Modern Dental Practice & Multi-Clinic System',
   description:
-    'Board-certified prosthodontists, dental implants, Invisalign clear aligners, and 24/7 emergency dental care across 3 metropolitan clinics.',
+    'Board-certified prosthodontists, dental implants, clear aligners, and emergency dental care across 3 metropolitan clinics.',
   keywords: [
     'Dentist',
     'Dental Implants',
-    'Invisalign',
+    'Clear Aligners',
     'Teeth Whitening',
     'Emergency Dentist',
     'Cosmetic Dentistry',
-    'DentaFlow',
+    'Advanced Dental Clinic',
   ],
 };
 

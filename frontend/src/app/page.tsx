@@ -317,7 +317,7 @@ export default function HomePage() {
                     style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
                   >
                     <div className={styles.simulatedSmileAfter}>
-                      <span className={styles.tag}>AFTER DENTAFLOW MAKEOVER</span>
+                      <span className={styles.tag}>AFTER CLINICAL MAKEOVER</span>
                       <p className={styles.clinicalNotes}>Custom Hand-Layered E-Max Porcelain Veneers</p>
                     </div>
                   </div>
@@ -448,7 +448,7 @@ export default function HomePage() {
             <div className={styles.pricingCardsGrid}>
               <div className={styles.pricingCard}>
                 <span className={styles.planBadge}>Individual Care</span>
-                <h3>DentaFlow Essential</h3>
+                <h3>Essential Dental Care</h3>
                 <div className={styles.priceRow}>
                   <span className={styles.currency}>$</span>
                   <strong className={styles.amount}>{billingPeriod === 'monthly' ? '39' : '33'}</strong>
@@ -469,7 +469,7 @@ export default function HomePage() {
               <div className={`${styles.pricingCard} ${styles.popularCard}`}>
                 <div className={styles.popularRibbon}>Most Popular Plan</div>
                 <span className={styles.planBadge}>Family & Cosmetic</span>
-                <h3>DentaFlow Complete VIP</h3>
+                <h3>Complete VIP Care</h3>
                 <div className={styles.priceRow}>
                   <span className={styles.currency}>$</span>
                   <strong className={styles.amount}>{billingPeriod === 'monthly' ? '79' : '67'}</strong>
@@ -480,7 +480,7 @@ export default function HomePage() {
                   <li><CheckCircle2 size={16} /> 4 Deep Cleanings & Periodontal Checks</li>
                   <li><CheckCircle2 size={16} /> Complimentary Annual In-Office Teeth Whitening</li>
                   <li><CheckCircle2 size={16} /> 24/7 Priority Emergency Access (Zero Wait)</li>
-                  <li><CheckCircle2 size={16} /> 25% Discount on Invisalign & Dental Implants</li>
+                  <li><CheckCircle2 size={16} /> 25% Discount on Aligners & Dental Implants</li>
                   <li><CheckCircle2 size={16} /> Free Oral Sedation for All Surgical Visits</li>
                 </ul>
                 <Button variant="primary" fullWidth size="md" onClick={() => handleOpenBooking()}>
@@ -566,7 +566,7 @@ export default function HomePage() {
                 },
                 {
                   q: 'Do you accept dental insurance and financing plans?',
-                  a: 'We accept all major PPO insurance networks and provide direct claim billing. We also offer 0% interest financing for up to 24 months through CareCredit and our in-house DentaFlow Membership plan.',
+                  a: 'We accept all major PPO insurance networks and provide direct claim billing. We also offer 0% interest financing for up to 24 months through CareCredit and our in-house Dental Membership plan.',
                 },
                 {
                   q: 'What should I do in an acute dental emergency?',

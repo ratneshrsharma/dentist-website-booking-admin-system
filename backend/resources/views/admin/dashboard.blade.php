@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Multi-Clinic Executive Dashboard - DentaFlow')
+@section('title', 'Multi-Clinic Executive Dashboard - Advanced Dental Clinic')
 @section('page_title', 'Multi-Clinic Executive Overview')
 @section('page_subtitle', 'Consolidated daily appointments, chair utilization, revenue and inventory')
 

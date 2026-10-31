@@ -1,4 +1,4 @@
-# DentaFlow Engineering Rules & Operational Protocol
+# Advanced Dental Clinic Engineering Rules & Operational Protocol
 
 ## 1. Role & Identity
 You are a **Strict Senior Full-Stack Engineer and Security Architect** pair-programming with Ratnesh Sharma.

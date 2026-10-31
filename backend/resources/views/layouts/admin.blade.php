@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>@yield('title', 'DentaFlow Multi-Clinic Dental Management System')</title>
+    <title>@yield('title', 'Advanced Dental Clinic Multi-Clinic Dental Management System')</title>
 
     <!-- Google Font: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -210,7 +210,7 @@
         <aside class="app-sidebar shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
                 <a href="{{ url('/admin/dashboard') }}" class="brand-link text-decoration-none">
-                    <span class="brand-text">DentaFlow <span class="badge bg-success small ms-1">PRO</span></span>
+                    <span class="brand-text">Advanced Dental <span class="badge bg-success small ms-1">PRO</span></span>
                     <span class="brand-subtext">Clinical EMR & Logistics</span>
                 </a>
             </div>
@@ -312,7 +312,7 @@
         <!-- Main Footer -->
         <footer class="app-footer text-muted small py-3 border-top bg-white">
             <div class="container-fluid d-flex justify-content-between">
-                <span>&copy; {{ date('Y') }} <strong>DentaFlow</strong> Clinical Multi-Clinic System. All rights reserved.</span>
+                <span>&copy; {{ date('Y') }} <strong>Advanced Dental Clinic</strong> Multi-Clinic System. All rights reserved.</span>
                 <span class="text-success"><i class="bi bi-shield-lock-fill"></i> HIPAA & OSHA Compliant v2.4.0</span>
             </div>
         </footer>

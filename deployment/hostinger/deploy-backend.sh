@@ -1,12 +1,12 @@
 #!/bin/bash
 # ==============================================================================
-# DentaFlow Production Shared Hosting Backend Deployment Script
+# Advanced Dental Clinic Production Shared Hosting Backend Deployment Script
 # Target: Linux Shared Hosting (Hostinger / GoDaddy) with PHP 8.2+ & MySQL 8.0
 # ==============================================================================
 
 set -e
 
-echo "=== [1/5] Initializing DentaFlow Backend Deployment ==="
+echo "=== [1/5] Initializing Advanced Dental Clinic Backend Deployment ==="
 cd "$(dirname "$0")/../../backend"
 
 echo "=== [2/5] Installing Production Composer Dependencies ==="
@@ -24,4 +24,4 @@ echo "=== [5/5] Creating Storage Symlink & Permissions ==="
 php artisan storage:link || true
 chmod -R 775 storage bootstrap/cache
 
-echo "=== DentaFlow Backend Deployment Complete! ==="
+echo "=== Advanced Dental Clinic Backend Deployment Complete! ==="

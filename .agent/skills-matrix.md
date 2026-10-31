@@ -1,6 +1,6 @@
 # Skills & Plugins Matrix: Agent Assignment & Operational Workflow
 
-This matrix defines the 17 specialized engineering and design skills incorporated into the DentaFlow project. Each skill is mapped to its primary **Agent Persona**, its concrete **Project Application**, and its **Activation Trigger**.
+This matrix defines the 17 specialized engineering and design skills incorporated into the Advanced Dental Clinic project. Each skill is mapped to its primary **Agent Persona**, its concrete **Project Application**, and its **Activation Trigger**.
 
 ---
 

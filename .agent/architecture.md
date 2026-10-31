@@ -1,7 +1,7 @@
-# DentaFlow Architecture & System Specification
+# Advanced Dental Clinic Architecture & System Specification
 
 ## 1. System Overview
-DentaFlow is a turnkey, multi-clinic dental management and patient engagement platform built for commercial deployment on shared Linux servers (Hostinger, GoDaddy). It combines a high-speed static patient portal with a full-featured clinical administration engine.
+Advanced Dental Clinic is a multi-clinic dental management and patient engagement platform built for commercial deployment on shared Linux servers (Hostinger, GoDaddy). It combines a high-speed static patient portal with a full-featured clinical administration engine.
 
 ---
 

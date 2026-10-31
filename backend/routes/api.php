@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| DentaFlow REST API Routes (Version 1)
+| Advanced Dental Clinic REST API Routes (Version 1)
 |--------------------------------------------------------------------------
 |
 | Public and authenticated endpoints serving the Next.js patient portal,
@@ -23,7 +23,7 @@ Route::prefix('v1')->middleware(['throttle:60,1'])->group(function (): void {
     // Health & System Ping
     Route::get('/ping', fn () => response()->json([
         'status' => 'healthy',
-        'system' => 'DentaFlow Dental Practice Suite',
+        'system' => 'Advanced Dental Clinic Suite',
         'timestamp' => now()->toIso8601String(),
     ]));
 

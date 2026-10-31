@@ -1,6 +1,6 @@
 #!/bin/bash
 # ==============================================================================
-# DentaFlow Production Static Frontend Build & Sync Script
+# Advanced Dental Clinic Production Static Frontend Build & Sync Script
 # Target: Next.js 15+ Static Export (output: 'export') for Shared Linux Hosting
 # ==============================================================================
 
@@ -24,4 +24,4 @@ else
     exit 1
 fi
 
-echo "=== DentaFlow Frontend Export Ready for Shared Hosting Upload ==="
+echo "=== Advanced Dental Clinic Frontend Export Ready for Shared Hosting Upload ==="

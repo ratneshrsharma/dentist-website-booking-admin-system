@@ -1,6 +1,6 @@
-# DentaFlow QA & Security Audit Report
+# Advanced Dental Clinic QA & Security Audit Report
 
-**System Name:** DentaFlow - Digital Dental Practice, Real-Time Booking & Multi-Clinic Management Platform  
+**System Name:** Advanced Dental Clinic - Digital Practice, Real-Time Booking & Multi-Clinic Management Platform  
 **Target Infrastructure:** Linux Shared Hosting (Hostinger / GoDaddy) | PHP 8.2+ | MySQL 8.0  
 **Audit Date:** 2026-10-31  
 **Lead Auditor:** QA & Security Reviewer Agent  
@@ -9,7 +9,7 @@
 ---
 
 ## 1. Executive Summary
-DentaFlow has been developed under strict dual-surface architectural guidelines:
+Advanced Dental Clinic has been developed under strict dual-surface architectural guidelines:
 1. **Patient-Facing Web Surface:** Headless Next.js 15+ App Router compiling to static HTML/CSS/JS (`output: 'export'`) with centralized SCSS design tokens, zero Tailwind utility classes, zero TypeScript `any` types, and 3 switchable clinical design themes (Modern Minimalist, Classic Heritage, Clinical Luxury).
 2. **Clinical Admin Surface:** Laravel 11.x REST API + AdminLTE 4 (Bootstrap 5 + Blade) administrative panels featuring FullCalendar 6 drag-and-drop scheduling, Patient EMR with an interactive 32-adult tooth SVG Odontogram, clinical treatment planning, and multi-branch inventory logistics.
 3. **Infrastructure Hardening:** Apache / LiteSpeed production `.htaccess` routing, OWASP Top 10 security headers, Gzip/Brotli compression, and immutable browser caching.
@@ -62,7 +62,7 @@ DentaFlow has been developed under strict dual-surface architectural guidelines:
 
 ## 4. NasrTech Dental Suite Reverse Engineering Parity
 
-| NasrTech Module | DentaFlow Equivalent | Feature Parity Detail |
+| NasrTech Module | Advanced Dental Clinic Equivalent | Feature Parity Detail |
 | :--- | :--- | :--- |
 | **Patient EMR** | `PatientProfile`, `DentalChart` | Medical history, allergies, systemic conditions, digital documents. |
 | **Interactive Chart** | SVG Odontogram Blade View | 32-adult teeth with 5 anatomical surfaces (`mesial`, `distal`, `occlusal`, `buccal`, `lingual`). |

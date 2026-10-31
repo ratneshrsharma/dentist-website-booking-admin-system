@@ -1,4 +1,4 @@
-# Agents Daily Diary (DentaFlow Project)
+# Agents Daily Diary (Advanced Dental Clinic Project)
 
 > **MANDATORY INSTRUCTION FOR ALL AGENTS:**
 > 1. **BEFORE STARTING WORK:** Read the latest entries below to understand active tasks, architectural decisions, and current blockers.
@@ -43,8 +43,8 @@
   - Reverse-engineered NasrTech Dental Suite demo (`https://www.nasrtech.dev/dashboard/?demo=1&plan=pro&duration=30`): extracted all modules (Overview, Patients, Appointments, Treatment Records, Live Chat, Analytics, Clinic Location, Question Tree Triage, Video Consultations), clinical workflows, multi-currency (SAR/AED/EGP) and dual-language (EN/AR).
   - Analyzed 8AMDESIGN's "Confident Doctor" dental template as Template 1 specification for patient portal.
   - Activated and mapped skills: `ux-ui-max-pro` (conversion architecture, 3-sec value proposition, WaaS calculator), `shadcn-ui` (accessible primitives and design tokens), `gsap-motion` (hero split-text, ScrollTrigger, Lenis smooth scrolling).
-  - Saved core reference and project memory files in persistent memory (`dentaflow-clinical-system-specs.md` and `dentaflow-frontend-template-confident.md`).
-- **Current State:** Research complete, memory saved, specs integrated into DentaFlow architecture.
+  - Saved core reference and project memory files in persistent memory (`clinical-system-specs.md` and `frontend-template-confident.md`).
+- **Current State:** Research complete, memory saved, specs integrated into Advanced Dental Clinic architecture.
 - **Blockers / Warnings:** Ensure all frontend animations degrade gracefully when `prefers-reduced-motion` is enabled.
 - **Next Immediate Action:** Proceed with Phase 1 migration completion and Phase 4 frontend component scaffolding.
 

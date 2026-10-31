@@ -49,10 +49,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           </div>
 
           <div className={styles.topBarRight}>
-            <a href="tel:+919904379260" className={styles.emergencyLink}>
+            <a href="tel:+15550192830" className={styles.emergencyLink}>
               <span className={styles.emergencyDot} />
               <Phone size={12} />
-              <span>24/7 Dental Emergency: <strong>+91 99043 79260</strong></span>
+              <span>24/7 Dental Emergency: <strong>+1 (555) 019-2830</strong></span>
             </a>
             <div className={styles.topThemeWrapper}>
               <ThemeSwitcher />
@@ -70,8 +70,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               <Sparkles size={20} />
             </div>
             <div className={styles.brandText}>
-              <span className={styles.brandTitle}>DentaFlow</span>
-              <span className={styles.brandSubtitle}>Modern Dental & Implant Center</span>
+              <span className={styles.brandTitle}>Advanced Dental Clinic</span>
+              <span className={styles.brandSubtitle}>Practice & Multi-Clinic System</span>
             </div>
           </Link>
 
@@ -99,7 +99,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
             </li>
             <li>
               <Link href="#pricing" className={styles.navLink}>
-                WaaS & Insurance
+                Plans & Coverage
               </Link>
             </li>
           </ul>

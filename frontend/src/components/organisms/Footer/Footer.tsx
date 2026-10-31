@@ -23,9 +23,9 @@ export const Footer: React.FC = () => {
             <p>Our emergency clinical team is on standby 24/7 across all 3 metro branches.</p>
           </div>
           <div className={styles.emergencyActions}>
-            <a href="tel:+919904379260" className={styles.emergencyCallBtn}>
+            <a href="tel:+15550192830" className={styles.emergencyCallBtn}>
               <Phone size={18} />
-              <span>Call Emergency Line: +91 99043 79260</span>
+              <span>Call Emergency Line: +1 (555) 019-2830</span>
             </a>
           </div>
         </div>
@@ -41,8 +41,8 @@ export const Footer: React.FC = () => {
                 <Sparkles size={20} />
               </div>
               <div>
-                <span className={styles.brandTitle}>DentaFlow</span>
-                <span className={styles.brandSubtitle}>Dental & Implant Ecosystem</span>
+                <span className={styles.brandTitle}>Advanced Dental Clinic</span>
+                <span className={styles.brandSubtitle}>Comprehensive Dental Care & Specialists</span>
               </div>
             </Link>
             <p className={styles.brandDescription}>
@@ -79,7 +79,7 @@ export const Footer: React.FC = () => {
             </ul>
           </div>
 
-          {/* Column 3: Patient Care & WaaS */}
+          {/* Column 3: Patient Care & Plans */}
           <div className={styles.linksCol}>
             <h5 className={styles.colTitle}>Patient Care & Plans</h5>
             <ul className={styles.linksList}>
@@ -89,7 +89,7 @@ export const Footer: React.FC = () => {
               <li><Link href="#makeover">Before & After Smile Transformation</Link></li>
               <li><Link href="#reviews">Verified Patient Testimonials</Link></li>
               <li><Link href="#faq">Pre & Post Treatment Guidelines</Link></li>
-              <li><a href="https://wa.me/919904379260" target="_blank" rel="noopener noreferrer">WhatsApp Direct Clinical Hub</a></li>
+              <li><a href="https://wa.me/15550192830" target="_blank" rel="noopener noreferrer">WhatsApp Direct Clinical Hub</a></li>
             </ul>
           </div>
 
@@ -97,20 +97,20 @@ export const Footer: React.FC = () => {
           <div className={styles.locationsCol}>
             <h5 className={styles.colTitle}>Clinic Locations</h5>
             <div className={styles.branchItem}>
-              <strong>Metro Dental Headquarters</strong>
-              <p><MapPin size={12} /> 100 Grand Avenue, Suite 400, New York, NY</p>
+              <strong>Metropolis Central Clinic</strong>
+              <p><MapPin size={12} /> 100 Sample Boulevard, Suite 400, Metropolis, NY 10001</p>
               <p><Clock size={12} /> Mon-Sat: 8:00 AM - 8:00 PM</p>
             </div>
 
             <div className={styles.branchItem}>
-              <strong>Downtown Smiles Branch</strong>
-              <p><MapPin size={12} /> 250 West 57th Street, New York, NY</p>
+              <strong>Westside Dental Care</strong>
+              <p><MapPin size={12} /> 250 Practice Way, Suite 200, Metropolis, NY 10024</p>
               <p><Clock size={12} /> Mon-Fri: 9:00 AM - 6:00 PM</p>
             </div>
 
             <div className={styles.branchItem}>
-              <strong>Westside Pediatric & Family Dental</strong>
-              <p><MapPin size={12} /> 720 Columbus Avenue, New York, NY</p>
+              <strong>Eastside Family Dentistry</strong>
+              <p><MapPin size={12} /> 720 Example Avenue, Building B, Metropolis, NY 10128</p>
               <p><Clock size={12} /> Tue-Sat: 8:30 AM - 5:30 PM</p>
             </div>
           </div>
@@ -121,7 +121,7 @@ export const Footer: React.FC = () => {
       <div className={styles.bottomBar}>
         <div className={styles.bottomContainer}>
           <p className={styles.copyright}>
-            &copy; {new Date().getFullYear()} DentaFlow Clinical Group. All rights reserved. Designed with clinical precision.
+            &copy; {new Date().getFullYear()} Advanced Dental Clinic Network. All rights reserved. Demonstration and portfolio release.
           </p>
           <div className={styles.legalLinks}>
             <span>HIPAA Compliant</span>
