@@ -93,9 +93,9 @@ export default function HomePage() {
                   variant="outline"
                   size="lg"
                   icon={<PhoneCall size={18} />}
-                  onClick={() => (window.location.href = 'tel:+15550192830')}
+                  onClick={() => (window.location.href = 'tel:+919904379260')}
                 >
-                  Emergency Care: (555) 019-2830
+                  Emergency Care: +91 99043 79260
                 </Button>
               </div>
 

@@ -157,7 +157,7 @@ For commercial licensing, live demonstrations, or technical customization inquir
 - **Developer & Architect:** Ratnesh Sharma
 - **Email:** [ratnesh.at.24@gmail.com](mailto:ratnesh.at.24@gmail.com)
 - **GitHub:** [@ratneshrsharma](https://github.com/ratneshrsharma)
-- **WhatsApp:** [Start WhatsApp Conversation](https://wa.me/15550192830?text=Hello%20Ratnesh,%20I%20am%20interested%20in%20purchasing/renting%20the%20DentaFlow%20System)
+- **WhatsApp:** [+91 99043 79260 (Direct Chat)](https://wa.me/919904379260?text=Hello%20Ratnesh,%20I%20am%20interested%20in%20purchasing/renting%20the%20DentaFlow%20System)
 
 ---
 

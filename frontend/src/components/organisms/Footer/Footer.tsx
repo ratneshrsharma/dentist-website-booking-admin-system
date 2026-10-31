@@ -25,9 +25,9 @@ export const Footer: React.FC = () => {
             <p>Our emergency clinical team is on standby 24/7 across all 3 metro branches.</p>
           </div>
           <div className={styles.emergencyActions}>
-            <a href="tel:+15550192830" className={styles.emergencyCallBtn}>
+            <a href="tel:+919904379260" className={styles.emergencyCallBtn}>
               <Phone size={18} />
-              <span>Call Emergency Line: (555) 019-2830</span>
+              <span>Call Emergency Line: +91 99043 79260</span>
             </a>
           </div>
         </div>
@@ -91,7 +91,7 @@ export const Footer: React.FC = () => {
               <li><Link href="#makeover">Before & After Smile Transformation</Link></li>
               <li><Link href="#reviews">Verified Patient Testimonials</Link></li>
               <li><Link href="#faq">Pre & Post Treatment Guidelines</Link></li>
-              <li><a href="https://wa.me/15550192830" target="_blank" rel="noopener noreferrer">WhatsApp Direct Clinical Hub</a></li>
+              <li><a href="https://wa.me/919904379260" target="_blank" rel="noopener noreferrer">WhatsApp Direct Clinical Hub</a></li>
             </ul>
           </div>
 

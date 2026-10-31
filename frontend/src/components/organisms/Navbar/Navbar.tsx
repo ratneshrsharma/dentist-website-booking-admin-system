@@ -49,10 +49,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           </div>
 
           <div className={styles.topBarRight}>
-            <a href="tel:+15550192830" className={styles.emergencyLink}>
+            <a href="tel:+919904379260" className={styles.emergencyLink}>
               <span className={styles.emergencyDot} />
               <Phone size={12} />
-              <span>24/7 Dental Emergency: <strong>(555) 019-2830</strong></span>
+              <span>24/7 Dental Emergency: <strong>+91 99043 79260</strong></span>
             </a>
             <div className={styles.topThemeWrapper}>
               <ThemeSwitcher />

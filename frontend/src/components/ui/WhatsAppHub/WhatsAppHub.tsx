@@ -11,7 +11,7 @@ interface WhatsAppHubProps {
 
 export const WhatsAppHub: React.FC<WhatsAppHubProps> = ({
   onOpenBooking,
-  phone = '+15550192830',
+  phone = '+919904379260',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
