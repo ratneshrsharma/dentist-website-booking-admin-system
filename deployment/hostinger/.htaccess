@@ -1,0 +1,121 @@
+# ==============================================================================
+# DentaFlow Production Shared Hosting Configuration (Hostinger / GoDaddy)
+# Dual-Surface: Next.js 15 Static Frontend + Laravel 11 API & AdminLTE 4 Blade
+# ==============================================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 1. Force HTTPS Redirection
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # 2. Canonical Hostname: Enforce non-www (or adjust to www per domain preference)
+    RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+    RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+    # 3. Disallow Trailing Slash if not a directory
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # 4. Route API requests (/api/*) directly to Laravel Public Index
+    RewriteRule ^api/(.*)$ backend/public/index.php [L,QSA]
+
+    # 5. Route AdminLTE Blade Admin requests (/admin/*) to Laravel Public Index
+    RewriteRule ^admin/(.*)$ backend/public/index.php [L,QSA]
+
+    # 6. Route Storage Symlink (/storage/*) to Laravel Public Storage
+    RewriteRule ^storage/(.*)$ backend/public/storage/$1 [L]
+
+    # 7. Serve Next.js Exported Static Frontend Files (/frontend/out/*)
+    # If a static HTML/CSS/JS file exists in frontend/out, serve it directly
+    RewriteCond %{DOCUMENT_ROOT}/frontend/out/$1 -f [OR]
+    RewriteCond %{DOCUMENT_ROOT}/frontend/out/$1.html -f
+    RewriteRule ^(.*)$ frontend/out/$1 [L]
+
+    # 8. Single Page Fallback for Patient-Facing Next.js Portal
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/(api|admin|backend|storage)
+    RewriteRule ^(.*)$ frontend/out/index.html [L]
+</IfModule>
+
+# ==============================================================================
+# OWASP TOP 10 SECURITY HARDENING & IMMUNITY HEADERS
+# ==============================================================================
+<IfModule mod_headers.c>
+    # Block clickjacking attacks
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Prevent MIME-sniffing exploits
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Legacy XSS protection for older browsers
+    Header always set X-XSS-Protection "1; mode=block"
+
+    # Strict Referrer Privacy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Enforce HTTPS HSTS for 1 year with preload
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Restrict device hardware permissions
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+
+    # Remove server fingerprinting
+    Header unset X-Powered-By
+</IfModule>
+
+# ==============================================================================
+# PREVENT DIRECTORY BROWSING & PROTECT SENSITIVE FILES
+# ==============================================================================
+Options -Indexes
+
+# Shield .env, git repository, composer/package configs, lock files, and logs
+<FilesMatch "(^\.env|\.git|\.lock$|\.json$|\.xml$|\.yml$|\.yaml$|\.md$|\.log$)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Specifically protect Laravel sensitive directories
+RedirectMatch 404 ^/(backend/app|backend/bootstrap|backend/config|backend/database|backend/storage/logs)/.*$
+
+# ==============================================================================
+# GZIP & BROTLI HIGH-PERFORMANCE COMPRESSION
+# ==============================================================================
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ==============================================================================
+# BROWSER CACHING FOR STATIC ASSETS (Lighthouse 100 Performance)
+# ==============================================================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+
+    # Static Next.js compiled chunks (immutable hash)
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+
+    # Dynamic HTML documents (must revalidate)
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
