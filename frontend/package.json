@@ -1,0 +1,32 @@
+{
+  "name": "dentaflow-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@gsap/react": "^2.1.1",
+    "@radix-ui/react-accordion": "^1.2.1",
+    "@radix-ui/react-dialog": "^1.1.2",
+    "@radix-ui/react-select": "^2.1.2",
+    "@radix-ui/react-tabs": "^1.1.1",
+    "framer-motion": "^11.11.10",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.14",
+    "lucide-react": "^0.453.0",
+    "next": "^15.0.1",
+    "react": "^19.0.0-rc-69d4b80a-20241021",
+    "react-dom": "^19.0.0-rc-69d4b80a-20241021",
+    "sass": "^1.80.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.7",
+    "@types/react": "^19.0.0-rc.1",
+    "@types/react-dom": "^19.0.0-rc.1",
+    "typescript": "^5.6.3"
+  }
+}

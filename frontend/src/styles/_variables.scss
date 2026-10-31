@@ -1,0 +1,120 @@
+// ==============================================================================
+// DentaFlow SCSS Design Token System
+// Strict No-Tailwind Architecture: Centralized Variables, Themes & Scales
+// ==============================================================================
+
+// 1. Theme Color Palettes
+
+// Theme A: Modern Minimalist (Default / Template 1: Confident Doctor)
+$modern-primary: #0D9488;        // Deep Medical Teal
+$modern-primary-hover: #0F766E;  // Rich Teal
+$modern-primary-light: #CCFBF1;  // Soft Mint Tint
+$modern-secondary: #0F172A;      // Midnight Slate
+$modern-accent: #F59E0B;         // Warm Gold / Action Amber
+$modern-bg: #F8FAFC;             // Clinical Pure Soft Grey
+$modern-surface: #FFFFFF;        // Pristine White Card
+$modern-surface-muted: #F1F5F9;  // Muted Slate
+$modern-border: #E2E8F0;         // Clean Border
+$modern-text-main: #0F172A;      // High Contrast Charcoal
+$modern-text-muted: #64748B;     // Informative Slate
+$modern-text-light: #94A3B8;     // Subdued Placeholder
+
+// Theme B: Classic Heritage (Template 2)
+$classic-primary: #1E3A8A;       // Royal Oxford Navy
+$classic-primary-hover: #172554;
+$classic-primary-light: #DBEAFE;
+$classic-secondary: #78350F;     // Warm Mahogany Amber
+$classic-accent: #D97706;
+$classic-bg: #FFFDF8;            // Warm Ivory
+$classic-surface: #FFFFFF;
+$classic-surface-muted: #F8F5EE;
+$classic-border: #E7E0D3;
+$classic-text-main: #1C1917;
+$classic-text-muted: #78716C;
+
+// Theme C: Clinical Luxury (Template 3)
+$luxury-primary: #D4AF37;        // Metallic Champagne Gold
+$luxury-primary-hover: #B89628;
+$luxury-primary-light: #2D2713;
+$luxury-secondary: #0A0A0A;      // Obsidian Black
+$luxury-accent: #10B981;         // Emerald Success
+$luxury-bg: #09090B;             // Deep Dark Obsidian
+$luxury-surface: #18181B;        // Dark Zinc Surface
+$luxury-surface-muted: #27272A;
+$luxury-border: #3F3F46;
+$luxury-text-main: #F4F4F5;
+$luxury-text-muted: #A1A1AA;
+
+// 2. Functional & Diagnostic Status Colors
+$color-success: #10B981;
+$color-warning: #F59E0B;
+$color-danger: #EF4444;
+$color-info: #3B82F6;
+$color-emergency: #DC2626;
+
+// 3. Typography Scale & Families
+$font-family-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-serif: 'Playfair Display', Georgia, Cambria, 'Times New Roman', serif;
+$font-family-mono: 'JetBrains Mono', Menlo, Monaco, Consolas, monospace;
+
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 1.875rem;  // 30px
+$font-size-4xl: 2.25rem;   // 36px
+$font-size-5xl: 3rem;      // 48px
+$font-size-6xl: 3.75rem;   // 60px
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+$font-weight-extrabold: 800;
+
+// 4. Fluid Spacing Scale (8pt Grid)
+$spacing-1: 0.25rem;   // 4px
+$spacing-2: 0.5rem;    // 8px
+$spacing-3: 0.75rem;   // 12px
+$spacing-4: 1rem;      // 16px
+$spacing-5: 1.25rem;   // 20px
+$spacing-6: 1.5rem;    // 24px
+$spacing-8: 2rem;      // 32px
+$spacing-10: 2.5rem;   // 40px
+$spacing-12: 3rem;     // 48px
+$spacing-16: 4rem;     // 64px
+$spacing-20: 5rem;     // 80px
+$spacing-24: 6rem;     // 96px
+
+// 5. Border Radii
+$radius-sm: 0.375rem;  // 6px
+$radius-md: 0.5rem;    // 8px
+$radius-lg: 0.75rem;   // 12px
+$radius-xl: 1rem;      // 16px
+$radius-2xl: 1.5rem;   // 24px
+$radius-full: 9999px;
+
+// 6. Elevation & Shadows
+$shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+$shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+$shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+$shadow-hover: 0 25px 30px -5px rgba(13, 148, 136, 0.12), 0 12px 14px -6px rgba(13, 148, 136, 0.06);
+
+// 7. Responsive Breakpoints
+$bp-mobile: 480px;
+$bp-tablet: 768px;
+$bp-desktop: 1024px;
+$bp-wide: 1280px;
+$bp-ultra: 1536px;
+
+// 8. Z-Index Stack
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
