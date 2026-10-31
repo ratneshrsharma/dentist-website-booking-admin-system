@@ -81,6 +81,19 @@
 - **Blockers / Warnings:** None. Ready for Hostinger sub-domain deployment when user desires.
 - **Next Immediate Action:** Present live links and Vercel project management details to user.
 
+## [2026-10-31 20:00] — Persona: Architect Agent (Priority Handover)
+- **Task:** User Priority Instruction — Appointment Request WhatsApp & Email Copies.
+- **Action Taken:**
+  - Persisted in primary agent memory (`MEMORY.md` and `next-priority-appointment-notifications.md`).
+  - Recorded user directive: *"We will do it tomorrow, keep it in reminder. When I ask some update, ask me for this first."*
+  - Identified scope:
+    1. Add **"WhatsApp"** to contact method selector in Step 05 ("How would you like to be contacted?" alongside "By phone" and "By email").
+    2. Deliver full copy of appointment request details to both **Clinic** and **Patient/User** via **Email** and **WhatsApp**.
+    3. Add 1-click WhatsApp copy/sharing to the confirmation screen.
+- **Current State:** Session paused per user request.
+- **CRITICAL RULE FOR NEXT SESSION:** When the user returns and asks for an update, **ask them about this task first** before taking any other action.
+
+
 
 
 
