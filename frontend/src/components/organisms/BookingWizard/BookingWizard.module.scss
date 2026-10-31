@@ -1,0 +1,823 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $z-modal-backdrop;
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-4;
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modalContainer {
+  width: 100%;
+  max-width: 820px;
+  max-height: 90vh;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  box-shadow: $shadow-xl;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modalHeader {
+  @include flex-between;
+  padding: $spacing-5 $spacing-6;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
+
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+
+  h3 {
+    font-family: var(--font-family-heading);
+    font-size: $font-size-base;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.6875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+.iconCircle {
+  width: 40px;
+  height: 40px;
+  border-radius: $radius-xl;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeBtn {
+  color: var(--color-text-muted);
+  padding: $spacing-2;
+  border-radius: $radius-md;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--color-text-main);
+    background-color: var(--color-surface-muted);
+  }
+}
+
+/* Stepper */
+.stepperBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-3 $spacing-6;
+  background-color: var(--color-surface-muted);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stepItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+
+  &.active {
+    opacity: 1;
+
+    .stepCircle {
+      background-color: var(--color-primary);
+      color: #FFFFFF;
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+    }
+
+    .stepLabel {
+      font-weight: $font-weight-bold;
+      color: var(--color-text-main);
+    }
+  }
+
+  &.completed {
+    opacity: 0.9;
+
+    .stepCircle {
+      background-color: #10B981;
+      color: #FFFFFF;
+    }
+  }
+}
+
+.stepCircle {
+  width: 24px;
+  height: 24px;
+  border-radius: $radius-full;
+  background-color: var(--color-border);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: $font-weight-bold;
+}
+
+.stepLabel {
+  font-size: $font-size-xs;
+  color: var(--color-text-muted);
+
+  @include mobile {
+    display: none;
+  }
+}
+
+/* Error Banner */
+.errorBanner {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-3 $spacing-6;
+  background-color: rgba(220, 38, 38, 0.08);
+  color: #DC2626;
+  font-size: $font-size-xs;
+  border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+}
+
+/* Modal Body */
+.modalBody {
+  padding: $spacing-6;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.sectionHeader {
+  margin-bottom: $spacing-5;
+
+  h4 {
+    font-family: var(--font-family-heading);
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin-bottom: $spacing-1;
+  }
+
+  p {
+    font-size: $font-size-xs;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+.fieldGroup {
+  margin-bottom: $spacing-5;
+}
+
+.fieldLabel {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-main);
+  margin-bottom: $spacing-2;
+}
+
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-3;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+.selectCard {
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  border-radius: $radius-xl;
+  padding: $spacing-4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+}
+
+.cardHeader {
+  @include flex-between;
+  margin-bottom: $spacing-1;
+
+  strong {
+    font-size: $font-size-xs;
+    color: var(--color-text-main);
+  }
+}
+
+.cardSubtext {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  margin-bottom: $spacing-2;
+}
+
+.phonePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6875rem;
+  color: var(--color-primary);
+}
+
+.serviceGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-3;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.serviceCard {
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  padding: $spacing-4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+}
+
+.serviceCardTop {
+  @include flex-between;
+  margin-bottom: $spacing-1;
+}
+
+.serviceName {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-main);
+}
+
+.servicePrice {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: var(--color-primary);
+}
+
+.serviceDescription {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  line-height: 1.4;
+  margin-bottom: $spacing-2;
+}
+
+.serviceMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+}
+
+.durationPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+}
+
+/* Step 2 Doctors & Slots */
+.doctorGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-3;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+.doctorCard {
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  padding: $spacing-3;
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+  }
+
+  &.selected {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+    box-shadow: 0 0 0 2px var(--color-primary);
+  }
+}
+
+.doctorAvatar {
+  width: 44px;
+  height: 44px;
+  border-radius: $radius-full;
+  background-color: var(--color-surface-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-muted);
+}
+
+.doctorInfo {
+  display: flex;
+  flex-direction: column;
+
+  strong {
+    font-size: $font-size-xs;
+    color: var(--color-text-main);
+  }
+
+  .specialization {
+    font-size: 0.6875rem;
+    color: var(--color-primary);
+    font-weight: $font-weight-medium;
+  }
+
+  .experience {
+    font-size: 0.625rem;
+    color: var(--color-text-muted);
+  }
+}
+
+.slotSection {
+  display: grid;
+  grid-template-columns: 1fr 1.8fr;
+  gap: $spacing-5;
+  margin-top: $spacing-4;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dateInput {
+  width: 100%;
+  padding: $spacing-3;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  background-color: var(--color-surface);
+  color: var(--color-text-main);
+  font-family: var(--font-family-sans);
+  font-size: $font-size-xs;
+}
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $spacing-2;
+
+  @include mobile {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.slotPill {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-2;
+  border-radius: $radius-lg;
+  border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  span {
+    font-size: $font-size-xs;
+    font-weight: $font-weight-semibold;
+    color: var(--color-text-main);
+  }
+
+  .chairCount {
+    font-size: 0.5625rem;
+    color: #10B981;
+  }
+
+  .bookedTag {
+    font-size: 0.5625rem;
+    color: #DC2626;
+  }
+
+  &:hover:not(:disabled) {
+    border-color: var(--color-primary);
+  }
+
+  &.selectedSlot {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+
+    span {
+      color: #FFFFFF;
+    }
+
+    .chairCount {
+      color: #CCFBF1;
+    }
+  }
+
+  &.slotDisabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background-color: var(--color-surface-muted);
+  }
+}
+
+.loadingSlots {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  color: var(--color-text-muted);
+  font-size: $font-size-xs;
+  padding: $spacing-4 0;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Step 3 Forms */
+.formRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-4;
+  margin-bottom: $spacing-3;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.formCol {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+
+  label {
+    font-size: 0.6875rem;
+    font-weight: $font-weight-semibold;
+    color: var(--color-text-main);
+  }
+
+  input {
+    padding: $spacing-2 $spacing-3;
+    border-radius: $radius-md;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-main);
+    font-size: $font-size-xs;
+  }
+}
+
+.formRowSingle {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+  margin-bottom: $spacing-4;
+
+  label {
+    font-size: 0.6875rem;
+    font-weight: $font-weight-semibold;
+    color: var(--color-text-main);
+  }
+
+  textarea {
+    padding: $spacing-2 $spacing-3;
+    border-radius: $radius-md;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-surface);
+    color: var(--color-text-main);
+    font-size: $font-size-xs;
+    font-family: var(--font-family-sans);
+  }
+}
+
+.painSliderBox {
+  background-color: var(--color-surface-muted);
+  padding: $spacing-4;
+  border-radius: $radius-xl;
+  border: 1px solid var(--color-border);
+  margin-bottom: $spacing-4;
+}
+
+.sliderHeader {
+  @include flex-between;
+  margin-bottom: $spacing-2;
+
+  label {
+    font-size: 0.6875rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+  }
+}
+
+.painBadge {
+  font-size: 0.6875rem;
+  font-weight: $font-weight-bold;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+
+  &.painHigh {
+    background-color: rgba(220, 38, 38, 0.15);
+    color: #DC2626;
+  }
+}
+
+.rangeInput {
+  width: 100%;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+}
+
+.sliderLabels {
+  @include flex-between;
+  font-size: 0.5625rem;
+  color: var(--color-text-muted);
+  margin-top: 4px;
+}
+
+.conditionSection {
+  margin-bottom: $spacing-4;
+}
+
+.checkboxGroup {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-2;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkLabel {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: $font-size-xs;
+  color: var(--color-text-main);
+  cursor: pointer;
+
+  input {
+    accent-color: var(--color-primary);
+  }
+}
+
+/* Step 4 Dropzone */
+.dropzoneContainer {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-8;
+  border: 2px dashed var(--color-border);
+  border-radius: $radius-2xl;
+  background-color: var(--color-surface-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--color-primary);
+    background-color: var(--color-primary-light);
+  }
+}
+
+.uploadIcon {
+  color: var(--color-primary);
+  margin-bottom: $spacing-2;
+}
+
+.dropzoneTitle {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: var(--color-text-main);
+}
+
+.dropzoneSubtitle {
+  font-size: 0.6875rem;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.uploadedFileList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+
+  h5 {
+    font-size: $font-size-xs;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+}
+
+.fileItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-2 $spacing-3;
+  border-radius: $radius-lg;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.fileName {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-main);
+  flex: 1;
+}
+
+.fileSize {
+  font-size: 0.625rem;
+  color: var(--color-text-muted);
+}
+
+.verifiedTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 0.625rem;
+  color: #10B981;
+}
+
+.hipaaNotice {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  padding: $spacing-3;
+  background-color: rgba(13, 148, 136, 0.08);
+  border-radius: $radius-lg;
+  color: var(--color-primary-hover);
+  font-size: 0.6875rem;
+}
+
+/* Step 5 Review & Success */
+.summaryCard {
+  background-color: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.summaryRow {
+  @include flex-between;
+  font-size: $font-size-xs;
+
+  span {
+    color: var(--color-text-muted);
+  }
+
+  strong {
+    color: var(--color-text-main);
+  }
+}
+
+.successScreen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: $spacing-6 0;
+
+  h3 {
+    font-family: var(--font-family-heading);
+    font-size: $font-size-xl;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: $spacing-3 0 $spacing-1;
+  }
+}
+
+.successBadge {
+  width: 72px;
+  height: 72px;
+  border-radius: $radius-full;
+  background-color: rgba(16, 185, 129, 0.15);
+  color: #10B981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.refCode {
+  font-size: $font-size-sm;
+  color: var(--color-text-muted);
+  margin-bottom: $spacing-5;
+
+  strong {
+    color: var(--color-primary);
+  }
+}
+
+.confirmationAlerts {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+  margin: $spacing-5 0;
+  width: 100%;
+}
+
+.alertItem {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  padding: $spacing-3;
+  border-radius: $radius-lg;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-size: $font-size-xs;
+  color: var(--color-text-main);
+}
+
+.successActions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+  margin-top: $spacing-4;
+}
+
+/* Modal Footer */
+.modalFooter {
+  @include flex-between;
+  padding: $spacing-4 $spacing-6;
+  border-top: 1px solid var(--color-border);
+  background-color: var(--color-surface);
+}
