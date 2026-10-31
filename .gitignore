@@ -1,0 +1,74 @@
+# =========================================================================
+# DentaFlow Git Ignore - Dual Monorepo (Laravel + Next.js)
+# =========================================================================
+
+# Dependencies
+/backend/vendor/
+/frontend/node_modules/
+node_modules/
+vendor/
+
+# Environment and Secrets
+.env
+.env.backup
+.env.production
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Laravel Backend Artefacts
+/backend/bootstrap/cache/*
+!/backend/bootstrap/cache/.gitignore
+/backend/storage/*.key
+/backend/storage/app/*
+!/backend/storage/app/.gitignore
+/backend/storage/app/public/*
+!/backend/storage/app/public/.gitignore
+/backend/storage/framework/cache/*
+!/backend/storage/framework/cache/.gitignore
+/backend/storage/framework/sessions/*
+!/backend/storage/framework/sessions/.gitignore
+/backend/storage/framework/testing/*
+!/backend/storage/framework/testing/.gitignore
+/backend/storage/framework/views/*
+!/backend/storage/framework/views/.gitignore
+/backend/storage/logs/*
+!/backend/storage/logs/.gitignore
+/backend/public/hot
+/backend/public/storage
+
+# Next.js Frontend Artefacts
+/frontend/.next/
+/frontend/out/
+/frontend/build/
+.next/
+out/
+build/
+dist/
+*.tsbuildinfo
+next-env.d.ts
+
+# Testing & Coverage
+/backend/.phpunit.result.cache
+/backend/coverage/
+.nyc_output/
+playwright-report/
+test-results/
+
+# Editor & System Files
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
