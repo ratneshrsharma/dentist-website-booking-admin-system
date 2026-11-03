@@ -19,13 +19,12 @@
 ## 🎯 Step-by-Step Priority Deployment Checklist
 
 ### Priority 1: Create Hostinger MySQL Database & 1-Click Import (Estimated: 3 mins)
-1. Log in to **Hostinger hPanel** (`hpanel.hostinger.com`).
+1. Log in to your **Hostinger hPanel** (`hpanel.hostinger.com`).
 2. Navigate to **Databases** → **MySQL Databases**.
-3. Create a new database:
-   - **Database Name:** `u123456789_advanced_dental` (Hostinger auto-prefixes your account ID).
-   - **Database Username:** `u123456789_dental_user`.
-   - **Password:** Generate a strong password (copy and save this).
-4. Click **Enter phpMyAdmin** next to the newly created database.
+3. Confirmed Database Details:
+   - **Database Name:** `u499464314_advanceddental`
+   - **Database Username:** `u499464314_dental_user`
+4. Click **Enter phpMyAdmin** next to `u499464314_advanceddental`.
 5. In phpMyAdmin, click the **Import** tab on the top menu.
 6. Click **Choose File** and select:
    `deployment/database/advanced_dental_clinic.sql`
@@ -80,8 +79,8 @@ You have two fast upload methods:
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
    DB_PORT=3306
-   DB_DATABASE=u123456789_advanced_dental
-   DB_USERNAME=u123456789_dental_user
+   DB_DATABASE=u499464314_advanceddental
+   DB_USERNAME=u499464314_dental_user
    DB_PASSWORD=YourActualHostingerDatabasePassword
 
    SESSION_DRIVER=file
