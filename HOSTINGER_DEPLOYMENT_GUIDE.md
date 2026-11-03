@@ -18,17 +18,26 @@
 
 ## 🎯 Step-by-Step Priority Deployment Checklist
 
-### Priority 1: Create Hostinger MySQL Database & 1-Click Import (Estimated: 3 mins)
-1. Log in to your **Hostinger hPanel** (`hpanel.hostinger.com`).
-2. Navigate to **Databases** → **MySQL Databases**.
-3. Confirmed Database Details:
-   - **Database Name:** `u499464314_advanceddental`
-   - **Database Username:** `u499464314_dental_user`
-4. Click **Enter phpMyAdmin** next to `u499464314_advanceddental`.
-5. In phpMyAdmin, click the **Import** tab on the top menu.
-6. Click **Choose File** and select:
-   `deployment/database/advanced_dental_clinic.sql`
-7. Click **Import** at the bottom.
+### Priority 1: Create Hostinger MySQL Database & 1-Click Import (Estimated: 2 mins)
+Confirmed Database Details:
+- **Database Name:** `u499464314_advanceddental`
+- **Database Username:** `u499464314_dental_user`
+
+You can import the database either via phpMyAdmin or via SSH command line:
+
+#### Option A: 1-Click CLI Import via SSH (Fastest)
+Once connected via SSH on Hostinger:
+```bash
+mysql -u u499464314_dental_user -p u499464314_advanceddental < ~/public_html/demo/advanced-dental-clinic/database/advanced_dental_clinic.sql
+```
+*(Enter your MySQL password when prompted)*
+
+#### Option B: Via Hostinger phpMyAdmin
+1. Log in to your **Hostinger hPanel** (`hpanel.hostinger.com`) → **Databases** → **MySQL Databases**.
+2. Click **Enter phpMyAdmin** next to `u499464314_advanceddental`.
+3. In phpMyAdmin, click the **Import** tab on the top menu.
+4. Click **Choose File** and select `deployment/database/advanced_dental_clinic.sql`.
+5. Click **Import** at the bottom.
    - *Result:* All tables (`clinics`, `users`, `doctor_profiles`, `service_categories`, `cms_treatments`, `theme_settings`, `seo_metadata`, `seo_redirects`) will be created and pre-seeded with American clinical standards and default admin logins.
 
 ---
@@ -42,20 +51,42 @@
 
 ---
 
-### Priority 3: Upload Website & Backend Files (Estimated: 5 mins)
-You have two fast upload methods:
+### Priority 3: Upload Website & Backend Files (Estimated: 3 mins)
+You can deploy using SSH/SCP directly or via Hostinger File Manager:
 
-#### Method A: 1-Click ZIP Upload (Recommended via File Manager)
-1. Run the packaging command locally:
-   ```bash
-   bash deployment/hostinger/package-hostinger.sh
-   ```
-2. Upload the generated `deployment/dist/advanced_dental_clinic_hostinger.zip` to:
+#### Method A: 1-Click SSH & SCP Upload (Fastest)
+Hostinger SSH Credentials:
+- **Host / IP:** `147.93.99.237`
+- **Port:** `65002`
+- **User:** `u499464314`
+- **Connection Command:** `ssh -p 65002 u499464314@147.93.99.237`
+
+**From your local machine (PowerShell or Git Bash in root folder):**
+```bash
+# Upload ZIP package via SCP:
+scp -P 65002 "portfolio/01-Dentist Website +Booking System  + Admin Panle+ Clinik Dashboard/deployment/dist/advanced_dental_clinic_hostinger.zip" u499464314@147.93.99.237:~/
+```
+
+**Then connect via SSH and extract in one go:**
+```bash
+ssh -p 65002 u499464314@147.93.99.237
+```
+Once connected on Hostinger, run:
+```bash
+mkdir -p ~/public_html/demo/advanced-dental-clinic
+unzip -o ~/advanced_dental_clinic_hostinger.zip -d ~/public_html/demo/advanced-dental-clinic/
+rm -f ~/advanced_dental_clinic_hostinger.zip
+chmod -R 755 ~/public_html/demo/advanced-dental-clinic
+chmod -R 775 ~/public_html/demo/advanced-dental-clinic/backend/storage ~/public_html/demo/advanced-dental-clinic/backend/bootstrap/cache
+```
+
+#### Method B: 1-Click ZIP Upload via Hostinger File Manager
+1. Upload the generated `deployment/dist/advanced_dental_clinic_hostinger.zip` to:
    `public_html/demo/advanced-dental-clinic/`
-3. Right-click the `.zip` file in Hostinger File Manager and choose **Extract**.
-4. Ensure the `.htaccess` and `index.html` sit directly inside `public_html/demo/advanced-dental-clinic/`.
+2. Right-click the `.zip` file in Hostinger File Manager and choose **Extract**.
+3. Ensure the `.htaccess` and `index.html` sit directly inside `public_html/demo/advanced-dental-clinic/`.
 
-#### Method B: Git Deployment via Hostinger Git Tool
+#### Method C: Git Deployment via Hostinger Git Tool
 1. In hPanel, navigate to **Advanced** → **Git**.
 2. Repository URL: `https://github.com/ratneshrsharma/dentist-website-booking-admin-system.git`
 3. Branch: `main`
