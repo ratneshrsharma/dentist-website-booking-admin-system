@@ -258,14 +258,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               <ShieldCheck size={14} />
               <span>ADA Accredited</span>
             </div>
-            <Button
-              variant="primary"
-              size="sm"
-              icon={<Calendar size={14} />}
-              onClick={onOpenBooking}
-            >
-              Book Appointment
-            </Button>
+            <div className={styles.desktopBookingBtn}>
+              <Button
+                variant="primary"
+                size="sm"
+                icon={<Calendar size={14} />}
+                onClick={onOpenBooking}
+              >
+                Book Appointment
+              </Button>
+            </div>
 
             {/* Mobile Hamburger Toggle */}
             <button

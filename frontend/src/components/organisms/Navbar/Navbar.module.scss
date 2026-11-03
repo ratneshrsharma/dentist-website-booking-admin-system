@@ -29,6 +29,10 @@
   padding: 0.5rem 0;
   font-size: 1rem;
   color: var(--color-text-muted);
+
+  @include tablet-down {
+    display: none;
+  }
 }
 
 .topBarContainer {
@@ -161,6 +165,10 @@
   font-size: 1rem;
   color: var(--color-text-muted);
   letter-spacing: 0.01em;
+
+  @include mobile {
+    display: none;
+  }
 }
 
 .navLinks {
@@ -501,6 +509,15 @@
   border: 1px solid var(--color-border);
   font-size: 1rem;
   color: var(--color-text-muted);
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.desktopBookingBtn {
+  display: inline-flex;
+  align-items: center;
 
   @include mobile {
     display: none;

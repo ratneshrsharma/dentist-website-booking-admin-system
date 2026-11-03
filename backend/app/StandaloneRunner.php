@@ -243,6 +243,78 @@ class StandaloneRunner
             return $stacks[$matches[1]] ?? '';
         }, $rendered);
 
+        // Render rich mock audit data for SEO and Redirects in standalone mode
+        $sampleSeoAudit = '<div class="list-group-item p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-bold text-dark">/ (Home Page)</span>
+                <span class="badge bg-success-subtle text-success border border-success-subtle">Configured</span>
+            </div>
+            <div class="text-truncate text-secondary mb-1" style="max-width: 280px;">Pain-Free Restorations. Confident Smiles for Life.</div>
+            <div class="d-flex gap-2">
+                <span class="badge bg-light text-muted border">Dentist</span>
+                <span class="badge bg-info-subtle text-info border">Scripts</span>
+            </div>
+        </div>
+        <div class="list-group-item p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-bold text-dark">/treatments/dental-implants</span>
+                <span class="badge bg-success-subtle text-success border border-success-subtle">Configured</span>
+            </div>
+            <div class="text-truncate text-secondary mb-1" style="max-width: 280px;">Dental Implants Overview | Advanced Dental Clinic</div>
+            <div class="d-flex gap-2">
+                <span class="badge bg-light text-muted border">MedicalProcedure</span>
+            </div>
+        </div>
+        <div class="list-group-item p-3">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-bold text-dark">/contact</span>
+                <span class="badge bg-success-subtle text-success border border-success-subtle">Configured</span>
+            </div>
+            <div class="text-truncate text-secondary mb-1" style="max-width: 280px;">Contact & Practice Locations | Advanced Dental Clinic</div>
+            <div class="d-flex gap-2">
+                <span class="badge bg-light text-muted border">MedicalBusiness</span>
+            </div>
+        </div>';
+
+        $sampleRedirects = '<tr>
+            <td class="ps-3 font-monospace text-danger fw-bold">/services/dental-implants</td>
+            <td class="font-monospace text-success fw-bold">/treatments/dental-implants</td>
+            <td><span class="badge bg-success-subtle text-success border border-success-subtle">301 Permanent</span></td>
+            <td><span class="badge bg-light text-dark border">420</span></td>
+            <td class="text-muted">Nov 01, 2026</td>
+            <td class="text-end pe-3">
+                <button type="button" class="btn btn-outline-danger btn-sm py-0 px-2" title="Delete Rule"><i class="bi bi-trash"></i></button>
+            </td>
+        </tr>
+        <tr>
+            <td class="ps-3 font-monospace text-danger fw-bold">/booking-online</td>
+            <td class="font-monospace text-success fw-bold">/book-appointment</td>
+            <td><span class="badge bg-success-subtle text-success border border-success-subtle">301 Permanent</span></td>
+            <td><span class="badge bg-light text-dark border">184</span></td>
+            <td class="text-muted">Nov 02, 2026</td>
+            <td class="text-end pe-3">
+                <button type="button" class="btn btn-outline-danger btn-sm py-0 px-2" title="Delete Rule"><i class="bi bi-trash"></i></button>
+            </td>
+        </tr>
+        <tr>
+            <td class="ps-3 font-monospace text-danger fw-bold">/contact-us.html</td>
+            <td class="font-monospace text-success fw-bold">/contact</td>
+            <td><span class="badge bg-success-subtle text-success border border-success-subtle">301 Permanent</span></td>
+            <td><span class="badge bg-light text-dark border">92</span></td>
+            <td class="text-muted">Nov 03, 2026</td>
+            <td class="text-end pe-3">
+                <button type="button" class="btn btn-outline-danger btn-sm py-0 px-2" title="Delete Rule"><i class="bi bi-trash"></i></button>
+            </td>
+        </tr>';
+
+        $rendered = preg_replace("/@forelse\(\\\$seoList as \\\$seo\).*?@endforelse/s", $sampleSeoAudit, $rendered);
+        $rendered = preg_replace("/@forelse\(\\\$redirects as \\\$rule\).*?@endforelse/s", $sampleRedirects, $rendered);
+
+        // Strip session alert blocks if no active session flash
+        $rendered = preg_replace("/@if\(session\('success'\)\).*?@endif/s", '', $rendered);
+        $rendered = preg_replace("/@if\(session\('error'\)\).*?@endif/s", '', $rendered);
+        $rendered = preg_replace("/@if\(session\('status'\)\).*?@endif/s", '', $rendered);
+
         // Strip remaining Blade directives safely
         $rendered = preg_replace('/@stack\([^\)]+\)/', '', $rendered);
         $rendered = preg_replace('/@push\([^\)]+\)/', '', $rendered);
@@ -250,10 +322,14 @@ class StandaloneRunner
         $rendered = preg_replace('/@extends\([^\)]+\)/', '', $rendered);
         $rendered = preg_replace('/\{\{.*?\}\}/', '', $rendered);
         $rendered = preg_replace('/@csrf/', '', $rendered);
-        $rendered = preg_replace('/@if\(.*?\)/', '', $rendered);
+        $rendered = preg_replace('/@method\([^\)]+\)/', '', $rendered);
+        $rendered = preg_replace('/@if\((?:[^)(]+|\((?:[^)(]+|\([^)(]*\))*\))*\)/', '', $rendered);
         $rendered = preg_replace('/@endif/', '', $rendered);
         $rendered = preg_replace('/@foreach\(.*?\)/', '', $rendered);
         $rendered = preg_replace('/@endforeach/', '', $rendered);
+        $rendered = preg_replace('/@forelse\(.*?\)/', '', $rendered);
+        $rendered = preg_replace('/@empty/', '', $rendered);
+        $rendered = preg_replace('/@endforelse/', '', $rendered);
 
         header('Content-Type: text/html; charset=utf-8');
         echo $rendered;

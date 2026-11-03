@@ -13,6 +13,10 @@
 .mainContent {
   flex: 1;
   padding-top: 100px; /* Offset for fixed topbar + navbar */
+
+  @include tablet-down {
+    padding-top: 76px;
+  }
 }
 
 .container {
