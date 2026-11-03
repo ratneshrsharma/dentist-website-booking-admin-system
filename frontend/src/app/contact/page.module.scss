@@ -1,0 +1,222 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.contactContainer {
+  padding: $spacing-12 0 $spacing-20;
+}
+
+.contentWrap {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-16;
+}
+
+.twoColLayout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-12;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+    gap: $spacing-8;
+  }
+}
+
+.formCard {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-8;
+  box-shadow: $shadow-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+
+  h3 {
+    font-family: var(--font-family-heading);
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+
+  label {
+    font-size: 0.8125rem;
+    font-weight: $font-weight-semibold;
+    color: var(--color-text-main);
+  }
+
+  input,
+  select,
+  textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: $radius-lg;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-background);
+    color: var(--color-text-main);
+    font-size: 0.875rem;
+    font-family: inherit;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 100px;
+  }
+}
+
+.submitBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.85rem;
+  border-radius: $radius-xl;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  color: #FFFFFF;
+  font-weight: $font-weight-bold;
+  font-size: 0.9375rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(13, 148, 136, 0.45);
+  }
+}
+
+.branchList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+.branchCard {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  box-shadow: $shadow-sm;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+
+  h4 {
+    font-size: 1.125rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .branchBadge {
+    font-size: 0.6875rem;
+    font-weight: $font-weight-semibold;
+    padding: 0.15rem 0.5rem;
+    border-radius: $radius-full;
+    background-color: rgba(13, 148, 136, 0.15);
+    color: var(--color-primary);
+  }
+}
+
+.branchInfoRow {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-3;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+
+  svg {
+    color: var(--color-primary);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  a {
+    color: var(--color-text-main);
+    text-decoration: none;
+    font-weight: $font-weight-medium;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+  }
+}
+
+.emergencyBanner {
+  background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(220, 38, 38, 0.02) 100%);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.emergencyText {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-1;
+
+  h4 {
+    color: #DC2626;
+    font-size: 1rem;
+    font-weight: $font-weight-bold;
+    margin: 0;
+  }
+
+  p {
+    color: var(--color-text-muted);
+    font-size: 0.8125rem;
+    margin: 0;
+  }
+}
+
+.emergencyCallBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.25rem;
+  border-radius: $radius-lg;
+  background-color: #DC2626;
+  color: #FFFFFF;
+  font-weight: $font-weight-bold;
+  font-size: 0.875rem;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}

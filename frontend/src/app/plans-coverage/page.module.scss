@@ -1,0 +1,166 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.plansContainer {
+  padding: $spacing-12 0 $spacing-20;
+}
+
+.contentWrap {
+  @include container;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-16;
+}
+
+.pricingGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-8;
+  align-items: stretch;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pricingCard {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-8;
+  box-shadow: $shadow-sm;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &.featured {
+    border-color: var(--color-primary);
+    box-shadow: $shadow-lg;
+    transform: scale(1.02);
+
+    @include tablet-down {
+      transform: none;
+    }
+  }
+
+  .popularBadge {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+    font-size: 0.6875rem;
+    font-weight: $font-weight-bold;
+    padding: 0.25rem 0.75rem;
+    border-radius: $radius-full;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0 0 $spacing-2 0;
+  }
+
+  p {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    margin: 0 0 $spacing-4 0;
+    min-height: 38px;
+  }
+}
+
+.priceDisplay {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: $spacing-6;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: $spacing-6;
+
+  .amount {
+    font-size: 2.5rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    font-family: var(--font-family-heading);
+    line-height: 1;
+  }
+
+  .period {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+}
+
+.featureList {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 $spacing-8 0;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+  flex: 1;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    color: var(--color-text-main);
+
+    svg {
+      color: var(--color-primary);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+  }
+}
+
+.selectPlanBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;
+  border-radius: $radius-xl;
+  background-color: var(--color-surface-muted);
+  color: var(--color-text-main);
+  text-decoration: none;
+  font-weight: $font-weight-semibold;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+
+  &:hover,
+  .featured & {
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+  }
+}
+
+.insuranceSection {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-8;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+
+  h3 {
+    font-family: var(--font-family-heading);
+    font-size: 1.25rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}

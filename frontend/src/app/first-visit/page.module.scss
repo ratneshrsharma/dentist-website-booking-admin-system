@@ -1,0 +1,114 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.firstVisitContainer {
+  padding: $spacing-12 0 $spacing-20;
+}
+
+.contentWrap {
+  @include container;
+  max-width: 860px;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-12;
+}
+
+.introCard {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-8;
+  box-shadow: $shadow-sm;
+
+  h2 {
+    font-family: var(--font-family-heading);
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0 0 $spacing-3 0;
+  }
+
+  p {
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+.stepsTimeline {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-6;
+}
+
+.stepRow {
+  display: flex;
+  align-items: flex-start;
+  gap: $spacing-4;
+
+  .stepCircle {
+    width: 44px;
+    height: 44px;
+    border-radius: $radius-full;
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: $font-weight-bold;
+    font-size: 0.9375rem;
+    flex-shrink: 0;
+  }
+
+  .stepCard {
+    flex: 1;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: $radius-xl;
+    padding: $spacing-5;
+    box-shadow: $shadow-sm;
+
+    h3 {
+      font-size: 1.0625rem;
+      font-weight: $font-weight-bold;
+      color: var(--color-text-main);
+      margin: 0 0 $spacing-2 0;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: var(--color-text-muted);
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+.checklistGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-4;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: $spacing-4;
+  border-radius: $radius-lg;
+  background-color: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  font-size: 0.8125rem;
+  font-weight: $font-weight-medium;
+  color: var(--color-text-main);
+
+  svg {
+    color: var(--color-primary);
+    flex-shrink: 0;
+  }
+}

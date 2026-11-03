@@ -1,0 +1,96 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.faqContainer {
+  padding: $spacing-12 0 $spacing-20;
+}
+
+.contentWrap {
+  @include container;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-12;
+}
+
+.categoryBlock {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+
+  h2 {
+    font-family: var(--font-family-heading);
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-primary);
+    margin: 0;
+    border-bottom: 1px solid var(--color-border);
+    padding-bottom: $spacing-3;
+  }
+}
+
+.faqItem {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  padding: $spacing-6;
+  box-shadow: $shadow-sm;
+
+  h3 {
+    font-size: 1.0625rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0 0 $spacing-2 0;
+  }
+
+  p {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+}
+
+.ctaBox {
+  background-color: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-2xl;
+  padding: $spacing-8;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-4;
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+
+  p {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    max-width: 500px;
+    margin: 0;
+  }
+
+  .ctaBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: $radius-xl;
+    background-color: var(--color-primary);
+    color: #FFFFFF;
+    text-decoration: none;
+    font-weight: $font-weight-bold;
+    font-size: 0.875rem;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
