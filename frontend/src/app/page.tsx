@@ -10,7 +10,6 @@ import { Button } from '@/components/ui/Button/Button';
 import { Badge } from '@/components/ui/Badge/Badge';
 import {
   Calendar,
-  Sparkles,
   Star,
   ArrowRight,
   CheckCircle2,
@@ -49,24 +48,8 @@ export default function HomePage() {
         <section className={styles.heroSection}>
           <div className={styles.heroContainer}>
             <div className={styles.heroContent}>
-              <div className={styles.badgeRow}>
-                <span className={styles.heroEyebrow}>
-                  <Sparkles size={14} />
-                  Precision Digital Dentistry & Prosthodontics
-                </span>
-                <div className={styles.ratingSnippet}>
-                  <div className={styles.stars}>
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={13} fill="#F59E0B" color="#F59E0B" />
-                    ))}
-                  </div>
-                  <span><strong>4.98/5</strong> (2,450+ Patient Reviews)</span>
-                </div>
-              </div>
-
               <h1 className={styles.heroHeadline}>
-                Pain-Free Restorations.
-                <span className={styles.gradientText}> Confident Smiles</span> for Life.
+                Pain-Free Restorations. Confident Smiles for Life.
               </h1>
 
               <p className={styles.heroSubheadline}>
@@ -95,6 +78,11 @@ export default function HomePage() {
               {/* Authority & Trust Metrics */}
               <div className={styles.trustGrid}>
                 <div className={styles.trustItem}>
+                  <strong>4.98 / 5 Stars</strong>
+                  <span>2,450+ Verified Reviews</span>
+                </div>
+                <div className={styles.trustDivider} />
+                <div className={styles.trustItem}>
                   <strong>15,000+</strong>
                   <span>Successful Implants & Makeovers</span>
                 </div>
@@ -106,7 +94,7 @@ export default function HomePage() {
                 <div className={styles.trustDivider} />
                 <div className={styles.trustItem}>
                   <strong>3 Clinics</strong>
-                  <span>Full-Service Digital Diagnostic Labs</span>
+                  <span>Full Digital Diagnostic Labs</span>
                 </div>
               </div>
             </div>
@@ -397,7 +385,7 @@ export default function HomePage() {
                   role: 'Chief Orthodontist & Dentofacial Orthopedics',
                   school: 'Pacific University School of Dentistry',
                   exp: '12+ Years Experience',
-                  image: 'https://images.unsplash.com/photo-1594824813576-2916b9b1e959?auto=format&fit=crop&w=600&q=80',
+                  image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80',
                   skills: ['Invisalign Clear Aligners', 'Interceptive Orthodontics', 'Bite Alignment'],
                 },
                 {
@@ -485,8 +473,8 @@ export default function HomePage() {
 
             <div className={styles.pricingCardsGrid}>
               <div className={styles.pricingCard}>
-                <span className={styles.planBadge}>Individual Care</span>
                 <h3>Essential Dental Care</h3>
+                <span className={styles.planBadge}>Individual Care</span>
                 <div className={styles.priceRow}>
                   <span className={styles.currency}>$</span>
                   <strong className={styles.amount}>{billingPeriod === 'monthly' ? '39' : '33'}</strong>
@@ -506,8 +494,8 @@ export default function HomePage() {
 
               <div className={`${styles.pricingCard} ${styles.popularCard}`}>
                 <div className={styles.popularRibbon}>Most Popular Plan</div>
-                <span className={styles.planBadge}>Family & Cosmetic</span>
                 <h3>Complete VIP Care</h3>
+                <span className={styles.planBadge}>Family & Cosmetic</span>
                 <div className={styles.priceRow}>
                   <span className={styles.currency}>$</span>
                   <strong className={styles.amount}>{billingPeriod === 'monthly' ? '79' : '67'}</strong>

@@ -22,7 +22,6 @@
   --color-text-light: #{$modern-text-light};
   --font-family-sans: #{$font-family-sans};
   --font-family-display: #{$font-family-sans};
-  --hero-gradient: linear-gradient(135deg, rgba(13, 148, 136, 0.08) 0%, rgba(248, 250, 252, 0) 100%);
 }
 
 [data-theme='classic'] {
@@ -41,7 +40,6 @@
   --color-text-light: #A8A29E;
   --font-family-sans: #{$font-family-sans};
   --font-family-display: #{$font-family-serif};
-  --hero-gradient: linear-gradient(135deg, rgba(30, 58, 138, 0.08) 0%, rgba(255, 253, 248, 0) 100%);
 }
 
 [data-theme='luxury'] {
@@ -60,7 +58,6 @@
   --color-text-light: #71717A;
   --font-family-sans: #{$font-family-sans};
   --font-family-display: #{$font-family-serif};
-  --hero-gradient: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.15) 0%, rgba(9, 9, 11, 0) 70%);
 }
 
 // Global Reset
@@ -83,7 +80,7 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text-main);
   line-height: 1.5;
-  min-height: 100vh;
+  min-height: 100dvh;
   transition: background-color 0.3s ease, color 0.3s ease;
   overflow-x: hidden;
 }

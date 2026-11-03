@@ -4,7 +4,7 @@
 .pageWrapper {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  min-height: 100dvh;
   background-color: var(--color-background);
   color: var(--color-text-main);
   overflow-x: hidden;
@@ -135,21 +135,17 @@
 
 .heroHeadline {
   font-family: var(--font-family-heading);
-  font-size: $font-size-4xl;
+  font-size: clamp(2.5rem, 4.2vw, 3.5rem);
   font-weight: 800;
   color: var(--color-text-main);
-  line-height: 1.15;
+  line-height: 1.12;
   letter-spacing: -0.03em;
+  margin: 0;
 
   @include mobile {
-    font-size: 2.125rem;
+    font-size: 1.625rem;
+    line-height: 1.25;
   }
-}
-
-.gradientText {
-  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
 }
 
 .heroSubheadline {
@@ -157,6 +153,11 @@
   color: var(--color-text-muted);
   line-height: 1.6;
   margin: 0;
+
+  @include mobile {
+    font-size: 1rem;
+    padding-right: $spacing-2;
+  }
 }
 
 .heroCtaGroup {
@@ -216,14 +217,14 @@
   border: 1px solid var(--color-border);
   border-radius: $radius-2xl;
   padding: $spacing-6;
-  box-shadow: $shadow-xl;
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    transform: translateY(-4px);
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
   }
 }
 
@@ -234,7 +235,7 @@
 .chairStatus {
   font-size: 1rem;
   font-weight: $font-weight-semibold;
-  color: #10B981;
+  color: #047857;
 }
 
 .doctorGraphic {
@@ -332,12 +333,10 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: $shadow-sm;
-  transition: all 0.25s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
     border-color: var(--color-primary);
   }
 
@@ -483,7 +482,6 @@
   height: 340px;
   border-radius: $radius-2xl;
   overflow: hidden;
-  box-shadow: $shadow-xl;
   border: 1px solid var(--color-border);
 }
 
@@ -631,12 +629,11 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-3;
-  box-shadow: $shadow-sm;
-  transition: transform 0.25s ease;
+  transition: border-color 0.2s ease, transform 0.2s ease;
 
   &:hover {
-    transform: translateY(-4px);
-    box-shadow: $shadow-lg;
+    transform: translateY(-2px);
+    border-color: var(--color-primary);
   }
 
   h3 {
@@ -748,7 +745,6 @@
   display: flex;
   flex-direction: column;
   gap: $spacing-4;
-  box-shadow: $shadow-md;
 
   h3 {
     font-size: $font-size-xl;
@@ -760,7 +756,6 @@
 
 .popularCard {
   border: 2px solid var(--color-primary);
-  box-shadow: $shadow-xl;
 }
 
 .popularRibbon {
@@ -861,7 +856,6 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  box-shadow: $shadow-sm;
 }
 
 .reviewStars {

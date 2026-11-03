@@ -138,9 +138,9 @@ export const MOCK_DOCTORS: Doctor[] = [
     years_experience: 12,
     biography: 'Dr. Maya Lin is a recognized provider of discreet clear aligner systems and accelerated digital orthodontics for adults and adolescents.',
     consultation_fee: 120.00,
-    calendar_color: '#6366F1',
+    calendar_color: '#0F766E',
     is_accepting_new_patients: true,
-    avatar_url: 'https://images.unsplash.com/photo-1594824813576-2916b9b1e959?auto=format&fit=crop&w=600&q=80',
+    avatar_url: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80',
   },
   {
     id: 3,
@@ -346,7 +346,7 @@ export async function fetchAvailableSlots(
     ];
     return times.map((t, idx) => ({
       time: t,
-      display: t.startsWith('09') || t.startsWith('10') || t.startsWith('11') ? `${t} AM` : `${parseInt(t.slice(0, 2)) - 12}:${t.slice(3)} PM`,
+      display: parseInt(t.slice(0, 2), 10) < 12 ? `${t} AM` : `${parseInt(t.slice(0, 2), 10) - 12}:${t.slice(3)} PM`,
       available: idx !== 2 && idx !== 7, // simulate 2 booked slots
       remaining_chairs: idx === 2 || idx === 7 ? 0 : 2,
     }));

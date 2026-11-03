@@ -8,7 +8,6 @@ const nextConfig: NextConfig = {
   ...(isProduction ? { output: 'export' } : {}),
   trailingSlash: true,
   basePath: '/advanced-dental-clinic',
-  assetPrefix: '/advanced-dental-clinic',
   images: {
     unoptimized: true,
   },
