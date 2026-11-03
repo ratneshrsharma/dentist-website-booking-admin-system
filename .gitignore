@@ -56,6 +56,10 @@ next-env.d.ts
 playwright-report/
 test-results/
 
+# Archives & Exports
+*.zip
+*.tar.gz
+
 # Editor & System Files
 .idea/
 .vscode/
