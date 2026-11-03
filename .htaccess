@@ -12,32 +12,31 @@
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # 2. Route API requests (/api/*) directly to Laravel Public Index
-    RewriteRule ^api/(.*)$ backend/public/index.php [L,QSA]
+    RewriteRule ^api(/.*)?$ backend/public/index.php [L,QSA]
 
     # 3. Route AdminLTE Blade Admin requests (/admin/*) to Laravel Public Index
-    RewriteRule ^admin/(.*)$ backend/public/index.php [L,QSA]
+    RewriteRule ^admin(/.*)?$ backend/public/index.php [L,QSA]
 
     # 4. Route Storage Symlink (/storage/*) to Laravel Public Storage
     RewriteRule ^storage/(.*)$ backend/public/storage/$1 [L]
 
-    # 5. Serve Next.js Multi-Page Static Export Files (from frontend/out)
-    # Check if direct file exists in frontend/out
-    RewriteCond %{DOCUMENT_ROOT}/frontend/out/$1 -f
-    RewriteRule ^(.*)$ frontend/out/$1 [L]
+    # 5. Serve Static Files directly if they exist on disk (_next, images, css, js)
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
 
-    # Check if directory with index.html exists in frontend/out (trailing slash or clean URL)
-    RewriteCond %{DOCUMENT_ROOT}/frontend/out/$1/index.html -f
-    RewriteRule ^(.*)/?$ frontend/out/$1/index.html [L]
+    # 6. Serve directory index.html if it exists
+    RewriteCond %{REQUEST_FILENAME}/index.html -f
+    RewriteRule ^(.*)/?$ $1/index.html [L]
 
-    # Check if HTML file exists with .html extension
-    RewriteCond %{DOCUMENT_ROOT}/frontend/out/$1.html -f
-    RewriteRule ^(.*)$ frontend/out/$1.html [L]
+    # 7. Serve HTML file if clean URL requested (e.g. /about-us -> /about-us.html)
+    RewriteCond %{REQUEST_FILENAME}.html -f
+    RewriteRule ^(.*)$ $1.html [L]
 
-    # 6. Fallback for Patient-Facing Next.js Portal (Home / 404)
+    # 8. Fallback for Patient-Facing Next.js Portal (Home / 404)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} !^/(api|admin|backend|storage)
-    RewriteRule ^(.*)$ frontend/out/index.html [L]
+    RewriteCond %{REQUEST_URI} !^.*(api|admin|backend|storage)
+    RewriteRule ^(.*)$ index.html [L]
 </IfModule>
 
 # ==============================================================================

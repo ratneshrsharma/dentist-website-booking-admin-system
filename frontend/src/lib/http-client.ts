@@ -12,7 +12,7 @@ import _ from 'lodash';
 
 // Primary API Base URL
 export const API_BASE_URL: string =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+  process.env.NEXT_PUBLIC_API_URL || '/advanced-dental-clinic/api/v1';
 
 // Cookie keys
 export const TOKEN_COOKIE_KEY = 'adc_auth_token';

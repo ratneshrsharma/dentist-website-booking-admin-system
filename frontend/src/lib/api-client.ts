@@ -3,7 +3,7 @@ import type { ServiceCategory } from '@/types/service.types';
 import type { Doctor } from '@/types/doctor.types';
 import type { TimeSlot, BookingFormData, BookingResponse } from '@/types/booking.types';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '/advanced-dental-clinic/api/v1';
 
 // Fallback Mock Data for Standalone Static Deployment / Offline Previews
 export const MOCK_CLINICS: Clinic[] = [
