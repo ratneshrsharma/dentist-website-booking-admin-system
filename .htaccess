@@ -1,0 +1,100 @@
+# ==============================================================================
+# Advanced Dental Clinic Production Shared Hosting Configuration (Hostinger / LiteSpeed / Apache)
+# Subdirectory Target: https://demo.ratneshsharma.com/advanced-dental-clinic/
+# Dual-Surface: Next.js 15 Multi-Page Static Frontend + Laravel 11 API & AdminLTE 4 Blade
+# ==============================================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1. Force HTTPS
+    RewriteCond %{HTTPS} off
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # 2. Route API requests (/api/*) directly to Laravel Public Index
+    RewriteRule ^api/(.*)$ backend/public/index.php [L,QSA]
+
+    # 3. Route AdminLTE Blade Admin requests (/admin/*) to Laravel Public Index
+    RewriteRule ^admin/(.*)$ backend/public/index.php [L,QSA]
+
+    # 4. Route Storage Symlink (/storage/*) to Laravel Public Storage
+    RewriteRule ^storage/(.*)$ backend/public/storage/$1 [L]
+
+    # 5. Serve Next.js Multi-Page Static Export Files (from frontend/out)
+    # Check if direct file exists in frontend/out
+    RewriteCond %{DOCUMENT_ROOT}/frontend/out/$1 -f
+    RewriteRule ^(.*)$ frontend/out/$1 [L]
+
+    # Check if directory with index.html exists in frontend/out (trailing slash or clean URL)
+    RewriteCond %{DOCUMENT_ROOT}/frontend/out/$1/index.html -f
+    RewriteRule ^(.*)/?$ frontend/out/$1/index.html [L]
+
+    # Check if HTML file exists with .html extension
+    RewriteCond %{DOCUMENT_ROOT}/frontend/out/$1.html -f
+    RewriteRule ^(.*)$ frontend/out/$1.html [L]
+
+    # 6. Fallback for Patient-Facing Next.js Portal (Home / 404)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/(api|admin|backend|storage)
+    RewriteRule ^(.*)$ frontend/out/index.html [L]
+</IfModule>
+
+# ==============================================================================
+# OWASP TOP 10 SECURITY HARDENING & IMMUNITY HEADERS
+# ==============================================================================
+<IfModule mod_headers.c>
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+    Header unset X-Powered-By
+</IfModule>
+
+# ==============================================================================
+# PREVENT DIRECTORY BROWSING & PROTECT SENSITIVE FILES
+# ==============================================================================
+Options -Indexes
+
+<FilesMatch "(^\.env|\.git|\.lock$|\.json$|\.xml$|\.yml$|\.yaml$|\.md$|\.log$)">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+RedirectMatch 404 ^/(backend/app|backend/bootstrap|backend/config|backend/database|backend/storage/logs)/.*$
+
+# ==============================================================================
+# GZIP & BROTLI HIGH-PERFORMANCE COMPRESSION
+# ==============================================================================
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/plain
+    AddOutputFilterByType DEFLATE text/html
+    AddOutputFilterByType DEFLATE text/xml
+    AddOutputFilterByType DEFLATE text/css
+    AddOutputFilterByType DEFLATE text/javascript
+    AddOutputFilterByType DEFLATE application/xml
+    AddOutputFilterByType DEFLATE application/xhtml+xml
+    AddOutputFilterByType DEFLATE application/rss+xml
+    AddOutputFilterByType DEFLATE application/javascript
+    AddOutputFilterByType DEFLATE application/x-javascript
+    AddOutputFilterByType DEFLATE application/json
+    AddOutputFilterByType DEFLATE image/svg+xml
+</IfModule>
+
+# ==============================================================================
+# BROWSER CACHING FOR STATIC ASSETS (Lighthouse 100 Performance)
+# ==============================================================================
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresDefault "access plus 1 month"
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>

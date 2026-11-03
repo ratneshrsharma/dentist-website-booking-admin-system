@@ -267,6 +267,24 @@
 
                         <li class="nav-header text-uppercase text-secondary small fw-bold px-3 py-2 mt-2">Website & System</li>
                         <li class="nav-item">
+                            <a href="{{ url('/admin/theme-customizer') }}" class="nav-link @if(request()->is('admin/theme-customizer*')) active @endif">
+                                <i class="nav-icon bi bi-palette2"></i>
+                                <p>Theme Customizer</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/admin/seo-manager') }}" class="nav-link @if(request()->is('admin/seo-manager*')) active @endif">
+                                <i class="nav-icon bi bi-search"></i>
+                                <p>Yoast SEO & Scripts</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url('/admin/seo-redirects') }}" class="nav-link @if(request()->is('admin/seo-redirects*')) active @endif">
+                                <i class="nav-icon bi bi-signpost-split"></i>
+                                <p>URL 301 Redirects</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
                             <a href="{{ url('/admin/cms') }}" class="nav-link @if(request()->is('admin/cms*')) active @endif">
                                 <i class="nav-icon bi bi-globe"></i>
                                 <p>Website CMS Manager</p>
