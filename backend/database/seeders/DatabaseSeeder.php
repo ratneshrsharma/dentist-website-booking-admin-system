@@ -16,6 +16,7 @@ final class DatabaseSeeder extends Seeder
             ServicesTableSeeder::class,
             DoctorSchedulesTableSeeder::class,
             InventoryItemsTableSeeder::class,
+            CmsAndThemeSeeder::class,
         ]);
     }
 }

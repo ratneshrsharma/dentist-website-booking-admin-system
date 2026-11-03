@@ -5,8 +5,11 @@ declare(strict_types=1);
 use App\Http\Controllers\Api\V1\AppointmentApiController;
 use App\Http\Controllers\Api\V1\AvailabilityApiController;
 use App\Http\Controllers\Api\V1\ClinicApiController;
+use App\Http\Controllers\Api\V1\CmsApiController;
 use App\Http\Controllers\Api\V1\DoctorApiController;
+use App\Http\Controllers\Api\V1\SeoApiController;
 use App\Http\Controllers\Api\V1\ServiceApiController;
+use App\Http\Controllers\Api\V1\ThemeApiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,4 +50,17 @@ Route::prefix('v1')->middleware(['throttle:60,1'])->group(function (): void {
     Route::post('/appointments/book', [AppointmentApiController::class, 'store'])
         ->middleware('throttle:10,1');
     Route::get('/appointments/lookup/{reference}', [AppointmentApiController::class, 'lookup']);
+
+    // 6. Headless CMS & Multi-Page Navigation API
+    Route::get('/cms/navigation', [CmsApiController::class, 'navigation']);
+    Route::get('/cms/treatments', [CmsApiController::class, 'treatments']);
+    Route::get('/cms/treatments/{slug}', [CmsApiController::class, 'treatmentBySlug']);
+    Route::get('/cms/pages/{slug}', [CmsApiController::class, 'pageByKey']);
+
+    // 7. Visual Theme Customizer API
+    Route::get('/theme/settings', [ThemeApiController::class, 'settings']);
+
+    // 8. Yoast-Style SEO & URL Redirects Engine
+    Route::get('/seo/metadata/{slug}', [SeoApiController::class, 'metadata']);
+    Route::get('/seo/redirects', [SeoApiController::class, 'redirects']);
 });
