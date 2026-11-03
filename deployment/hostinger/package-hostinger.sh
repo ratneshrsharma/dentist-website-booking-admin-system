@@ -49,7 +49,7 @@ mkdir -p "$DIST_DIR/bundle/backend/storage/logs"
 
 echo "=== [3/4] Creating Production Deployment ZIP Archive ==="
 cd "$DIST_DIR/bundle"
-zip -r "$BUILD_ZIP" ./* .htaccess
+tar -a -c -f "$BUILD_ZIP" * .htaccess
 
 echo "=== [4/4] Package Created Successfully! ==="
 echo "Archive location: $BUILD_ZIP"
