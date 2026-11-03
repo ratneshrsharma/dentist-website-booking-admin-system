@@ -92,9 +92,9 @@
   }
 
   span {
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: var(--color-text-main);
-    line-height: 1.4;
+    line-height: 1.5;
     font-weight: $font-weight-medium;
   }
 }
@@ -140,7 +140,7 @@
   align-items: center;
   justify-content: center;
   font-weight: $font-weight-bold;
-  font-size: 0.875rem;
+  font-size: 1rem;
   flex-shrink: 0;
   z-index: 1;
   box-shadow: 0 4px 10px rgba(13, 148, 136, 0.3);
@@ -155,17 +155,17 @@
   box-shadow: $shadow-sm;
 
   h4 {
-    font-size: 1rem;
+    font-size: 1.0625rem;
     font-weight: $font-weight-bold;
     color: var(--color-text-main);
     margin: 0 0 $spacing-2 0;
   }
 
   p {
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 }
 
@@ -183,17 +183,17 @@
   border: 1px solid var(--color-border);
 
   h4 {
-    font-size: 0.9375rem;
+    font-size: 1.0625rem;
     font-weight: $font-weight-bold;
     color: var(--color-text-main);
     margin: 0 0 $spacing-2 0;
   }
 
   p {
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0;
-    line-height: 1.5;
+    line-height: 1.6;
   }
 }
 
@@ -242,14 +242,14 @@
   flex-direction: column;
 
   small {
-    font-size: 0.6875rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
   }
 
   strong {
-    font-size: 0.9375rem;
+    font-size: 1.0625rem;
     color: var(--color-text-main);
   }
 }
@@ -262,10 +262,10 @@
   width: 100%;
   padding: 0.85rem;
   border-radius: $radius-xl;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  background-color: var(--color-primary);
   color: #FFFFFF;
   font-weight: $font-weight-bold;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
@@ -273,6 +273,7 @@
 
   &:hover {
     transform: translateY(-2px);
+    background-color: var(--color-primary-hover);
     box-shadow: 0 6px 20px rgba(13, 148, 136, 0.45);
   }
 }
@@ -288,7 +289,7 @@
   background-color: #25D366;
   color: #FFFFFF;
   font-weight: $font-weight-semibold;
-  font-size: 0.875rem;
+  font-size: 1rem;
   text-decoration: none;
   transition: opacity 0.2s ease;
 
@@ -302,7 +303,7 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  font-size: 0.8125rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
 
   a {

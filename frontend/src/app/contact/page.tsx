@@ -81,7 +81,7 @@ export default function ContactPage() {
                 <div style={{ padding: '2rem 1rem', textAlign: 'center' }}>
                   <CheckCircle2 size={48} color="#0D9488" style={{ margin: '0 auto 1rem' }} />
                   <h4>Inquiry Successfully Received!</h4>
-                  <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem' }}>
+                  <p style={{ color: 'var(--color-text-muted)', fontSize: '1rem' }}>
                     Thank you, {formData.fullName}. Our patient coordinator has been notified and will call you at {formData.phone} shortly.
                   </p>
                 </div>

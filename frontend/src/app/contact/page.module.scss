@@ -42,7 +42,7 @@
   }
 
   p {
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0;
   }
@@ -54,7 +54,7 @@
   gap: 0.35rem;
 
   label {
-    font-size: 0.8125rem;
+    font-size: 1rem;
     font-weight: $font-weight-semibold;
     color: var(--color-text-main);
   }
@@ -68,7 +68,7 @@
     border: 1px solid var(--color-border);
     background-color: var(--color-background);
     color: var(--color-text-main);
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-family: inherit;
     transition: border-color 0.15s ease, box-shadow 0.15s ease;
 
@@ -92,10 +92,10 @@
   gap: 0.5rem;
   padding: 0.85rem;
   border-radius: $radius-xl;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  background-color: var(--color-primary);
   color: #FFFFFF;
   font-weight: $font-weight-bold;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
@@ -103,6 +103,7 @@
 
   &:hover {
     transform: translateY(-2px);
+    background-color: var(--color-primary-hover);
     box-shadow: 0 6px 20px rgba(13, 148, 136, 0.45);
   }
 }
@@ -134,9 +135,9 @@
   }
 
   .branchBadge {
-    font-size: 0.6875rem;
+    font-size: 1rem;
     font-weight: $font-weight-semibold;
-    padding: 0.15rem 0.5rem;
+    padding: 0.2rem 0.6rem;
     border-radius: $radius-full;
     background-color: rgba(13, 148, 136, 0.15);
     color: var(--color-primary);
@@ -147,7 +148,7 @@
   display: flex;
   align-items: flex-start;
   gap: $spacing-3;
-  font-size: 0.875rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
 
   svg {
@@ -168,7 +169,7 @@
 }
 
 .emergencyBanner {
-  background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, rgba(220, 38, 38, 0.02) 100%);
+  background-color: rgba(220, 38, 38, 0.05);
   border: 1px solid rgba(220, 38, 38, 0.25);
   border-radius: $radius-xl;
   padding: $spacing-6;
@@ -190,14 +191,14 @@
 
   h4 {
     color: #DC2626;
-    font-size: 1rem;
+    font-size: 1.0625rem;
     font-weight: $font-weight-bold;
     margin: 0;
   }
 
   p {
     color: var(--color-text-muted);
-    font-size: 0.8125rem;
+    font-size: 1rem;
     margin: 0;
   }
 }
@@ -211,7 +212,7 @@
   background-color: #DC2626;
   color: #FFFFFF;
   font-weight: $font-weight-bold;
-  font-size: 0.875rem;
+  font-size: 1rem;
   text-decoration: none;
   white-space: nowrap;
   transition: opacity 0.2s ease;

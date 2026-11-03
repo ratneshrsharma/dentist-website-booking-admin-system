@@ -102,13 +102,13 @@
 }
 
 .headerTitle {
-  font-size: $font-size-sm;
+  font-size: 1.125rem;
   font-weight: $font-weight-bold;
   line-height: 1.2;
 }
 
 .headerSubtitle {
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: #94A3B8;
 }
 
@@ -128,7 +128,7 @@
 }
 
 .messageSnippet {
-  font-size: $font-size-xs;
+  font-size: 1rem;
   color: var(--color-text-muted);
   margin-bottom: $spacing-4;
   line-height: 1.4;
@@ -156,13 +156,13 @@
     flex-direction: column;
 
     strong {
-      font-size: $font-size-xs;
+      font-size: 1rem;
       font-weight: $font-weight-semibold;
       color: var(--color-text-main);
     }
 
     span {
-      font-size: 0.6875rem;
+      font-size: 1rem;
       color: var(--color-text-muted);
     }
   }

@@ -44,7 +44,7 @@
   }
 
   p {
-    font-size: 0.875rem;
+    font-size: 1rem;
     line-height: 1.6;
     color: var(--color-text-muted);
     margin: 0;
@@ -70,7 +70,7 @@
   }
 
   p {
-    font-size: 0.875rem;
+    font-size: 1rem;
     color: var(--color-text-muted);
     max-width: 500px;
     margin: 0;
@@ -86,7 +86,7 @@
     color: #FFFFFF;
     text-decoration: none;
     font-weight: $font-weight-bold;
-    font-size: 0.875rem;
+    font-size: 1rem;
     transition: opacity 0.2s ease;
 
     &:hover {

@@ -26,8 +26,8 @@
 .topBar {
   background-color: var(--color-surface-muted);
   border-bottom: 1px solid var(--color-border);
-  padding: 0.375rem 0;
-  font-size: 0.6875rem;
+  padding: 0.5rem 0;
+  font-size: 1rem;
   color: var(--color-text-muted);
 }
 
@@ -96,12 +96,12 @@
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.2rem 0.55rem;
+  padding: 0.35rem 0.75rem;
   border-radius: $radius-md;
   background-color: rgba(13, 148, 136, 0.08);
   color: var(--color-primary);
   font-weight: $font-weight-semibold;
-  font-size: 0.6875rem;
+  font-size: 1rem;
   text-decoration: none;
   transition: all 0.2s ease;
   border: 1px solid rgba(13, 148, 136, 0.2);
@@ -132,15 +132,14 @@
 }
 
 .logoMark {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: $radius-xl;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  background-color: var(--color-primary);
   color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
   flex-shrink: 0;
 }
 
@@ -151,7 +150,7 @@
 
 .brandTitle {
   font-family: var(--font-family-heading);
-  font-size: $font-size-lg;
+  font-size: $font-size-xl;
   font-weight: $font-weight-bold;
   color: var(--color-text-main);
   line-height: 1.15;
@@ -159,9 +158,9 @@
 }
 
 .brandSubtitle {
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
-  letter-spacing: 0.02em;
+  letter-spacing: 0.01em;
 }
 
 .navLinks {
@@ -283,7 +282,7 @@
   }
 
   p {
-    font-size: $font-size-xs;
+    font-size: 1rem;
     color: var(--color-text-muted);
     margin: 0;
   }
@@ -304,7 +303,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: $font-size-sm;
+  font-size: 1rem;
   font-weight: $font-weight-bold;
   color: var(--color-text-main);
   padding-bottom: 0.375rem;
@@ -318,7 +317,7 @@
 }
 
 .categoryDesc {
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
   line-height: 1.4;
   margin: 0 0 0.75rem 0;
@@ -357,14 +356,14 @@
 }
 
 .itemTitle {
-  font-size: 0.8125rem;
+  font-size: 1rem;
   font-weight: $font-weight-semibold;
   color: var(--color-text-main);
   transition: color 0.18s ease;
 }
 
 .itemBadge {
-  font-size: 0.5625rem;
+  font-size: 1rem;
   font-weight: $font-weight-bold;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -376,7 +375,7 @@
 
 .itemDesc {
   display: block;
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
   line-height: 1.35;
   margin-top: 0.125rem;
@@ -395,7 +394,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: $font-size-xs;
+  font-size: 1rem;
   color: var(--color-text-muted);
 
   svg {
@@ -407,7 +406,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.375rem;
-  font-size: $font-size-xs;
+  font-size: 1rem;
   font-weight: $font-weight-semibold;
   color: var(--color-primary);
   text-decoration: none;
@@ -460,7 +459,7 @@
 
 .simpleTitle {
   display: block;
-  font-size: 0.8125rem;
+  font-size: 1rem;
   font-weight: $font-weight-semibold;
   color: var(--color-text-main);
   transition: color 0.18s ease;
@@ -468,7 +467,7 @@
 
 .simpleDesc {
   display: block;
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
   line-height: 1.35;
   margin-top: 0.125rem;
@@ -500,7 +499,7 @@
   border-radius: $radius-full;
   background-color: var(--color-surface-muted);
   border: 1px solid var(--color-border);
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: var(--color-text-muted);
 
   @include mobile {
@@ -608,7 +607,7 @@
 }
 
 .mobileCatTitle {
-  font-size: 0.6875rem;
+  font-size: 1rem;
   font-weight: $font-weight-bold;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -622,7 +621,7 @@
   justify-content: space-between;
   padding: 0.45rem 0.5rem;
   border-radius: $radius-md;
-  font-size: $font-size-sm;
+  font-size: 1rem;
   color: var(--color-text-main);
   text-decoration: none;
   transition: background 0.15s ease;
@@ -634,7 +633,7 @@
 }
 
 .mobileBadge {
-  font-size: 0.5625rem;
+  font-size: 1rem;
   font-weight: $font-weight-bold;
   text-transform: uppercase;
   padding: 0.1rem 0.35rem;
@@ -661,7 +660,7 @@
   border-radius: $radius-lg;
   background-color: var(--color-surface-muted);
   border: 1px solid var(--color-border);
-  font-size: 0.8125rem;
+  font-size: 1rem;
   font-weight: $font-weight-semibold;
   color: var(--color-text-main);
   text-decoration: none;

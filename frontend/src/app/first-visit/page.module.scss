@@ -29,7 +29,7 @@
   }
 
   p {
-    font-size: 0.9375rem;
+    font-size: 1rem;
     line-height: 1.65;
     color: var(--color-text-muted);
     margin: 0;
@@ -57,7 +57,7 @@
     align-items: center;
     justify-content: center;
     font-weight: $font-weight-bold;
-    font-size: 0.9375rem;
+    font-size: 1rem;
     flex-shrink: 0;
   }
 
@@ -77,10 +77,10 @@
     }
 
     p {
-      font-size: 0.875rem;
+      font-size: 1rem;
       color: var(--color-text-muted);
       margin: 0;
-      line-height: 1.5;
+      line-height: 1.6;
     }
   }
 }
@@ -103,7 +103,7 @@
   border-radius: $radius-lg;
   background-color: var(--color-surface-muted);
   border: 1px solid var(--color-border);
-  font-size: 0.8125rem;
+  font-size: 1rem;
   font-weight: $font-weight-medium;
   color: var(--color-text-main);
 

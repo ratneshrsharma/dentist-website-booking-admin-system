@@ -8,7 +8,7 @@
 }
 
 .emergencyStrip {
-  background: linear-gradient(90deg, #991B1B, #DC2626);
+  background-color: #DC2626;
   padding: $spacing-4 0;
   color: #FFFFFF;
 }
@@ -32,7 +32,7 @@
   }
 
   p {
-    font-size: $font-size-xs;
+    font-size: 1rem;
     color: rgba(255, 255, 255, 0.9);
     margin: 0;
   }
@@ -45,7 +45,6 @@
   border-radius: $radius-full;
   background-color: #FEF08A;
   margin-right: $spacing-2;
-  box-shadow: 0 0 8px #FEF08A;
 }
 
 .emergencyActions {
@@ -60,7 +59,7 @@
   background-color: #FFFFFF;
   color: #DC2626;
   font-weight: $font-weight-bold;
-  font-size: $font-size-sm;
+  font-size: 1rem;
   padding: 0.625rem 1.25rem;
   border-radius: $radius-full;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
@@ -104,10 +103,10 @@
 }
 
 .logoMark {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   border-radius: $radius-xl;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent));
+  background-color: var(--color-primary);
   color: #FFFFFF;
   display: flex;
   align-items: center;
@@ -124,13 +123,13 @@
 }
 
 .brandSubtitle {
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: #94A3B8;
   letter-spacing: 0.02em;
 }
 
 .brandDescription {
-  font-size: $font-size-xs;
+  font-size: 1rem;
   color: #94A3B8;
   line-height: 1.6;
 }
@@ -146,7 +145,7 @@
   display: inline-flex;
   align-items: center;
   gap: $spacing-2;
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: #CBD5E1;
 
   svg {
@@ -162,7 +161,7 @@
 
 .colTitle {
   font-family: var(--font-family-heading);
-  font-size: $font-size-sm;
+  font-size: 1.125rem;
   font-weight: $font-weight-bold;
   color: #FFFFFF;
   letter-spacing: 0.04em;
@@ -177,7 +176,7 @@
   gap: $spacing-2;
 
   li a {
-    font-size: $font-size-xs;
+    font-size: 1rem;
     color: #94A3B8;
     transition: color 0.2s ease, transform 0.2s ease;
     display: inline-block;
@@ -205,13 +204,13 @@
   gap: 3px;
 
   strong {
-    font-size: $font-size-xs;
+    font-size: 1rem;
     color: #F8FAFC;
     font-weight: $font-weight-semibold;
   }
 
   p {
-    font-size: 0.6875rem;
+    font-size: 1rem;
     color: #94A3B8;
     display: flex;
     align-items: center;
@@ -223,7 +222,7 @@
 .bottomBar {
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding: $spacing-4 0;
-  font-size: 0.6875rem;
+  font-size: 1rem;
   color: #64748B;
 }
 
@@ -255,7 +254,7 @@
 
 .authorCredit {
   color: #94A3B8;
-  font-size: 0.6875rem;
+  font-size: 1rem;
 
   a {
     color: var(--color-primary);
