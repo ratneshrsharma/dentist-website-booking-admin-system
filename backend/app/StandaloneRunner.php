@@ -231,7 +231,22 @@ class StandaloneRunner
             '/advanced-dental-clinic/',
         ], $rendered);
 
+        // Extract push blocks from child view (e.g. @push('styles') ... @endpush)
+        $stacks = [];
+        preg_match_all("/@push\('([^']+)'\)(.*?)@endpush/s", $contentHtml, $pushBlocks, PREG_SET_ORDER);
+        foreach ($pushBlocks as $push) {
+            $stacks[$push[1]] = ($stacks[$push[1]] ?? '') . "\n" . trim($push[2]);
+        }
+
+        // Replace @stack directives with pushed content
+        $rendered = preg_replace_callback("/@stack\('([^']+)'\)/", function ($matches) use ($stacks) {
+            return $stacks[$matches[1]] ?? '';
+        }, $rendered);
+
         // Strip remaining Blade directives safely
+        $rendered = preg_replace('/@stack\([^\)]+\)/', '', $rendered);
+        $rendered = preg_replace('/@push\([^\)]+\)/', '', $rendered);
+        $rendered = preg_replace('/@endpush/', '', $rendered);
         $rendered = preg_replace('/@extends\([^\)]+\)/', '', $rendered);
         $rendered = preg_replace('/\{\{.*?\}\}/', '', $rendered);
         $rendered = preg_replace('/@csrf/', '', $rendered);

@@ -4,6 +4,9 @@
 # Dual-Surface: Next.js 15 Multi-Page Static Frontend + Laravel 11 API & AdminLTE 4 Blade
 # ==============================================================================
 
+# Set default directory index for root and subfolder
+DirectoryIndex index.html index.php
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
@@ -11,28 +14,31 @@
     RewriteCond %{HTTPS} off
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
-    # 2. Route API requests (/api/*) directly to Laravel Public Index
+    # 2. Serve root index.html when directory root is accessed
+    RewriteRule ^$ index.html [L]
+
+    # 3. Route API requests (/api/*) directly to Laravel Public Index
     RewriteRule ^api(/.*)?$ backend/public/index.php [L,QSA]
 
-    # 3. Route AdminLTE Blade Admin requests (/admin/*) to Laravel Public Index
+    # 4. Route AdminLTE Blade Admin requests (/admin/*) to Laravel Public Index
     RewriteRule ^admin(/.*)?$ backend/public/index.php [L,QSA]
 
-    # 4. Route Storage Symlink (/storage/*) to Laravel Public Storage
+    # 5. Route Storage Symlink (/storage/*) to Laravel Public Storage
     RewriteRule ^storage/(.*)$ backend/public/storage/$1 [L]
 
-    # 5. Serve Static Files directly if they exist on disk (_next, images, css, js)
+    # 6. Serve Static Files directly if they exist on disk (_next, images, css, js)
     RewriteCond %{REQUEST_FILENAME} -f
     RewriteRule ^ - [L]
 
-    # 6. Serve directory index.html if it exists
+    # 7. Serve directory index.html if it exists
     RewriteCond %{REQUEST_FILENAME}/index.html -f
     RewriteRule ^(.*)/?$ $1/index.html [L]
 
-    # 7. Serve HTML file if clean URL requested (e.g. /about-us -> /about-us.html)
+    # 8. Serve HTML file if clean URL requested (e.g. /about-us -> /about-us.html)
     RewriteCond %{REQUEST_FILENAME}.html -f
     RewriteRule ^(.*)$ $1.html [L]
 
-    # 8. Fallback for Patient-Facing Next.js Portal (Home / 404)
+    # 9. Fallback for Patient-Facing Next.js Portal (Home / 404)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} !^.*(api|admin|backend|storage)
