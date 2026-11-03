@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import styles from './Navbar.module.scss';
-import { ThemeSwitcher } from '@/components/ui/ThemeSwitcher/ThemeSwitcher';
 import { Button } from '@/components/ui/Button/Button';
 import { MAIN_NAVIGATION, NavDropdown } from '@/data/navigation';
 import {
@@ -99,10 +98,13 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                 24/7 Dental Emergency: <strong>+1 (555) 019-2830</strong>
               </span>
             </a>
-            <div className={styles.topThemeWrapper}>
-              <ThemeSwitcher />
-            </div>
-            <Link href="/admin" className={styles.staffPortalLink} title="Clinic Staff EMR Portal">
+            <Link
+              href="/admin"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.staffPortalLink}
+              title="Clinic Staff EMR Portal (Opens in New Tab)"
+            >
               <Lock size={12} />
               <span>Admin EMR</span>
             </Link>
@@ -145,8 +147,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
                 <li
                   key={navItem.label}
                   className={`${styles.navItemDropdown} ${
-                    activeDropdown === navItem.label ? styles.isOpen : ''
-                  }`}
+                    hasCategories ? styles.hasMegaMenu : ''
+                  } ${activeDropdown === navItem.label ? styles.isOpen : ''}`}
                   onMouseEnter={() => handleMouseEnter(navItem.label)}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -357,6 +359,8 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               <div className={styles.mobileFooterActions}>
                 <Link
                   href="/admin"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={styles.mobileAdminLink}
                   onClick={() => setMobileMenuOpen(false)}
                 >

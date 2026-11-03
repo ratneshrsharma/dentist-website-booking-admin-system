@@ -52,16 +52,12 @@
 }
 
 .heroBadge {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: $radius-full;
-  background-color: rgba(13, 148, 136, 0.12);
+  display: inline-block;
   color: var(--color-primary);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   font-weight: $font-weight-semibold;
-  margin-bottom: $spacing-3;
-  letter-spacing: 0.05em;
+  margin-bottom: $spacing-2;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 

@@ -50,9 +50,10 @@ export default function HomePage() {
           <div className={styles.heroContainer}>
             <div className={styles.heroContent}>
               <div className={styles.badgeRow}>
-                <Badge variant="primary" size="md" icon={<Sparkles size={14} />}>
+                <span className={styles.heroEyebrow}>
+                  <Sparkles size={14} />
                   Precision Digital Dentistry & Prosthodontics
-                </Badge>
+                </span>
                 <div className={styles.ratingSnippet}>
                   <div className={styles.stars}>
                     {[...Array(5)].map((_, i) => (
@@ -169,7 +170,7 @@ export default function HomePage() {
         <section id="services" className={styles.servicesSection}>
           <div className={styles.container}>
             <div className={styles.sectionTitleCenter}>
-              <Badge variant="primary" size="md">Specialized Dental Services</Badge>
+              <span className={styles.sectionSubtitle}>Specialized Dental Services</span>
               <h2>Comprehensive Restorative & Cosmetic Treatments</h2>
               <p>Every procedure is engineered with digital precision, pain minimization, and lasting clinical longevity.</p>
             </div>
@@ -271,7 +272,7 @@ export default function HomePage() {
           <div className={styles.container}>
             <div className={styles.makeoverGrid}>
               <div className={styles.makeoverText}>
-                <Badge variant="accent" size="md">Clinical Visual Proof</Badge>
+                <span className={styles.sectionSubtitle}>Clinical Visual Proof</span>
                 <h2>Interactive Smile Transformations</h2>
                 <p>
                   Drag the slider to compare pre-operative tooth discoloration and misalignment against our custom porcelain veneer restorations.
@@ -374,7 +375,7 @@ export default function HomePage() {
         <section id="doctors" className={styles.doctorsSection}>
           <div className={styles.container}>
             <div className={styles.sectionTitleCenter}>
-              <Badge variant="primary" size="md">Master Clinical Specialists</Badge>
+              <span className={styles.sectionSubtitle}>Master Clinical Specialists</span>
               <h2>Meet Our Attending Dental Team</h2>
               <p>Multidisciplinary specialists collaborating to deliver exceptional oral healthcare under one roof.</p>
             </div>
@@ -459,7 +460,7 @@ export default function HomePage() {
         <section id="pricing" className={styles.pricingSection}>
           <div className={styles.container}>
             <div className={styles.sectionTitleCenter}>
-              <Badge variant="accent" size="md">Transparent Patient Economics</Badge>
+              <span className={styles.sectionSubtitle}>Transparent Patient Economics</span>
               <h2>Dental Membership & Care Plans</h2>
               <p>No insurance? No problem. Receive comprehensive preventative care and 20% off all procedures.</p>
 
@@ -534,7 +535,7 @@ export default function HomePage() {
         <section id="reviews" className={styles.reviewsSection}>
           <div className={styles.container}>
             <div className={styles.sectionTitleCenter}>
-              <Badge variant="primary" size="md">Verified Patient Testimonials</Badge>
+              <span className={styles.sectionSubtitle}>Verified Patient Testimonials</span>
               <h2>Real Experiences, Transformed Lives</h2>
               <p>Read authenticated reviews from patients treated across our 3 clinic locations.</p>
             </div>
@@ -586,7 +587,7 @@ export default function HomePage() {
         <section id="faq" className={styles.faqSection}>
           <div className={styles.containerNarrow}>
             <div className={styles.sectionTitleCenter}>
-              <Badge variant="primary" size="md">Patient Guidelines</Badge>
+              <span className={styles.sectionSubtitle}>Patient Guidelines</span>
               <h2>Frequently Asked Clinical Questions</h2>
               <p>Everything you need to know about scheduling, dental anxiety, and insurance coverage.</p>
             </div>
