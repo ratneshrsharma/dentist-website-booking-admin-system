@@ -1,17 +1,16 @@
 # ==============================================================================
-# Advanced Dental Clinic Production Shared Hosting Configuration (Hostinger / LiteSpeed / Apache)
-# Subdirectory Target: https://demo.ratneshsharma.com/advanced-dental-clinic/
+# Advanced Dental Clinic Production & Local Shared Hosting Configuration (Apache / LiteSpeed)
 # Dual-Surface: Next.js 15 Multi-Page Static Frontend + Laravel 11 API & AdminLTE 4 Blade
 # ==============================================================================
 
-# Set default directory index for root and subfolder
 DirectoryIndex index.html index.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # 1. Force HTTPS
+    # 1. Force HTTPS (Only in production, bypass on localhost)
     RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$ [NC]
     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
     # 2. Serve root index.html when directory root is accessed
@@ -53,8 +52,6 @@ DirectoryIndex index.html index.php
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-XSS-Protection "1; mode=block"
     Header always set Referrer-Policy "strict-origin-when-cross-origin"
-    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
     Header unset X-Powered-By
 </IfModule>
 
@@ -71,7 +68,7 @@ Options -Indexes
 RedirectMatch 404 ^/(backend/app|backend/bootstrap|backend/config|backend/database|backend/storage/logs)/.*$
 
 # ==============================================================================
-# GZIP & BROTLI HIGH-PERFORMANCE COMPRESSION
+# GZIP COMPRESSION
 # ==============================================================================
 <IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/plain
@@ -89,7 +86,7 @@ RedirectMatch 404 ^/(backend/app|backend/bootstrap|backend/config|backend/databa
 </IfModule>
 
 # ==============================================================================
-# BROWSER CACHING FOR STATIC ASSETS (Lighthouse 100 Performance)
+# BROWSER CACHING FOR STATIC ASSETS
 # ==============================================================================
 <IfModule mod_expires.c>
     ExpiresActive On

@@ -104,15 +104,20 @@ class StandaloneRunner
         if ($uri === '/api/v1/theme/settings') {
             $pdo = self::getPdo();
             if ($pdo) {
-                $stmt = $pdo->query("SELECT setting_key, setting_value FROM theme_settings");
-                $data = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
+                $stmt = $pdo->query("SELECT `key`, `value` FROM theme_settings");
+                $rows = $stmt->fetchAll();
+                $data = [];
+                foreach ($rows as $row) {
+                    $val = json_decode($row['value'], true);
+                    $data[$row['key']] = $val !== null ? $val : $row['value'];
+                }
                 echo json_encode(['success' => true, 'data' => $data]);
             } else {
                 echo json_encode(['success' => true, 'data' => [
-                    'primary_color' => '#0D9488',
-                    'secondary_color' => '#0F766E',
-                    'accent_color' => '#F59E0B',
-                    'surface_color' => '#FFFFFF',
+                    'primary' => ['hex' => '#0D9488', 'label' => 'Clinical Teal'],
+                    'secondary' => ['hex' => '#14B8A6', 'label' => 'Mint Accent'],
+                    'accent' => ['hex' => '#0284C7', 'label' => 'Sky Clinical'],
+                    'surface' => ['hex' => '#FFFFFF', 'label' => 'Pure Surface'],
                 ]]);
             }
             exit;
@@ -121,9 +126,61 @@ class StandaloneRunner
         if ($uri === '/api/v1/cms/treatments') {
             $pdo = self::getPdo();
             if ($pdo) {
-                $stmt = $pdo->query("SELECT id, name, slug, short_description, starting_price, duration_minutes, icon_name FROM cms_treatments WHERE is_active = 1 ORDER BY display_order ASC");
+                $stmt = $pdo->query("SELECT id, title, title AS name, slug, category, overview, overview AS short_description, cost_estimate, cost_estimate AS starting_price, duration, duration AS duration_minutes, recovery_time, hero_image FROM cms_treatments WHERE is_published = 1 ORDER BY sort_order ASC");
                 $data = $stmt->fetchAll();
                 echo json_encode(['success' => true, 'data' => $data]);
+            } else {
+                echo json_encode(['success' => true, 'data' => []]);
+            }
+            exit;
+        }
+
+        if ($uri === '/api/v1/cms/navigation') {
+            $pdo = self::getPdo();
+            if ($pdo) {
+                $stmt = $pdo->query("SELECT id, title, slug, category, overview AS description, hero_image FROM cms_treatments WHERE is_published = 1 ORDER BY sort_order ASC");
+                $treatments = $stmt->fetchAll();
+                $categories = [];
+                foreach ($treatments as $t) {
+                    $cat = $t['category'];
+                    if (!isset($categories[$cat])) {
+                        $categories[$cat] = [];
+                    }
+                    $categories[$cat][] = $t;
+                }
+                echo json_encode(['success' => true, 'data' => ['categories' => $categories]]);
+            } else {
+                echo json_encode(['success' => true, 'data' => ['categories' => []]]);
+            }
+            exit;
+        }
+
+        if (str_starts_with($uri, '/api/v1/seo/metadata')) {
+            $slug = trim(str_replace('/api/v1/seo/metadata', '', $uri), '/');
+            $slug = $slug === '' ? 'home' : $slug;
+            $pdo = self::getPdo();
+            if ($pdo) {
+                $stmt = $pdo->prepare("SELECT * FROM seo_metadata WHERE entity_slug = :slug LIMIT 1");
+                $stmt->execute(['slug' => $slug]);
+                $meta = $stmt->fetch();
+                if (!$meta) {
+                    $stmt = $pdo->prepare("SELECT * FROM seo_metadata WHERE entity_slug = 'home' LIMIT 1");
+                    $stmt->execute();
+                    $meta = $stmt->fetch();
+                }
+                echo json_encode(['success' => true, 'data' => $meta]);
+            } else {
+                echo json_encode(['success' => false, 'message' => 'Database offline']);
+            }
+            exit;
+        }
+
+        if ($uri === '/api/v1/seo/redirects') {
+            $pdo = self::getPdo();
+            if ($pdo) {
+                $stmt = $pdo->query("SELECT source_url, target_url, status_code FROM seo_redirects WHERE is_active = 1");
+                $redirects = $stmt->fetchAll();
+                echo json_encode(['success' => true, 'data' => $redirects]);
             } else {
                 echo json_encode(['success' => true, 'data' => []]);
             }
