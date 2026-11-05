@@ -4,6 +4,12 @@
 .button {
   @include button-base;
 
+  @include mobile {
+    white-space: normal;
+    text-align: center;
+    max-width: 100%;
+  }
+
   .icon {
     display: inline-flex;
     align-items: center;
@@ -36,12 +42,21 @@
   padding: $spacing-3 $spacing-5;
   font-size: $font-size-sm;
   border-radius: $radius-lg;
+
+  @include mobile {
+    padding: $spacing-2 $spacing-4;
+  }
 }
 
 .size_lg {
   padding: $spacing-4 $spacing-8;
   font-size: $font-size-base;
   border-radius: $radius-xl;
+
+  @include mobile {
+    padding: $spacing-3 $spacing-4;
+    white-space: normal;
+  }
 }
 
 // Variants
