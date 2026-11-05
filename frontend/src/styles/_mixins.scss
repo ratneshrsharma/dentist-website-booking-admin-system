@@ -61,10 +61,20 @@
   }
 
   @include desktop {
-    max-width: 1400px;
+    max-width: 1440px;
     padding-left: $spacing-8;
     padding-right: $spacing-8;
   }
+}
+
+// 100% Edge-to-Edge Fluid Container (Header Navigation, Ribbons & Wide Full-Bleed Sections)
+@mixin container-fluid {
+  width: 100%;
+  max-width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: clamp(1rem, 2.5vw, 3.5rem);
+  padding-right: clamp(1rem, 2.5vw, 3.5rem);
 }
 
 // 3. Flexbox & Grid Helpers
