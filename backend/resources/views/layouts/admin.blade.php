@@ -151,8 +151,8 @@
                             <li><a class="dropdown-item active" href="?clinic=1"><i class="bi bi-check2 text-success me-2"></i>Metro Dental HQ (New York)</a></li>
                             <li><a class="dropdown-item" href="?clinic=2"><i class="bi bi-building me-2"></i>Downtown Smiles Branch (West 57th)</a></li>
                             <li><a class="dropdown-item" href="?clinic=3"><i class="bi bi-building me-2"></i>Westside Pediatric & Family Dental</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-primary fw-bold" href="{{ url('/admin/multi-clinic') }}"><i class="bi bi-grid-fill me-2"></i>All-Clinics Central Monitor</a></li>
+                            <li data-roles="super_admin,admin"><hr class="dropdown-divider"></li>
+                            <li data-roles="super_admin,admin"><a class="dropdown-item text-primary fw-bold" href="{{ url('/admin/multi-clinic') }}"><i class="bi bi-grid-fill me-2"></i>All-Clinics Central Monitor</a></li>
                         </ul>
                     </div>
                 </div>
@@ -200,8 +200,21 @@
                                 <span class="d-block fw-bold text-dark small">@yield('user_name', 'Dr. Alexander Vance')</span>
                                 <small class="text-muted">@yield('user_email', 'admin@example.com')</small>
                             </li>
-                            <li><a class="dropdown-item" href="{{ url('/admin/roles') }}"><i class="bi bi-shield-lock me-2"></i>Security & Permissions</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/admin/clinics') }}"><i class="bi bi-hospital me-2"></i>Branch Facilities</a></li>
+                            <!-- Admin Links -->
+                            <li data-roles="super_admin,admin"><a class="dropdown-item" href="{{ url('/admin/roles') }}"><i class="bi bi-shield-lock me-2 text-warning"></i>Security & Permissions</a></li>
+                            <li data-roles="super_admin,admin"><a class="dropdown-item" href="{{ url('/admin/clinics') }}"><i class="bi bi-hospital me-2 text-primary"></i>Branch Facilities</a></li>
+                            <!-- Doctor Links -->
+                            <li data-roles="doctor"><a class="dropdown-item" href="{{ url('/admin/emr/odontogram') }}"><i class="bi bi-diagram-3-fill me-2 text-danger"></i>Clinical Odontogram EMR</a></li>
+                            <li data-roles="doctor"><a class="dropdown-item" href="{{ url('/admin/patients') }}"><i class="bi bi-people-fill me-2 text-primary"></i>My Assigned Patients</a></li>
+                            <!-- Receptionist Links -->
+                            <li data-roles="receptionist"><a class="dropdown-item" href="{{ url('/admin/appointments/calendar') }}"><i class="bi bi-calendar-check me-2 text-info"></i>Appointments Roster</a></li>
+                            <li data-roles="receptionist"><a class="dropdown-item" href="{{ url('/admin/patients') }}"><i class="bi bi-person-plus me-2 text-primary"></i>Patient Intake</a></li>
+                            <!-- Website Manager Links -->
+                            <li data-roles="website_manager"><a class="dropdown-item" href="{{ url('/admin/cms-pages') }}"><i class="bi bi-globe me-2 text-success"></i>Website CMS Pages</a></li>
+                            <li data-roles="website_manager"><a class="dropdown-item" href="{{ url('/admin/theme-customizer') }}"><i class="bi bi-palette2 me-2 text-warning"></i>Theme Customizer</a></li>
+                            <!-- Billing Officer Links -->
+                            <li data-roles="billing"><a class="dropdown-item" href="{{ url('/admin/billing') }}"><i class="bi bi-receipt-cutoff me-2 text-dark"></i>Billing Ledger & POS</a></li>
+                            <li data-roles="billing"><a class="dropdown-item" href="{{ url('/admin/inventory') }}"><i class="bi bi-box-seam me-2 text-secondary"></i>Dental Supplies</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item text-danger fw-semibold" href="{{ url('/admin/logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
                         </ul>

@@ -129,7 +129,7 @@
             <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <label for="password" class="form-label small fw-semibold text-secondary mb-0">Password</label>
-                    <a href="{{ url('/admin/forgot-password') }}" class="small text-decoration-none text-muted">Forgot password?</a>
+                    <a href="{{ url('/admin/forgot-password') }}" class="small text-decoration-none text-muted">Forgot Password?</a>
                 </div>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-shield-lock"></i></span>
@@ -167,49 +167,49 @@
             <div class="row g-2">
                 <!-- 1. Super Admin -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillCreds('admin@example.com', 'Admin@DemoPass2026!', 'super_admin')">
-                        <div class="fw-bold text-dark"><i class="bi bi-crown-fill text-warning me-1"></i>Super Admin</div>
-                        <div class="text-muted text-truncate">Full System & RBAC</div>
+                    <div class="role-chip" onclick="fillAndSubmit('admin@example.com', 'Admin@DemoPass2026!')">
+                        <div class="fw-bold text-dark"><i class="bi bi-crown-fill text-warning me-1"></i>Super Administrator</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">Full System & RBAC</div>
                     </div>
                 </div>
 
                 <!-- 2. Clinic Admin -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillCreds('clinic.admin@example.com', 'Admin@DemoPass2026!', 'admin')">
+                    <div class="role-chip" onclick="fillAndSubmit('clinic.admin@example.com', 'Clinic@DemoPass2026!')">
                         <div class="fw-bold text-dark"><i class="bi bi-hospital-fill text-primary me-1"></i>Clinic Admin</div>
-                        <div class="text-muted text-truncate">Branch & Operations</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">Branch & Operations</div>
                     </div>
                 </div>
 
                 <!-- 3. Doctor -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillCreds('dr.caldwell@example.com', 'Doctor@DemoPass2026!', 'doctor')">
-                        <div class="fw-bold text-dark"><i class="bi bi-heart-pulse-fill text-danger me-1"></i>Doctor (EMR)</div>
-                        <div class="text-muted text-truncate">Patients & Odontogram</div>
+                    <div class="role-chip" onclick="fillAndSubmit('dr.caldwell@example.com', 'Doctor@DemoPass2026!')">
+                        <div class="fw-bold text-dark"><i class="bi bi-heart-pulse-fill text-danger me-1"></i>Dr. Ethan Caldwell</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">Doctor EMR & Patients</div>
                     </div>
                 </div>
 
                 <!-- 4. Appointment Manager -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillCreds('reception@example.com', 'Staff@DemoPass2026!', 'receptionist')">
+                    <div class="role-chip" onclick="fillAndSubmit('reception@example.com', 'Appt@DemoPass2026!')">
                         <div class="fw-bold text-dark"><i class="bi bi-calendar-check-fill text-info me-1"></i>Appt. Manager</div>
-                        <div class="text-muted text-truncate">Scheduler & Intake</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">Scheduler & Intake</div>
                     </div>
                 </div>
 
                 <!-- 5. Website Manager -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillCreds('webmaster@example.com', 'Webmaster@DemoPass2026!', 'website_manager')">
+                    <div class="role-chip" onclick="fillAndSubmit('webmaster@example.com', 'Web@DemoPass2026!')">
                         <div class="fw-bold text-dark"><i class="bi bi-globe2 text-success me-1"></i>Website Mgr</div>
-                        <div class="text-muted text-truncate">CMS, SEO & Theme</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">CMS, SEO & Theme</div>
                     </div>
                 </div>
 
                 <!-- 6. Billing Officer -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillCreds('billing@example.com', 'Billing@DemoPass2026!', 'billing')">
+                    <div class="role-chip" onclick="fillAndSubmit('billing@example.com', 'Bill@DemoPass2026!')">
                         <div class="fw-bold text-dark"><i class="bi bi-receipt-cutoff text-dark me-1"></i>Billing Officer</div>
-                        <div class="text-muted text-truncate">POS, Invoices & Claims</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">POS, Invoices & Claims</div>
                     </div>
                 </div>
             </div>
@@ -236,7 +236,13 @@
         });
     }
 
-    // Role Auto-Filler
+    // Role Auto-Filler and 1-Click Demo Login
+    function fillAndSubmit(email, password) {
+        document.getElementById('email').value = email;
+        document.getElementById('password').value = password;
+        document.getElementById('loginForm').submit();
+    }
+
     function fillCreds(email, password, role) {
         document.getElementById('email').value = email;
         document.getElementById('password').value = password;

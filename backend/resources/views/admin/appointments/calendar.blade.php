@@ -163,7 +163,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary btn-sm" onclick="alert('Appointment saved to schedule!'); $('#newApptModal').modal('hide');">
+                <button type="button" class="btn btn-primary btn-sm" onclick="alert('Appointment saved to schedule!'); bootstrap.Modal.getOrCreateInstance(document.getElementById('newApptModal')).hide();">
                     <i class="bi bi-check-lg"></i> Lock Slot
                 </button>
             </div>

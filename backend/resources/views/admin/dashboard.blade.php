@@ -6,11 +6,20 @@
 
 @section('page_actions')
     <div class="d-flex gap-2">
-        <a href="{{ url('/admin/appointments/calendar') }}" class="btn btn-sm btn-primary">
+        <a href="{{ url('/admin/appointments/calendar') }}" class="btn btn-sm btn-primary" data-roles="super_admin,admin,doctor,receptionist,billing">
             <i class="bi bi-calendar-plus me-1"></i> New Appointment
         </a>
-        <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-sm btn-outline-secondary">
+        <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-sm btn-outline-secondary" data-roles="super_admin,admin,doctor">
             <i class="bi bi-diagram-3 me-1"></i> Launch Odontogram EMR
+        </a>
+        <a href="{{ url('/admin/cms-pages') }}" class="btn btn-sm btn-outline-primary" data-roles="website_manager">
+            <i class="bi bi-globe me-1"></i> CMS Page Manager
+        </a>
+        <a href="{{ url('/admin/theme-customizer') }}" class="btn btn-sm btn-outline-secondary" data-roles="website_manager">
+            <i class="bi bi-palette2 me-1"></i> Theme Customizer
+        </a>
+        <a href="{{ url('/admin/billing') }}" class="btn btn-sm btn-outline-dark" data-roles="billing">
+            <i class="bi bi-receipt me-1"></i> New Billing Invoice
         </a>
     </div>
 @endsection
@@ -249,32 +258,53 @@
             </div>
             <div class="card-body">
                 <div class="row g-2">
-                    <div class="col-6">
+                    <div class="col-6" data-roles="super_admin,admin,doctor">
                         <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-outline-secondary w-100 p-3 text-start">
                             <i class="bi bi-diagram-3-fill fs-4 text-primary d-block mb-1"></i>
                             <strong class="d-block text-dark">New Odontogram Chart</strong>
                             <span class="text-muted small">Record 32-tooth surfaces</span>
                         </a>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6" data-roles="super_admin,admin,doctor,receptionist">
                         <a href="{{ url('/admin/appointments/calendar') }}" class="btn btn-outline-secondary w-100 p-3 text-start">
                             <i class="bi bi-calendar-event-fill fs-4 text-success d-block mb-1"></i>
                             <strong class="d-block text-dark">Doctor Rostering</strong>
                             <span class="text-muted small">Drag-and-drop chair slots</span>
                         </a>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6" data-roles="super_admin,admin,receptionist">
+                        <a href="{{ url('/admin/patients') }}" class="btn btn-outline-secondary w-100 p-3 text-start">
+                            <i class="bi bi-person-plus-fill fs-4 text-info d-block mb-1"></i>
+                            <strong class="d-block text-dark">Patient Intake</strong>
+                            <span class="text-muted small">Register walk-in patient</span>
+                        </a>
+                    </div>
+                    <div class="col-6" data-roles="super_admin,admin,billing">
                         <a href="{{ url('/admin/billing') }}" class="btn btn-outline-secondary w-100 p-3 text-start">
                             <i class="bi bi-credit-card-2-front-fill fs-4 text-warning d-block mb-1"></i>
                             <strong class="d-block text-dark">POS Bill Settlement</strong>
                             <span class="text-muted small">Generate itemized receipts</span>
                         </a>
                     </div>
-                    <div class="col-6">
-                        <a href="{{ url('/admin/cms') }}" class="btn btn-outline-secondary w-100 p-3 text-start">
+                    <div class="col-6" data-roles="super_admin,admin,doctor,billing">
+                        <a href="{{ url('/admin/inventory') }}" class="btn btn-outline-secondary w-100 p-3 text-start">
+                            <i class="bi bi-box-seam fs-4 text-secondary d-block mb-1"></i>
+                            <strong class="d-block text-dark">Dental Supplies Stock</strong>
+                            <span class="text-muted small">Implants & consumables</span>
+                        </a>
+                    </div>
+                    <div class="col-6" data-roles="super_admin,admin,website_manager">
+                        <a href="{{ url('/admin/cms-pages') }}" class="btn btn-outline-secondary w-100 p-3 text-start">
                             <i class="bi bi-globe fs-4 text-info d-block mb-1"></i>
-                            <strong class="d-block text-dark">Patient Portal CMS</strong>
-                            <span class="text-muted small">Switch web templates</span>
+                            <strong class="d-block text-dark">Website CMS Pages</strong>
+                            <span class="text-muted small">Edit pages & treatments</span>
+                        </a>
+                    </div>
+                    <div class="col-6" data-roles="super_admin,admin,website_manager">
+                        <a href="{{ url('/admin/theme-customizer') }}" class="btn btn-outline-secondary w-100 p-3 text-start">
+                            <i class="bi bi-palette2 fs-4 text-warning d-block mb-1"></i>
+                            <strong class="d-block text-dark">Theme Customizer</strong>
+                            <span class="text-muted small">Colors & typography tokens</span>
                         </a>
                     </div>
                 </div>

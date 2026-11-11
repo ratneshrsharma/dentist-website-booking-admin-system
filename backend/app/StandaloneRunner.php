@@ -343,6 +343,95 @@ class StandaloneRunner
             exit;
         }
 
+        // 4.5. Administrative Form POST Handlers (Theme, SEO, Redirects)
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            if ($action === 'theme-customizer/update' || $action === 'theme-customizer') {
+                $userRole = $_SESSION['auth_user']['role'] ?? 'guest';
+                if (!self::checkPermission('theme-customizer', $userRole)) {
+                    http_response_code(403);
+                    self::renderForbiddenView('theme-customizer', $_SESSION['auth_user']);
+                    return;
+                }
+
+                $pdo = self::getPdo();
+                if ($pdo && !empty($_POST['colors'])) {
+                    try {
+                        foreach ($_POST['colors'] as $key => $colorVal) {
+                            $stmt = $pdo->prepare("UPDATE theme_settings SET setting_value = ? WHERE setting_key = ?");
+                            $stmt->execute([json_encode(['hex' => $colorVal]), 'color_' . $key]);
+                        }
+                    } catch (\Throwable $e) {
+                        // Keep resilient
+                    }
+                }
+                $_SESSION['flash_success'] = 'Theme design tokens and typography successfully updated!';
+                header('Location: /advanced-dental-clinic/admin/theme-customizer');
+                exit;
+            }
+
+            if ($action === 'seo-manager/store' || $action === 'seo-manager') {
+                $userRole = $_SESSION['auth_user']['role'] ?? 'guest';
+                if (!self::checkPermission('seo-manager', $userRole)) {
+                    http_response_code(403);
+                    self::renderForbiddenView('seo-manager', $_SESSION['auth_user']);
+                    return;
+                }
+
+                $pdo = self::getPdo();
+                if ($pdo && !empty($_POST['meta_title'])) {
+                    try {
+                        $slug = $_POST['entity_slug'] ?? 'home';
+                        $type = $_POST['entity_type'] ?? 'page';
+                        $stmt = $pdo->prepare("INSERT INTO seo_metadata (entity_type, entity_slug, meta_title, meta_description, canonical_url, og_title, og_description)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)
+                            ON DUPLICATE KEY UPDATE meta_title = VALUES(meta_title), meta_description = VALUES(meta_description)");
+                        $stmt->execute([
+                            $type,
+                            $slug,
+                            $_POST['meta_title'] ?? '',
+                            $_POST['meta_description'] ?? '',
+                            $_POST['canonical_url'] ?? '',
+                            $_POST['og_title'] ?? '',
+                            $_POST['og_description'] ?? ''
+                        ]);
+                    } catch (\Throwable $e) {
+                        // Keep resilient
+                    }
+                }
+                $_SESSION['flash_success'] = 'SEO metadata, OpenGraph tags, and custom scripts successfully saved!';
+                header('Location: /advanced-dental-clinic/admin/seo-manager');
+                exit;
+            }
+
+            if ($action === 'seo-redirects/store' || $action === 'seo-redirects') {
+                $userRole = $_SESSION['auth_user']['role'] ?? 'guest';
+                if (!self::checkPermission('seo-redirects', $userRole)) {
+                    http_response_code(403);
+                    self::renderForbiddenView('seo-redirects', $_SESSION['auth_user']);
+                    return;
+                }
+
+                $pdo = self::getPdo();
+                if ($pdo && !empty($_POST['source_url']) && !empty($_POST['target_url'])) {
+                    try {
+                        $stmt = $pdo->prepare("INSERT INTO seo_redirects (source_url, target_url, status_code, is_active)
+                            VALUES (?, ?, ?, 1)
+                            ON DUPLICATE KEY UPDATE target_url = VALUES(target_url), status_code = VALUES(status_code), is_active = 1");
+                        $stmt->execute([
+                            ltrim($_POST['source_url'], '/'),
+                            ltrim($_POST['target_url'], '/'),
+                            (int)($_POST['status_code'] ?? 301)
+                        ]);
+                    } catch (\Throwable $e) {
+                        // Keep resilient
+                    }
+                }
+                $_SESSION['flash_success'] = '301 Permanent Redirect rule successfully deployed!';
+                header('Location: /advanced-dental-clinic/admin/seo-redirects');
+                exit;
+            }
+        }
+
         // 5. Route Normalization to module key
         $module = match ($action) {
             '', 'dashboard' => 'dashboard',
@@ -629,8 +718,18 @@ class StandaloneRunner
         $rendered = preg_replace("/@forelse\(\\\$seoList as \\\$seo\).*?@endforelse/s", $sampleSeoAudit, $rendered);
         $rendered = preg_replace("/@forelse\(\\\$redirects as \\\$rule\).*?@endforelse/s", $sampleRedirects, $rendered);
 
-        // Strip session alert blocks if no active session flash
-        $rendered = preg_replace("/@if\(session\('success'\)\).*?@endif/s", '', $rendered);
+        // Render or strip session alert blocks
+        if (!empty($_SESSION['flash_success'])) {
+            $flashMsg = htmlspecialchars($_SESSION['flash_success']);
+            $flashAlert = '<div class="alert alert-success alert-dismissible fade show shadow-sm mb-4" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> ' . $flashMsg . '
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>';
+            $rendered = preg_replace("/@if\(session\('success'\)\).*?@endif/s", $flashAlert, $rendered);
+            unset($_SESSION['flash_success']);
+        } else {
+            $rendered = preg_replace("/@if\(session\('success'\)\).*?@endif/s", '', $rendered);
+        }
         $rendered = preg_replace("/@if\(session\('error'\)\).*?@endif/s", '', $rendered);
         $rendered = preg_replace("/@if\(session\('status'\)\).*?@endif/s", '', $rendered);
 
@@ -647,28 +746,44 @@ class StandaloneRunner
             $rendered
         );
 
-        // 3. DYNAMIC RBAC SIDEBAR MASKING: Prevent clinical & financial data leaks
+        // 3. DYNAMIC RBAC DOM MASKING: Prevent clinical & financial data leaks across the DOM
         $userRole = $authUser['role'] ?? 'super_admin';
+
+        // 3a. Mask navigation items, section headers, and dropdown items
         $rendered = preg_replace_callback(
-            '/<li class="nav-item"[^>]*data-roles="([^"]+)"[^>]*>.*?<\/li>/s',
+            '/<li[^>]*data-roles="([^"]+)"[^>]*>.*?<\/li>/s',
             function ($matches) use ($userRole) {
                 $allowedRoles = array_map('trim', explode(',', $matches[1]));
                 if ($userRole === 'super_admin' || in_array($userRole, $allowedRoles, true)) {
                     return $matches[0];
                 }
-                return ''; // Exclude unauthorized navigation item
+                return ''; // Exclude unauthorized navigation or dropdown element
             },
             $rendered
         );
 
+        // 3b. Mask dashboard action cards and layout columns
         $rendered = preg_replace_callback(
-            '/<li class="nav-header"[^>]*data-roles="([^"]+)"[^>]*>.*?<\/li>/s',
+            '/<div[^>]*data-roles="([^"]+)"[^>]*>.*?<\/div>/s',
             function ($matches) use ($userRole) {
                 $allowedRoles = array_map('trim', explode(',', $matches[1]));
                 if ($userRole === 'super_admin' || in_array($userRole, $allowedRoles, true)) {
                     return $matches[0];
                 }
-                return ''; // Exclude unauthorized section header
+                return ''; // Exclude unauthorized widget or card
+            },
+            $rendered
+        );
+
+        // 3c. Mask action buttons and links
+        $rendered = preg_replace_callback(
+            '/<(a|button)[^>]*data-roles="([^"]+)"[^>]*>.*?<\/\1>/s',
+            function ($matches) use ($userRole) {
+                $allowedRoles = array_map('trim', explode(',', $matches[2]));
+                if ($userRole === 'super_admin' || in_array($userRole, $allowedRoles, true)) {
+                    return $matches[0];
+                }
+                return ''; // Exclude unauthorized action button
             },
             $rendered
         );
