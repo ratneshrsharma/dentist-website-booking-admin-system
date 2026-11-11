@@ -191,15 +191,19 @@
                                 <i class="bi bi-person-fill"></i>
                             </div>
                             <div class="d-none d-sm-block text-start">
-                                <span class="d-block fw-semibold text-dark small lh-1">Dr. Alexander Vance</span>
-                                <span class="text-muted" style="font-size: 0.6875rem;">Super Administrator</span>
+                                <span class="d-block fw-semibold text-dark small lh-1">@yield('user_name', 'Dr. Alexander Vance')</span>
+                                <span class="badge bg-primary-subtle text-primary border small" style="font-size: 0.65rem;">@yield('user_role_label', 'Super Administrator')</span>
                             </div>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-person-badge me-2"></i>Doctor Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><i class="bi bi-shield-lock me-2"></i>Security & 2FA</a></li>
+                            <li class="px-3 py-2 border-bottom">
+                                <span class="d-block fw-bold text-dark small">@yield('user_name', 'Dr. Alexander Vance')</span>
+                                <small class="text-muted">@yield('user_email', 'admin@example.com')</small>
+                            </li>
+                            <li><a class="dropdown-item" href="{{ url('/admin/roles') }}"><i class="bi bi-shield-lock me-2"></i>Security & Permissions</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/admin/clinics') }}"><i class="bi bi-hospital me-2"></i>Branch Facilities</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item text-danger" href="#"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
+                            <li><a class="dropdown-item text-danger fw-semibold" href="{{ url('/admin/logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -219,79 +223,82 @@
             <div class="sidebar-wrapper">
                 <nav class="mt-2">
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
-                        <li class="nav-header text-uppercase text-secondary small fw-bold px-3 py-2">Clinical Operations</li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/dashboard') }}" class="nav-link @if(request()->is('admin/dashboard*')) active @endif">
+                        <!-- Section: Clinical Operations -->
+                        <li class="nav-header text-uppercase text-secondary small fw-bold px-3 py-2" data-section="clinical">Clinical Operations</li>
+                        <li class="nav-item" data-nav="dashboard" data-roles="super_admin,admin,doctor,receptionist,website_manager,billing">
+                            <a href="{{ url('/admin/dashboard') }}" class="nav-link">
                                 <i class="nav-icon bi bi-speedometer2"></i>
                                 <p>Practice Dashboard</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/appointments/calendar') }}" class="nav-link @if(request()->is('admin/appointments*')) active @endif">
+                        <li class="nav-item" data-nav="calendar" data-roles="super_admin,admin,doctor,receptionist,billing">
+                            <a href="{{ url('/admin/appointments/calendar') }}" class="nav-link">
                                 <i class="nav-icon bi bi-calendar-week"></i>
                                 <p>Scheduler & Calendar</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/emr/odontogram') }}" class="nav-link @if(request()->is('admin/emr*')) active @endif">
+                        <li class="nav-item" data-nav="odontogram" data-roles="super_admin,admin,doctor">
+                            <a href="{{ url('/admin/emr/odontogram') }}" class="nav-link">
                                 <i class="nav-icon bi bi-diagram-3-fill"></i>
                                 <p>Odontogram EMR</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/patients') }}" class="nav-link @if(request()->is('admin/patients*')) active @endif">
+                        <li class="nav-item" data-nav="patients" data-roles="super_admin,admin,doctor,receptionist,billing">
+                            <a href="{{ url('/admin/patients') }}" class="nav-link">
                                 <i class="nav-icon bi bi-people-fill"></i>
                                 <p>Patient Records (EHR)</p>
                             </a>
                         </li>
 
-                        <li class="nav-header text-uppercase text-secondary small fw-bold px-3 py-2 mt-2">Logistics & Finance</li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/multi-clinic') }}" class="nav-link @if(request()->is('admin/multi-clinic*')) active @endif">
+                        <!-- Section: Logistics & Finance -->
+                        <li class="nav-header text-uppercase text-secondary small fw-bold px-3 py-2 mt-2" data-section="logistics" data-roles="super_admin,admin,doctor,billing">Logistics & Finance</li>
+                        <li class="nav-item" data-nav="clinics" data-roles="super_admin,admin">
+                            <a href="{{ url('/admin/clinics') }}" class="nav-link">
                                 <i class="nav-icon bi bi-buildings"></i>
                                 <p>Multi-Clinic Manager</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/inventory') }}" class="nav-link @if(request()->is('admin/inventory*')) active @endif">
+                        <li class="nav-item" data-nav="inventory" data-roles="super_admin,admin,doctor,billing">
+                            <a href="{{ url('/admin/inventory') }}" class="nav-link">
                                 <i class="nav-icon bi bi-box-seam"></i>
                                 <p>Dental Supplies & Stock</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/billing') }}" class="nav-link @if(request()->is('admin/billing*')) active @endif">
+                        <li class="nav-item" data-nav="billing" data-roles="super_admin,admin,billing">
+                            <a href="{{ url('/admin/billing') }}" class="nav-link">
                                 <i class="nav-icon bi bi-receipt-cutoff"></i>
                                 <p>Billing, Invoices & POS</p>
                             </a>
                         </li>
 
-                        <li class="nav-header text-uppercase text-secondary small fw-bold px-3 py-2 mt-2">Website & System</li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/theme-customizer') }}" class="nav-link @if(request()->is('admin/theme-customizer*')) active @endif">
+                        <!-- Section: Website & System -->
+                        <li class="nav-header text-uppercase text-secondary small fw-bold px-3 py-2 mt-2" data-section="website" data-roles="super_admin,admin,website_manager">Website & System</li>
+                        <li class="nav-item" data-nav="theme-customizer" data-roles="super_admin,admin,website_manager">
+                            <a href="{{ url('/admin/theme-customizer') }}" class="nav-link">
                                 <i class="nav-icon bi bi-palette2"></i>
                                 <p>Theme Customizer</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/seo-manager') }}" class="nav-link @if(request()->is('admin/seo-manager*')) active @endif">
+                        <li class="nav-item" data-nav="seo-manager" data-roles="super_admin,admin,website_manager">
+                            <a href="{{ url('/admin/seo-manager') }}" class="nav-link">
                                 <i class="nav-icon bi bi-search"></i>
                                 <p>Yoast SEO & Scripts</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/seo-redirects') }}" class="nav-link @if(request()->is('admin/seo-redirects*')) active @endif">
+                        <li class="nav-item" data-nav="seo-redirects" data-roles="super_admin,admin,website_manager">
+                            <a href="{{ url('/admin/seo-redirects') }}" class="nav-link">
                                 <i class="nav-icon bi bi-signpost-split"></i>
                                 <p>URL 301 Redirects</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/cms') }}" class="nav-link @if(request()->is('admin/cms*')) active @endif">
+                        <li class="nav-item" data-nav="cms-pages" data-roles="super_admin,admin,website_manager">
+                            <a href="{{ url('/admin/cms-pages') }}" class="nav-link">
                                 <i class="nav-icon bi bi-globe"></i>
                                 <p>Website CMS Manager</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url('/admin/users') }}" class="nav-link @if(request()->is('admin/users*')) active @endif">
+                        <li class="nav-item" data-nav="roles" data-roles="super_admin,admin">
+                            <a href="{{ url('/admin/roles') }}" class="nav-link">
                                 <i class="nav-icon bi bi-shield-check"></i>
                                 <p>Staff RBAC & Roles</p>
                             </a>

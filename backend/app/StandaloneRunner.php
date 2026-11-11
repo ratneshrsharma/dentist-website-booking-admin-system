@@ -18,6 +18,10 @@ class StandaloneRunner
 
     public static function run(): void
     {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
         self::loadEnv();
         $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 
@@ -40,6 +44,70 @@ class StandaloneRunner
         // Default redirect to admin dashboard
         header('Location: /advanced-dental-clinic/admin/dashboard');
         exit;
+    }
+
+    public static function getTestUsers(): array
+    {
+        return [
+            'admin@example.com' => [
+                'name' => 'Demo Administrator',
+                'password' => 'Admin@DemoPass2026!',
+                'role' => 'super_admin',
+                'role_label' => 'Super Administrator',
+                'facility' => 'All Branches',
+            ],
+            'clinic.admin@example.com' => [
+                'name' => 'Sarah Miller',
+                'password' => 'Clinic@DemoPass2026!',
+                'role' => 'admin',
+                'role_label' => 'Clinic Administrator',
+                'facility' => 'Metro Dental Central',
+            ],
+            'dr.caldwell@example.com' => [
+                'name' => 'Dr. Ethan Caldwell, DDS',
+                'password' => 'Doctor@DemoPass2026!',
+                'role' => 'doctor',
+                'role_label' => 'Doctor (EMR)',
+                'facility' => 'Metro Dental Central',
+            ],
+            'reception@example.com' => [
+                'name' => 'Emily Watson',
+                'password' => 'Appt@DemoPass2026!',
+                'role' => 'receptionist',
+                'role_label' => 'Appointment Manager',
+                'facility' => 'Metro Dental Central',
+            ],
+            'webmaster@example.com' => [
+                'name' => 'Alex Rivera',
+                'password' => 'Web@DemoPass2026!',
+                'role' => 'website_manager',
+                'role_label' => 'Website Manager',
+                'facility' => 'Digital Marketing',
+            ],
+            'billing@example.com' => [
+                'name' => 'Robert Fox',
+                'password' => 'Bill@DemoPass2026!',
+                'role' => 'billing',
+                'role_label' => 'Billing Officer',
+                'facility' => 'Finance Department',
+            ],
+        ];
+    }
+
+    public static function checkPermission(string $module, string $role): bool
+    {
+        if ($role === 'super_admin' || $role === 'admin') {
+            return true;
+        }
+
+        $matrix = [
+            'doctor' => ['dashboard', 'calendar', 'odontogram', 'patients', 'inventory'],
+            'receptionist' => ['dashboard', 'calendar', 'patients'],
+            'website_manager' => ['dashboard', 'theme-customizer', 'seo-manager', 'seo-redirects', 'cms-pages'],
+            'billing' => ['dashboard', 'calendar', 'patients', 'inventory', 'billing'],
+        ];
+
+        return in_array($module, $matrix[$role] ?? [], true);
     }
 
     private static function loadEnv(): void
@@ -194,37 +262,196 @@ class StandaloneRunner
     private static function handleAdmin(string $uri): void
     {
         $action = trim(preg_replace('#^/admin/?#', '', $uri), '/');
-        if ($action === '' || $action === 'dashboard') {
-            self::renderView('dashboard');
+
+        // 1. Login Endpoint
+        if ($action === 'login') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $email = strtolower(trim($_POST['email'] ?? ''));
+                $password = $_POST['password'] ?? '';
+                $users = self::getTestUsers();
+
+                $matchedUser = null;
+                foreach ($users as $uEmail => $uData) {
+                    if (strtolower($uEmail) === $email) {
+                        $matchedUser = array_merge($uData, ['email' => $uEmail]);
+                        break;
+                    }
+                }
+
+                // Fallback: check if submitted value matches role key (for testing convenience)
+                if (!$matchedUser) {
+                    foreach ($users as $uEmail => $uData) {
+                        if ($uData['role'] === $email) {
+                            $matchedUser = array_merge($uData, ['email' => $uEmail]);
+                            break;
+                        }
+                    }
+                }
+
+                if ($matchedUser && ($matchedUser['password'] === $password || !empty($_POST['demo_quick_login']))) {
+                    $_SESSION['auth_user'] = $matchedUser;
+                    header('Location: /advanced-dental-clinic/admin/dashboard');
+                    exit;
+                }
+
+                self::renderAuthView('login', [
+                    'error' => 'Invalid clinical credentials. Please verify your registered email and password.',
+                    'email' => $email,
+                ]);
+                return;
+            }
+
+            if (!empty($_SESSION['auth_user'])) {
+                header('Location: /advanced-dental-clinic/admin/dashboard');
+                exit;
+            }
+
+            self::renderAuthView('login');
             return;
         }
 
-        if ($action === 'theme-customizer') {
-            self::renderView('theme-customizer');
+        // 2. Forgot Password Endpoint
+        if ($action === 'forgot-password') {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $email = strtolower(trim($_POST['email'] ?? ''));
+                self::renderAuthView('forgot-password', [
+                    'reset_sent' => true,
+                    'email' => $email,
+                ]);
+                return;
+            }
+            self::renderAuthView('forgot-password');
             return;
         }
 
-        if ($action === 'seo-manager') {
-            self::renderView('seo-manager');
+        // 3. Logout Endpoint
+        if ($action === 'logout') {
+            unset($_SESSION['auth_user']);
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                session_destroy();
+            }
+            session_start();
+            self::renderAuthView('login', [
+                'message' => 'You have been securely signed out of your clinical workspace session.',
+            ]);
             return;
         }
 
-        if ($action === 'seo-redirects') {
-            self::renderView('seo-redirects');
+        // 4. Authentication Barrier - All other routes require an active session
+        if (empty($_SESSION['auth_user'])) {
+            header('Location: /advanced-dental-clinic/admin/login');
+            exit;
+        }
+
+        // 5. Route Normalization to module key
+        $module = match ($action) {
+            '', 'dashboard' => 'dashboard',
+            'appointments/calendar', 'calendar' => 'calendar',
+            'emr/odontogram', 'odontogram' => 'odontogram',
+            'patients' => 'patients',
+            'clinics', 'multi-clinic' => 'clinics',
+            'inventory' => 'inventory',
+            'billing' => 'billing',
+            'theme-customizer' => 'theme-customizer',
+            'seo-manager' => 'seo-manager',
+            'seo-redirects' => 'seo-redirects',
+            'cms-pages', 'cms' => 'cms-pages',
+            'roles', 'users' => 'roles',
+            default => 'dashboard',
+        };
+
+        // 6. Role-Based Access Control (RBAC) Guard - Strict Data Leak Barrier
+        $userRole = $_SESSION['auth_user']['role'] ?? 'guest';
+        if (!self::checkPermission($module, $userRole)) {
+            http_response_code(403);
+            self::renderForbiddenView($module, $_SESSION['auth_user']);
             return;
         }
 
-        if ($action === 'appointments/calendar') {
-            self::renderView('calendar');
-            return;
+        self::renderView($module);
+    }
+
+    private static function renderAuthView(string $viewName, array $data = []): void
+    {
+        $viewsDir = dirname(__DIR__) . '/resources/views';
+        $file = $viewsDir . '/admin/auth/' . $viewName . '.blade.php';
+        if (!file_exists($file)) {
+            echo "<h2>Auth view not found: {$viewName}</h2>";
+            exit;
         }
 
-        if ($action === 'emr/odontogram') {
-            self::renderView('odontogram');
-            return;
-        }
+        $error = $data['error'] ?? null;
+        $message = $data['message'] ?? null;
+        $reset_sent = $data['reset_sent'] ?? false;
+        $email = $data['email'] ?? 'admin@example.com';
 
-        self::renderView('dashboard');
+        ob_start();
+        include $file;
+        $html = ob_get_clean();
+
+        // Replace URLs
+        $html = str_replace([
+            '{{ url(\'/admin/login\') }}',
+            '{{ url(\'/admin/forgot-password\') }}',
+            '{{ url(\'/admin/dashboard\') }}',
+            '{{ url(\'/\') }}',
+        ], [
+            '/advanced-dental-clinic/admin/login',
+            '/advanced-dental-clinic/admin/forgot-password',
+            '/advanced-dental-clinic/admin/dashboard',
+            '/advanced-dental-clinic/',
+        ], $html);
+
+        $html = preg_replace('/@csrf/', '', $html);
+        $html = preg_replace('/\{\{.*?\}\}/', '', $html);
+
+        header('Content-Type: text/html; charset=utf-8');
+        echo $html;
+        exit;
+    }
+
+    private static function renderForbiddenView(string $module, array $authUser): void
+    {
+        $viewsDir = dirname(__DIR__) . '/resources/views';
+        $file = $viewsDir . '/admin/auth/forbidden.blade.php';
+
+        $moduleLabels = [
+            'dashboard' => 'Practice Dashboard',
+            'calendar' => 'Clinical Scheduler & Calendar',
+            'odontogram' => 'Odontogram EMR & Clinical Charting',
+            'patients' => 'Patient Records EHR',
+            'clinics' => 'Multi-Clinic Branch Manager',
+            'inventory' => 'Dental Supplies & Restorative Stock',
+            'billing' => 'Billing, Invoices & POS',
+            'theme-customizer' => 'Theme Customizer',
+            'seo-manager' => 'Yoast SEO & Scripts',
+            'seo-redirects' => 'URL 301 Redirects',
+            'cms-pages' => 'Website CMS Pages',
+            'roles' => 'Staff Directory & RBAC Roles',
+        ];
+
+        $user_role_label = $authUser['role_label'] ?? 'Restricted Staff';
+        $module_name = $moduleLabels[$module] ?? ucfirst($module);
+
+        ob_start();
+        include $file;
+        $html = ob_get_clean();
+
+        $html = str_replace([
+            '{{ url(\'/admin/dashboard\') }}',
+            '{{ url(\'/admin/logout\') }}',
+            '{{ url(\'/\') }}',
+        ], [
+            '/advanced-dental-clinic/admin/dashboard',
+            '/advanced-dental-clinic/admin/logout',
+            '/advanced-dental-clinic/',
+        ], $html);
+
+        $html = preg_replace('/\{\{.*?\}\}/', '', $html);
+
+        header('Content-Type: text/html; charset=utf-8');
+        echo $html;
+        exit;
     }
 
     private static function renderView(string $viewName): void
@@ -234,7 +461,7 @@ class StandaloneRunner
 
         $layoutHtml = file_exists($layoutFile) ? file_get_contents($layoutFile) : '';
 
-        // Determine view file
+        // Determine view file for all 12 modules
         $viewFile = match ($viewName) {
             'dashboard' => $viewsDir . '/admin/dashboard.blade.php',
             'theme-customizer' => $viewsDir . '/admin/theme/customizer.blade.php',
@@ -242,6 +469,12 @@ class StandaloneRunner
             'seo-redirects' => $viewsDir . '/admin/seo/redirects.blade.php',
             'calendar' => $viewsDir . '/admin/appointments/calendar.blade.php',
             'odontogram' => $viewsDir . '/admin/emr/odontogram.blade.php',
+            'patients' => $viewsDir . '/admin/patients/index.blade.php',
+            'clinics' => $viewsDir . '/admin/clinics/index.blade.php',
+            'inventory' => $viewsDir . '/admin/inventory/index.blade.php',
+            'billing' => $viewsDir . '/admin/billing/index.blade.php',
+            'cms-pages' => $viewsDir . '/admin/cms/pages.blade.php',
+            'roles' => $viewsDir . '/admin/roles/index.blade.php',
             default => $viewsDir . '/admin/dashboard.blade.php',
         };
 
@@ -259,6 +492,17 @@ class StandaloneRunner
             $sections[$sec[1]] = trim($sec[2]);
         }
 
+        // Populate authenticated user details into header yields
+        $authUser = $_SESSION['auth_user'] ?? [
+            'name' => 'Demo Administrator',
+            'role_label' => 'Super Administrator',
+            'email' => 'admin@example.com',
+            'role' => 'super_admin',
+        ];
+        $sections['user_name'] = $authUser['name'] ?? 'Authorized Clinician';
+        $sections['user_role_label'] = $authUser['role_label'] ?? 'Clinical Staff';
+        $sections['user_email'] = $authUser['email'] ?? 'staff@advanceddental.com';
+
         // Render layout
         $rendered = $layoutHtml;
 
@@ -269,22 +513,40 @@ class StandaloneRunner
             return $sections[$key] ?? $default;
         }, $rendered);
 
-        // Replace Blade helpers and URLs
+        // Replace Blade helpers and URLs for all 12 modules and auth actions
         $rendered = str_replace([
             '{{ url(\'/admin/appointments/calendar\') }}',
             '{{ url(\'/admin/emr/odontogram\') }}',
+            '{{ url(\'/admin/patients\') }}',
+            '{{ url(\'/admin/clinics\') }}',
+            '{{ url(\'/admin/multi-clinic\') }}',
+            '{{ url(\'/admin/inventory\') }}',
+            '{{ url(\'/admin/billing\') }}',
             '{{ url(\'/admin/theme-customizer\') }}',
             '{{ url(\'/admin/seo-manager\') }}',
             '{{ url(\'/admin/seo-redirects\') }}',
+            '{{ url(\'/admin/cms-pages\') }}',
+            '{{ url(\'/admin/roles\') }}',
             '{{ url(\'/admin/dashboard\') }}',
+            '{{ url(\'/admin/logout\') }}',
+            '{{ url(\'/admin/login\') }}',
             '{{ url(\'/\') }}',
         ], [
             '/advanced-dental-clinic/admin/appointments/calendar',
             '/advanced-dental-clinic/admin/emr/odontogram',
+            '/advanced-dental-clinic/admin/patients',
+            '/advanced-dental-clinic/admin/clinics',
+            '/advanced-dental-clinic/admin/clinics',
+            '/advanced-dental-clinic/admin/inventory',
+            '/advanced-dental-clinic/admin/billing',
             '/advanced-dental-clinic/admin/theme-customizer',
             '/advanced-dental-clinic/admin/seo-manager',
             '/advanced-dental-clinic/admin/seo-redirects',
+            '/advanced-dental-clinic/admin/cms-pages',
+            '/advanced-dental-clinic/admin/roles',
             '/advanced-dental-clinic/admin/dashboard',
+            '/advanced-dental-clinic/admin/logout',
+            '/advanced-dental-clinic/admin/login',
             '/advanced-dental-clinic/',
         ], $rendered);
 
@@ -371,6 +633,45 @@ class StandaloneRunner
         $rendered = preg_replace("/@if\(session\('success'\)\).*?@endif/s", '', $rendered);
         $rendered = preg_replace("/@if\(session\('error'\)\).*?@endif/s", '', $rendered);
         $rendered = preg_replace("/@if\(session\('status'\)\).*?@endif/s", '', $rendered);
+
+        // 1. DYNAMIC ACTIVE HIGHLIGHT: Strip all existing active classes from links
+        $rendered = preg_replace('/class="nav-link\s+active\s*"/', 'class="nav-link"', $rendered);
+        $rendered = preg_replace('/class="nav-link\s+active"/', 'class="nav-link"', $rendered);
+
+        // 2. DYNAMIC ACTIVE HIGHLIGHT: Inject active class strictly into the current view nav link
+        $rendered = preg_replace_callback(
+            '/(<li[^>]*data-nav="' . preg_quote($viewName, '/') . '"[^>]*>.*?<a[^>]*class="nav-link)([^"]*)(")/s',
+            function ($matches) {
+                return $matches[1] . ' active' . $matches[2] . $matches[3];
+            },
+            $rendered
+        );
+
+        // 3. DYNAMIC RBAC SIDEBAR MASKING: Prevent clinical & financial data leaks
+        $userRole = $authUser['role'] ?? 'super_admin';
+        $rendered = preg_replace_callback(
+            '/<li class="nav-item"[^>]*data-roles="([^"]+)"[^>]*>.*?<\/li>/s',
+            function ($matches) use ($userRole) {
+                $allowedRoles = array_map('trim', explode(',', $matches[1]));
+                if ($userRole === 'super_admin' || in_array($userRole, $allowedRoles, true)) {
+                    return $matches[0];
+                }
+                return ''; // Exclude unauthorized navigation item
+            },
+            $rendered
+        );
+
+        $rendered = preg_replace_callback(
+            '/<li class="nav-header"[^>]*data-roles="([^"]+)"[^>]*>.*?<\/li>/s',
+            function ($matches) use ($userRole) {
+                $allowedRoles = array_map('trim', explode(',', $matches[1]));
+                if ($userRole === 'super_admin' || in_array($userRole, $allowedRoles, true)) {
+                    return $matches[0];
+                }
+                return ''; // Exclude unauthorized section header
+            },
+            $rendered
+        );
 
         // Strip remaining Blade directives safely
         $rendered = preg_replace('/@stack\([^\)]+\)/', '', $rendered);
