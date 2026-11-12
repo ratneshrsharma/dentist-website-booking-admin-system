@@ -20,6 +20,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => redirect('/admin/dashboard'));
 
+// Public Digital Invoices & Patient Tax Receipts
+Route::get('/billing/{invoice_ref}', function ($invoice_ref) {
+    require_once app_path('StandaloneRunner.php');
+    \App\StandaloneRunner::handlePublicInvoice($invoice_ref);
+});
+
 Route::prefix('admin')->group(function (): void {
     // Authentication Endpoints
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -49,6 +55,10 @@ Route::prefix('admin')->group(function (): void {
 
     // 7. Billing, Invoices & POS
     Route::get('/billing', fn () => view('admin.billing.index'));
+    Route::get('/billing/{invoice_ref}', function ($invoice_ref) {
+        require_once app_path('StandaloneRunner.php');
+        \App\StandaloneRunner::handlePublicInvoice($invoice_ref);
+    });
 
     // 8. Theme & Typography Customizer
     Route::get('/theme-customizer', [ThemeCustomizerController::class, 'index']);

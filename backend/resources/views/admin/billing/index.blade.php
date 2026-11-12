@@ -116,7 +116,11 @@
                 <tbody id="billingTableBody">
                     <!-- Row 1 -->
                     <tr id="inv-row-891" data-id="INV-2026-0891" data-patient="David Sample" data-mrn="MRN-2026-0001" data-procedure="Guided Implant Surgical Placement (#19)" data-doctor="Dr. Ethan Caldwell" data-amount="1650.00" data-method="Visa Card" data-status="Paid in Full">
-                        <td class="ps-3"><span class="badge bg-light text-dark border fw-mono row-inv-id">INV-2026-0891</span></td>
+                        <td class="ps-3">
+                            <a href="{{ url('/billing/INV-2026-0891') }}" target="_blank" class="badge bg-light text-primary border fw-mono row-inv-id text-decoration-none" title="Open Digital Invoice View">
+                                <i class="bi bi-box-arrow-up-right me-1"></i>INV-2026-0891
+                            </a>
+                        </td>
                         <td>
                             <span class="fw-bold text-dark d-block row-patient">David Sample</span>
                             <small class="text-muted row-mrn">MRN-2026-0001</small>
@@ -129,6 +133,7 @@
                         <td><span class="small text-muted row-date">Today, 11:30 AM</span></td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/billing/INV-2026-0891') }}" target="_blank" class="btn btn-outline-primary" title="View Digital Invoice"><i class="bi bi-eye"></i></a>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openPrintReceiptModal('inv-row-891')" title="Print Tax Receipt"><i class="bi bi-printer"></i></button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openWhatsAppModal('inv-row-891')" title="Send WhatsApp Receipt"><i class="bi bi-whatsapp text-success"></i></button>
                                 <button type="button" class="btn btn-outline-danger" onclick="voidInvoiceRow('inv-row-891')" title="Void Invoice"><i class="bi bi-x-circle"></i></button>
@@ -138,7 +143,11 @@
 
                     <!-- Row 2 -->
                     <tr id="inv-row-890" data-id="INV-2026-0890" data-patient="Emma Jenkins" data-mrn="MRN-2026-0042" data-procedure="Clear Aligner Monthly Refinement (Tray 8)" data-doctor="Dr. Maya Lin" data-amount="280.00" data-method="Direct Debit" data-status="Paid in Full">
-                        <td class="ps-3"><span class="badge bg-light text-dark border fw-mono row-inv-id">INV-2026-0890</span></td>
+                        <td class="ps-3">
+                            <a href="{{ url('/billing/INV-2026-0890') }}" target="_blank" class="badge bg-light text-primary border fw-mono row-inv-id text-decoration-none" title="Open Digital Invoice View">
+                                <i class="bi bi-box-arrow-up-right me-1"></i>INV-2026-0890
+                            </a>
+                        </td>
                         <td>
                             <span class="fw-bold text-dark d-block row-patient">Emma Jenkins</span>
                             <small class="text-muted row-mrn">MRN-2026-0042</small>
@@ -151,6 +160,7 @@
                         <td><span class="small text-muted row-date">Today, 09:45 AM</span></td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/billing/INV-2026-0890') }}" target="_blank" class="btn btn-outline-primary" title="View Digital Invoice"><i class="bi bi-eye"></i></a>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openPrintReceiptModal('inv-row-890')" title="Print Tax Receipt"><i class="bi bi-printer"></i></button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openWhatsAppModal('inv-row-890')" title="Send WhatsApp Receipt"><i class="bi bi-whatsapp text-success"></i></button>
                                 <button type="button" class="btn btn-outline-danger" onclick="voidInvoiceRow('inv-row-890')" title="Void Invoice"><i class="bi bi-x-circle"></i></button>
@@ -160,7 +170,11 @@
 
                     <!-- Row 3 -->
                     <tr id="inv-row-889" data-id="INV-2026-0889" data-patient="Michael Brown" data-mrn="MRN-2026-0098" data-procedure="Molar Endodontic Therapy & Core Build-Up" data-doctor="Dr. Marcus Vance" data-amount="950.00" data-method="Dental Net Ins." data-status="Insurance Pending">
-                        <td class="ps-3"><span class="badge bg-light text-dark border fw-mono row-inv-id">INV-2026-0889</span></td>
+                        <td class="ps-3">
+                            <a href="{{ url('/billing/INV-2026-0889') }}" target="_blank" class="badge bg-light text-primary border fw-mono row-inv-id text-decoration-none" title="Open Digital Invoice View">
+                                <i class="bi bi-box-arrow-up-right me-1"></i>INV-2026-0889
+                            </a>
+                        </td>
                         <td>
                             <span class="fw-bold text-dark d-block row-patient">Michael Brown</span>
                             <small class="text-muted row-mrn">MRN-2026-0098</small>
@@ -173,6 +187,7 @@
                         <td><span class="small text-muted row-date">Yesterday</span></td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/billing/INV-2026-0889') }}" target="_blank" class="btn btn-outline-primary" title="View Digital Invoice"><i class="bi bi-eye"></i></a>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openPrintReceiptModal('inv-row-889')" title="Print Tax Receipt"><i class="bi bi-printer"></i></button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openWhatsAppModal('inv-row-889')" title="Send WhatsApp Receipt"><i class="bi bi-whatsapp text-success"></i></button>
                                 <button type="button" class="btn btn-outline-danger" onclick="voidInvoiceRow('inv-row-889')" title="Void Invoice"><i class="bi bi-x-circle"></i></button>
@@ -182,7 +197,11 @@
 
                     <!-- Row 4 -->
                     <tr id="inv-row-888" data-id="INV-2026-0888" data-patient="Sophia Turner" data-mrn="MRN-2026-0112" data-procedure="Pediatric Exam, Prophylaxis & Sealants" data-doctor="Dr. Olivia Harper" data-amount="145.00" data-method="Cash POS" data-status="Paid in Full">
-                        <td class="ps-3"><span class="badge bg-light text-dark border fw-mono row-inv-id">INV-2026-0888</span></td>
+                        <td class="ps-3">
+                            <a href="{{ url('/billing/INV-2026-0888') }}" target="_blank" class="badge bg-light text-primary border fw-mono row-inv-id text-decoration-none" title="Open Digital Invoice View">
+                                <i class="bi bi-box-arrow-up-right me-1"></i>INV-2026-0888
+                            </a>
+                        </td>
                         <td>
                             <span class="fw-bold text-dark d-block row-patient">Sophia Turner</span>
                             <small class="text-muted row-mrn">MRN-2026-0112</small>
@@ -195,6 +214,7 @@
                         <td><span class="small text-muted row-date">19 Mar 2026</span></td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/billing/INV-2026-0888') }}" target="_blank" class="btn btn-outline-primary" title="View Digital Invoice"><i class="bi bi-eye"></i></a>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openPrintReceiptModal('inv-row-888')" title="Print Tax Receipt"><i class="bi bi-printer"></i></button>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openWhatsAppModal('inv-row-888')" title="Send WhatsApp Receipt"><i class="bi bi-whatsapp text-success"></i></button>
                                 <button type="button" class="btn btn-outline-danger" onclick="voidInvoiceRow('inv-row-888')" title="Void Invoice"><i class="bi bi-x-circle"></i></button>

@@ -19,8 +19,8 @@ DirectoryIndex index.html index.php
     # 3. Route API requests (/api/*) directly to Laravel Public Index
     RewriteRule ^api(/.*)?$ backend/public/index.php [L,QSA]
 
-    # 4. Route AdminLTE Blade Admin requests (/admin/*) to Laravel Public Index
-    RewriteRule ^admin(/.*)?$ backend/public/index.php [L,QSA]
+    # 4. Route Billing Invoices (/billing/*) & AdminLTE Blade Admin requests (/admin/*) to Laravel Public Index
+    RewriteRule ^(billing|admin)(/.*)?$ backend/public/index.php [L,QSA]
 
     # 5. Route Storage Symlink (/storage/*) to Laravel Public Storage
     RewriteRule ^storage/(.*)$ backend/public/storage/$1 [L]
@@ -40,7 +40,7 @@ DirectoryIndex index.html index.php
     # 9. Fallback for Patient-Facing Next.js Portal (Home / 404)
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_URI} !^.*(api|admin|backend|storage)
+    RewriteCond %{REQUEST_URI} !^.*(api|admin|billing|backend|storage)
     RewriteRule ^(.*)$ index.html [L]
 </IfModule>
 

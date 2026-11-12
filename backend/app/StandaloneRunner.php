@@ -35,6 +35,20 @@ class StandaloneRunner
             return;
         }
 
+        // 1.5. Public Digital Invoices & Tax Receipts (e.g. /billing/INV-2026-0891 or /admin/billing/INV-2026-0891)
+        if (preg_match('#^/(?:admin/)?billing/([A-Za-z0-9\-_]+)$#i', $uri, $matches)) {
+            $candidate = $matches[1];
+            if ($candidate !== 'index' && $candidate !== '') {
+                self::handlePublicInvoice($candidate);
+                return;
+            }
+        }
+
+        if ($uri === '/billing' || $uri === '/billing/') {
+            header('Location: /advanced-dental-clinic/billing/INV-2026-0891');
+            exit;
+        }
+
         // 2. Admin Portal Endpoints
         if (str_starts_with($uri, '/admin')) {
             self::handleAdmin($uri);
@@ -799,6 +813,12 @@ class StandaloneRunner
     {
         $action = trim(preg_replace('#^/admin/?#', '', $uri), '/');
 
+        // Check if an invoice was requested under /admin/billing/{id}
+        if (preg_match('#^billing/([A-Za-z0-9\-_]+)$#i', $action, $m) && $m[1] !== 'index' && $m[1] !== '') {
+            self::handlePublicInvoice($m[1]);
+            return;
+        }
+
         // 1. Login Endpoint
         if ($action === 'login') {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -1372,6 +1392,173 @@ class StandaloneRunner
 
         header('Content-Type: text/html; charset=utf-8');
         echo $rendered;
+        exit;
+    }
+
+    public static function handlePublicInvoice(string $invoiceId): void
+    {
+        $registry = [
+            'INV-2026-0891' => [
+                'id' => 'INV-2026-0891',
+                'date' => '21 Mar 2026, 11:30 AM',
+                'patient' => 'David Sample',
+                'mrn' => 'MRN-2026-0001',
+                'procedure' => 'Guided Implant Surgical Placement (#19)',
+                'doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
+                'amount' => 1650.00,
+                'method' => 'Visa Card POS (Auth #892410)',
+                'status' => 'Paid in Full',
+                'items' => [
+                    [
+                        'code' => 'D6010',
+                        'title' => 'Guided Dental Implant Placement (#19)',
+                        'description' => 'Precision 3D CBCT-guided surgical osteotomy and Straumann BLX Titanium fixture',
+                        'qty' => 1,
+                        'unit_price' => 1250.00,
+                        'total' => 1250.00,
+                    ],
+                    [
+                        'code' => 'D7953',
+                        'title' => 'Bone Replacement Graft for Ridge Preservation',
+                        'description' => 'Bio-Oss collagen osteoinductive graft material and Bio-Gide resorbable barrier membrane',
+                        'qty' => 1,
+                        'unit_price' => 400.00,
+                        'total' => 400.00,
+                    ],
+                ],
+            ],
+            'INV-2026-0890' => [
+                'id' => 'INV-2026-0890',
+                'date' => '21 Mar 2026, 09:45 AM',
+                'patient' => 'Emma Jenkins',
+                'mrn' => 'MRN-2026-0042',
+                'procedure' => 'Clear Aligner Monthly Refinement (Tray 8)',
+                'doctor' => 'Dr. Maya Lin, DDS',
+                'amount' => 280.00,
+                'method' => 'Direct Debit',
+                'status' => 'Paid in Full',
+                'items' => [
+                    [
+                        'code' => 'D8080',
+                        'title' => 'Clear Aligner Orthodontic Refinement & Tracking',
+                        'description' => '3D iTero intraoral digital scan, tracking audit and aligner tray sets #8 & #9',
+                        'qty' => 1,
+                        'unit_price' => 280.00,
+                        'total' => 280.00,
+                    ],
+                ],
+            ],
+            'INV-2026-0889' => [
+                'id' => 'INV-2026-0889',
+                'date' => '20 Mar 2026, 16:15 PM',
+                'patient' => 'Michael Brown',
+                'mrn' => 'MRN-2026-0098',
+                'procedure' => 'Molar Endodontic Therapy & Core Build-Up',
+                'doctor' => 'Dr. Marcus Vance, DDS',
+                'amount' => 950.00,
+                'method' => 'Dental Net Ins. Copay',
+                'status' => 'Insurance Pending',
+                'items' => [
+                    [
+                        'code' => 'D3330',
+                        'title' => 'Molar Root Canal Endodontic Therapy (#30)',
+                        'description' => 'WaveOne rotary instrumentation, warm vertical obturation and digital apical radiography',
+                        'qty' => 1,
+                        'unit_price' => 750.00,
+                        'total' => 750.00,
+                    ],
+                    [
+                        'code' => 'D2950',
+                        'title' => 'Core Build-Up Including Pins',
+                        'description' => 'Dual-cure radiopaque composite resin core foundation preparation',
+                        'qty' => 1,
+                        'unit_price' => 200.00,
+                        'total' => 200.00,
+                    ],
+                ],
+            ],
+            'INV-2026-0888' => [
+                'id' => 'INV-2026-0888',
+                'date' => '20 Mar 2026, 14:00 PM',
+                'patient' => 'Sophia Rodriguez',
+                'mrn' => 'MRN-2026-0112',
+                'procedure' => 'Full Mouth Ultrasonic Debridement & Polish',
+                'doctor' => 'Dr. Ethan Caldwell, DDS',
+                'amount' => 120.00,
+                'method' => 'Apple Pay Contactless',
+                'status' => 'Paid in Full',
+                'items' => [
+                    [
+                        'code' => 'D4346',
+                        'title' => 'Full Mouth Scaling & Ultrasonic Debridement',
+                        'description' => 'Supragingival and subgingival calculus removal and air-polishing prophylaxis',
+                        'qty' => 1,
+                        'unit_price' => 120.00,
+                        'total' => 120.00,
+                    ],
+                ],
+            ],
+            'INV-2026-0887' => [
+                'id' => 'INV-2026-0887',
+                'date' => '19 Mar 2026, 11:15 AM',
+                'patient' => 'James Wilson',
+                'mrn' => 'MRN-2026-0145',
+                'procedure' => 'Ceramic Crown Preparation & CAD/CAM Scan (#14)',
+                'doctor' => 'Dr. Maya Lin, DDS',
+                'amount' => 680.00,
+                'method' => 'Mastercard POS',
+                'status' => 'Paid in Full',
+                'items' => [
+                    [
+                        'code' => 'D2740',
+                        'title' => 'Monolithic Zirconia Crown Restoration (#14)',
+                        'description' => 'Precision CAD/CAM digital impression, prep and temporary protective restoration',
+                        'qty' => 1,
+                        'unit_price' => 680.00,
+                        'total' => 680.00,
+                    ],
+                ],
+            ],
+        ];
+
+        // Also attempt PDO lookup if database exists
+        $pdo = self::getPdo();
+        if ($pdo) {
+            try {
+                $stmt = $pdo->prepare("SELECT * FROM invoices WHERE invoice_number = ? LIMIT 1");
+                $stmt->execute([$invoiceId]);
+                $dbInv = $stmt->fetch(\PDO::FETCH_ASSOC);
+                if ($dbInv) {
+                    $registry[$invoiceId] = [
+                        'id' => $dbInv['invoice_number'] ?? $invoiceId,
+                        'date' => date('d M Y, H:i A', strtotime($dbInv['created_at'] ?? 'now')),
+                        'patient' => $dbInv['patient_name'] ?? 'David Sample',
+                        'mrn' => 'MRN-2026-' . str_pad($dbInv['patient_id'] ?? '1', 4, '0', STR_PAD_LEFT),
+                        'procedure' => $dbInv['description'] ?? 'General Dental Procedure',
+                        'doctor' => $dbInv['doctor_name'] ?? 'Dr. Ethan Caldwell, DDS, FACP',
+                        'amount' => (float)($dbInv['total_amount'] ?? 1650.00),
+                        'method' => $dbInv['payment_method'] ?? 'Visa Card POS',
+                        'status' => $dbInv['payment_status'] ?? 'Paid in Full',
+                    ];
+                }
+            } catch (\Throwable $e) {}
+        }
+
+        $invKey = strtoupper(trim($invoiceId));
+        $invoice = $registry[$invKey] ?? $registry['INV-2026-0891'];
+        $invoice['id'] = $invKey; // Reflect exact requested ID
+
+        $viewsDir = dirname(__DIR__) . '/resources/views';
+        $file = $viewsDir . '/admin/billing/invoice.blade.php';
+
+        $home_url = '/advanced-dental-clinic/';
+
+        ob_start();
+        include $file;
+        $html = ob_get_clean();
+
+        header('Content-Type: text/html; charset=utf-8');
+        echo $html;
         exit;
     }
 }

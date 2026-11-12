@@ -38,22 +38,100 @@
             background-color: var(--app-sidebar-bg) !important;
         }
 
-        .brand-link {
+        .sidebar-brand {
+            height: auto !important;
+            min-height: 4.25rem !important;
+            padding: 0.75rem 1rem !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
             background-color: #0F172A !important;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-            padding: 1rem 1.25rem !important;
+        }
+
+        .sidebar-brand .brand-link {
+            height: auto !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.75rem !important;
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            white-space: normal !important;
+            line-height: 1.25 !important;
+            text-decoration: none !important;
+            width: 100% !important;
+        }
+
+        .brand-icon-box {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #0D9488, #0F766E);
+            border-radius: 9px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .brand-details {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
         }
 
         .brand-text {
             font-weight: 800;
-            letter-spacing: -0.02em;
+            font-size: 0.9375rem;
+            letter-spacing: -0.01em;
             color: #FFFFFF !important;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
         }
 
         .brand-subtext {
             font-size: 0.6875rem;
             color: #94A3B8;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             display: block;
+            margin-top: 2px;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-bell-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .nav-bell-btn:hover {
+            background-color: #F1F5F9;
+        }
+
+        .nav-bell-badge {
+            top: 4px;
+            right: 4px;
+            font-size: 0.65rem;
+            padding: 0.22em 0.45em;
+            line-height: 1;
+            box-shadow: 0 0 0 2px #FFFFFF;
+            font-weight: 700;
         }
 
         .clinic-selector-badge {
@@ -161,26 +239,43 @@
                 <ul class="navbar-nav ms-auto align-items-center">
                     <!-- Quick Emergency Triage Notification -->
                     <li class="nav-item dropdown me-2">
-                        <a class="nav-link position-relative" data-bs-toggle="dropdown" href="#">
-                            <i class="bi bi-bell fs-5"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        <a class="nav-link position-relative nav-bell-btn" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false" title="Urgent Clinical Notifications">
+                            <i class="bi bi-bell fs-5 text-secondary"></i>
+                            <span class="badge bg-danger rounded-pill position-absolute nav-bell-badge">
                                 3
                             </span>
                         </a>
-                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end shadow">
-                            <span class="dropdown-item dropdown-header fw-bold">3 Urgent Notifications</span>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Emergency triage: Severe trauma
-                                <span class="float-end text-muted text-sm">4 mins ago</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item">
-                                <i class="bi bi-box-seam-fill text-warning me-2"></i> Low stock: Titanium Implants (Batch #849)
-                                <span class="float-end text-muted text-sm">1 hour ago</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a href="#" class="dropdown-item dropdown-footer text-center">View All Notifications</a>
+                        <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end shadow border-0 mt-2" style="min-width: 320px; border-radius: 12px;">
+                            <div class="p-3 bg-light border-bottom d-flex justify-content-between align-items-center">
+                                <span class="fw-bold text-dark small mb-0"><i class="bi bi-bell-fill text-danger me-2"></i>3 Urgent Clinical Alerts</span>
+                                <span class="badge bg-danger-subtle text-danger small">Action Required</span>
+                            </div>
+                            <div class="list-group list-group-flush small">
+                                <a href="{{ url('/admin/appointments/calendar') }}" class="list-group-item list-group-item-action py-2 px-3 border-bottom">
+                                    <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                        <strong class="text-danger"><i class="bi bi-exclamation-octagon-fill me-1"></i>Emergency Triage</strong>
+                                        <small class="text-muted">4m ago</small>
+                                    </div>
+                                    <p class="mb-0 text-secondary" style="font-size: 0.78rem;">Severe acute trauma - Patient David S. arriving in Chair 1.</p>
+                                </a>
+                                <a href="{{ url('/admin/inventory') }}" class="list-group-item list-group-item-action py-2 px-3 border-bottom">
+                                    <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                        <strong class="text-warning"><i class="bi bi-box-seam-fill me-1"></i>Low Material Stock</strong>
+                                        <small class="text-muted">1h ago</small>
+                                    </div>
+                                    <p class="mb-0 text-secondary" style="font-size: 0.78rem;">Straumann BLX Implants below threshold (3 remaining).</p>
+                                </a>
+                                <a href="{{ url('/admin/billing') }}" class="list-group-item list-group-item-action py-2 px-3">
+                                    <div class="d-flex w-100 justify-content-between align-items-center mb-1">
+                                        <strong class="text-primary"><i class="bi bi-cash-stack me-1"></i>POS Claim Settled</strong>
+                                        <small class="text-muted">2h ago</small>
+                                    </div>
+                                    <p class="mb-0 text-secondary" style="font-size: 0.78rem;">Invoice INV-2026-0891 confirmed paid (£1,650.00).</p>
+                                </a>
+                            </div>
+                            <div class="p-2 border-top text-center bg-light">
+                                <a href="{{ url('/admin/dashboard') }}" class="small text-decoration-none fw-semibold text-primary">View Clinical Dashboard Overview</a>
+                            </div>
                         </div>
                     </li>
 
@@ -226,9 +321,14 @@
         <!-- Main Sidebar Container -->
         <aside class="app-sidebar shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
-                <a href="{{ url('/admin/dashboard') }}" class="brand-link text-decoration-none">
-                    <span class="brand-text">Advanced Dental <span class="badge bg-success small ms-1">PRO</span></span>
-                    <span class="brand-subtext">Clinical EMR & Logistics</span>
+                <a href="{{ url('/admin/dashboard') }}" class="brand-link">
+                    <div class="brand-icon-box">
+                        <i class="bi bi-hospital"></i>
+                    </div>
+                    <div class="brand-details">
+                        <span class="brand-text">Advanced Dental <span class="badge bg-success small" style="font-size: 0.625rem; padding: 0.25em 0.5em;">PRO</span></span>
+                        <span class="brand-subtext">Clinical EMR & Logistics</span>
+                    </div>
                 </a>
             </div>
 
