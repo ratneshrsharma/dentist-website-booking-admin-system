@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Dental PRO - Developer Architectural Specification & API Guide</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary: #0D9488;
+            --primary-dark: #0F766E;
+            --primary-light: #CCFBF1;
+            --secondary: #475569;
+            --dark: #0F172A;
+            --surface: #FFFFFF;
+            --bg: #F8FAFC;
+            --border: #E2E8F0;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --success: #10B981;
+            --info: #0284C7;
+            --code-bg: #1E293B;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: #1E293B;
+            line-height: 1.65;
+            font-size: 15px;
+        }
+
+        /* Top Hero Header */
+        .doc-header {
+            background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0D9488 100%);
+            color: #FFFFFF;
+            padding: 3.5rem 2rem 3rem;
+            border-bottom: 4px solid var(--primary);
+        }
+
+        .header-container {
+            max-width: 1240px;
+            margin: 0 auto;
+        }
+
+        .doc-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .doc-title {
+            font-size: 2.35rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            margin-bottom: 0.75rem;
+            line-height: 1.2;
+        }
+
+        .doc-subtitle {
+            font-size: 1.1rem;
+            color: #CBD5E1;
+            max-width: 850px;
+            font-weight: 400;
+        }
+
+        .doc-meta {
+            margin-top: 1.75rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            font-size: 0.85rem;
+            color: #94A3B8;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 1.25rem;
+        }
+
+        .doc-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        /* Main Layout */
+        .doc-layout {
+            max-width: 1240px;
+            margin: 2.5rem auto 4rem;
+            padding: 0 1.5rem;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+
+        /* Sidebar Navigation */
+        .doc-sidebar {
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            padding: 1.5rem;
+            position: sticky;
+            top: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            max-height: calc(100vh - 3rem);
+            overflow-y: auto;
+        }
+
+        .sidebar-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #64748B;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 0.35rem;
+        }
+
+        .toc-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.45rem 0.65rem;
+            border-radius: 0.5rem;
+            color: #334155;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.15s ease;
+        }
+
+        .toc-link:hover {
+            background: #F1F5F9;
+            color: var(--primary);
+            transform: translateX(3px);
+        }
+
+        .toc-link.active {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        /* Main Content */
+        .doc-content {
+            background: #FFFFFF;
+            border: 1px solid var(--border);
+            border-radius: 0.85rem;
+            padding: 2.5rem 3rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--dark);
+            margin: 2.5rem 0 1.25rem;
+            padding-bottom: 0.65rem;
+            border-bottom: 2px solid #F1F5F9;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1E293B;
+            margin: 1.75rem 0 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        h4 {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #334155;
+            margin: 1.25rem 0 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1.15rem;
+            color: #334155;
+        }
+
+        ul, ol {
+            margin: 0 0 1.25rem 1.5rem;
+            color: #334155;
+        }
+
+        li {
+            margin-bottom: 0.45rem;
+        }
+
+        /* Code Blocks */
+        pre {
+            background: var(--code-bg);
+            color: #E2E8F0;
+            font-family: 'JetBrains Mono', monospace;
+            padding: 1.25rem;
+            border-radius: 0.65rem;
+            overflow-x: auto;
+            font-size: 0.83rem;
+            margin: 1.25rem 0;
+            border: 1px solid #334155;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .key-tag {
+            font-family: 'JetBrains Mono', monospace;
+            background: #F1F5F9;
+            padding: 0.15rem 0.4rem;
+            border-radius: 0.3rem;
+            border: 1px solid #CBD5E1;
+            font-size: 0.78rem;
+            color: #0F172A;
+        }
+
+        /* HTTP Method Badges */
+        .method-badge {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.5rem;
+            border-radius: 0.3rem;
+            text-transform: uppercase;
+            margin-right: 0.5rem;
+        }
+        .method-get { background: #DBEAFE; color: #1D4ED8; border: 1px solid #BFDBFE; }
+        .method-post { background: #DCFCE7; color: #15803D; border: 1px solid #BBF7D0; }
+        .method-put { background: #FEF3C7; color: #B45309; border: 1px solid #FDE68A; }
+        .method-delete { background: #FEE2E2; color: #B91C1C; border: 1px solid #FECACA; }
+
+        /* Endpoint Card */
+        .endpoint-card {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 0.85rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--dark);
+        }
+
+        /* Callout Alerts */
+        .callout {
+            border-radius: 0.5rem;
+            padding: 1.15rem 1.35rem;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+            display: flex;
+            gap: 0.85rem;
+            align-items: flex-start;
+        }
+
+        .callout-info { background: #F0F9FF; border-left: 4px solid var(--info); color: #0369A1; }
+        .callout-success { background: #ECFDF5; border-left: 4px solid var(--success); color: #065F46; }
+        .callout-warning { background: #FFFBEB; border-left: 4px solid var(--accent); color: #92400E; }
+        .callout-icon { font-size: 1.25rem; flex-shrink: 0; margin-top: 1px; }
+
+        /* Tables */
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin: 1rem 0 1.5rem;
+        }
+
+        .spec-table th, .spec-table td {
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--border);
+            text-align: left;
+        }
+
+        .spec-table th {
+            background: #F1F5F9;
+            font-weight: 700;
+            color: #334155;
+        }
+
+        /* Print styles */
+        @media print {
+            body { background: #FFFFFF; font-size: 11pt; }
+            .doc-header { background: #0F172A !important; color: #000; padding: 1.5rem; }
+            .doc-layout { display: block; padding: 0; margin: 0; }
+            .doc-sidebar { display: none; }
+            .doc-content { border: none; box-shadow: none; padding: 0; }
+            pre { background: #F1F5F9; color: #000; border: 1px solid #CBD5E1; }
+        }
+
+        @media (max-width: 900px) {
+            .doc-layout { grid-template-columns: 1fr; }
+            .doc-sidebar { position: static; max-height: none; }
+            .doc-content { padding: 1.5rem; }
+            .doc-title { font-size: 1.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Banner -->
+    <header class="doc-header">
+        <div class="header-container">
+            <div class="doc-badge">
+                <i class="bi bi-code-slash"></i> Technical Architecture &bull; API Specification
+            </div>
+            <h1 class="doc-title">Developer Architectural & REST API Specification</h1>
+            <p class="doc-subtitle">
+                Comprehensive page-by-page and section-by-section engineering documentation covering Next.js static frontend, Laravel 11 / AdminLTE 4 backend, REST API endpoints, request payloads, response schemas, database migrations, and Apache/LiteSpeed `.htaccess` routing rules.
+            </p>
+            <div class="doc-meta">
+                <span><i class="bi bi-diagram-3 text-success"></i> Dual-Surface Architecture (Next.js 15 + Laravel 11)</span>
+                <span><i class="bi bi-shield-lock"></i> OWASP Top 10 &amp; AES-256 Encryption</span>
+                <span><i class="bi bi-cpu"></i> PHP 8.2+ &bull; MySQL InnoDB &bull; REST API v1</span>
+                <span><i class="bi bi-person-badge"></i> Author: Ratnesh Sharma (Senior Architect)</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="doc-layout">
+
+        <!-- Sidebar Navigation -->
+        <aside class="doc-sidebar">
+            <div class="sidebar-title">Architecture Sections</div>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="#arch-overview" class="toc-link"><i class="bi bi-layers"></i> 1. System Architecture Overview</a></li>
+                <li class="toc-item"><a href="#routing-htaccess" class="toc-link"><i class="bi bi-signpost-split"></i> 2. Apache / LiteSpeed Routing</a></li>
+                <li class="toc-item"><a href="#frontend-pages" class="toc-link"><i class="bi bi-window"></i> 3. Frontend Pages &amp; Sections</a></li>
+                <li class="toc-item"><a href="#api-endpoints" class="toc-link"><i class="bi bi-hdd-network"></i> 4. REST API Endpoints &amp; Schemas</a></li>
+                <li class="toc-item"><a href="#database-schema" class="toc-link"><i class="bi bi-database"></i> 5. MySQL Database Migrations</a></li>
+                <li class="toc-item"><a href="#deployment-pkzip" class="toc-link"><i class="bi bi-file-earmark-zip"></i> 6. Hostinger PKZIP Deployment</a></li>
+            </ul>
+        </aside>
+
+        <!-- Document Content -->
+        <main class="doc-content">
+
+            <!-- Section 1: Architecture Overview -->
+            <section id="arch-overview">
+                <h2><i class="bi bi-layers-fill text-primary"></i> 1. Dual-Surface System Architecture</h2>
+                <p>
+                    The <strong>Advanced Dental PRO</strong> platform is engineered with a decoupled dual-surface architecture that guarantees lightning-fast static page delivery alongside robust server-side clinical and financial data management.
+                </p>
+
+                <div class="card-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin: 1.5rem 0;">
+                    <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="bi bi-globe me-2"></i> Client Layer (Next.js 15)</h4>
+                        <p style="font-size: 0.88rem; color: #475569; margin-bottom: 0;">
+                            Pre-rendered static HTML/CSS/JS exported via Next.js App Router (<code class="key-tag">output: 'export'</code>, <code class="key-tag">trailingSlash: true</code>). Hosted on root domain for sub-second Global CDN delivery.
+                        </p>
+                    </div>
+
+                    <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem;">
+                        <h4 style="color: var(--primary); margin-bottom: 0.5rem;"><i class="bi bi-server me-2"></i> Server Layer (Laravel 11)</h4>
+                        <p style="font-size: 0.88rem; color: #475569; margin-bottom: 0;">
+                            Headless REST API v1 endpoints and AdminLTE 4 Blade management portal hosted under <code class="key-tag">/backend/public/</code>. Manages EMR, appointments, billing, POS, and Yoast SEO.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Apache Routing -->
+            <section id="routing-htaccess">
+                <h2><i class="bi bi-signpost-split-fill text-primary"></i> 2. Apache / LiteSpeed Multi-Route `.htaccess`</h2>
+                <p>
+                    The root <code class="key-tag">.htaccess</code> file coordinates traffic routing between static Next.js assets, API requests, and Laravel Blade admin routes without request conflicts.
+                </p>
+
+                <pre><code># Advanced Dental Clinic Production .htaccess Routing
+DirectoryIndex index.html index.php
+
+&lt;IfModule mod_rewrite.c&gt;
+    RewriteEngine On
+
+    # 1. Force HTTPS in Production
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} !^(localhost|127\.0\.0\.1)(:[0-9]+)?$ [NC]
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # 2. Route API requests directly to Laravel Public Index
+    RewriteRule ^api(/.*)?$ backend/public/index.php [L,QSA]
+
+    # 3. Route Admin & Billing requests to Laravel Public Index
+    RewriteRule ^(billing|admin)(/.*)?$ backend/public/index.php [L,QSA]
+
+    # 4. Route Storage Symlink
+    RewriteRule ^storage/(.*)$ backend/public/storage/$1 [L]
+
+    # 5. Serve static files if they exist on disk
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^ - [L]
+
+    # 6. Fallback for Next.js Client Portal SPA/Static Pages
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^.*(api|admin|billing|backend|storage)
+    RewriteRule ^(.*)$ index.html [L]
+&lt;/IfModule&gt;</code></pre>
+            </section>
+
+            <!-- Section 3: Frontend Pages -->
+            <section id="frontend-pages">
+                <h2><i class="bi bi-window-stack text-primary"></i> 3. Frontend Pages &amp; Section Architecture</h2>
+                <p>
+                    The Next.js patient-facing portal consists of 12 fully responsive multi-page views with dynamic slide-out booking drawers, interactive Calendly availability slots, and WhatsApp direct triage integration.
+                </p>
+
+                <table class="spec-table">
+                    <thead>
+                        <tr>
+                            <th>Page Route</th>
+                            <th>Primary Component / View</th>
+                            <th>Key Sections &amp; Features</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code class="key-tag">/index.html</code></td>
+                            <td>Homepage Hero &amp; Practice Overview</td>
+                            <td>Hero headline ("Pain-Free Restorations"), doctor profile card (Dr. Ethan Caldwell), live 3-step booking drawer trigger, clinic stats bar.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">/about-us.html</code></td>
+                            <td>Clinical History &amp; Team</td>
+                            <td>19+ years clinical excellence, philosophy of care, multi-specialty dental team bios, state-of-the-art operatory tour.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">/treatments/index.html</code></td>
+                            <td>Treatments &amp; Procedures</td>
+                            <td>Categorized grid (Preventive, Cosmetic, Orthodontics, Implants), CDT code badges, starting prices, duration tags.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">/treatments/[slug].html</code></td>
+                            <td>Treatment Detail &amp; FAQ</td>
+                            <td>In-depth procedure walkthrough, candidate criteria, recovery timeline, patient FAQs, and 1-click booking CTA.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">/smile-gallery.html</code></td>
+                            <td>Before / After Smile Gallery</td>
+                            <td>Interactive visual slider comparing pre- and post-treatment results for veneers, aligners, and implants.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">/contact.html</code></td>
+                            <td>Clinics, Map &amp; Direct WhatsApp</td>
+                            <td>Multi-branch addresses (Central, Westside, Northside), direct telephone, emergency triage, WhatsApp chat link (+919904379260).</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 4: REST API Endpoints -->
+            <section id="api-endpoints">
+                <h2><i class="bi bi-hdd-network-fill text-primary"></i> 4. REST API v1 Endpoints &amp; Payloads</h2>
+                <p>
+                    All API endpoints return standard JSON responses with HTTP status codes and strict rate limiting (60 req/min for general endpoints, 10 req/min for appointment booking).
+                </p>
+
+                <!-- Endpoint 1 -->
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <span class="method-badge method-get">GET</span> /api/v1/clinics
+                    </div>
+                    <p style="font-size: 0.9rem; color: #475569;">Retrieves active multi-branch clinic locations, addresses, operating hours, and contact numbers.</p>
+                    <h4>JSON Response Example:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Advanced Dental Clinic (Central Practice)",
+      "slug": "advanced-dental-central",
+      "branch_code": "ADC-001",
+      "address": {
+        "line1": "100 Healthcare Boulevard, Suite 400",
+        "city": "Austin", "state": "TX", "postal_code": "78701"
+      },
+      "contact": {
+        "phone": "+919904379260",
+        "whatsapp": "+919904379260",
+        "email": "central@advanceddental-demo.com"
+      },
+      "total_chairs": 8,
+      "is_headquarters": true
+    }
+  ]
+}</code></pre>
+                </div>
+
+                <!-- Endpoint 2 -->
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <span class="method-badge method-get">GET</span> /api/v1/availability/slots?date=2026-03-25
+                    </div>
+                    <p style="font-size: 0.9rem; color: #475569;">Retrieves real-time morning and afternoon Calendly time slots with live chair availability status.</p>
+                    <h4>JSON Response Example:</h4>
+                    <pre><code>{
+  "success": true,
+  "date": "2026-03-25",
+  "slots": [
+    { "time": "09:00", "display": "9:00 AM", "period": "morning", "available": true, "remaining_chairs": 3 },
+    { "time": "10:30", "display": "10:30 AM", "period": "morning", "available": false, "remaining_chairs": 0 },
+    { "time": "14:00", "display": "2:00 PM", "period": "afternoon", "available": true, "remaining_chairs": 2 }
+  ]
+}</code></pre>
+                </div>
+
+                <!-- Endpoint 3 -->
+                <div class="endpoint-card">
+                    <div class="endpoint-header">
+                        <span class="method-badge method-post">POST</span> /api/v1/appointments/book
+                    </div>
+                    <p style="font-size: 0.9rem; color: #475569;">Submits patient appointment booking payload, locks operatory slot, persists to database, generates booking reference, and returns WhatsApp triage link.</p>
+                    <h4>Request Payload (JSON):</h4>
+                    <pre><code>{
+  "clinicId": 1,
+  "doctorProfileId": 1,
+  "appointmentDate": "2026-03-25",
+  "appointmentTime": "10:00",
+  "patient": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "phone": "+15552345678",
+    "email": "john.doe@example.com"
+  },
+  "intake": {
+    "chiefComplaint": "Routine cleaning and posterior composite restoration"
+  }
+}</code></pre>
+                    <h4>JSON Response Example:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "Appointment locked and confirmed successfully!",
+  "data": {
+    "appointment_id": 1042,
+    "booking_reference": "ADC-849201",
+    "patient_name": "John Doe",
+    "doctor_name": "Dr. Ethan Caldwell, DDS, FACP",
+    "clinic_name": "Advanced Dental Clinic (Central Practice)",
+    "appointment_date": "2026-03-25",
+    "appointment_time": "10:00",
+    "status": "confirmed",
+    "whatsapp_notified": true,
+    "whatsapp_url": "https://wa.me/919904379260?text=Hello+Advanced+Dental..."
+  }
+}</code></pre>
+                </div>
+            </section>
+
+            <!-- Section 5: Database Schema -->
+            <section id="database-schema">
+                <h2><i class="bi bi-database-fill text-primary"></i> 5. MySQL Database Schema &amp; Migrations</h2>
+                <p>
+                    The backend relies on 16 relational MySQL tables structured under InnoDB with foreign key constraints, UTF8mb4 character sets, and ACID compliance.
+                </p>
+
+                <table class="spec-table">
+                    <thead>
+                        <tr>
+                            <th>Table Name</th>
+                            <th>Engine / Charset</th>
+                            <th>Key Columns</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code class="key-tag">clinics</code></td>
+                            <td>InnoDB / utf8mb4</td>
+                            <td>id, name, slug, address, city, phone, email, is_active</td>
+                            <td>Multi-branch clinic locations and facility metadata.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">users</code></td>
+                            <td>InnoDB / utf8mb4</td>
+                            <td>id, name, email, password, role, clinic_id</td>
+                            <td>Staff users across 6 granular roles (super_admin, doctor, etc.).</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">doctor_profiles</code></td>
+                            <td>InnoDB / utf8mb4</td>
+                            <td>id, user_id, clinic_id, specialty, years_experience, rating</td>
+                            <td>Clinician credentials, bios, avatars, and consultation fees.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">appointments</code></td>
+                            <td>InnoDB / utf8mb4</td>
+                            <td>id, booking_reference, clinic_id, doctor_profile_id, patient_name, appointment_date, appointment_time, status</td>
+                            <td>Patient appointment bookings and calendar schedule slots.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">dental_charts</code></td>
+                            <td>InnoDB / utf8mb4</td>
+                            <td>id, patient_id, tooth_number, surface, condition, notes</td>
+                            <td>Interactive Odontogram EMR surface condition mapping.</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">theme_settings</code></td>
+                            <td>InnoDB / utf8mb4</td>
+                            <td>id, key, value, group</td>
+                            <td>Dynamic visual branding tokens (colors, typography, WhatsApp number).</td>
+                        </tr>
+                        <tr>
+                            <td><code class="key-tag">seo_metadata</code></td>
+                            <td>InnoDB / utf8mb4</td>
+                            <td>id, entity_slug, meta_title, meta_description, og_image, schema_json</td>
+                            <td>Yoast-style enterprise SEO metadata and JSON-LD structured data.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 6: PKZIP Deployment -->
+            <section id="deployment-pkzip">
+                <h2><i class="bi bi-file-earmark-zip-fill text-primary"></i> 6. Hostinger PKZIP Distribution Packaging</h2>
+                <p>
+                    To prevent Hostinger/cPanel Linux extraction errors caused by POSIX tarball extensions, the project includes an automated Python packaging script (<code class="key-tag">deployment/package_pkzip.py</code>) that builds standards-compliant RFC 1951 Deflate PKZIP archives.
+                </p>
+
+                <pre><code># Running local PKZIP compilation utility
+python deployment/package_pkzip.py
+
+# Output:
+# Packaging from Project Root: C:\Users\RATNESH\Work\Ratnesh\Ratnesh_Git\portfolio\01-Dentist Website +Booking System  + Admin Panle+ Clinik Dashboard
+# Building Full PKZIP archive...
+# Full PKZIP created at: .../deployment/dist/advanced_dental_clinic_hostinger.zip (4280 KB)
+# Building Incremental Update PKZIP archive...
+# Incremental PKZIP created at: .../update-booking-drawer-and-api.zip (340 KB)
+# Done! Both archives are standard Deflate PKZIP format compliant with Hostinger.</code></pre>
+
+                <div class="callout callout-success">
+                    <i class="bi bi-check-circle-fill callout-icon"></i>
+                    <div>
+                        <strong>Deployment Verification:</strong>
+                        Upload <code class="key-tag">advanced_dental_clinic_hostinger.zip</code> directly into Hostinger File Manager under <code class="key-tag">public_html/advanced-dental-clinic/</code> and click <strong>Extract</strong>. The archive extracts instantly with zero extraction warnings.
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+</body>
+</html>
