@@ -115,13 +115,13 @@
             </div>
         <?php endif; ?>
 
-        <form action="{{ url('/admin/login') }}" method="POST" id="loginForm">
+        <form action="{{ url('/admin/login') }}" method="POST" id="loginForm" autocomplete="off">
             <!-- Email -->
             <div class="mb-3">
                 <label for="email" class="form-label small fw-semibold text-secondary">Work Email Address</label>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
-                    <input type="email" class="form-control border-start-0 ps-0" id="email" name="email" value="<?= htmlspecialchars($email ?? 'admin@example.com') ?>" placeholder="doctor@advanceddental.com" required autofocus>
+                    <input type="email" class="form-control border-start-0 ps-0" id="email" name="email" value="<?= htmlspecialchars($email ?? '') ?>" placeholder="name@advanceddental.com" autocomplete="off" required autofocus>
                 </div>
             </div>
 
@@ -133,17 +133,17 @@
                 </div>
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-shield-lock"></i></span>
-                    <input type="password" class="form-control border-start-0 border-end-0 ps-0" id="password" name="password" value="Admin@DemoPass2026!" placeholder="••••••••••••" required>
+                    <input type="password" class="form-control border-start-0 border-end-0 ps-0" id="password" name="password" value="" placeholder="Enter your password" autocomplete="new-password" required>
                     <button class="btn btn-outline-secondary border-start-0" type="button" id="togglePassword">
                         <i class="bi bi-eye text-muted" id="eyeIcon"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Remember Me & Branch -->
+            <!-- Remember Me & Security -->
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember" checked>
+                    <input class="form-check-input" type="checkbox" id="rememberMe" name="remember">
                     <label class="form-check-label small text-muted" for="rememberMe">Remember me</label>
                 </div>
                 <span class="badge bg-light text-muted border small"><i class="bi bi-shield-check text-success me-1"></i>256-bit Encrypted</span>
@@ -155,61 +155,61 @@
             </button>
         </form>
 
-        <!-- Quick Role Switcher for Testing (User-Friendly Demo) -->
+        <!-- Test Accounts Reference (For Manual Entry) -->
         <div class="mt-4 pt-3 border-top">
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="text-uppercase fw-bold text-muted small" style="font-size: 0.7rem; letter-spacing: 0.05em;">
-                    <i class="bi bi-key-fill text-warning me-1"></i>Quick Role Switcher (Demo / Testing)
+                    <i class="bi bi-key-fill text-warning me-1"></i>Test Credentials (Manual Entry Reference)
                 </span>
-                <span class="badge bg-secondary-subtle text-secondary small">Click to Auto-Fill</span>
+                <span class="badge bg-secondary-subtle text-secondary small">Manual Entry</span>
             </div>
 
             <div class="row g-2">
                 <!-- 1. Super Admin -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillAndSubmit('admin@example.com', 'Admin@DemoPass2026!')">
-                        <div class="fw-bold text-dark"><i class="bi bi-crown-fill text-warning me-1"></i>Super Administrator</div>
-                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">Full System & RBAC</div>
+                    <div class="role-chip" onclick="fillCreds('admin@example.com', 'Admin@DemoPass2026!')" title="Click to fill credentials into form">
+                        <div class="fw-bold text-dark"><i class="bi bi-crown-fill text-warning me-1"></i>Super Admin</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">admin@example.com</div>
                     </div>
                 </div>
 
                 <!-- 2. Clinic Admin -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillAndSubmit('clinic.admin@example.com', 'Clinic@DemoPass2026!')">
+                    <div class="role-chip" onclick="fillCreds('clinic.admin@example.com', 'Clinic@DemoPass2026!')" title="Click to fill credentials into form">
                         <div class="fw-bold text-dark"><i class="bi bi-hospital-fill text-primary me-1"></i>Clinic Admin</div>
-                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">Branch & Operations</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">clinic.admin@example.com</div>
                     </div>
                 </div>
 
                 <!-- 3. Doctor -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillAndSubmit('dr.caldwell@example.com', 'Doctor@DemoPass2026!')">
+                    <div class="role-chip" onclick="fillCreds('dr.caldwell@example.com', 'Doctor@DemoPass2026!')" title="Click to fill credentials into form">
                         <div class="fw-bold text-dark"><i class="bi bi-heart-pulse-fill text-danger me-1"></i>Dr. Ethan Caldwell</div>
-                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">Doctor EMR & Patients</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">dr.caldwell@example.com</div>
                     </div>
                 </div>
 
                 <!-- 4. Appointment Manager -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillAndSubmit('reception@example.com', 'Appt@DemoPass2026!')">
+                    <div class="role-chip" onclick="fillCreds('reception@example.com', 'Appt@DemoPass2026!')" title="Click to fill credentials into form">
                         <div class="fw-bold text-dark"><i class="bi bi-calendar-check-fill text-info me-1"></i>Appt. Manager</div>
-                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">Scheduler & Intake</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">reception@example.com</div>
                     </div>
                 </div>
 
                 <!-- 5. Website Manager -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillAndSubmit('webmaster@example.com', 'Web@DemoPass2026!')">
+                    <div class="role-chip" onclick="fillCreds('webmaster@example.com', 'Web@DemoPass2026!')" title="Click to fill credentials into form">
                         <div class="fw-bold text-dark"><i class="bi bi-globe2 text-success me-1"></i>Website Mgr</div>
-                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">CMS, SEO & Theme</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">webmaster@example.com</div>
                     </div>
                 </div>
 
                 <!-- 6. Billing Officer -->
                 <div class="col-6">
-                    <div class="role-chip" onclick="fillAndSubmit('billing@example.com', 'Bill@DemoPass2026!')">
+                    <div class="role-chip" onclick="fillCreds('billing@example.com', 'Bill@DemoPass2026!')" title="Click to fill credentials into form">
                         <div class="fw-bold text-dark"><i class="bi bi-receipt-cutoff text-dark me-1"></i>Billing Officer</div>
-                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">POS, Invoices & Claims</div>
+                        <div class="text-muted text-truncate" style="font-size: 0.7rem;">billing@example.com</div>
                     </div>
                 </div>
             </div>

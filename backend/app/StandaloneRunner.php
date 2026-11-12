@@ -1020,7 +1020,7 @@ class StandaloneRunner
         $error = $data['error'] ?? null;
         $message = $data['message'] ?? null;
         $reset_sent = $data['reset_sent'] ?? false;
-        $email = $data['email'] ?? 'admin@example.com';
+        $email = $data['email'] ?? '';
 
         ob_start();
         include $file;
