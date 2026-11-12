@@ -1,8 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './WhatsAppHub.module.scss';
 import { MessageCircle, Phone, X, Calendar } from 'lucide-react';
+import { fetchThemeSettings } from '@/lib/api-client';
 
 interface WhatsAppHubProps {
   onOpenBooking?: () => void;
@@ -11,14 +12,25 @@ interface WhatsAppHubProps {
 
 export const WhatsAppHub: React.FC<WhatsAppHubProps> = ({
   onOpenBooking,
-  phone = '+15550192830',
+  phone = '+919904379260',
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [activePhone, setActivePhone] = useState(phone);
+
+  useEffect(() => {
+    fetchThemeSettings()
+      .then((settings) => {
+        if (settings.whatsapp_number) {
+          setActivePhone(settings.whatsapp_number);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   const whatsappMessage = encodeURIComponent(
     'Hello Advanced Dental Clinic! I would like to schedule an oral consultation or inquire about a dental treatment.'
   );
-  const whatsappUrl = `https://wa.me/${phone.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`;
+  const whatsappUrl = `https://wa.me/${activePhone.replace(/[^0-9]/g, '')}?text=${whatsappMessage}`;
 
   return (
     <div className={styles.hubContainer}>
@@ -29,7 +41,7 @@ export const WhatsAppHub: React.FC<WhatsAppHubProps> = ({
               <span className={styles.statusDot} />
               <div>
                 <h4 className={styles.headerTitle}>Advanced Dental Support Hub</h4>
-                <p className={styles.headerSubtitle}>Instant Clinical Triage & Assistance</p>
+                <p className={styles.headerSubtitle}>Instant Clinical Triage & WhatsApp: {activePhone}</p>
               </div>
             </div>
             <button
@@ -57,7 +69,7 @@ export const WhatsAppHub: React.FC<WhatsAppHubProps> = ({
                 <MessageCircle size={18} />
                 <div>
                   <strong>Chat on WhatsApp</strong>
-                  <span>Instant reply within ~5 minutes</span>
+                  <span>Direct triage line ({activePhone})</span>
                 </div>
               </a>
 
@@ -72,13 +84,13 @@ export const WhatsAppHub: React.FC<WhatsAppHubProps> = ({
                 >
                   <Calendar size={18} />
                   <div>
-                    <strong>Book Online Wizard</strong>
-                    <span>Select doctor & real-time slot</span>
+                    <strong>Book Online Drawer</strong>
+                    <span>Select doctor & Calendly slot</span>
                   </div>
                 </button>
               )}
 
-              <a href={`tel:${phone}`} className={`${styles.actionBtn} ${styles.callBtn}`}>
+              <a href={`tel:${activePhone.replace(/[^0-9+]/g, '')}`} className={`${styles.actionBtn} ${styles.callBtn}`}>
                 <Phone size={18} />
                 <div>
                   <strong>Emergency Hotline</strong>

@@ -25,7 +25,7 @@ export default function ContactPage() {
     '@context': 'https://schema.org',
     '@type': 'Dentist',
     name: 'Advanced Dental Clinic',
-    telephone: '+1 (800) 555-DENT',
+    telephone: '+91 99043 79260',
     email: 'appointments@advanceddentalclinic.com',
     address: {
       '@type': 'PostalAddress',
@@ -66,8 +66,8 @@ export default function ContactPage() {
               <h4>Immediate Dental Emergency? Severe Toothache or Trauma?</h4>
               <p>Our on-call dental trauma team is available 24 hours a day, 7 days a week.</p>
             </div>
-            <a href="tel:+18005553368" className={styles.emergencyCallBtn}>
-              <Phone size={16} /> 24/7 Hotline: +1 (800) 555-DENT
+            <a href="https://wa.me/919904379260?text=Hello%20Advanced%20Dental%20Clinic!%20I%20have%20an%20urgent%20dental%20inquiry." target="_blank" rel="noopener noreferrer" className={styles.emergencyCallBtn}>
+              <Phone size={16} /> 24/7 Hotline & WhatsApp: +91 99043 79260
             </a>
           </div>
 
@@ -165,7 +165,7 @@ export default function ContactPage() {
                 </div>
                 <div className={styles.branchInfoRow}>
                   <Phone size={18} />
-                  <a href="tel:+18005553368">+1 (800) 555-DENT (Ext 1)</a>
+                  <a href="tel:+919904379260">+91 99043 79260 (Ext 1)</a>
                 </div>
                 <div className={styles.branchInfoRow}>
                   <Clock size={18} />
@@ -184,7 +184,7 @@ export default function ContactPage() {
                 </div>
                 <div className={styles.branchInfoRow}>
                   <Phone size={18} />
-                  <a href="tel:+18005553368">+1 (800) 555-DENT (Ext 2)</a>
+                  <a href="tel:+919904379260">+91 99043 79260 (Ext 2)</a>
                 </div>
                 <div className={styles.branchInfoRow}>
                   <Clock size={18} />
@@ -203,7 +203,7 @@ export default function ContactPage() {
                 </div>
                 <div className={styles.branchInfoRow}>
                   <Phone size={18} />
-                  <a href="tel:+18005553368">+1 (800) 555-DENT (Ext 3)</a>
+                  <a href="tel:+919904379260">+91 99043 79260 (Ext 3)</a>
                 </div>
                 <div className={styles.branchInfoRow}>
                   <Clock size={18} />

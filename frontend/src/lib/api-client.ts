@@ -337,19 +337,40 @@ export async function fetchAvailableSlots(
     const res = await fetch(url);
     if (!res.ok) throw new Error('API request failed');
     const json = await res.json();
-    return json.slots || [];
+    if (!json.success || !json.slots || json.slots.length === 0) {
+      throw new Error(json.message || 'No slots available');
+    }
+    return json.slots;
   } catch {
-    // Generate realistic simulated slots based on operating hours
-    const times = [
-      '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
-      '14:00', '14:30', '15:00', '15:30', '16:00', '16:30'
-    ];
-    return times.map((t, idx) => ({
-      time: t,
-      display: parseInt(t.slice(0, 2), 10) < 12 ? `${t} AM` : `${parseInt(t.slice(0, 2), 10) - 12}:${t.slice(3)} PM`,
-      available: idx !== 2 && idx !== 7, // simulate 2 booked slots
-      remaining_chairs: idx === 2 || idx === 7 ? 0 : 2,
-    }));
+    // Generate realistic Calendly-style morning and afternoon slots
+    const morningTimes = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30'];
+    const afternoonTimes = ['13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'];
+    const slots: TimeSlot[] = [];
+    morningTimes.forEach((t, idx) => {
+      const isBooked = (idx === 3);
+      const h = parseInt(t.slice(0, 2), 10);
+      const m = t.slice(3);
+      slots.push({
+        time: t,
+        display: `${h < 12 ? h : h - 12}:${m} ${h < 12 ? 'AM' : 'PM'}`,
+        period: 'morning',
+        available: !isBooked,
+        remaining_chairs: isBooked ? 0 : 3,
+      });
+    });
+    afternoonTimes.forEach((t, idx) => {
+      const isBooked = (idx === 2);
+      const h = parseInt(t.slice(0, 2), 10);
+      const m = t.slice(3);
+      slots.push({
+        time: t,
+        display: `${h < 12 ? h : h - 12}:${m} ${h < 12 ? 'AM' : 'PM'}`,
+        period: 'afternoon',
+        available: !isBooked,
+        remaining_chairs: isBooked ? 0 : 2,
+      });
+    });
+    return slots;
   }
 }
 
@@ -416,5 +437,22 @@ export async function uploadIntakeDocument(file: File, documentType: string = 'x
       file_path: `/storage/documents/simulated-${Date.now()}-${file.name}`,
       checksum: 'sha256-simulated-' + Math.random().toString(36).substring(2, 10),
     };
+  }
+}
+
+export interface ThemeSettingsData {
+  whatsapp_number?: string;
+  colors?: Record<string, string>;
+  typography?: Record<string, any>;
+}
+
+export async function fetchThemeSettings(): Promise<ThemeSettingsData> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/theme/settings`, { next: { revalidate: 30 } });
+    if (!res.ok) throw new Error('Failed to fetch theme settings');
+    const json = await res.json();
+    return json.data || { whatsapp_number: '+919904379260' };
+  } catch {
+    return { whatsapp_number: '+919904379260' };
   }
 }

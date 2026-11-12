@@ -3,6 +3,7 @@ export interface TimeSlot {
   display: string;
   available: boolean;
   remaining_chairs: number;
+  period?: 'morning' | 'afternoon';
 }
 
 export type BookingStep = 1 | 2 | 3 | 4 | 5;
@@ -69,6 +70,7 @@ export interface BookingResponse {
     status: string;
     whatsapp_notified?: boolean;
     email_notified?: boolean;
+    whatsapp_url?: string;
   };
 }
 

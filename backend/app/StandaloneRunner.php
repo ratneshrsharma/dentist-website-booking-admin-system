@@ -769,6 +769,28 @@ class StandaloneRunner
             exit;
         }
 
+        if ($uri === '/api/v1/cms-pages' || $uri === '/api/v1/cms/pages') {
+            if ($pdo) {
+                try {
+                    $stmt = $pdo->query("SELECT id, title, slug, template, meta_title, meta_description, is_published, updated_at FROM cms_pages WHERE is_published = 1 ORDER BY id ASC");
+                    $pages = $stmt->fetchAll();
+                    if (!empty($pages)) {
+                        echo json_encode(['success' => true, 'data' => $pages]);
+                        exit;
+                    }
+                } catch (\Throwable $e) {}
+            }
+            echo json_encode(['success' => true, 'data' => [
+                ['id' => 1, 'title' => 'Home', 'slug' => '/', 'template' => 'confident-doctor', 'is_published' => 1],
+                ['id' => 2, 'title' => 'About Us', 'slug' => '/about-us', 'template' => 'editorial', 'is_published' => 1],
+                ['id' => 3, 'title' => 'Treatments & Procedures', 'slug' => '/treatments', 'template' => 'clinical-catalog', 'is_published' => 1],
+                ['id' => 4, 'title' => 'Contact & Practice Locations', 'slug' => '/contact', 'template' => 'contact-split', 'is_published' => 1],
+                ['id' => 5, 'title' => 'Dental Implants', 'slug' => '/treatments/dental-implants', 'template' => 'procedure-detail', 'is_published' => 1],
+                ['id' => 6, 'title' => 'Clear Aligners', 'slug' => '/treatments/clear-aligners', 'template' => 'procedure-detail', 'is_published' => 1],
+            ]]);
+            exit;
+        }
+
         echo json_encode(['success' => false, 'message' => 'Endpoint not found', 'path' => $uri]);
         exit;
     }

@@ -91,11 +91,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
           </div>
 
           <div className={styles.topBarRight}>
-            <a href="tel:+15550192830" className={styles.emergencyLink}>
+            <a href="https://wa.me/919904379260?text=Hello%20Advanced%20Dental%20Clinic!%20I%20have%20an%20urgent%20dental%20inquiry." target="_blank" rel="noopener noreferrer" className={styles.emergencyLink}>
               <span className={styles.emergencyDot} />
               <Phone size={12} />
               <span>
-                24/7 Dental Emergency: <strong>+1 (555) 019-2830</strong>
+                24/7 Dental Emergency & WhatsApp: <strong>+91 99043 79260</strong>
               </span>
             </a>
             <Link

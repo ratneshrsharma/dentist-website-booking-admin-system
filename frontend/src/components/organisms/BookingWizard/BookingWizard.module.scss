@@ -8,12 +8,12 @@
   right: 0;
   bottom: 0;
   z-index: 9999;
-  background-color: rgba(15, 23, 42, 0.75);
-  backdrop-filter: blur(8px);
+  background-color: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(6px);
   display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: $spacing-4;
+  justify-content: flex-end; /* Drawer slides out from right to left */
+  align-items: stretch;
+  padding: 0;
   animation: fadeIn 0.25s ease-out;
 }
 
@@ -25,35 +25,41 @@
 .modalContainer {
   position: relative;
   z-index: 10000;
-  width: 100%;
-  max-width: 820px;
-  max-height: 90vh;
+  width: 90%;
+  max-width: 1200px;
+  height: 100vh;
+  max-height: 100vh;
   background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: $radius-2xl;
-  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  border-left: 1px solid var(--color-border);
+  border-radius: $radius-2xl 0 0 $radius-2xl;
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.28);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @include mobile {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 0;
+  }
 }
 
-@keyframes scaleIn {
+@keyframes slideInRight {
   from {
-    opacity: 0;
-    transform: scale(0.96) translateY(12px);
+    transform: translateX(100%);
   }
   to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateX(0);
   }
 }
 
 .modalHeader {
   @include flex-between;
-  padding: $spacing-5 $spacing-6;
+  padding: $spacing-4 $spacing-6;
   border-bottom: 1px solid var(--color-border);
   background-color: var(--color-surface);
+  flex-shrink: 0;
 }
 
 .headerTitle {
@@ -63,22 +69,44 @@
 
   h3 {
     font-family: var(--font-family-heading);
-    font-size: $font-size-base;
+    font-size: $font-size-lg;
     font-weight: $font-weight-bold;
     color: var(--color-text-main);
     margin: 0;
   }
 
   p {
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: var(--color-text-muted);
     margin: 0;
   }
 }
 
+.headerMeta {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
+.hipaaBadgeTop {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: $font-weight-semibold;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  padding: 4px 10px;
+  border-radius: $radius-full;
+
+  @include mobile {
+    display: none;
+  }
+}
+
 .iconCircle {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   border-radius: $radius-xl;
   background-color: var(--color-primary-light);
   color: var(--color-primary);
@@ -92,6 +120,11 @@
   padding: $spacing-2;
   border-radius: $radius-md;
   cursor: pointer;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.2s ease;
 
   &:hover {
@@ -108,13 +141,14 @@
   padding: $spacing-3 $spacing-6;
   background-color: var(--color-surface-muted);
   border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
 }
 
 .stepItem {
   display: flex;
   align-items: center;
   gap: $spacing-2;
-  opacity: 0.5;
+  opacity: 0.55;
   transition: opacity 0.2s ease;
 
   &.active {
@@ -123,7 +157,7 @@
     .stepCircle {
       background-color: var(--color-primary);
       color: #FFFFFF;
-      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.2);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.25);
     }
 
     .stepLabel {
@@ -139,24 +173,28 @@
       background-color: #10B981;
       color: #FFFFFF;
     }
+
+    .stepLabel {
+      color: var(--color-text-main);
+    }
   }
 }
 
 .stepCircle {
-  width: 24px;
-  height: 24px;
+  width: 26px;
+  height: 26px;
   border-radius: $radius-full;
   background-color: var(--color-border);
   color: var(--color-text-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
+  font-size: 0.8125rem;
   font-weight: $font-weight-bold;
 }
 
 .stepLabel {
-  font-size: $font-size-xs;
+  font-size: 0.875rem;
   color: var(--color-text-muted);
 
   @include mobile {
@@ -174,14 +212,185 @@
   color: #DC2626;
   font-size: $font-size-xs;
   border-bottom: 1px solid rgba(220, 38, 38, 0.2);
+  flex-shrink: 0;
 }
 
-/* Modal Body */
+/* Modal Body & Drawer 2-Column Layout */
 .modalBody {
-  padding: $spacing-6;
-  overflow-y: auto;
   flex: 1;
+  overflow-y: auto;
   background-color: var(--color-surface);
+}
+
+.drawerLayout {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: $spacing-6;
+  padding: $spacing-6;
+  min-height: 100%;
+
+  @include tablet-down {
+    grid-template-columns: 1fr;
+    padding: $spacing-4;
+  }
+}
+
+/* Summary Sidebar */
+.summarySidebar {
+  @include tablet-down {
+    order: 2;
+    margin-top: $spacing-4;
+  }
+}
+
+.summaryStickyBox {
+  position: sticky;
+  top: $spacing-4;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-4;
+}
+
+.sidebarHeader {
+  @include flex-between;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: $spacing-3;
+
+  h5 {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
+    color: var(--color-text-main);
+    margin: 0;
+  }
+}
+
+.stepCounterBadge {
+  font-size: 0.75rem;
+  font-weight: $font-weight-semibold;
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+  padding: 2px 8px;
+  border-radius: $radius-full;
+}
+
+.sidebarDetailList {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.sidebarDetailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  .detailLabel {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: $font-weight-semibold;
+    color: var(--color-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    svg {
+      color: var(--color-primary);
+    }
+  }
+
+  strong {
+    font-size: 0.9375rem;
+    color: var(--color-text-main);
+  }
+
+  small {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+  }
+
+  .highlightSlot {
+    color: var(--color-primary);
+    font-weight: $font-weight-bold;
+  }
+}
+
+.sidebarTotalBox {
+  @include flex-between;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-lg;
+  padding: $spacing-3 $spacing-4;
+  margin-top: $spacing-2;
+
+  span {
+    font-size: 0.8125rem;
+    color: var(--color-text-muted);
+    font-weight: $font-weight-medium;
+  }
+
+  h4 {
+    font-size: $font-size-lg;
+    font-weight: $font-weight-bold;
+    color: var(--color-primary);
+    margin: 0;
+  }
+}
+
+.sidebarWaTriage {
+  background: rgba(37, 211, 102, 0.08);
+  border: 1px solid rgba(37, 211, 102, 0.25);
+  border-radius: $radius-lg;
+  padding: $spacing-3;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-2;
+
+  .waTriageTitle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8125rem;
+    font-weight: $font-weight-bold;
+    color: #0F766E;
+  }
+
+  p {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: 1.35;
+  }
+
+  .waLinkBtn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: #25D366;
+    color: #FFFFFF;
+    font-size: 0.75rem;
+    font-weight: $font-weight-bold;
+    padding: 6px 10px;
+    border-radius: $radius-md;
+    text-decoration: none;
+    transition: background 0.2s ease;
+
+    &:hover {
+      background: #1EBE5B;
+    }
+  }
+}
+
+/* Step Main Content */
+.stepMainContent {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
 .sectionHeader {
@@ -189,7 +398,7 @@
 
   h4 {
     font-family: var(--font-family-heading);
-    font-size: $font-size-lg;
+    font-size: $font-size-xl;
     font-weight: $font-weight-bold;
     color: var(--color-text-main);
     margin-bottom: $spacing-1;
@@ -211,11 +420,12 @@
   align-items: center;
   gap: $spacing-2;
   font-size: $font-size-xs;
-  font-weight: $font-weight-semibold;
+  font-weight: $font-weight-bold;
   color: var(--color-text-main);
   margin-bottom: $spacing-2;
 }
 
+/* Step 1 Cards */
 .cardGrid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -237,6 +447,7 @@
   &:hover {
     border-color: var(--color-primary);
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.08);
   }
 
   &.selected {
@@ -257,17 +468,19 @@
 }
 
 .cardSubtext {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--color-text-muted);
   margin-bottom: $spacing-2;
+  line-height: 1.4;
 }
 
 .phonePill {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 1rem;
+  font-size: 0.8125rem;
   color: var(--color-primary);
+  font-weight: $font-weight-medium;
 }
 
 .serviceGrid {
@@ -282,6 +495,7 @@
 
 .serviceCard {
   border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
   border-radius: $radius-xl;
   padding: $spacing-4;
   cursor: pointer;
@@ -289,6 +503,7 @@
 
   &:hover {
     border-color: var(--color-primary);
+    transform: translateY(-2px);
   }
 
   &.selected {
@@ -316,7 +531,7 @@
 }
 
 .serviceDescription {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--color-text-muted);
   line-height: 1.4;
   margin-bottom: $spacing-2;
@@ -332,25 +547,26 @@
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  font-size: 1rem;
+  font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
 
-/* Step 2 Doctors & Slots */
+/* Step 2 Doctors */
 .doctorGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: $spacing-3;
 
-  @include tablet-down {
+  @include mobile {
     grid-template-columns: 1fr;
   }
 }
 
 .doctorCard {
   border: 1px solid var(--color-border);
+  background-color: var(--color-surface);
   border-radius: $radius-xl;
-  padding: $spacing-3;
+  padding: $spacing-3 $spacing-4;
   display: flex;
   align-items: center;
   gap: $spacing-3;
@@ -359,6 +575,7 @@
 
   &:hover {
     border-color: var(--color-primary);
+    transform: translateY(-2px);
   }
 
   &.selected {
@@ -369,14 +586,16 @@
 }
 
 .doctorAvatar {
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: $radius-full;
   background-color: var(--color-surface-muted);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-muted);
+  color: var(--color-primary);
+  flex-shrink: 0;
+  border: 1px solid var(--color-border);
 }
 
 .doctorInfo {
@@ -389,43 +608,113 @@
   }
 
   .specialization {
-    font-size: 1rem;
+    font-size: 0.875rem;
     color: var(--color-primary);
-    font-weight: $font-weight-medium;
+    font-weight: $font-weight-semibold;
   }
 
   .experience {
-    font-size: 1rem;
+    font-size: 0.8125rem;
     color: var(--color-text-muted);
   }
 }
 
+/* Step 2 Calendly Slot Section */
 .slotSection {
-  display: grid;
-  grid-template-columns: 1fr 1.8fr;
-  gap: $spacing-5;
-  margin-top: $spacing-4;
+  margin-top: $spacing-5;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: $radius-xl;
+  padding: $spacing-5;
+}
 
-  @include tablet-down {
-    grid-template-columns: 1fr;
+.datePickerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $spacing-4;
+  padding-bottom: $spacing-4;
+  margin-bottom: $spacing-4;
+  border-bottom: 1px solid var(--color-border);
+
+  @include mobile {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 
+.datePickerCol {
+  display: flex;
+  align-items: center;
+  gap: $spacing-3;
+}
+
 .dateInput {
-  width: 100%;
-  padding: $spacing-3;
+  padding: $spacing-2 $spacing-3;
   border: 1px solid var(--color-border);
   border-radius: $radius-lg;
   background-color: var(--color-surface);
   color: var(--color-text-main);
   font-family: var(--font-family-sans);
   font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+  }
+}
+
+.dateQuickDisplay {
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.calendlyPicker {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-5;
+}
+
+.periodGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-3;
+}
+
+.periodHeader {
+  display: flex;
+  align-items: center;
+  gap: $spacing-2;
+  font-size: 0.875rem;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-main);
+
+  svg {
+    color: var(--color-primary);
+  }
+}
+
+.periodBadge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: $radius-full;
+  background-color: var(--color-surface-muted);
+  color: var(--color-text-muted);
+  font-weight: normal;
+  border: 1px solid var(--color-border);
 }
 
 .slotsGrid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: $spacing-2;
+  gap: $spacing-3;
+
+  @include tablet-down {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
   @include mobile {
     grid-template-columns: repeat(2, 1fr);
@@ -436,38 +725,58 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: $spacing-2;
+  justify-content: center;
+  padding: $spacing-2 $spacing-3;
   border-radius: $radius-lg;
   border: 1px solid var(--color-border);
   background-color: var(--color-surface);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 54px;
+  text-align: center;
 
-  span {
-    font-size: $font-size-xs;
-    font-weight: $font-weight-semibold;
+  .slotTime {
+    font-size: $font-size-sm;
+    font-weight: $font-weight-bold;
     color: var(--color-text-main);
   }
 
   .chairCount {
-    font-size: 1rem;
+    font-size: 0.75rem;
     color: #10B981;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    margin-top: 2px;
+    font-weight: $font-weight-medium;
+  }
+
+  .dotAvailable {
+    font-size: 0.625rem;
   }
 
   .bookedTag {
-    font-size: 1rem;
-    color: #DC2626;
+    font-size: 0.75rem;
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.1);
+    padding: 1px 6px;
+    border-radius: $radius-full;
+    margin-top: 2px;
+    font-weight: $font-weight-semibold;
   }
 
   &:hover:not(:disabled) {
     border-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.12);
   }
 
   &.selectedSlot {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
 
-    span {
+    .slotTime {
       color: #FFFFFF;
     }
 
@@ -477,23 +786,31 @@
   }
 
   &.slotDisabled {
-    opacity: 0.4;
+    opacity: 0.5;
     cursor: not-allowed;
     background-color: var(--color-surface-muted);
+    border-style: dashed;
+
+    .slotTime {
+      text-decoration: line-through;
+      color: var(--color-text-muted);
+    }
   }
 }
 
 .loadingSlots {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: $spacing-2;
   color: var(--color-text-muted);
   font-size: $font-size-xs;
-  padding: $spacing-4 0;
+  padding: $spacing-6 0;
 }
 
 .spin {
   animation: spin 1s linear infinite;
+  color: var(--color-primary);
 }
 
 @keyframes spin {
@@ -519,7 +836,7 @@
   gap: $spacing-1;
 
   label {
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: $font-weight-semibold;
     color: var(--color-text-main);
   }
@@ -531,6 +848,12 @@
     background-color: var(--color-surface);
     color: var(--color-text-main);
     font-size: $font-size-xs;
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
   }
 }
 
@@ -541,7 +864,7 @@
   margin-bottom: $spacing-4;
 
   label {
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: $font-weight-semibold;
     color: var(--color-text-main);
   }
@@ -554,6 +877,12 @@
     color: var(--color-text-main);
     font-size: $font-size-xs;
     font-family: var(--font-family-sans);
+
+    &:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
   }
 }
 
@@ -570,14 +899,14 @@
   margin-bottom: $spacing-2;
 
   label {
-    font-size: 1rem;
+    font-size: 0.875rem;
     font-weight: $font-weight-bold;
     color: var(--color-text-main);
   }
 }
 
 .painBadge {
-  font-size: 1rem;
+  font-size: 0.8125rem;
   font-weight: $font-weight-bold;
   padding: 2px 8px;
   border-radius: $radius-full;
@@ -598,7 +927,7 @@
 
 .sliderLabels {
   @include flex-between;
-  font-size: 1rem;
+  font-size: 0.75rem;
   color: var(--color-text-muted);
   margin-top: 4px;
 }
@@ -621,12 +950,14 @@
   display: flex;
   align-items: center;
   gap: $spacing-2;
-  font-size: $font-size-xs;
+  font-size: 0.875rem;
   color: var(--color-text-main);
   cursor: pointer;
 
   input {
     accent-color: var(--color-primary);
+    width: 16px;
+    height: 16px;
   }
 }
 
@@ -667,7 +998,7 @@
 }
 
 .dropzoneSubtitle {
-  font-size: 1rem;
+  font-size: 0.875rem;
   color: var(--color-text-muted);
   margin-top: 2px;
 }
@@ -706,7 +1037,7 @@
 }
 
 .fileSize {
-  font-size: 1rem;
+  font-size: 0.8125rem;
   color: var(--color-text-muted);
 }
 
@@ -714,7 +1045,7 @@
   display: inline-flex;
   align-items: center;
   gap: 2px;
-  font-size: 1rem;
+  font-size: 0.8125rem;
   color: #10B981;
 }
 
@@ -726,7 +1057,7 @@
   background-color: rgba(13, 148, 136, 0.08);
   border-radius: $radius-lg;
   color: var(--color-primary-hover);
-  font-size: 1rem;
+  font-size: 0.875rem;
 }
 
 /* Step 5 Review & Success */
@@ -810,11 +1141,34 @@
   color: var(--color-text-main);
 }
 
+.whatsappConfirmationBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-2;
+  background-color: #25D366;
+  color: #FFFFFF;
+  font-weight: $font-weight-bold;
+  font-size: $font-size-xs;
+  padding: $spacing-3 $spacing-5;
+  border-radius: $radius-lg;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.3);
+
+  &:hover {
+    background-color: #1EBE5B;
+    transform: translateY(-1px);
+  }
+}
+
 .successActions {
   display: flex;
   align-items: center;
   gap: $spacing-3;
   margin-top: $spacing-4;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 /* Modal Footer */
@@ -823,4 +1177,5 @@
   padding: $spacing-4 $spacing-6;
   border-top: 1px solid var(--color-border);
   background-color: var(--color-surface);
+  flex-shrink: 0;
 }
