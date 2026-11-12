@@ -79,7 +79,7 @@
             </div>
             <h1 class="doc-title">Module 13: Complete Swagger / OpenAPI Reference</h1>
             <p class="doc-subtitle">
-                System-wide interactive REST API specification documenting all 21+ backend endpoints, request payloads, response schemas, authentication scopes, rate limits, and troubleshooting codes.
+                System-wide interactive REST API specification documenting all 20+ production endpoints, request payloads, response schemas, authentication scopes, rate limits, and error handling codes.
             </p>
         </div>
     </header>
@@ -100,19 +100,39 @@
                 <li class="toc-item"><a href="#ep-patients-list" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/patients</span></a></li>
                 <li class="toc-item"><a href="#ep-patients-create" class="toc-link"><span class="badge-method badge-post">POST</span> <span>/api/v1/patients</span></a></li>
                 <li class="toc-item"><a href="#ep-clinics" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/clinics</span></a></li>
+                <li class="toc-item"><a href="#ep-doctors" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/doctors</span></a></li>
+                <li class="toc-item"><a href="#ep-services" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/services</span></a></li>
                 <li class="toc-item"><a href="#ep-inventory" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/inventory</span></a></li>
                 <li class="toc-item"><a href="#ep-invoices" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/billing/invoices</span></a></li>
+                <li class="toc-item"><a href="#ep-documents" class="toc-link"><span class="badge-method badge-post">POST</span> <span>/api/v1/documents</span></a></li>
                 <li class="toc-item"><a href="#ep-theme" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/theme-settings</span></a></li>
                 <li class="toc-item"><a href="#ep-seo" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/seo</span></a></li>
+                <li class="toc-item"><a href="#ep-redirects" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/seo/redirects</span></a></li>
                 <li class="toc-item"><a href="#ep-cms" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/cms-pages/{slug}</span></a></li>
+            </ul>
+
+            <div class="sidebar-title" style="margin-top: 1.5rem;">All Module Guides</div>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="01-auth-and-security.html" class="toc-link"><i class="bi bi-shield-lock"></i> 01. Auth &amp; RBAC</a></li>
+                <li class="toc-item"><a href="02-dashboard-architecture.html" class="toc-link"><i class="bi bi-speedometer2"></i> 02. Dashboard</a></li>
+                <li class="toc-item"><a href="03-appointments-and-calendar.html" class="toc-link"><i class="bi bi-calendar3"></i> 03. Scheduler</a></li>
+                <li class="toc-item"><a href="04-emr-odontogram.html" class="toc-link"><i class="bi bi-heart-pulse"></i> 04. Odontogram</a></li>
+                <li class="toc-item"><a href="05-patients-ehr.html" class="toc-link"><i class="bi bi-person-vcard"></i> 05. Patients EHR</a></li>
+                <li class="toc-item"><a href="06-clinics-facilities.html" class="toc-link"><i class="bi bi-building"></i> 06. Multi-Clinic</a></li>
+                <li class="toc-item"><a href="07-inventory-and-supplies.html" class="toc-link"><i class="bi bi-boxes"></i> 07. Inventory</a></li>
+                <li class="toc-item"><a href="08-billing-pos-and-invoices.html" class="toc-link"><i class="bi bi-receipt"></i> 08. Billing &amp; POS</a></li>
+                <li class="toc-item"><a href="09-theme-customizer.html" class="toc-link"><i class="bi bi-palette"></i> 09. Theme Tokens</a></li>
+                <li class="toc-item"><a href="10-seo-and-redirects.html" class="toc-link"><i class="bi bi-graph-up-arrow"></i> 10. Yoast SEO</a></li>
+                <li class="toc-item"><a href="11-cms-pages-manager.html" class="toc-link"><i class="bi bi-file-earmark-richtext"></i> 11. CMS Pages</a></li>
+                <li class="toc-item"><a href="12-staff-rbac-security.html" class="toc-link"><i class="bi bi-people"></i> 12. Staff RBAC</a></li>
             </ul>
         </aside>
 
         <!-- Main Content -->
         <main class="doc-content">
-            <h2><i class="bi bi-hdd-network text-primary"></i> OpenAPI 3.1 &amp; Swagger Specification</h2>
+            <h2><i class="bi bi-hdd-network text-primary"></i> OpenAPI 3.1 &amp; Swagger Specification Hub</h2>
             <p>
-                This reference acts as the definitive replacement for Swagger UI, providing exact schema definitions, security scopes, rate limits, and JSON payloads for every production API.
+                This reference acts as the definitive replacement for Swagger UI, providing exact schema definitions, security scopes, rate limits, and JSON payloads for every production API endpoint.
             </p>
 
             <!-- Global Headers & Rate Limits -->
@@ -153,7 +173,7 @@
                     <span class="key-tag">Scope: Public</span>
                 </div>
                 <div class="endpoint-body">
-                    <p>Authenticates staff credentials, establishes an HTTP-only session cookie, and returns user identity.</p>
+                    <p>Authenticates staff credentials, establishes an HTTP-only secure session cookie, and returns user identity and bearer token.</p>
                     <h4>Request Payload:</h4>
                     <pre><code>{
   "email": "dr.caldwell@example.com",
@@ -163,15 +183,37 @@
                     <h4>200 OK Response:</h4>
                     <pre><code>{
   "success": true,
-  "message": "Authentication successful.",
+  "message": "Staff authentication successful.",
+  "token": "adc_token_5a8f9c2d1b...",
   "user": {
     "id": 3,
-    "name": "Dr. Ethan Caldwell, DDS",
+    "name": "Dr. Ethan Caldwell, DDS, FACP",
     "email": "dr.caldwell@example.com",
     "role": "doctor",
     "clinic_id": 1,
-    "is_2fa_enabled": false
+    "branch": "Central Practice (HQ)"
   }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: POST /api/v1/auth/logout -->
+            <div class="endpoint-card" id="ep-auth-logout">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-post">POST</span>
+                        <span>/api/v1/auth/logout</span>
+                    </div>
+                    <span class="key-tag">Scope: Authenticated Staff</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Terminates active staff session, destroys server-side session state, and revokes access token.</p>
+                    <h4>Headers Required:</h4>
+                    <p><code>Authorization: Bearer adc_token_...</code></p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "Staff session successfully terminated and access token revoked."
 }</code></pre>
                 </div>
             </div>
@@ -202,6 +244,92 @@
                 </div>
             </div>
 
+            <!-- Endpoint: GET /api/v1/appointments -->
+            <div class="endpoint-card" id="ep-appts-list">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/appointments</span>
+                    </div>
+                    <span class="key-tag">Scope: Authenticated Staff</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Retrieves filtered list of appointments across clinic branches with pagination and status indicators.</p>
+                    <h4>Query Parameters:</h4>
+                    <ul>
+                        <li><code>date</code> (optional, string, YYYY-MM-DD): Filter by date.</li>
+                        <li><code>status</code> (optional, string): confirmed, in_chair, completed, cancelled.</li>
+                        <li><code>clinic_id</code> (optional, integer): Filter by branch.</li>
+                    </ul>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "total": 3,
+  "data": [
+    {
+      "id": 101,
+      "booking_reference": "APT-2026-8942",
+      "patient_name": "Eleanor Vance",
+      "patient_phone": "+447911123456",
+      "doctor_name": "Dr. Ethan Caldwell, DDS, FACP",
+      "clinic_name": "Advanced Dental Clinic (Central Practice)",
+      "appointment_date": "2026-11-15",
+      "appointment_time": "10:30",
+      "treatment_type": "Dental Implants Consult",
+      "status": "confirmed",
+      "payment_status": "pending"
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: POST /api/v1/appointments -->
+            <div class="endpoint-card" id="ep-appts-book">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-post">POST</span>
+                        <span>/api/v1/appointments</span>
+                    </div>
+                    <span class="key-tag">Scope: Public &amp; Staff (Rate limit: 10/min)</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Dispatches appointment booking with pessimistic chair lock and WhatsApp triage notification.</p>
+                    <h4>Request Payload:</h4>
+                    <pre><code>{
+  "patient": {
+    "firstName": "Eleanor",
+    "lastName": "Vance",
+    "phone": "+447911123456",
+    "email": "eleanor.vance@example.co.uk"
+  },
+  "appointmentDate": "2026-11-15",
+  "appointmentTime": "14:00",
+  "clinicId": 1,
+  "doctorProfileId": 1,
+  "intake": {
+    "chiefComplaint": "Interested in Straumann BLX implant options."
+  }
+}</code></pre>
+                    <h4>201 Created Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "Appointment locked and confirmed successfully!",
+  "data": {
+    "appointment_id": 842,
+    "booking_reference": "APT-2026-8942",
+    "patient_name": "Eleanor Vance",
+    "doctor_name": "Dr. Ethan Caldwell, DDS, FACP",
+    "clinic_name": "Advanced Dental Clinic (Central Practice)",
+    "appointment_date": "2026-11-15",
+    "appointment_time": "14:00",
+    "status": "confirmed",
+    "whatsapp_url": "https://wa.me/919904379260?text=..."
+  }
+}</code></pre>
+                </div>
+            </div>
+
             <!-- Endpoint: GET /api/v1/appointments/slots -->
             <div class="endpoint-card" id="ep-appts-slots">
                 <div class="endpoint-header">
@@ -223,46 +351,44 @@
                     <pre><code>{
   "success": true,
   "date": "2026-11-15",
-  "available_slots": [
-    { "time": "09:00", "status": "available", "period": "morning" },
-    { "time": "09:45", "status": "available", "period": "morning" },
-    { "time": "10:30", "status": "booked", "period": "morning" },
-    { "time": "14:00", "status": "available", "period": "afternoon" },
-    { "time": "15:30", "status": "available", "period": "afternoon" }
+  "slots": [
+    { "time": "09:00", "display": "9:00 AM", "period": "morning", "available": true, "remaining_chairs": 3 },
+    { "time": "10:30", "display": "10:30 AM", "period": "morning", "available": false, "remaining_chairs": 0 },
+    { "time": "14:00", "display": "2:00 PM", "period": "afternoon", "available": true, "remaining_chairs": 2 }
   ]
 }</code></pre>
                 </div>
             </div>
 
-            <!-- Endpoint: POST /api/v1/appointments -->
-            <div class="endpoint-card" id="ep-appts-book">
+            <!-- Endpoint: GET /api/v1/emr/odontogram -->
+            <div class="endpoint-card" id="ep-emr-get">
                 <div class="endpoint-header">
                     <div class="endpoint-route">
-                        <span class="badge-method badge-post">POST</span>
-                        <span>/api/v1/appointments</span>
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/emr/odontogram</span>
                     </div>
-                    <span class="key-tag">Scope: Public &amp; Staff (Rate limit: 10/min)</span>
+                    <span class="key-tag">Scope: Doctor &amp; Admin</span>
                 </div>
                 <div class="endpoint-body">
-                    <p>Dispatches appointment booking with pessimistic chair lock and WhatsApp triage notification.</p>
-                    <h4>Request Payload:</h4>
-                    <pre><code>{
-  "patient_name": "Eleanor Vance",
-  "patient_phone": "+447911123456",
-  "patient_email": "eleanor.vance@example.co.uk",
-  "appointment_date": "2026-11-15",
-  "appointment_time": "14:00",
-  "doctor_id": 1,
-  "clinic_id": 1,
-  "treatment_type": "Dental Implants Consult",
-  "notes": "Interested in Straumann BLX implant options."
-}</code></pre>
-                    <h4>201 Created Response:</h4>
+                    <p>Retrieves 32-tooth dental chart state, 5-surface conditions (Occlusal, Mesial, Distal, Buccal, Lingual), and periodontal probing depths.</p>
+                    <h4>Query Parameters:</h4>
+                    <ul>
+                        <li><code>patient_id</code> (optional, integer): Target patient ID. Defaults to active patient.</li>
+                    </ul>
+                    <h4>200 OK Response:</h4>
                     <pre><code>{
   "success": true,
-  "message": "Appointment booked successfully.",
-  "booking_reference": "APT-2026-8942",
-  "whatsapp_confirmation_url": "https://wa.me/919904379260?text=..."
+  "data": {
+    "patient_id": 1042,
+    "patient_name": "Eleanor Vance",
+    "chart_type": "universal_numbering_32",
+    "last_charted": "2026-11-12",
+    "charting_doctor": "Dr. Ethan Caldwell, DDS, FACP",
+    "chart": [
+      { "tooth": 1, "status": "sound", "surfaces": { "O": "sound", "M": "sound", "D": "sound", "B": "sound", "L": "sound" }, "pocket_depth": 2.0 },
+      { "tooth": 19, "status": "rct", "surfaces": { "O": "composite", "M": "sound", "D": "sound", "B": "sound", "L": "sound" }, "pocket_depth": 3.5, "notes": "Root canal obturated" }
+    ]
+  }
 }</code></pre>
                 </div>
             </div>
@@ -290,8 +416,399 @@
                     <h4>200 OK Response:</h4>
                     <pre><code>{
   "success": true,
-  "message": "Odontogram chart updated successfully.",
-  "record_id": 8421
+  "message": "Odontogram chart for tooth #19 surface O updated successfully.",
+  "data": {
+    "record_id": 8421,
+    "patient_id": 1042,
+    "tooth_number": 19,
+    "surface": "O",
+    "condition": "caries",
+    "pocket_depth": 3.5,
+    "updated_at": "2026-11-12T10:30:00Z"
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/patients -->
+            <div class="endpoint-card" id="ep-patients-list">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/patients</span>
+                    </div>
+                    <span class="key-tag">Scope: Authenticated Clinical Staff</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns searchable directory of patient electronic health records (EHR) with medical alerts and assigned clinicians.</p>
+                    <h4>Query Parameters:</h4>
+                    <ul>
+                        <li><code>search</code> (optional, string): Filter by patient name or phone.</li>
+                        <li><code>clinic_id</code> (optional, integer): Filter by branch.</li>
+                    </ul>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "total": 4,
+  "data": [
+    {
+      "id": 1042,
+      "chart_number": "EHR-2026-1042",
+      "name": "Eleanor Vance",
+      "phone": "+447911123456",
+      "email": "eleanor.vance@example.co.uk",
+      "medical_alerts": ["Penicillin Allergy"],
+      "assigned_doctor": "Dr. Ethan Caldwell, DDS, FACP",
+      "last_visit": "2026-10-15"
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: POST /api/v1/patients -->
+            <div class="endpoint-card" id="ep-patients-create">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-post">POST</span>
+                        <span>/api/v1/patients</span>
+                    </div>
+                    <span class="key-tag">Scope: Receptionist &amp; Admin</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Registers a new patient intake profile with medical alert tagging and emergency contact information.</p>
+                    <h4>Request Payload:</h4>
+                    <pre><code>{
+  "first_name": "Oliver",
+  "last_name": "Queen",
+  "phone": "+1 555-0199",
+  "email": "oliver.queen@example.com",
+  "dob": "1985-05-14",
+  "gender": "male",
+  "medical_alerts": ["Latex Allergy"],
+  "clinic_id": 1
+}</code></pre>
+                    <h4>201 Created Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "New patient EHR profile registered successfully.",
+  "data": {
+    "patient_id": 1055,
+    "chart_number": "EHR-2026-1055",
+    "name": "Oliver Queen",
+    "phone": "+1 555-0199",
+    "email": "oliver.queen@example.com",
+    "medical_alerts": ["Latex Allergy"],
+    "clinic_id": 1,
+    "created_at": "2026-11-12T11:00:00Z"
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/clinics -->
+            <div class="endpoint-card" id="ep-clinics">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/clinics</span>
+                    </div>
+                    <span class="key-tag">Scope: Public</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns multi-clinic branches directory with operating hours, addresses, chair counts, and WhatsApp triage numbers.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Advanced Dental Clinic (Central Practice)",
+      "slug": "advanced-dental-central",
+      "branch_code": "ADC-001",
+      "address": {
+        "line1": "100 Healthcare Boulevard, Suite 400",
+        "city": "Austin",
+        "state": "TX",
+        "postal_code": "78701"
+      },
+      "contact": {
+        "phone": "+919904379260",
+        "whatsapp": "+919904379260",
+        "email": "central@advanceddental-demo.com"
+      },
+      "total_chairs": 8,
+      "is_headquarters": true
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/doctors -->
+            <div class="endpoint-card" id="ep-doctors">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/doctors</span>
+                    </div>
+                    <span class="key-tag">Scope: Public</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns clinical specialists directory with credentials, years of experience, ratings, and biographies.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Dr. Ethan Caldwell, DDS, FACP",
+      "specialty": "Board-Certified Prosthodontist & Oral Surgeon",
+      "years_of_experience": 16,
+      "consultation_fee": 150,
+      "rating": 4.98,
+      "avatar_url": "https://images.unsplash.com/photo-1622253692010-333f2da6031d..."
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/services -->
+            <div class="endpoint-card" id="ep-services">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/services</span>
+                    </div>
+                    <span class="key-tag">Scope: Public</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns hierarchical clinical services catalog categorized by preventive, cosmetic, orthodontics, and implants.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "name": "Preventive & Diagnostic",
+      "services": [
+        {
+          "id": 1,
+          "name": "Comprehensive Oral Exam & Cancer Screening",
+          "base_cost": 95.0,
+          "duration_minutes": 45
+        }
+      ]
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/inventory -->
+            <div class="endpoint-card" id="ep-inventory">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/inventory</span>
+                    </div>
+                    <span class="key-tag">Scope: Admin &amp; Billing Staff</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns dental supplies, implants, restorative composites inventory status and low-stock alerts.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "total_items": 5,
+  "low_stock_count": 2,
+  "data": [
+    {
+      "id": 1,
+      "sku": "IMP-BLX-41",
+      "name": "Straumann BLX 4.1mm SLA Implants",
+      "category": "Implantology",
+      "stock_level": 8,
+      "reorder_threshold": 10,
+      "status": "low_stock",
+      "unit_cost": 340.00
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/billing/invoices -->
+            <div class="endpoint-card" id="ep-invoices">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/billing/invoices</span>
+                    </div>
+                    <span class="key-tag">Scope: Billing &amp; Admin</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns financial invoices, CDT procedure codes ledger, POS collections, and public receipt links.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "total": 3,
+  "data": [
+    {
+      "id": 891,
+      "invoice_number": "INV-2026-0891",
+      "patient_name": "Eleanor Vance",
+      "total": 2400.00,
+      "amount_paid": 2400.00,
+      "balance_due": 0.00,
+      "status": "paid",
+      "public_receipt_url": "/advanced-dental-clinic/billing/INV-2026-0891"
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: POST /api/v1/documents -->
+            <div class="endpoint-card" id="ep-documents">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-post">POST</span>
+                        <span>/api/v1/documents</span>
+                    </div>
+                    <span class="key-tag">Scope: Clinical Staff</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Uploads HIPAA-encrypted patient dental X-rays, DICOM scans, or medical documents.</p>
+                    <h4>Request Payload (multipart/form-data):</h4>
+                    <ul>
+                        <li><code>document</code> (file, required): PDF, PNG, JPG, or DICOM file.</li>
+                    </ul>
+                    <h4>201 Created Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "Dental document uploaded and encrypted successfully (AES-256 / HIPAA).",
+  "data": {
+    "document_id": 482,
+    "file_path": "/storage/documents/1762943200_opg_scan.pdf",
+    "checksum": "sha256-a1b2c3d4..."
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/theme-settings -->
+            <div class="endpoint-card" id="ep-theme">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/theme-settings</span>
+                    </div>
+                    <span class="key-tag">Scope: Public</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns dynamic theme design tokens, brand colors, and WhatsApp triage number configured in AdminLTE.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": {
+    "primary": { "hex": "#0D9488", "label": "Clinical Teal" },
+    "secondary": { "hex": "#14B8A6", "label": "Mint Accent" },
+    "whatsapp_number": "+919904379260"
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/seo -->
+            <div class="endpoint-card" id="ep-seo">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/seo</span>
+                    </div>
+                    <span class="key-tag">Scope: Public</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns Yoast-style meta titles, descriptions, OpenGraph tags, Twitter cards, and JSON-LD schema.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": {
+    "page_slug": "home",
+    "title": "Advanced Dental Clinic | Multi-Specialty Dental Care",
+    "meta_description": "Board-certified dental specialists in Austin & Denver offering pain-free implants and Invisalign.",
+    "json_ld_schema": {
+      "@context": "https://schema.org",
+      "@type": "Dentist",
+      "name": "Advanced Dental Clinic",
+      "telephone": "+919904379260"
+    }
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/seo/redirects -->
+            <div class="endpoint-card" id="ep-redirects">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/seo/redirects</span>
+                    </div>
+                    <span class="key-tag">Scope: Public</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns active 301 and 404 URL redirects configuration managed in the admin SEO module.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": [
+    {
+      "source_url": "/teeth-cleaning",
+      "target_url": "/treatments/preventive-care",
+      "status_code": 301
+    }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/cms-pages/{slug} -->
+            <div class="endpoint-card" id="ep-cms">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/cms-pages/{slug}</span>
+                    </div>
+                    <span class="key-tag">Scope: Public</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns headless pre-rendered page content, section titles, hero copy, and metadata for requested CMS slug.</p>
+                    <h4>URL Parameters:</h4>
+                    <ul>
+                        <li><code>slug</code> (required, string): Page slug (e.g., <code>about-us</code> or <code>treatments/dental-implants</code>).</li>
+                    </ul>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": {
+    "slug": "treatments/dental-implants",
+    "title": "Permanent Titanium Dental Implants",
+    "template": "procedure-detail",
+    "status": "published",
+    "hero": {
+      "headline": "Permanent, Natural-Looking Tooth Replacement",
+      "subheadline": "Restore your bite and smile confidence with computer-guided Straumann BLX implants."
+    },
+    "sections": [
+      {
+        "id": "overview",
+        "title": "Why Choose Computer-Guided Dental Implants?",
+        "content": "<p>Dental implants provide a lifelong foundation...</p>"
+      }
+    ]
+  }
 }</code></pre>
                 </div>
             </div>

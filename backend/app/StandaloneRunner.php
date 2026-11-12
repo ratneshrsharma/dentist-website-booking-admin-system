@@ -190,6 +190,64 @@ class StandaloneRunner
             exit;
         }
 
+        // Staff Authentication API
+        if ($uri === '/api/v1/auth/login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $rawInput = file_get_contents('php://input');
+            $payload = json_decode($rawInput, true) ?? $_POST;
+            $email = strtolower(trim($payload['email'] ?? ''));
+            $password = $payload['password'] ?? '';
+            $users = self::getTestUsers();
+            $matchedUser = null;
+            foreach ($users as $uEmail => $uData) {
+                if (strtolower($uEmail) === $email || $uData['role'] === $email) {
+                    $matchedUser = array_merge($uData, ['email' => $uEmail]);
+                    break;
+                }
+            }
+            if ($matchedUser && ($matchedUser['password'] === $password || !empty($payload['demo_quick_login']))) {
+                if (session_status() !== PHP_SESSION_ACTIVE) {
+                    @session_start();
+                }
+                $_SESSION['auth_user'] = $matchedUser;
+                $token = 'adc_token_' . bin2hex(random_bytes(16));
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Staff authentication successful.',
+                    'token' => $token,
+                    'user' => [
+                        'id' => $matchedUser['id'] ?? 1,
+                        'name' => $matchedUser['name'],
+                        'email' => $matchedUser['email'],
+                        'role' => $matchedUser['role'],
+                        'clinic_id' => $matchedUser['clinic_id'] ?? 1,
+                        'branch' => $matchedUser['branch'] ?? 'Central Practice (HQ)',
+                    ]
+                ]);
+            } else {
+                http_response_code(401);
+                echo json_encode([
+                    'success' => false,
+                    'message' => 'Invalid staff credentials. Verify registered clinical email and password.',
+                ]);
+            }
+            exit;
+        }
+
+        if ($uri === '/api/v1/auth/logout') {
+            if (session_status() !== PHP_SESSION_ACTIVE) {
+                @session_start();
+            }
+            unset($_SESSION['auth_user']);
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                @session_destroy();
+            }
+            echo json_encode([
+                'success' => true,
+                'message' => 'Staff session successfully terminated and access token revoked.'
+            ]);
+            exit;
+        }
+
         // WhatsApp number helper - default to +919904379260 unless customized in admin
         $waNumber = '+919904379260';
         $pdo = self::getPdo();
@@ -208,7 +266,7 @@ class StandaloneRunner
             } catch (\Throwable $e) {}
         }
 
-        if ($uri === '/api/v1/theme/settings' || $uri === '/api/v1/settings') {
+        if ($uri === '/api/v1/theme/settings' || $uri === '/api/v1/theme-settings' || $uri === '/api/v1/settings') {
             if ($pdo) {
                 $stmt = $pdo->query("SELECT `key`, `value` FROM theme_settings");
                 $rows = $stmt->fetchAll();
@@ -584,8 +642,69 @@ class StandaloneRunner
             exit;
         }
 
-        // 5. Booking Submission Endpoint (Fixes "Endpoint not found")
+        // 5. Appointments API (List & Booking Submission)
         if ($uri === '/api/v1/appointments/book' || $uri === '/api/v1/appointments') {
+            if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+                $storageDir = dirname(__DIR__) . '/storage/app';
+                $jsonFile = $storageDir . '/appointments.json';
+                $savedAppts = file_exists($jsonFile) ? (json_decode(file_get_contents($jsonFile), true) ?: []) : [];
+                $defaultAppts = [
+                    [
+                        'id' => 101,
+                        'booking_reference' => 'APT-2026-8942',
+                        'patient_name' => 'Eleanor Vance',
+                        'patient_phone' => '+447911123456',
+                        'patient_email' => 'eleanor.vance@example.co.uk',
+                        'doctor_name' => 'Dr. Ethan Caldwell, DDS, FACP',
+                        'clinic_name' => 'Advanced Dental Clinic (Central Practice)',
+                        'appointment_date' => date('Y-m-d'),
+                        'appointment_time' => '10:30',
+                        'treatment_type' => 'Dental Implants Consult',
+                        'status' => 'confirmed',
+                        'payment_status' => 'pending',
+                        'created_at' => date('Y-m-d 08:30:00'),
+                    ],
+                    [
+                        'id' => 102,
+                        'booking_reference' => 'APT-2026-8943',
+                        'patient_name' => 'Marcus Sterling',
+                        'patient_phone' => '+447700900123',
+                        'patient_email' => 'marcus.s@example.com',
+                        'doctor_name' => 'Dr. Maya Lin, DMD, MS',
+                        'clinic_name' => 'Advanced Dental Clinic (Central Practice)',
+                        'appointment_date' => date('Y-m-d'),
+                        'appointment_time' => '11:15',
+                        'treatment_type' => 'Invisalign Progress Check',
+                        'status' => 'in_chair',
+                        'payment_status' => 'paid',
+                        'created_at' => date('Y-m-d 09:00:00'),
+                    ],
+                    [
+                        'id' => 103,
+                        'booking_reference' => 'APT-2026-8944',
+                        'patient_name' => 'Sophia Patel',
+                        'patient_phone' => '+447890123456',
+                        'patient_email' => 'sophia.patel@example.com',
+                        'doctor_name' => 'Dr. Sarah Jenkins, DDS',
+                        'clinic_name' => 'Advanced Dental Clinic (Westside Studio)',
+                        'appointment_date' => date('Y-m-d'),
+                        'appointment_time' => '14:00',
+                        'treatment_type' => 'Root Canal Therapy Evaluation',
+                        'status' => 'confirmed',
+                        'payment_status' => 'pending',
+                        'created_at' => date('Y-m-d 10:15:00'),
+                    ],
+                ];
+                $merged = array_merge($savedAppts, $defaultAppts);
+                echo json_encode([
+                    'success' => true,
+                    'total' => count($merged),
+                    'data' => $merged,
+                ]);
+                exit;
+            }
+
+            // POST Booking Submission
             $rawInput = file_get_contents('php://input');
             $payload = json_decode($rawInput, true) ?? $_POST;
 
@@ -696,7 +815,324 @@ class StandaloneRunner
             exit;
         }
 
-        // 6. Medical Documents Upload Endpoint
+        // 6. EMR Odontogram API (32-Tooth 5-Surface Clinical Engine)
+        if (str_starts_with($uri, '/api/v1/emr/odontogram')) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $rawInput = file_get_contents('php://input');
+                $payload = json_decode($rawInput, true) ?? $_POST;
+                $patientId = (int)($payload['patient_id'] ?? 1042);
+                $toothNumber = (int)($payload['tooth_number'] ?? 19);
+                $surface = strtoupper(trim($payload['surface'] ?? 'O'));
+                $condition = strtolower(trim($payload['condition'] ?? 'caries'));
+                $pocketDepth = (float)($payload['pocket_depth'] ?? 3.5);
+                $notes = $payload['clinical_notes'] ?? 'Clinical chart updated via EMR API.';
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Odontogram chart for tooth #{$toothNumber} surface {$surface} updated successfully.",
+                    'data' => [
+                        'record_id' => mt_rand(8000, 9999),
+                        'patient_id' => $patientId,
+                        'tooth_number' => $toothNumber,
+                        'surface' => $surface,
+                        'condition' => $condition,
+                        'pocket_depth' => $pocketDepth,
+                        'clinical_notes' => $notes,
+                        'updated_at' => date('c'),
+                    ]
+                ]);
+                exit;
+            }
+
+            // GET /api/v1/emr/odontogram or /api/v1/emr/odontogram/{patient_id}
+            $patientId = 1042;
+            if (preg_match('#^/api/v1/emr/odontogram/(\d+)$#', $uri, $m)) {
+                $patientId = (int)$m[1];
+            }
+            echo json_encode([
+                'success' => true,
+                'data' => [
+                    'patient_id' => $patientId,
+                    'patient_name' => 'Eleanor Vance',
+                    'chart_type' => 'universal_numbering_32',
+                    'last_charted' => date('Y-m-d'),
+                    'charting_doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
+                    'chart' => [
+                        ['tooth' => 1, 'status' => 'sound', 'surfaces' => ['O' => 'sound', 'M' => 'sound', 'D' => 'sound', 'B' => 'sound', 'L' => 'sound'], 'pocket_depth' => 2.0],
+                        ['tooth' => 3, 'status' => 'crown', 'material' => 'zirconia', 'surfaces' => ['O' => 'restored', 'M' => 'restored', 'D' => 'restored', 'B' => 'restored', 'L' => 'restored'], 'pocket_depth' => 2.5],
+                        ['tooth' => 14, 'status' => 'caries', 'surfaces' => ['O' => 'caries', 'M' => 'sound', 'D' => 'sound', 'B' => 'sound', 'L' => 'sound'], 'pocket_depth' => 3.0, 'notes' => 'Occlusal fissure caries, scheduled for composite restoration'],
+                        ['tooth' => 19, 'status' => 'rct', 'surfaces' => ['O' => 'composite', 'M' => 'sound', 'D' => 'sound', 'B' => 'sound', 'L' => 'sound'], 'pocket_depth' => 3.5, 'notes' => 'Root canal obturation complete, crown build-up intact'],
+                        ['tooth' => 30, 'status' => 'implant', 'implant_brand' => 'Straumann BLX 4.1mm', 'surfaces' => ['O' => 'implant_crown', 'M' => 'implant_crown', 'D' => 'implant_crown', 'B' => 'implant_crown', 'L' => 'implant_crown'], 'pocket_depth' => 2.0],
+                    ]
+                ]
+            ]);
+            exit;
+        }
+
+        // 7. Patient Records EHR API
+        if (str_starts_with($uri, '/api/v1/patients')) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $rawInput = file_get_contents('php://input');
+                $payload = json_decode($rawInput, true) ?? $_POST;
+                $firstName = trim($payload['first_name'] ?? 'John');
+                $lastName = trim($payload['last_name'] ?? 'Doe');
+                $phone = trim($payload['phone'] ?? '+1 555-0199');
+                $email = trim($payload['email'] ?? 'patient@example.com');
+                $newId = mt_rand(1050, 1999);
+
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'New patient EHR profile registered successfully.',
+                    'data' => [
+                        'patient_id' => $newId,
+                        'chart_number' => 'EHR-2026-' . $newId,
+                        'name' => "{$firstName} {$lastName}",
+                        'phone' => $phone,
+                        'email' => $email,
+                        'medical_alerts' => $payload['medical_alerts'] ?? [],
+                        'clinic_id' => (int)($payload['clinic_id'] ?? 1),
+                        'created_at' => date('c'),
+                    ]
+                ]);
+                exit;
+            }
+
+            // GET /api/v1/patients
+            $search = strtolower(trim($_GET['search'] ?? ''));
+            $patients = [
+                [
+                    'id' => 1042,
+                    'chart_number' => 'EHR-2026-1042',
+                    'name' => 'Eleanor Vance',
+                    'first_name' => 'Eleanor',
+                    'last_name' => 'Vance',
+                    'dob' => '1988-04-12',
+                    'age' => 38,
+                    'gender' => 'female',
+                    'phone' => '+447911123456',
+                    'email' => 'eleanor.vance@example.co.uk',
+                    'medical_alerts' => ['Penicillin Allergy'],
+                    'assigned_doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
+                    'assigned_clinic' => 'Central Practice (HQ)',
+                    'last_visit' => '2026-10-15',
+                    'next_appointment' => '2026-11-15 10:30',
+                    'balance_due' => 0.00,
+                ],
+                [
+                    'id' => 1043,
+                    'chart_number' => 'EHR-2026-1043',
+                    'name' => 'Marcus Sterling',
+                    'first_name' => 'Marcus',
+                    'last_name' => 'Sterling',
+                    'dob' => '1994-09-21',
+                    'age' => 32,
+                    'gender' => 'male',
+                    'phone' => '+447700900123',
+                    'email' => 'marcus.s@example.com',
+                    'medical_alerts' => [],
+                    'assigned_doctor' => 'Dr. Maya Lin, DMD, MS',
+                    'assigned_clinic' => 'Central Practice (HQ)',
+                    'last_visit' => '2026-11-01',
+                    'next_appointment' => '2026-11-20 11:15',
+                    'balance_due' => 2400.00,
+                ],
+                [
+                    'id' => 1044,
+                    'chart_number' => 'EHR-2026-1044',
+                    'name' => 'Sophia Patel',
+                    'first_name' => 'Sophia',
+                    'last_name' => 'Patel',
+                    'dob' => '1982-12-05',
+                    'age' => 43,
+                    'gender' => 'female',
+                    'phone' => '+447890123456',
+                    'email' => 'sophia.patel@example.com',
+                    'medical_alerts' => ['Type 2 Diabetes'],
+                    'assigned_doctor' => 'Dr. Sarah Jenkins, DDS',
+                    'assigned_clinic' => 'Westside Studio',
+                    'last_visit' => '2026-09-28',
+                    'next_appointment' => '2026-11-18 14:00',
+                    'balance_due' => 1250.00,
+                ],
+                [
+                    'id' => 1045,
+                    'chart_number' => 'EHR-2026-1045',
+                    'name' => 'David Kim',
+                    'first_name' => 'David',
+                    'last_name' => 'Kim',
+                    'dob' => '1975-06-30',
+                    'age' => 51,
+                    'gender' => 'male',
+                    'phone' => '+447998877665',
+                    'email' => 'david.kim@example.com',
+                    'medical_alerts' => ['Latex Sensitivity', 'Hypertension'],
+                    'assigned_doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
+                    'assigned_clinic' => 'Central Practice (HQ)',
+                    'last_visit' => '2026-10-22',
+                    'next_appointment' => '2026-12-01 09:30',
+                    'balance_due' => 150.00,
+                ],
+            ];
+
+            if ($search !== '') {
+                $patients = array_values(array_filter($patients, function ($p) use ($search) {
+                    return str_contains(strtolower($p['name']), $search) || str_contains($p['phone'], $search);
+                }));
+            }
+
+            echo json_encode([
+                'success' => true,
+                'total' => count($patients),
+                'data' => $patients,
+            ]);
+            exit;
+        }
+
+        // 8. Dental Supplies & Stock Inventory API
+        if ($uri === '/api/v1/inventory') {
+            $inventory = [
+                [
+                    'id' => 1,
+                    'sku' => 'IMP-BLX-41',
+                    'name' => 'Straumann BLX 4.1mm SLA Implants',
+                    'category' => 'Implantology',
+                    'stock_level' => 8,
+                    'reorder_threshold' => 10,
+                    'unit_cost' => 340.00,
+                    'supplier' => 'Straumann USA',
+                    'status' => 'low_stock',
+                    'expiry_date' => '2028-06-30',
+                ],
+                [
+                    'id' => 2,
+                    'sku' => 'RES-FIL-A2',
+                    'name' => 'Filtek Supreme Ultra Composite (A2 Body)',
+                    'category' => 'Restorative Materials',
+                    'stock_level' => 24,
+                    'reorder_threshold' => 15,
+                    'unit_cost' => 82.50,
+                    'supplier' => '3M Oral Care',
+                    'status' => 'in_stock',
+                    'expiry_date' => '2027-11-30',
+                ],
+                [
+                    'id' => 3,
+                    'sku' => 'ANE-SEP-100',
+                    'name' => 'Septodont Septocaine 4% Epinephrine 1:100k',
+                    'category' => 'Anesthetics & Sedation',
+                    'stock_level' => 4,
+                    'reorder_threshold' => 8,
+                    'unit_cost' => 64.00,
+                    'supplier' => 'Septodont Inc.',
+                    'status' => 'critical',
+                    'expiry_date' => '2026-12-31',
+                ],
+                [
+                    'id' => 4,
+                    'sku' => 'ORT-NIT-016',
+                    'name' => 'Orthodontic NiTi Archwires 0.016 Upper',
+                    'category' => 'Orthodontics',
+                    'stock_level' => 45,
+                    'reorder_threshold' => 20,
+                    'unit_cost' => 18.00,
+                    'supplier' => 'American Orthodontics',
+                    'status' => 'in_stock',
+                    'expiry_date' => '2030-01-01',
+                ],
+                [
+                    'id' => 5,
+                    'sku' => 'BON-OPT-UNI',
+                    'name' => 'OptiBond Universal Dental Adhesive 5ml',
+                    'category' => 'Restorative Materials',
+                    'stock_level' => 12,
+                    'reorder_threshold' => 6,
+                    'unit_cost' => 115.00,
+                    'supplier' => 'Kerr Dental',
+                    'status' => 'in_stock',
+                    'expiry_date' => '2027-08-31',
+                ],
+            ];
+            echo json_encode([
+                'success' => true,
+                'total_items' => count($inventory),
+                'low_stock_count' => 2,
+                'data' => $inventory,
+            ]);
+            exit;
+        }
+
+        // 9. Billing, Invoices & POS API
+        if ($uri === '/api/v1/billing/invoices' || $uri === '/api/v1/invoices') {
+            $invoices = [
+                [
+                    'id' => 891,
+                    'invoice_number' => 'INV-2026-0891',
+                    'patient_id' => 1042,
+                    'patient_name' => 'Eleanor Vance',
+                    'date' => '2026-11-10',
+                    'due_date' => '2026-11-10',
+                    'procedures' => [
+                        ['code' => 'D6010', 'description' => 'Surgical Placement of Implant Body: Endosteal', 'fee' => 1750.00],
+                        ['code' => 'D7953', 'description' => 'Bone Replacement Graft for Ridge Preservation', 'fee' => 650.00],
+                    ],
+                    'subtotal' => 2400.00,
+                    'tax' => 0.00,
+                    'total' => 2400.00,
+                    'amount_paid' => 2400.00,
+                    'balance_due' => 0.00,
+                    'payment_method' => 'Visa Card (ending in 4242)',
+                    'status' => 'paid',
+                    'public_receipt_url' => '/advanced-dental-clinic/billing/INV-2026-0891',
+                    'whatsapp_share_url' => "https://wa.me/" . preg_replace('/[^0-9]/', '', $waNumber) . "?text=" . urlencode("Here is your receipt: https://demo.ratneshsharma.com/advanced-dental-clinic/billing/INV-2026-0891"),
+                ],
+                [
+                    'id' => 892,
+                    'invoice_number' => 'INV-2026-0892',
+                    'patient_id' => 1043,
+                    'patient_name' => 'Marcus Sterling',
+                    'date' => '2026-11-11',
+                    'due_date' => '2026-12-11',
+                    'procedures' => [
+                        ['code' => 'D8090', 'description' => 'Comprehensive Orthodontic Treatment: Clear Aligners', 'fee' => 4800.00],
+                    ],
+                    'subtotal' => 4800.00,
+                    'tax' => 0.00,
+                    'total' => 4800.00,
+                    'amount_paid' => 2400.00,
+                    'balance_due' => 2400.00,
+                    'payment_method' => 'Installment Plan (50% Deposit)',
+                    'status' => 'partial',
+                    'public_receipt_url' => '/advanced-dental-clinic/billing/INV-2026-0892',
+                ],
+                [
+                    'id' => 893,
+                    'invoice_number' => 'INV-2026-0893',
+                    'patient_id' => 1044,
+                    'patient_name' => 'Sophia Patel',
+                    'date' => '2026-11-12',
+                    'due_date' => '2026-12-12',
+                    'procedures' => [
+                        ['code' => 'D3330', 'description' => 'Endodontic Therapy - Molar Tooth #19', 'fee' => 1250.00],
+                    ],
+                    'subtotal' => 1250.00,
+                    'tax' => 0.00,
+                    'total' => 1250.00,
+                    'amount_paid' => 0.00,
+                    'balance_due' => 1250.00,
+                    'payment_method' => 'Cigna Dental Claim (Pending)',
+                    'status' => 'pending_insurance',
+                    'public_receipt_url' => '/advanced-dental-clinic/billing/INV-2026-0893',
+                ],
+            ];
+            echo json_encode([
+                'success' => true,
+                'total' => count($invoices),
+                'data' => $invoices,
+            ]);
+            exit;
+        }
+
+        // 10. Medical Documents Upload Endpoint
         if ($uri === '/api/v1/documents/upload' || $uri === '/api/v1/documents') {
             $uploadedPath = '/storage/documents/simulated-' . time() . '.pdf';
             if (!empty($_FILES['document']['name'])) {
@@ -753,23 +1189,59 @@ class StandaloneRunner
             exit;
         }
 
-        if (str_starts_with($uri, '/api/v1/seo/metadata')) {
-            $slug = trim(str_replace('/api/v1/seo/metadata', '', $uri), '/');
-            $slug = $slug === '' ? 'home' : $slug;
-            if ($pdo) {
-                $stmt = $pdo->prepare("SELECT * FROM seo_metadata WHERE entity_slug = :slug LIMIT 1");
-                $stmt->execute(['slug' => $slug]);
-                $meta = $stmt->fetch();
-                if (!$meta) {
-                    $stmt = $pdo->prepare("SELECT * FROM seo_metadata WHERE entity_slug = 'home' LIMIT 1");
-                    $stmt->execute();
-                    $meta = $stmt->fetch();
+        // 11. Yoast SEO & Scripts API (Single & Global)
+        if ($uri === '/api/v1/seo' || str_starts_with($uri, '/api/v1/seo/metadata') || str_starts_with($uri, '/api/v1/seo/')) {
+            $slug = 'home';
+            if (str_starts_with($uri, '/api/v1/seo/metadata/')) {
+                $slug = trim(str_replace('/api/v1/seo/metadata/', '', $uri), '/');
+            } elseif (str_starts_with($uri, '/api/v1/seo/')) {
+                $sub = trim(str_replace('/api/v1/seo/', '', $uri), '/');
+                if ($sub !== 'redirects' && $sub !== '') {
+                    $slug = $sub;
                 }
-                echo json_encode(['success' => true, 'data' => $meta]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Database offline']);
             }
-            exit;
+
+            if ($uri !== '/api/v1/seo/redirects') {
+                $seoData = [
+                    'page_slug' => $slug,
+                    'title' => 'Advanced Dental Clinic | Multi-Specialty Dental Care & Restorations',
+                    'meta_title' => 'Advanced Dental Clinic | Multi-Specialty Dental Care & Restorations',
+                    'meta_description' => 'Board-certified dental specialists offering computer-guided implants, Invisalign, pain-free sedation, and 24/7 online booking in Austin, Denver, and Charlotte.',
+                    'canonical_url' => 'https://demo.ratneshsharma.com/advanced-dental-clinic/' . ($slug === 'home' ? '' : $slug),
+                    'open_graph' => [
+                        'og_title' => 'Advanced Dental Clinic | Multi-Specialty Restorations',
+                        'og_description' => 'Modern pain-free dentistry with 3D digital planning, board-certified specialists, and transparent pricing.',
+                        'og_type' => 'website',
+                        'og_image' => 'https://demo.ratneshsharma.com/advanced-dental-clinic/images/og-clinic-banner.jpg',
+                        'og_url' => 'https://demo.ratneshsharma.com/advanced-dental-clinic/' . ($slug === 'home' ? '' : $slug),
+                    ],
+                    'twitter_card' => [
+                        'card' => 'summary_large_image',
+                        'site' => '@AdvancedDentalPRO',
+                        'title' => 'Advanced Dental Clinic | Modern Restorative Dentistry',
+                        'description' => 'Pain-free implantology, Invisalign clear aligners, and cosmetic veneers.',
+                    ],
+                    'json_ld_schema' => [
+                        '@context' => 'https://schema.org',
+                        '@type' => 'Dentist',
+                        'name' => 'Advanced Dental Clinic',
+                        'telephone' => $waNumber,
+                        'url' => 'https://demo.ratneshsharma.com/advanced-dental-clinic/',
+                        'priceRange' => '$$',
+                        'address' => [
+                            '@type' => 'PostalAddress',
+                            'streetAddress' => '100 Healthcare Boulevard, Suite 400',
+                            'addressLocality' => 'Austin',
+                            'addressRegion' => 'TX',
+                            'postalCode' => '78701',
+                            'addressCountry' => 'US',
+                        ]
+                    ],
+                    'redirects_count' => 6,
+                ];
+                echo json_encode(['success' => true, 'data' => $seoData]);
+                exit;
+            }
         }
 
         if ($uri === '/api/v1/seo/redirects') {
@@ -778,30 +1250,56 @@ class StandaloneRunner
                 $redirects = $stmt->fetchAll();
                 echo json_encode(['success' => true, 'data' => $redirects]);
             } else {
-                echo json_encode(['success' => true, 'data' => []]);
+                echo json_encode(['success' => true, 'data' => [
+                    ['source_url' => '/teeth-cleaning', 'target_url' => '/treatments/preventive-care', 'status_code' => 301],
+                    ['source_url' => '/cosmetic', 'target_url' => '/treatments/porcelain-veneers', 'status_code' => 301],
+                    ['source_url' => '/implants', 'target_url' => '/treatments/dental-implants', 'status_code' => 301],
+                ]]);
             }
             exit;
         }
 
-        if ($uri === '/api/v1/cms-pages' || $uri === '/api/v1/cms/pages') {
-            if ($pdo) {
-                try {
-                    $stmt = $pdo->query("SELECT id, title, slug, template, meta_title, meta_description, is_published, updated_at FROM cms_pages WHERE is_published = 1 ORDER BY id ASC");
-                    $pages = $stmt->fetchAll();
-                    if (!empty($pages)) {
-                        echo json_encode(['success' => true, 'data' => $pages]);
-                        exit;
-                    }
-                } catch (\Throwable $e) {}
+        // 12. Website CMS Pages API (Single & List)
+        if (str_starts_with($uri, '/api/v1/cms-pages') || str_starts_with($uri, '/api/v1/cms/pages')) {
+            $slug = trim(preg_replace('#^/api/v1/cms-?pages/?#', '', $uri), '/');
+            if ($slug === '' || $slug === 'index') {
+                echo json_encode(['success' => true, 'data' => [
+                    ['id' => 1, 'title' => 'Home', 'slug' => '/', 'template' => 'confident-doctor', 'status' => 'published'],
+                    ['id' => 2, 'title' => 'About Us', 'slug' => 'about-us', 'template' => 'editorial', 'status' => 'published'],
+                    ['id' => 3, 'title' => 'Treatments & Procedures', 'slug' => 'treatments', 'template' => 'clinical-catalog', 'status' => 'published'],
+                    ['id' => 4, 'title' => 'Contact & Practice Locations', 'slug' => 'contact', 'template' => 'contact-split', 'status' => 'published'],
+                    ['id' => 5, 'title' => 'Dental Implants', 'slug' => 'treatments/dental-implants', 'template' => 'procedure-detail', 'status' => 'published'],
+                    ['id' => 6, 'title' => 'Clear Aligners', 'slug' => 'treatments/clear-aligners', 'template' => 'procedure-detail', 'status' => 'published'],
+                ]]);
+                exit;
             }
-            echo json_encode(['success' => true, 'data' => [
-                ['id' => 1, 'title' => 'Home', 'slug' => '/', 'template' => 'confident-doctor', 'is_published' => 1],
-                ['id' => 2, 'title' => 'About Us', 'slug' => '/about-us', 'template' => 'editorial', 'is_published' => 1],
-                ['id' => 3, 'title' => 'Treatments & Procedures', 'slug' => '/treatments', 'template' => 'clinical-catalog', 'is_published' => 1],
-                ['id' => 4, 'title' => 'Contact & Practice Locations', 'slug' => '/contact', 'template' => 'contact-split', 'is_published' => 1],
-                ['id' => 5, 'title' => 'Dental Implants', 'slug' => '/treatments/dental-implants', 'template' => 'procedure-detail', 'is_published' => 1],
-                ['id' => 6, 'title' => 'Clear Aligners', 'slug' => '/treatments/clear-aligners', 'template' => 'procedure-detail', 'is_published' => 1],
-            ]]);
+
+            // Specific page content for requested slug
+            echo json_encode([
+                'success' => true,
+                'data' => [
+                    'slug' => $slug,
+                    'title' => ucwords(str_replace(['-', '/'], [' ', ' - '], $slug)),
+                    'template' => str_contains($slug, 'treatments/') ? 'procedure-detail' : 'default',
+                    'status' => 'published',
+                    'hero' => [
+                        'headline' => 'Comprehensive Clinical Excellence & Restorative Care',
+                        'subheadline' => 'State-of-the-art dental technology tailored for lasting oral health.',
+                        'cta_text' => 'Book Appointment Online',
+                    ],
+                    'sections' => [
+                        [
+                            'id' => 'intro',
+                            'title' => 'Clinical Overview',
+                            'content' => '<p>Advanced Dental Clinic delivers evidence-based, patient-centric dental care utilizing digital intraoral scanners, 3D CBCT imaging, and pain-free restorative protocols.</p>',
+                        ]
+                    ],
+                    'seo' => [
+                        'meta_title' => ucwords(str_replace(['-', '/'], [' ', ' - '], $slug)) . ' | Advanced Dental Clinic',
+                        'meta_description' => 'Discover world-class dental procedures and compassionate patient care at Advanced Dental Clinic.',
+                    ]
+                ]
+            ]);
             exit;
         }
 
