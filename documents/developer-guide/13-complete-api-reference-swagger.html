@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 13: Complete Swagger / OpenAPI Developer Reference</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary: #0D9488;
+            --primary-dark: #0F766E;
+            --primary-light: #CCFBF1;
+            --secondary: #475569;
+            --dark: #0F172A;
+            --surface: #FFFFFF;
+            --bg: #F8FAFC;
+            --border: #E2E8F0;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --success: #10B981;
+            --info: #0284C7;
+            --code-bg: #1E293B;
+            --method-get: #0284C7;
+            --method-post: #10B981;
+            --method-put: #F59E0B;
+            --method-delete: #EF4444;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; background: var(--bg); color: #1E293B; line-height: 1.65; font-size: 15px; }
+        .doc-header { background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0D9488 100%); color: #FFF; padding: 2.5rem 2rem; border-bottom: 4px solid var(--primary); }
+        .header-container { max-width: 1400px; margin: 0 auto; }
+        .breadcrumb-nav { font-size: 0.85rem; color: #94A3B8; margin-bottom: 0.75rem; }
+        .breadcrumb-nav a { color: #5EEAD4; text-decoration: none; font-weight: 600; }
+        .breadcrumb-nav a:hover { text-decoration: underline; }
+        .doc-title { font-size: 2.2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .doc-subtitle { font-size: 1.05rem; color: #CBD5E1; max-width: 950px; }
+        .doc-layout { max-width: 1400px; margin: 2rem auto 4rem; padding: 0 1.5rem; display: grid; grid-template-columns: 300px 1fr; gap: 2rem; align-items: start; }
+        .doc-sidebar { background: #FFF; border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; position: sticky; top: 1.5rem; max-height: calc(100vh - 3rem); overflow-y: auto; }
+        .sidebar-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748B; font-weight: 700; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        .toc-list { list-style: none; }
+        .toc-item { margin-bottom: 0.35rem; }
+        .toc-link { display: flex; align-items: center; justify-content: space-between; padding: 0.4rem 0.6rem; border-radius: 0.4rem; color: #334155; text-decoration: none; font-size: 0.82rem; font-weight: 500; }
+        .toc-link:hover { background: #F1F5F9; color: var(--primary); }
+        .toc-link.active { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; }
+        .badge-method { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.4rem; border-radius: 0.25rem; color: #FFF; }
+        .badge-get { background: var(--method-get); }
+        .badge-post { background: var(--method-post); }
+        .badge-put { background: var(--method-put); }
+        .badge-delete { background: var(--method-delete); }
+        .doc-content { background: #FFF; border: 1px solid var(--border); border-radius: 0.75rem; padding: 2.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        h2 { font-size: 1.6rem; font-weight: 800; color: var(--dark); margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #F1F5F9; display: flex; align-items: center; gap: 0.5rem; }
+        h2:first-of-type { margin-top: 0; }
+        h3 { font-size: 1.25rem; font-weight: 700; color: #1E293B; margin: 1.75rem 0 0.75rem; display: flex; align-items: center; gap: 0.6rem; }
+        p { margin-bottom: 1rem; color: #334155; }
+        ul, ol { margin: 0 0 1.25rem 1.5rem; color: #334155; }
+        li { margin-bottom: 0.4rem; }
+        pre { background: var(--code-bg); color: #E2E8F0; font-family: 'JetBrains Mono', monospace; padding: 1.25rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.82rem; margin: 1rem 0; border: 1px solid #334155; }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.88em; }
+        .key-tag { font-family: 'JetBrains Mono', monospace; background: #F1F5F9; padding: 0.15rem 0.4rem; border-radius: 0.3rem; border: 1px solid #CBD5E1; font-size: 0.78rem; color: #0F172A; }
+        .spec-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0 1.5rem; }
+        .spec-table th, .spec-table td { padding: 0.75rem 1rem; border: 1px solid var(--border); text-align: left; }
+        .spec-table th { background: #F1F5F9; font-weight: 700; color: #334155; }
+        .endpoint-card { border: 1px solid var(--border); border-radius: 0.6rem; margin-bottom: 2rem; overflow: hidden; }
+        .endpoint-header { background: #F8FAFC; padding: 1rem 1.25rem; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+        .endpoint-route { display: flex; align-items: center; gap: 0.75rem; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.95rem; }
+        .endpoint-body { padding: 1.25rem; }
+        @media (max-width: 900px) { .doc-layout { grid-template-columns: 1fr; } .doc-sidebar { position: static; max-height: none; } }
+    </style>
+</head>
+<body>
+
+    <header class="doc-header">
+        <div class="header-container">
+            <div class="breadcrumb-nav">
+                <a href="../02-developer-architecture-api-code-guide.html"><i class="bi bi-arrow-left"></i> Master Developer Guide &amp; Swagger Hub</a> / Complete Swagger API Reference
+            </div>
+            <h1 class="doc-title">Module 13: Complete Swagger / OpenAPI Reference</h1>
+            <p class="doc-subtitle">
+                System-wide interactive REST API specification documenting all 21+ backend endpoints, request payloads, response schemas, authentication scopes, rate limits, and troubleshooting codes.
+            </p>
+        </div>
+    </header>
+
+    <div class="doc-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="doc-sidebar">
+            <div class="sidebar-title">REST API Endpoints</div>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="#ep-auth-login" class="toc-link"><span class="badge-method badge-post">POST</span> <span>/api/v1/auth/login</span></a></li>
+                <li class="toc-item"><a href="#ep-auth-logout" class="toc-link"><span class="badge-method badge-post">POST</span> <span>/api/v1/auth/logout</span></a></li>
+                <li class="toc-item"><a href="#ep-kpis" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/dashboard/kpis</span></a></li>
+                <li class="toc-item"><a href="#ep-appts-list" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/appointments</span></a></li>
+                <li class="toc-item"><a href="#ep-appts-book" class="toc-link"><span class="badge-method badge-post">POST</span> <span>/api/v1/appointments</span></a></li>
+                <li class="toc-item"><a href="#ep-appts-slots" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/appointments/slots</span></a></li>
+                <li class="toc-item"><a href="#ep-emr-get" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/emr/odontogram</span></a></li>
+                <li class="toc-item"><a href="#ep-emr-save" class="toc-link"><span class="badge-method badge-post">POST</span> <span>/api/v1/emr/odontogram</span></a></li>
+                <li class="toc-item"><a href="#ep-patients-list" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/patients</span></a></li>
+                <li class="toc-item"><a href="#ep-patients-create" class="toc-link"><span class="badge-method badge-post">POST</span> <span>/api/v1/patients</span></a></li>
+                <li class="toc-item"><a href="#ep-clinics" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/clinics</span></a></li>
+                <li class="toc-item"><a href="#ep-inventory" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/inventory</span></a></li>
+                <li class="toc-item"><a href="#ep-invoices" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/billing/invoices</span></a></li>
+                <li class="toc-item"><a href="#ep-theme" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/theme-settings</span></a></li>
+                <li class="toc-item"><a href="#ep-seo" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/seo</span></a></li>
+                <li class="toc-item"><a href="#ep-cms" class="toc-link"><span class="badge-method badge-get">GET</span> <span>/api/v1/cms-pages/{slug}</span></a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="doc-content">
+            <h2><i class="bi bi-hdd-network text-primary"></i> OpenAPI 3.1 &amp; Swagger Specification</h2>
+            <p>
+                This reference acts as the definitive replacement for Swagger UI, providing exact schema definitions, security scopes, rate limits, and JSON payloads for every production API.
+            </p>
+
+            <!-- Global Headers & Rate Limits -->
+            <table class="spec-table">
+                <thead>
+                    <tr>
+                        <th>Global Setting</th>
+                        <th>Standard Value</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Base URL</strong></td>
+                        <td><code>https://demo.ratneshsharma.com/advanced-dental-clinic/api/v1</code></td>
+                        <td>Prefix all requests with this root path.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Headers Required</strong></td>
+                        <td><code>Accept: application/json</code><br><code>Content-Type: application/json</code><br><code>X-CSRF-TOKEN: {token}</code></td>
+                        <td>CSRF token required on all state-mutating requests (POST, PUT, DELETE).</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Rate Limits</strong></td>
+                        <td>&bull; General APIs: <code>60 requests / minute</code><br>&bull; Booking Endpoint: <code>10 requests / minute</code></td>
+                        <td>Returns <code>429 Too Many Requests</code> with <code>Retry-After</code> header on breach.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Endpoint: POST /api/v1/auth/login -->
+            <div class="endpoint-card" id="ep-auth-login">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-post">POST</span>
+                        <span>/api/v1/auth/login</span>
+                    </div>
+                    <span class="key-tag">Scope: Public</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Authenticates staff credentials, establishes an HTTP-only session cookie, and returns user identity.</p>
+                    <h4>Request Payload:</h4>
+                    <pre><code>{
+  "email": "dr.caldwell@example.com",
+  "password": "Password123!",
+  "remember": true
+}</code></pre>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "Authentication successful.",
+  "user": {
+    "id": 3,
+    "name": "Dr. Ethan Caldwell, DDS",
+    "email": "dr.caldwell@example.com",
+    "role": "doctor",
+    "clinic_id": 1,
+    "is_2fa_enabled": false
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/dashboard/kpis -->
+            <div class="endpoint-card" id="ep-kpis">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/dashboard/kpis</span>
+                    </div>
+                    <span class="key-tag">Scope: Authenticated Staff</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Returns real-time practice operational metrics filtered by the user's branch permissions.</p>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "data": {
+    "today_appointments": 14,
+    "active_patients": 1420,
+    "low_stock_warnings": 3,
+    "today_revenue": "$4,850.00",
+    "operatory_occupancy_rate": "87.5%",
+    "branch": "Central Practice (HQ)"
+  }
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: GET /api/v1/appointments/slots -->
+            <div class="endpoint-card" id="ep-appts-slots">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-get">GET</span>
+                        <span>/api/v1/appointments/slots</span>
+                    </div>
+                    <span class="key-tag">Scope: Public &amp; Staff</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Calendly-style availability engine querying doctor schedules and operatory chair capacities.</p>
+                    <h4>Query Parameters:</h4>
+                    <ul>
+                        <li><code>date</code> (required, string, YYYY-MM-DD): Target booking date.</li>
+                        <li><code>doctor_id</code> (optional, integer): Clinician ID.</li>
+                        <li><code>clinic_id</code> (optional, integer): Branch location ID.</li>
+                    </ul>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "date": "2026-11-15",
+  "available_slots": [
+    { "time": "09:00", "status": "available", "period": "morning" },
+    { "time": "09:45", "status": "available", "period": "morning" },
+    { "time": "10:30", "status": "booked", "period": "morning" },
+    { "time": "14:00", "status": "available", "period": "afternoon" },
+    { "time": "15:30", "status": "available", "period": "afternoon" }
+  ]
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: POST /api/v1/appointments -->
+            <div class="endpoint-card" id="ep-appts-book">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-post">POST</span>
+                        <span>/api/v1/appointments</span>
+                    </div>
+                    <span class="key-tag">Scope: Public &amp; Staff (Rate limit: 10/min)</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Dispatches appointment booking with pessimistic chair lock and WhatsApp triage notification.</p>
+                    <h4>Request Payload:</h4>
+                    <pre><code>{
+  "patient_name": "Eleanor Vance",
+  "patient_phone": "+447911123456",
+  "patient_email": "eleanor.vance@example.co.uk",
+  "appointment_date": "2026-11-15",
+  "appointment_time": "14:00",
+  "doctor_id": 1,
+  "clinic_id": 1,
+  "treatment_type": "Dental Implants Consult",
+  "notes": "Interested in Straumann BLX implant options."
+}</code></pre>
+                    <h4>201 Created Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "Appointment booked successfully.",
+  "booking_reference": "APT-2026-8942",
+  "whatsapp_confirmation_url": "https://wa.me/919904379260?text=..."
+}</code></pre>
+                </div>
+            </div>
+
+            <!-- Endpoint: POST /api/v1/emr/odontogram -->
+            <div class="endpoint-card" id="ep-emr-save">
+                <div class="endpoint-header">
+                    <div class="endpoint-route">
+                        <span class="badge-method badge-post">POST</span>
+                        <span>/api/v1/emr/odontogram</span>
+                    </div>
+                    <span class="key-tag">Scope: Doctor &amp; Admin</span>
+                </div>
+                <div class="endpoint-body">
+                    <p>Saves 5-surface tooth condition or periodontal probing depth for patient odontogram chart.</p>
+                    <h4>Request Payload:</h4>
+                    <pre><code>{
+  "patient_id": 1042,
+  "tooth_number": 19,
+  "surface": "O",
+  "condition": "caries",
+  "pocket_depth": 3.5,
+  "clinical_notes": "Early enamel breakdown on occlusal fissure."
+}</code></pre>
+                    <h4>200 OK Response:</h4>
+                    <pre><code>{
+  "success": true,
+  "message": "Odontogram chart updated successfully.",
+  "record_id": 8421
+}</code></pre>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+</body>
+</html>

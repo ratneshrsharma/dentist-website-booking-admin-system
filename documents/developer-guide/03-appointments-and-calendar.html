@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Module 03: Scheduler, Calendar & Availability Engine</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+        :root {
+            --primary: #0D9488;
+            --primary-dark: #0F766E;
+            --primary-light: #CCFBF1;
+            --secondary: #475569;
+            --dark: #0F172A;
+            --surface: #FFFFFF;
+            --bg: #F8FAFC;
+            --border: #E2E8F0;
+            --accent: #F59E0B;
+            --danger: #EF4444;
+            --success: #10B981;
+            --info: #0284C7;
+            --code-bg: #1E293B;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; background: var(--bg); color: #1E293B; line-height: 1.65; font-size: 15px; }
+        .doc-header { background: linear-gradient(135deg, #0F172A 0%, #1E293B 50%, #0D9488 100%); color: #FFF; padding: 2.5rem 2rem; border-bottom: 4px solid var(--primary); }
+        .header-container { max-width: 1280px; margin: 0 auto; }
+        .breadcrumb-nav { font-size: 0.85rem; color: #94A3B8; margin-bottom: 0.75rem; }
+        .breadcrumb-nav a { color: #5EEAD4; text-decoration: none; font-weight: 600; }
+        .breadcrumb-nav a:hover { text-decoration: underline; }
+        .doc-title { font-size: 2rem; font-weight: 800; margin-bottom: 0.5rem; }
+        .doc-subtitle { font-size: 1.05rem; color: #CBD5E1; max-width: 900px; }
+        .doc-layout { max-width: 1280px; margin: 2rem auto 4rem; padding: 0 1.5rem; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; align-items: start; }
+        .doc-sidebar { background: #FFF; border: 1px solid var(--border); border-radius: 0.75rem; padding: 1.25rem; position: sticky; top: 1.5rem; max-height: calc(100vh - 3rem); overflow-y: auto; }
+        .sidebar-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748B; font-weight: 700; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+        .toc-list { list-style: none; }
+        .toc-item { margin-bottom: 0.35rem; }
+        .toc-link { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0.6rem; border-radius: 0.4rem; color: #334155; text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+        .toc-link:hover { background: #F1F5F9; color: var(--primary); }
+        .toc-link.active { background: var(--primary-light); color: var(--primary-dark); font-weight: 700; }
+        .doc-content { background: #FFF; border: 1px solid var(--border); border-radius: 0.75rem; padding: 2.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        h2 { font-size: 1.5rem; font-weight: 800; color: var(--dark); margin: 2rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 2px solid #F1F5F9; display: flex; align-items: center; gap: 0.5rem; }
+        h2:first-of-type { margin-top: 0; }
+        h3 { font-size: 1.2rem; font-weight: 700; color: #1E293B; margin: 1.5rem 0 0.75rem; }
+        h4 { font-size: 1rem; font-weight: 700; color: #334155; margin: 1.25rem 0 0.5rem; }
+        p { margin-bottom: 1rem; color: #334155; }
+        ul, ol { margin: 0 0 1.25rem 1.5rem; color: #334155; }
+        li { margin-bottom: 0.4rem; }
+        pre { background: var(--code-bg); color: #E2E8F0; font-family: 'JetBrains Mono', monospace; padding: 1.25rem; border-radius: 0.5rem; overflow-x: auto; font-size: 0.82rem; margin: 1rem 0; border: 1px solid #334155; }
+        code { font-family: 'JetBrains Mono', monospace; font-size: 0.88em; }
+        .key-tag { font-family: 'JetBrains Mono', monospace; background: #F1F5F9; padding: 0.15rem 0.4rem; border-radius: 0.3rem; border: 1px solid #CBD5E1; font-size: 0.78rem; color: #0F172A; }
+        .spec-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0 1.5rem; }
+        .spec-table th, .spec-table td { padding: 0.75rem 1rem; border: 1px solid var(--border); text-align: left; }
+        .spec-table th { background: #F1F5F9; font-weight: 700; color: #334155; }
+        .ticket-card { background: #FFF; border: 1px solid #CBD5E1; border-left: 4px solid var(--danger); border-radius: 0.5rem; padding: 1.25rem; margin: 1.25rem 0; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
+        .ticket-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; border-bottom: 1px solid #E2E8F0; padding-bottom: 0.5rem; }
+        .ticket-id { font-family: 'JetBrains Mono', monospace; font-weight: 700; color: var(--danger); }
+        .ticket-title { font-weight: 700; color: var(--dark); font-size: 1.05rem; }
+        .ticket-tag { font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 0.3rem; font-weight: 600; text-transform: uppercase; background: #FEE2E2; color: #991B1B; }
+        @media (max-width: 900px) { .doc-layout { grid-template-columns: 1fr; } .doc-sidebar { position: static; max-height: none; } }
+    </style>
+</head>
+<body>
+
+    <header class="doc-header">
+        <div class="header-container">
+            <div class="breadcrumb-nav">
+                <a href="../02-developer-architecture-api-code-guide.html"><i class="bi bi-arrow-left"></i> Master Developer Guide &amp; Swagger Hub</a> / Scheduler Architecture
+            </div>
+            <h1 class="doc-title">Module 03: Scheduler, Calendar &amp; Availability Engine</h1>
+            <p class="doc-subtitle">
+                Technical specification for AdminLTE 4 clinical calendar (<code class="key-tag">/admin/appointments/calendar</code>), Calendly slot calculation algorithms, operatory status transitions, and WhatsApp dispatch.
+            </p>
+        </div>
+    </header>
+
+    <div class="doc-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="doc-sidebar">
+            <div class="sidebar-title">Scheduler Specs</div>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="#calendar-view" class="toc-link active"><i class="bi bi-calendar3"></i> 1. Calendar View &amp; FullCalendar</a></li>
+                <li class="toc-item"><a href="#slots-engine" class="toc-link"><i class="bi bi-clock"></i> 2. Calendly Slots Algorithm</a></li>
+                <li class="toc-item"><a href="#status-machine" class="toc-link"><i class="bi bi-arrow-repeat"></i> 3. Status State Machine</a></li>
+                <li class="toc-item"><a href="#whatsapp-dispatch" class="toc-link"><i class="bi bi-whatsapp text-success"></i> 4. WhatsApp Triage Integration</a></li>
+                <li class="toc-item"><a href="#support-tickets" class="toc-link"><i class="bi bi-tools text-danger"></i> 5. Support Tickets &amp; RCA</a></li>
+            </ul>
+            <div class="sidebar-title" style="margin-top: 1.5rem;">All Module Guides</div>
+            <ul class="toc-list">
+                <li class="toc-item"><a href="01-auth-and-security.html" class="toc-link"><i class="bi bi-shield-lock"></i> 01. Auth &amp; RBAC</a></li>
+                <li class="toc-item"><a href="02-dashboard-architecture.html" class="toc-link"><i class="bi bi-speedometer2"></i> 02. Dashboard</a></li>
+                <li class="toc-item"><a href="04-emr-odontogram.html" class="toc-link"><i class="bi bi-heart-pulse"></i> 04. Odontogram</a></li>
+                <li class="toc-item"><a href="05-patients-ehr.html" class="toc-link"><i class="bi bi-person-vcard"></i> 05. Patients EHR</a></li>
+                <li class="toc-item"><a href="06-clinics-facilities.html" class="toc-link"><i class="bi bi-building"></i> 06. Multi-Clinic</a></li>
+                <li class="toc-item"><a href="07-inventory-and-supplies.html" class="toc-link"><i class="bi bi-boxes"></i> 07. Inventory</a></li>
+                <li class="toc-item"><a href="08-billing-pos-and-invoices.html" class="toc-link"><i class="bi bi-receipt"></i> 08. Billing &amp; POS</a></li>
+                <li class="toc-item"><a href="09-theme-customizer.html" class="toc-link"><i class="bi bi-palette"></i> 09. Theme Tokens</a></li>
+                <li class="toc-item"><a href="10-seo-and-redirects.html" class="toc-link"><i class="bi bi-graph-up-arrow"></i> 10. Yoast SEO</a></li>
+                <li class="toc-item"><a href="11-cms-pages-manager.html" class="toc-link"><i class="bi bi-file-earmark-richtext"></i> 11. CMS Pages</a></li>
+                <li class="toc-item"><a href="12-staff-rbac-security.html" class="toc-link"><i class="bi bi-people"></i> 12. Staff RBAC</a></li>
+                <li class="toc-item"><a href="13-complete-api-reference-swagger.html" class="toc-link"><i class="bi bi-hdd-network"></i> 13. API Swagger</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="doc-content">
+            <!-- Section 1 -->
+            <section id="calendar-view">
+                <h2><i class="bi bi-calendar3 text-primary"></i> 1. Calendar View &amp; FullCalendar UI</h2>
+                <table class="spec-table">
+                    <thead>
+                        <tr>
+                            <th>Attribute</th>
+                            <th>Technical Specification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>HTTP Route</strong></td>
+                            <td><code>GET /admin/appointments/calendar</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Blade Template</strong></td>
+                            <td><code>backend/resources/views/admin/appointments/calendar.blade.php</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Client Libraries</strong></td>
+                            <td>FullCalendar 6.x (Resource Timeline / TimeGrid views)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Permitted Roles</strong></td>
+                            <td><code>super_admin</code>, <code>admin</code>, <code>doctor</code> (own appointments), <code>receptionist</code>, <code>billing</code> (read-only)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 2 -->
+            <section id="slots-engine">
+                <h2><i class="bi bi-clock-fill text-primary"></i> 2. Calendly Slots Calculation Algorithm</h2>
+                <p>Availability slots are computed via <code>BookingAvailabilityService.php</code> and served by <code>GET /api/v1/availability/slots?date=YYYY-MM-DD</code>:</p>
+
+                <pre><code>// Algorithm: Slot Generation with Operatory Concurrency Check
+$morningIntervals = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30'];
+$afternoonIntervals = ['13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'];
+
+foreach ($intervals as $time) {
+    // Count existing bookings for this clinic & slot
+    $bookedCount = Appointment::where('clinic_id', $clinicId)
+        ->whereDate('appointment_date', $date)
+        ->where('appointment_time', $time)
+        ->whereNotIn('status', ['cancelled', 'no_show'])
+        ->count();
+
+    $availableChairs = max(0, $totalChairs - $bookedCount);
+
+    $slots[] = [
+        'time' => $time,
+        'display' => date('g:i A', strtotime($time)),
+        'period' => $hour < 12 ? 'morning' : 'afternoon',
+        'available' => $availableChairs > 0,
+        'remaining_chairs' => $availableChairs,
+    ];
+}</code></pre>
+            </section>
+
+            <!-- Section 3 -->
+            <section id="status-machine">
+                <h2><i class="bi bi-arrow-repeat text-primary"></i> 3. Clinical Status State Machine</h2>
+                <table class="spec-table">
+                    <thead>
+                        <tr>
+                            <th>Status Enum</th>
+                            <th>Badge Color</th>
+                            <th>Description &amp; Action Trigger</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>confirmed</code></td>
+                            <td><span style="color: #0284C7; font-weight: 700;">Sky Blue</span></td>
+                            <td>Initial state when booked online or by reception. WhatsApp reminder dispatched.</td>
+                        </tr>
+                        <tr>
+                            <td><code>arrived</code></td>
+                            <td><span style="color: #F59E0B; font-weight: 700;">Amber</span></td>
+                            <td>Patient is seated in waiting room. Doctor operatory alerted.</td>
+                        </tr>
+                        <tr>
+                            <td><code>in_chair</code></td>
+                            <td><span style="color: #8B5CF6; font-weight: 700;">Purple</span></td>
+                            <td>Patient is in operatory chair undergoing clinical procedure.</td>
+                        </tr>
+                        <tr>
+                            <td><code>completed</code></td>
+                            <td><span style="color: #10B981; font-weight: 700;">Teal/Green</span></td>
+                            <td>Treatment concluded. Routes to Billing Officer for POS settlement.</td>
+                        </tr>
+                        <tr>
+                            <td><code>cancelled</code></td>
+                            <td><span style="color: #EF4444; font-weight: 700;">Red</span></td>
+                            <td>Appointment cancelled by patient or staff. Chair released back to slot pool.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 4 -->
+            <section id="whatsapp-dispatch">
+                <h2><i class="bi bi-whatsapp text-success"></i> 4. WhatsApp Triage Link Generation</h2>
+                <p>When an appointment is created or updated, the system formats a click-to-chat WhatsApp triage URL:</p>
+                <pre><code>$cleanPhone = preg_replace('/[^0-9]/', '', $waNumber); // e.g. 919904379260
+$message = "Hello Advanced Dental Clinic! My booking reference is *{$refCode}* for *{$patientName}* on *{$date}* at *{$time}*. Please confirm my clinical slot.";
+$waUrl = "https://wa.me/{$cleanPhone}?text=" . urlencode($message);</code></pre>
+            </section>
+
+            <!-- Section 5 -->
+            <section id="support-tickets">
+                <h2><i class="bi bi-tools text-danger"></i> 5. Support Tickets &amp; Root Cause Analysis (RCA)</h2>
+
+                <div class="ticket-card">
+                    <div class="ticket-header">
+                        <div>
+                            <span class="ticket-id">TICKET-SCHED-301</span> &bull;
+                            <span class="ticket-title">Double booking occurs when two patients book the same slot simultaneously</span>
+                        </div>
+                        <span class="ticket-tag">Race Condition</span>
+                    </div>
+                    <p><strong>Symptom:</strong> Two patients book 10:00 AM slot at Westside Studio where only 1 chair is available.</p>
+                    <p><strong>Root Cause:</strong> Lack of database row locking during the slot validation &amp; insertion window.</p>
+                    <p><strong>Resolution Runbook:</strong></p>
+                    <ol>
+                        <li>In <code>CreateAppointmentAction.php</code>, wrap booking inside a database transaction with pessimistic locking:
+                            <pre><code>DB::transaction(function () use ($data) {
+    $existing = Appointment::where('clinic_id', $data['clinic_id'])
+        ->where('appointment_date', $data['date'])
+        ->where('appointment_time', $data['time'])
+        ->lockForUpdate()
+        ->count();
+    if ($existing >= $totalChairs) {
+        throw new SlotUnavailableException("Slot just filled.");
+    }
+    return Appointment::create($data);
+});</code></pre>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="ticket-card">
+                    <div class="ticket-header">
+                        <div>
+                            <span class="ticket-id">TICKET-SCHED-302</span> &bull;
+                            <span class="ticket-title">WhatsApp button does not open on desktop browsers</span>
+                        </div>
+                        <span class="ticket-tag">URL Format</span>
+                    </div>
+                    <p><strong>Symptom:</strong> Clicking WhatsApp icon on Windows chrome opens an invalid URL protocol error.</p>
+                    <p><strong>Root Cause:</strong> Using <code>whatsapp://send</code> protocol instead of the universal web fallback <code>https://wa.me/...</code>.</p>
+                    <p><strong>Resolution Runbook:</strong> Ensure all links use <code>https://wa.me/{phone}?text={encoded}</code> format which automatically handles desktop WhatsApp Web and mobile native app redirection.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+</html>
