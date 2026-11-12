@@ -66,6 +66,34 @@
                     </div>
                 </div>
 
+                <!-- Section 1.5: Clinic WhatsApp & Direct Triage Hub -->
+                <div class="card mb-4 shadow-sm border-success-subtle">
+                    <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
+                        <span class="fs-5 fw-bold text-dark"><i class="bi bi-whatsapp text-success me-2"></i>Clinic WhatsApp & Patient Triage Channel</span>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle"><i class="bi bi-broadcast me-1"></i>Live Synchronized</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="row align-items-center g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small fw-bold">Official Clinic WhatsApp Number</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-success-subtle text-success"><i class="bi bi-whatsapp"></i></span>
+                                    <input type="text" class="form-control" name="whatsapp_number" value="{{ $whatsapp_number }}" placeholder="+919904379260" required>
+                                </div>
+                                <small class="text-muted d-block mt-1">International format with country code (default: <code>+919904379260</code>). Updates public patient floating triage hub, booking confirmation WhatsApp notifications, and direct contact buttons instantly via API.</small>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3 bg-light rounded border">
+                                    <div class="d-flex align-items-center text-success fw-bold small mb-1">
+                                        <i class="bi bi-check-circle-fill me-1"></i> Zero Code Re-Deploy
+                                    </div>
+                                    <span class="small text-muted">Whenever you update this phone number, the patient website and booking confirmation links reflect the new number immediately without rebuilding or re-deploying code!</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Section 2: Granular Typography Engine (H1-H6, P, A) -->
                 <div class="card mb-4 shadow-sm">
                     <div class="card-header bg-white d-flex align-items-center justify-content-between py-3">
