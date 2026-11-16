@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { getAssetPath } from '@/lib/assetPath';
 
 interface AcocksGreenHeaderProps {
   onOpenBooking?: () => void;
@@ -15,7 +16,7 @@ export const AcocksGreenHeader: React.FC<AcocksGreenHeaderProps> = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [logoSrc, setLogoSrc] = useState('/images/acocks-green-logo.png');
+  const [logoSrc, setLogoSrc] = useState(() => getAssetPath('/images/acocks-green-logo.png'));
   const [logoFallbackTried, setLogoFallbackTried] = useState(false);
   const [logoError, setLogoError] = useState(false);
   const aboutDropdownRef = useRef<HTMLDivElement>(null);

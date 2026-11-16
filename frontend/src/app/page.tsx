@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import styles from './page.module.scss';
 import { AcocksGreenHeader } from '@/components/organisms/AcocksGreenHeader';
+import { AcocksGreenHero } from '@/components/organisms/AcocksGreenHero';
 import { Footer } from '@/components/organisms/Footer/Footer';
 import { BookingWizard } from '@/components/organisms/BookingWizard/BookingWizard';
 import { WhatsAppHub } from '@/components/ui/WhatsAppHub/WhatsAppHub';
@@ -14,7 +15,6 @@ import {
   ArrowRight,
   CheckCircle2,
   ChevronDown,
-  PhoneCall,
   Sliders,
 } from 'lucide-react';
 
@@ -44,116 +44,14 @@ export default function HomePage() {
         onOpenEmergency={() => handleOpenBooking(1)}
       />
 
-      <main className={styles.mainContent}>
+      <main className={`${styles.mainContent} pt-28 bg-surface`}>
         {/* ========================================================
-            HERO SECTION: 3-Second Value Proposition & Doctor Spotlight
+            PHASE 2: ACOCKS GREEN HERO & STATS SECTION
             ======================================================== */}
-        <section className={styles.heroSection}>
-          <div className={styles.heroContainer}>
-            <div className={styles.heroContent}>
-              <h1 className={styles.heroHeadline}>
-                Pain-Free Restorations. Confident Smiles for Life.
-              </h1>
-
-              <p className={styles.heroSubheadline}>
-                Experience the next standard in gentle, precision dental care. From single-visit 3D dental implants and Invisalign clear aligners to porcelain smile makeovers across 3 state-of-the-art metropolitan clinics.
-              </p>
-
-              <div className={styles.heroCtaGroup}>
-                <Button
-                  variant="primary"
-                  size="lg"
-                  icon={<Calendar size={18} />}
-                  onClick={() => handleOpenBooking()}
-                >
-                  Schedule 3D Oral Scan & Consultation
-                </Button>
-                <Button
-                  variant="outline"
-                  size="lg"
-                  icon={<PhoneCall size={18} />}
-                  onClick={() => (window.location.href = 'tel:+15550192830')}
-                >
-                  Emergency Care: +1 (555) 019-2830
-                </Button>
-              </div>
-
-              {/* Authority & Trust Metrics */}
-              <div className={styles.trustGrid}>
-                <div className={styles.trustItem}>
-                  <strong>4.98 / 5 Stars</strong>
-                  <span>2,450+ Verified Reviews</span>
-                </div>
-                <div className={styles.trustDivider} />
-                <div className={styles.trustItem}>
-                  <strong>15,000+</strong>
-                  <span>Successful Implants & Makeovers</span>
-                </div>
-                <div className={styles.trustDivider} />
-                <div className={styles.trustItem}>
-                  <strong>Board-Certified</strong>
-                  <span>Prosthodontists & Specialists</span>
-                </div>
-                <div className={styles.trustDivider} />
-                <div className={styles.trustItem}>
-                  <strong>3 Clinics</strong>
-                  <span>Full Digital Diagnostic Labs</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Hero Visual Spotlight: Board-Certified Doctor Card */}
-            <div className={styles.heroVisual}>
-              <div className={styles.doctorSpotlightCard}>
-                <div className={styles.cardHeader}>
-                  <Badge variant="success" size="sm">Available Today</Badge>
-                  <span className={styles.chairStatus}>2 Openings Left</span>
-                </div>
-
-                <div className={styles.doctorGraphic}>
-                  <div className={styles.doctorAvatarBox}>
-                    <img
-                      src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80"
-                      alt="Dr. Ethan Caldwell, DDS, FACP"
-                      className={styles.avatarImage}
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className={styles.doctorCredentials}>
-                    <h3>Dr. Ethan Caldwell, DDS, FACP</h3>
-                    <p className={styles.doctorTitle}>Clinical Director & Board-Certified Prosthodontist</p>
-                    <span className={styles.doctorMeta}>Midwestern University | 16+ Years Clinical Mastery</span>
-                  </div>
-                </div>
-
-                <div className={styles.doctorHighlights}>
-                  <div className={styles.highlightPill}>
-                    <CheckCircle2 size={14} color="#0D9488" />
-                    <span>Computer-Guided Implantology</span>
-                  </div>
-                  <div className={styles.highlightPill}>
-                    <CheckCircle2 size={14} color="#0D9488" />
-                    <span>IV Sedation & Sleep Dentistry</span>
-                  </div>
-                  <div className={styles.highlightPill}>
-                    <CheckCircle2 size={14} color="#0D9488" />
-                    <span>Custom Micro-Layered Veneers</span>
-                  </div>
-                </div>
-
-                <Button
-                  variant="primary"
-                  fullWidth
-                  size="md"
-                  icon={<Calendar size={16} />}
-                  onClick={() => handleOpenBooking(1)}
-                >
-                  Book with Dr. Caldwell
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
+        <AcocksGreenHero
+          onOpenBooking={() => handleOpenBooking()}
+          onOpenEmergency={() => handleOpenBooking(1)}
+        />
 
         {/* ========================================================
             SERVICES & TREATMENTS BREAKDOWN (NasrTech REA Spec)
