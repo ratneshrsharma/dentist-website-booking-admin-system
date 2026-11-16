@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import styles from './page.module.scss';
 import { AcocksGreenHeader } from '@/components/organisms/AcocksGreenHeader';
 import { AcocksGreenHero } from '@/components/organisms/AcocksGreenHero';
+import { AcocksGreenServices } from '@/components/organisms/AcocksGreenServices';
+import { AcocksGreenAbout } from '@/components/organisms/AcocksGreenAbout';
 import { Footer } from '@/components/organisms/Footer/Footer';
 import { BookingWizard } from '@/components/organisms/BookingWizard/BookingWizard';
 import { WhatsAppHub } from '@/components/ui/WhatsAppHub/WhatsAppHub';
@@ -12,7 +14,6 @@ import { Badge } from '@/components/ui/Badge/Badge';
 import {
   Calendar,
   Star,
-  ArrowRight,
   CheckCircle2,
   ChevronDown,
   Sliders,
@@ -54,105 +55,11 @@ export default function HomePage() {
         />
 
         {/* ========================================================
-            SERVICES & TREATMENTS BREAKDOWN (NasrTech REA Spec)
+            PHASE 3: ACOCKS GREEN SERVICES GRID & ABOUT OUR SURGERY
             ======================================================== */}
-        <section id="services" className={styles.servicesSection}>
-          <div className={styles.container}>
-            <div className={styles.sectionTitleCenter}>
-              <span className={styles.sectionSubtitle}>Specialized Dental Services</span>
-              <h2>Comprehensive Restorative & Cosmetic Treatments</h2>
-              <p>Every procedure is engineered with digital precision, pain minimization, and lasting clinical longevity.</p>
-            </div>
+        <AcocksGreenServices onOpenBooking={handleOpenBooking} />
 
-            <div className={styles.servicesGrid}>
-              {[
-                {
-                  id: 1,
-                  title: 'Comprehensive Diagnostic Exam',
-                  cat: 'Preventive Care',
-                  desc: 'High-resolution digital panoramic X-rays, 3D intraoral optical scanning, periodontal probe mapping, and oral cancer screening.',
-                  duration: '45 mins',
-                  price: '$89',
-                  badge: 'Essential',
-                },
-                {
-                  id: 2,
-                  title: 'Guided Dental Implants (All-on-4)',
-                  cat: 'Implantology',
-                  desc: 'Computer-guided titanium implant fixture placement with surgical guide stent and same-day provisional screw-retained crown.',
-                  duration: '90 mins',
-                  price: '$1,850',
-                  badge: 'Lifetime Warranty',
-                },
-                {
-                  id: 3,
-                  title: 'Invisalign Clear Aligners',
-                  cat: 'Orthodontics',
-                  desc: 'Discreet, custom-milled thermoplastic orthodontic aligners for teeth straightening, gap closure, and bite realignment.',
-                  duration: '30 mins',
-                  price: '$3,200',
-                  badge: 'Top Choice',
-                },
-                {
-                  id: 4,
-                  title: 'Porcelain Veneers & Makeovers',
-                  cat: 'Cosmetic',
-                  desc: 'Ultra-thin hand-crafted ceramic shells bonded to facial tooth surfaces to transform discoloration, gaps, and chips.',
-                  duration: '60 mins',
-                  price: '$950',
-                  badge: 'Natural Aesthetics',
-                },
-                {
-                  id: 5,
-                  title: 'Microscopic Endodontics (Root Canal)',
-                  cat: 'Endodontics',
-                  desc: 'Gentle rotary canal disinfection under high-magnification surgical microscope with 3D biocompatible obturation.',
-                  duration: '75 mins',
-                  price: '$650',
-                  badge: 'Pain-Free',
-                },
-                {
-                  id: 6,
-                  title: 'Emergency Dental Trauma & Relief',
-                  cat: '24/7 Emergency',
-                  desc: 'Immediate clinical intervention for severe acute toothache, crown fractures, dental abscesses, or facial trauma.',
-                  duration: '45 mins',
-                  price: '$150',
-                  badge: 'Immediate Standby',
-                  isEmergency: true,
-                },
-              ].map((service) => (
-                <div
-                  key={service.id}
-                  className={`${styles.serviceCard} ${service.isEmergency ? styles.emergencyCard : ''}`}
-                >
-                  <div className={styles.serviceHeader}>
-                    <span className={styles.serviceCategory}>{service.cat}</span>
-                    <Badge variant={service.isEmergency ? 'emergency' : 'primary'} size="sm">
-                      {service.badge}
-                    </Badge>
-                  </div>
-                  <h3>{service.title}</h3>
-                  <p>{service.desc}</p>
-                  <div className={styles.serviceFooter}>
-                    <div className={styles.servicePricing}>
-                      <span className={styles.priceLabel}>Starting from</span>
-                      <span className={styles.priceValue}>{service.price}</span>
-                    </div>
-                    <Button
-                      variant={service.isEmergency ? 'emergency' : 'primary'}
-                      size="sm"
-                      icon={<ArrowRight size={14} />}
-                      onClick={() => handleOpenBooking(service.id)}
-                    >
-                      Book Slot
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <AcocksGreenAbout onOpenBooking={handleOpenBooking} />
 
         {/* ========================================================
             BEFORE & AFTER SMILE MAKEOVER SLIDER (Interactive)
