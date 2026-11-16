@@ -2,17 +2,19 @@ import type { Metadata } from 'next';
 import '@/styles/globals.scss';
 
 export const metadata: Metadata = {
-  title: 'Advanced Dental Clinic - Modern Dental Practice & Multi-Clinic System',
+  title: 'Acocks Green Dental Practice | NHS & Private Family Dental Care Birmingham B27',
   description:
-    'Board-certified prosthodontists, dental implants, clear aligners, and emergency dental care across 3 metropolitan clinics.',
+    'Welcoming NHS & private dental patients across Birmingham B27. Board-certified dentists, emergency triage, hygiene, restorative dentistry, cosmetic veneers, and Invisalign clear aligners.',
   keywords: [
-    'Dentist',
+    'Acocks Green Dental Practice',
+    'Dentist Birmingham B27',
+    'NHS Dentist Birmingham',
+    'Emergency Dentist Birmingham',
     'Dental Implants',
-    'Clear Aligners',
+    'Invisalign Clear Aligners',
     'Teeth Whitening',
-    'Emergency Dentist',
-    'Cosmetic Dentistry',
-    'Advanced Dental Clinic',
+    'Tarlok Marok',
+    'Dr Atandrilla Das',
   ],
 };
 
@@ -22,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-theme="modern">
+    <html lang="en" data-theme="acocks-green">
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -31,7 +33,11 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link
-          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Cinzel:wght@500;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Work+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap"
+          rel="stylesheet"
+        />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
           rel="stylesheet"
         />
       </head>

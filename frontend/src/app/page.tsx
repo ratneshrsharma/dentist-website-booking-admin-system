@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import styles from './page.module.scss';
-import { Navbar } from '@/components/organisms/Navbar/Navbar';
+import { AcocksGreenHeader } from '@/components/organisms/AcocksGreenHeader';
 import { Footer } from '@/components/organisms/Footer/Footer';
 import { BookingWizard } from '@/components/organisms/BookingWizard/BookingWizard';
 import { WhatsAppHub } from '@/components/ui/WhatsAppHub/WhatsAppHub';
@@ -38,8 +38,11 @@ export default function HomePage() {
 
   return (
     <div className={styles.pageWrapper}>
-      {/* Top Navbar with Instant Theme Switcher */}
-      <Navbar onOpenBooking={() => handleOpenBooking()} />
+      {/* Top Navbar with Acocks Green Medical Practice Theme */}
+      <AcocksGreenHeader
+        onOpenBooking={() => handleOpenBooking()}
+        onOpenEmergency={() => handleOpenBooking(1)}
+      />
 
       <main className={styles.mainContent}>
         {/* ========================================================

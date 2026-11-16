@@ -2,10 +2,32 @@
 // Advanced Dental Clinic Global Stylesheet & CSS Custom Properties Theme Engine
 // ==============================================================================
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import './variables';
 @import './mixins';
 
 :root,
+[data-theme='acocks-green'] {
+  --color-primary: #{$acocks-primary};
+  --color-primary-hover: #{$acocks-primary-hover};
+  --color-primary-light: #{$acocks-primary-fixed};
+  --color-secondary: #{$acocks-secondary};
+  --color-accent: #{$acocks-primary-fixed};
+  --color-bg: #{$acocks-bg};
+  --color-surface: #{$acocks-surface};
+  --color-surface-rgb: 255, 255, 255;
+  --color-surface-muted: #{$acocks-surface-low};
+  --color-border: #{$acocks-border};
+  --color-text-main: #{$acocks-text-main};
+  --color-text-muted: #{$acocks-text-muted};
+  --color-text-light: #{$acocks-secondary};
+  --font-family-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-family-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+}
+
 [data-theme='modern'] {
   --color-primary: #{$modern-primary};
   --color-primary-hover: #{$modern-primary-hover};
@@ -111,3 +133,29 @@ img, svg {
     scroll-behavior: auto !important;
   }
 }
+
+// Google Material Symbols Outlined support
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined', sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+  vertical-align: middle;
+}
+
+// Stitch Base Layer Rules
+@layer base {
+  body {
+    overscroll-behavior: none;
+  }
+}
+
