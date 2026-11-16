@@ -6,14 +6,15 @@ import { AcocksGreenHeader } from '@/components/organisms/AcocksGreenHeader';
 import { AcocksGreenHero } from '@/components/organisms/AcocksGreenHero';
 import { AcocksGreenServices } from '@/components/organisms/AcocksGreenServices';
 import { AcocksGreenAbout } from '@/components/organisms/AcocksGreenAbout';
+import { AcocksGreenTeam } from '@/components/organisms/AcocksGreenTeam';
+import { AcocksGreenReviews } from '@/components/organisms/AcocksGreenReviews';
+import { AcocksGreenSafetyCharter } from '@/components/organisms/AcocksGreenSafetyCharter';
 import { Footer } from '@/components/organisms/Footer/Footer';
 import { BookingWizard } from '@/components/organisms/BookingWizard/BookingWizard';
 import { WhatsAppHub } from '@/components/ui/WhatsAppHub/WhatsAppHub';
 import { Button } from '@/components/ui/Button/Button';
-import { Badge } from '@/components/ui/Badge/Badge';
 import {
   Calendar,
-  Star,
   CheckCircle2,
   ChevronDown,
   Sliders,
@@ -166,89 +167,9 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================
-            DOCTORS & SPECIALISTS TEAM SECTION
+            PHASE 4: ACOCKS GREEN CLINICAL TEAM & NURSING STRIP
             ======================================================== */}
-        <section id="doctors" className={styles.doctorsSection}>
-          <div className={styles.container}>
-            <div className={styles.sectionTitleCenter}>
-              <span className={styles.sectionSubtitle}>Master Clinical Specialists</span>
-              <h2>Meet Our Attending Dental Team</h2>
-              <p>Multidisciplinary specialists collaborating to deliver exceptional oral healthcare under one roof.</p>
-            </div>
-
-            <div className={styles.doctorsGrid}>
-              {[
-                {
-                  id: 1,
-                  name: 'Dr. Ethan Caldwell, DDS, FACP',
-                  role: 'Clinical Director & Prosthodontist',
-                  school: 'Midwestern University College of Dental Medicine',
-                  exp: '16+ Years Experience',
-                  image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80',
-                  skills: ['Implantology', 'Full-Mouth Rehabilitation', 'All-on-4'],
-                },
-                {
-                  id: 2,
-                  name: 'Dr. Maya Lin, DMD, MS',
-                  role: 'Chief Orthodontist & Dentofacial Orthopedics',
-                  school: 'Pacific University School of Dentistry',
-                  exp: '12+ Years Experience',
-                  image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80',
-                  skills: ['Invisalign Clear Aligners', 'Interceptive Orthodontics', 'Bite Alignment'],
-                },
-                {
-                  id: 3,
-                  name: 'Dr. Marcus Vance, DDS',
-                  role: 'Endodontist & Microsurgical Specialist',
-                  school: 'American Dental Institute of Science',
-                  exp: '10+ Years Experience',
-                  image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=600&q=80',
-                  skills: ['Microscopic Root Canal', 'Apicoectomy', 'Dental Trauma Management'],
-                },
-                {
-                  id: 4,
-                  name: 'Dr. Olivia Harper, DDS',
-                  role: 'Pediatric Dental & Family Specialist',
-                  school: 'National Health Dental College',
-                  exp: '8+ Years Experience',
-                  image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80',
-                  skills: ['Gentle Pediatric Care', 'Preventive Sealants', 'Biofilm Elimination'],
-                },
-              ].map((doc) => (
-                <div key={doc.id} className={styles.doctorCard}>
-                  <div className={styles.docAvatarHeader}>
-                    <div className={styles.avatarCircle}>
-                      <img
-                        src={doc.image}
-                        alt={doc.name}
-                        className={styles.avatarImage}
-                        loading="lazy"
-                      />
-                    </div>
-                    <Badge variant="primary" size="sm">{doc.exp}</Badge>
-                  </div>
-                  <h3>{doc.name}</h3>
-                  <span className={styles.docRole}>{doc.role}</span>
-                  <p className={styles.docSchool}>{doc.school}</p>
-                  <div className={styles.skillPills}>
-                    {doc.skills.map((s, idx) => (
-                      <span key={idx} className={styles.skillPill}>{s}</span>
-                    ))}
-                  </div>
-                  <Button
-                    variant="outline"
-                    fullWidth
-                    size="sm"
-                    icon={<Calendar size={14} />}
-                    onClick={() => handleOpenBooking(doc.id)}
-                  >
-                    View Available Slots
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <AcocksGreenTeam onOpenBooking={handleOpenBooking} />
 
         {/* ========================================================
             WAAS PRICING & MEMBERSHIP CALCULATOR (/ux-ui-max-pro)
@@ -326,56 +247,14 @@ export default function HomePage() {
         </section>
 
         {/* ========================================================
-            VERIFIED PATIENT REVIEWS & SOCIAL PROOF
+            PHASE 4: PATIENT REVIEWS & SOCIAL PROOF
             ======================================================== */}
-        <section id="reviews" className={styles.reviewsSection}>
-          <div className={styles.container}>
-            <div className={styles.sectionTitleCenter}>
-              <span className={styles.sectionSubtitle}>Verified Patient Testimonials</span>
-              <h2>Real Experiences, Transformed Lives</h2>
-              <p>Read authenticated reviews from patients treated across our 3 clinic locations.</p>
-            </div>
+        <AcocksGreenReviews />
 
-            <div className={styles.reviewsGrid}>
-              {[
-                {
-                  author: 'Jennifer Hayes',
-                  location: 'Central Practice (Austin)',
-                  review: 'Dr. Caldwell and the clinical team made my implant consultation so reassuring. The 3D imaging explained every step clearly, and the procedure was completely painless.',
-                  procedure: 'Dental Implant Consultation',
-                  stars: 5,
-                },
-                {
-                  author: 'Robert Martinez',
-                  location: 'Westside Cosmetic Studio',
-                  review: 'I started clear aligners 6 months ago with Dr. Lin. The digital scans are so fast and the progress has been incredible. Exceptional modern clinic with transparent pricing.',
-                  procedure: 'Invisalign Clear Aligners',
-                  stars: 5,
-                },
-                {
-                  author: 'Amanda Collins',
-                  location: 'Northside Family Center',
-                  review: 'Brought my two children for their routine dental cleanings. Dr. Harper has a gentle touch and made both kids feel completely at ease. Truly a warm, patient-first dental home.',
-                  procedure: 'Family Preventative Care',
-                  stars: 5,
-                },
-              ].map((rev, idx) => (
-                <div key={idx} className={styles.reviewCard}>
-                  <div className={styles.reviewStars}>
-                    {[...Array(rev.stars)].map((_, i) => (
-                      <Star key={i} size={15} fill="#F59E0B" color="#F59E0B" />
-                    ))}
-                  </div>
-                  <p className={styles.reviewBody}>&ldquo;{rev.review}&rdquo;</p>
-                  <div className={styles.reviewAuthor}>
-                    <strong>{rev.author}</strong>
-                    <span>{rev.procedure} • {rev.location}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* ========================================================
+            PHASE 4: NHS SEXUAL SAFETY CHARTER & PATIENT PROTECTION
+            ======================================================== */}
+        <AcocksGreenSafetyCharter />
 
         {/* ========================================================
             CLINICAL FAQ ACCORDION
