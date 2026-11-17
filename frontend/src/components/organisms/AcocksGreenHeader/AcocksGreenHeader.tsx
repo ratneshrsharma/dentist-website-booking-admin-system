@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { getAssetPath } from '@/lib/assetPath';
 
 interface AcocksGreenHeaderProps {
@@ -13,6 +14,9 @@ export const AcocksGreenHeader: React.FC<AcocksGreenHeaderProps> = ({
   onOpenBooking,
   onOpenEmergency,
 }) => {
+  const pathname = usePathname();
+  const isTreatments = pathname?.startsWith('/treatments');
+  const isHome = pathname === '/' || pathname === '';
   const [isScrolled, setIsScrolled] = useState(false);
   const [aboutDropdownOpen, setAboutDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -151,17 +155,26 @@ export const AcocksGreenHeader: React.FC<AcocksGreenHeaderProps> = ({
             <nav className="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-bold">
               <Link
                 href="/"
-                aria-current="page"
-                className="transition-colors text-primary font-bold hover:text-primary-container font-label-md text-label-md"
+                aria-current={isHome ? 'page' : undefined}
+                className={`transition-colors font-label-md text-label-md ${
+                  isHome
+                    ? 'text-primary font-bold hover:text-primary-container'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
               >
                 Home
               </Link>
-              <a
-                href="#services"
-                className="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors"
+              <Link
+                href="/treatments"
+                aria-current={isTreatments ? 'page' : undefined}
+                className={`transition-colors font-label-md text-label-md ${
+                  isTreatments
+                    ? 'text-primary font-bold hover:text-primary-container'
+                    : 'text-on-surface-variant hover:text-on-surface'
+                }`}
               >
                 Treatments &amp; Services
-              </a>
+              </Link>
 
               {/* About Us Dropdown */}
               <div
@@ -275,18 +288,22 @@ export const AcocksGreenHeader: React.FC<AcocksGreenHeaderProps> = ({
             <div className="flex flex-col space-y-4">
               <Link
                 href="/"
-                className="font-label-md text-label-md text-primary font-bold py-1 border-b border-border-subtle"
+                className={`font-label-md text-label-md py-1 border-b border-border-subtle ${
+                  isHome ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-primary'
+                }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Home
               </Link>
-              <a
-                href="#services"
-                className="font-label-md text-label-md text-on-surface-variant hover:text-primary py-1 border-b border-border-subtle"
+              <Link
+                href="/treatments"
+                className={`font-label-md text-label-md py-1 border-b border-border-subtle ${
+                  isTreatments ? 'text-primary font-bold' : 'text-on-surface-variant hover:text-primary'
+                }`}
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Treatments &amp; Services
-              </a>
+              </Link>
               <a
                 href="#team"
                 className="font-label-md text-label-md text-on-surface-variant hover:text-primary py-1 border-b border-border-subtle flex items-center justify-between"

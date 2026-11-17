@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 interface AcocksGreenFooterProps {
   onOpenBooking?: () => void;
@@ -89,40 +90,40 @@ export const AcocksGreenFooter: React.FC<AcocksGreenFooterProps> = ({
             </h4>
             <ul className="space-y-2.5 font-body-sm text-body-sm text-on-surface-variant">
               <li>
-                <a href="#services" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
                   <span>General NHS Dentistry</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#services" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
                   <span>Dental Hygiene &amp; Airflow Polish</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#services" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
                   <span>Restorative Crowns &amp; Bridges</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#services" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
                   <span>Clear Aligners &amp; Orthodontics</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#services" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
                   <span>Root Canal (Endodontics)</span>
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#services" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
                   <span>Pediatric &amp; Anxious Patient Care</span>
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
