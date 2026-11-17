@@ -99,14 +99,6 @@ export const AcocksGreenHeader: React.FC<AcocksGreenHeaderProps> = ({
               <span>Emergency Consultation</span>
             </button>
             <Link
-              href="/confident-doctor"
-              className="hidden sm:inline-flex items-center gap-1 text-[11px] bg-white/10 hover:bg-white/20 text-on-primary px-2.5 py-0.5 rounded-md transition-colors border border-white/20"
-              title="Switch to Secondary Template (Confident Doctor)"
-            >
-              <span className="material-symbols-outlined text-[13px]">swap_horiz</span>
-              <span>Template 2 (Doctor)</span>
-            </Link>
-            <Link
               href="/admin"
               target="_blank"
               rel="noopener noreferrer"

@@ -99,14 +99,6 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenBooking }) => {
               </span>
             </a>
             <Link
-              href="/"
-              className={styles.staffPortalLink}
-              title="Return to Primary Default Template (Acocks Green Dental Practice)"
-            >
-              <Sparkles size={12} />
-              <span>&larr; Primary (Acocks Green)</span>
-            </Link>
-            <Link
               href="/admin"
               target="_blank"
               rel="noopener noreferrer"

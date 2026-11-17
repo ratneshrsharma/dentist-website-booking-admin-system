@@ -46,7 +46,7 @@ export const ConfidentDoctorTemplate: React.FC<ConfidentDoctorTemplateProps> = (
             <div className={styles.heroContent}>
               <div className={styles.templateBadgeRow}>
                 <span className={styles.templateBadge}>
-                  Template 1 &bull; Confident Doctor (Secondary)
+                  Confident Doctor &bull; Multi-Clinic Dental Practice
                 </span>
               </div>
               <h1 className={styles.heroHeadline}>
