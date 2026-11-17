@@ -18,6 +18,16 @@ const nextConfig: NextConfig = {
   ...(isProduction
     ? {}
     : {
+        async redirects() {
+          return [
+            {
+              source: '/',
+              basePath: false,
+              destination: '/advanced-dental-clinic/',
+              permanent: false,
+            },
+          ];
+        },
         async rewrites() {
           return [
             {
