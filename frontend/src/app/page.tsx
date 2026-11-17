@@ -9,7 +9,8 @@ import { AcocksGreenAbout } from '@/components/organisms/AcocksGreenAbout';
 import { AcocksGreenTeam } from '@/components/organisms/AcocksGreenTeam';
 import { AcocksGreenReviews } from '@/components/organisms/AcocksGreenReviews';
 import { AcocksGreenSafetyCharter } from '@/components/organisms/AcocksGreenSafetyCharter';
-import { Footer } from '@/components/organisms/Footer/Footer';
+import { AcocksGreenContact } from '@/components/organisms/AcocksGreenContact';
+import { AcocksGreenFooter } from '@/components/organisms/AcocksGreenFooter';
 import { BookingWizard } from '@/components/organisms/BookingWizard/BookingWizard';
 import { WhatsAppHub } from '@/components/ui/WhatsAppHub/WhatsAppHub';
 import { Button } from '@/components/ui/Button/Button';
@@ -283,7 +284,7 @@ export default function HomePage() {
                 },
                 {
                   q: 'What should I do in an acute dental emergency?',
-                  a: 'Call our 24/7 Emergency Line immediately at (555) 019-2830 or use our WhatsApp Support Hub. Emergency patients receive priority immediate seating across our 3 branches.',
+                  a: 'Call our Birmingham practice emergency line immediately at 0121 765 2870 or dial NHS 111 out-of-hours. Registered and new patients receive priority triage and same-day emergency relief.',
                 },
               ].map((faq, idx) => (
                 <div
@@ -309,10 +310,18 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+
+        {/* ========================================================
+            PHASE 5: PRACTICE LOCATION, OPENING HOURS & INTERACTIVE MAP
+            ======================================================== */}
+        <AcocksGreenContact onOpenBooking={() => handleOpenBooking()} />
       </main>
 
-      {/* Comprehensive Footer */}
-      <Footer />
+      {/* Comprehensive Acocks Green NHS & Private Practice Footer */}
+      <AcocksGreenFooter
+        onOpenBooking={() => handleOpenBooking()}
+        onOpenEmergency={() => handleOpenBooking(1)}
+      />
 
       {/* High-Conversion Floating WhatsApp Hub */}
       <WhatsAppHub onOpenBooking={() => handleOpenBooking()} />

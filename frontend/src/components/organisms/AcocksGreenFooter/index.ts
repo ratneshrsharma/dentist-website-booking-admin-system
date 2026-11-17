@@ -1,0 +1,1 @@
+export { AcocksGreenFooter } from './AcocksGreenFooter';
