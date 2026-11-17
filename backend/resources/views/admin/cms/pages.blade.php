@@ -160,6 +160,33 @@
                         </td>
                     </tr>
 
+                    <!-- Page: Treatments & Services Main Catalog -->
+                    <tr id="page-row-treatments" data-title="Treatments & Services (Main Catalog)" data-subtitle="Evidence-Based Dental Excellence: NHS Fee Bands, Private Options & Category Filter" data-slug="/treatments" data-category="Treatments Main" data-status="Published">
+                        <td class="ps-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-primary px-2 py-1"><i class="bi bi-stars"></i></span>
+                                <div>
+                                    <span class="fw-bold text-dark d-block page-title">Treatments & Services (Main Catalog)</span>
+                                    <small class="text-muted page-subtitle">Evidence-Based Dental Excellence: NHS Fee Bands, Private Options & Category Filter</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge bg-light text-dark border fw-mono page-slug">/treatments</span></td>
+                        <td><span class="badge text-teal page-cat" style="background: #CCFBF1; color: #0F766E;">Treatments Main</span></td>
+                        <td>Acocks Green Clinical</td>
+                        <td><span class="badge bg-success-subtle text-success"><i class="bi bi-check-circle me-1"></i>Score: 99</span></td>
+                        <td><span class="small text-muted page-date">21 Mar 2026</span></td>
+                        <td><span class="badge bg-success page-status">Published</span></td>
+                        <td class="text-end pe-3">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/treatments') }}" target="_blank" class="btn btn-outline-secondary" title="View Live Website"><i class="bi bi-eye"></i></a>
+                                <button type="button" class="btn btn-outline-secondary" onclick="openEditCmsModal('page-row-treatments')" title="Edit Page Content & SEO"><i class="bi bi-pencil"></i></button>
+                                <a href="{{ url('/admin/seo-manager') }}" class="btn btn-outline-secondary" title="Yoast Meta & Schema"><i class="bi bi-search"></i></a>
+                                <button type="button" class="btn btn-outline-danger" onclick="deleteCmsPage('page-row-treatments')" title="Unpublish / Delete"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
                     <!-- Page 3 -->
                     <tr id="page-row-3" data-title="Dental Implants" data-subtitle="Single, Multiple & Full-Arch Guided Restorations" data-slug="/treatments/dental-implants" data-category="Treatments" data-status="Published">
                         <td class="ps-3">
