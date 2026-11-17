@@ -1,0 +1,300 @@
+@import '@/styles/variables';
+@import '@/styles/mixins';
+
+.floatingBar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 999;
+  max-width: 95vw;
+  pointer-events: auto;
+  animation: floatIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @include mobile {
+    bottom: 16px;
+    width: 92vw;
+  }
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 16px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+.barInner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 10px;
+  background-color: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 9999px;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.12), 0 4px 12px -2px rgba(0, 0, 0, 0.06);
+
+  @include mobile {
+    padding: 6px;
+    gap: 6px;
+    justify-content: center;
+  }
+}
+
+.labelSection {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding-left: 8px;
+  padding-right: 4px;
+
+  @include tablet-down {
+    display: none;
+  }
+}
+
+.liveIndicator {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.livePulse {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #0D631B;
+  opacity: 0.35;
+  animation: pulseAnim 2s infinite;
+}
+
+.liveDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #0D631B;
+}
+
+@keyframes pulseAnim {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+}
+
+.labelText {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748B;
+}
+
+.templateGroup {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #F1F5F9;
+  padding: 3px;
+  border-radius: 9999px;
+}
+
+.templateBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
+  border: 1px solid transparent;
+
+  &:hover {
+    color: #0F172A;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+
+  &.active {
+    background-color: #FFFFFF;
+    color: #0F172A;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  @include mobile {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    gap: 4px;
+  }
+}
+
+.primaryBtn.active {
+  border-color: rgba(13, 99, 27, 0.2);
+  color: #0D631B;
+}
+
+.secondaryBtn.active {
+  border-color: rgba(13, 148, 136, 0.2);
+  color: #0D9488;
+}
+
+.pillIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.templateName {
+  font-weight: 700;
+}
+
+.roleBadgePrimary {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background-color: #E8F5E9;
+  color: #0D631B;
+  letter-spacing: 0.02em;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.roleBadgeSecondary {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  background-color: #CCFBF1;
+  color: #0F766E;
+  letter-spacing: 0.02em;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.checkIcon {
+  margin-left: 2px;
+}
+
+.paletteWrapper {
+  position: relative;
+
+  @include mobile {
+    display: none;
+  }
+}
+
+.paletteToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 10px;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748B;
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #0F172A;
+    background-color: #F1F5F9;
+  }
+
+  &.expanded {
+    background-color: #F1F5F9;
+    color: #0F172A;
+  }
+}
+
+.paletteLabel {
+  @include tablet-down {
+    display: none;
+  }
+}
+
+.paletteDropdown {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  right: 0;
+  min-width: 190px;
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.14);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: dropUp 0.15s ease-out;
+}
+
+@keyframes dropUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.colorOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+  text-align: left;
+
+  &:hover {
+    background-color: #F8FAFC;
+    color: #0F172A;
+  }
+
+  &.colorActive {
+    background-color: #F1F5F9;
+    color: #0F172A;
+  }
+}
+
+.colorSwatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}

@@ -2,15 +2,24 @@
 
 import React, { useEffect, useState } from 'react';
 import styles from './ThemeSwitcher.module.scss';
-import { Palette } from 'lucide-react';
+import { Palette, Check } from 'lucide-react';
 
-export type ThemeMode = 'modern' | 'classic' | 'luxury';
+export type ThemeMode = 'acocks-green' | 'modern' | 'classic' | 'luxury';
 
-export const ThemeSwitcher: React.FC = () => {
-  const [activeTheme, setActiveTheme] = useState<ThemeMode>('modern');
+export interface ThemeSwitcherProps {
+  onThemeChange?: (theme: ThemeMode) => void;
+  className?: string;
+}
+
+export const ThemeSwitcher: React.FC<ThemeSwitcherProps> = ({
+  onThemeChange,
+  className,
+}) => {
+  // Acocks Green is the primary default theme
+  const [activeTheme, setActiveTheme] = useState<ThemeMode>('acocks-green');
 
   useEffect(() => {
-    const savedTheme = (localStorage.getItem('adc-theme') as ThemeMode) || 'modern';
+    const savedTheme = (localStorage.getItem('adc-theme') as ThemeMode) || 'acocks-green';
     setActiveTheme(savedTheme);
     document.documentElement.setAttribute('data-theme', savedTheme);
   }, []);
@@ -19,40 +28,63 @@ export const ThemeSwitcher: React.FC = () => {
     setActiveTheme(theme);
     localStorage.setItem('adc-theme', theme);
     document.documentElement.setAttribute('data-theme', theme);
+    if (onThemeChange) {
+      onThemeChange(theme);
+    }
   };
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} ${className || ''}`} role="region" aria-label="Theme & Template Switcher">
       <span className={styles.label}>
-        <Palette size={14} />
-        <span>Template:</span>
+        <Palette size={14} className={styles.paletteIcon} />
+        <span>Theme:</span>
       </span>
       <div className={styles.toggleGroup}>
         <button
           type="button"
-          className={`${styles.toggleButton} ${activeTheme === 'modern' ? styles.active : ''}`}
-          onClick={() => handleThemeChange('modern')}
-          title="Template 1: Modern Minimalist (Confident Doctor)"
+          className={`${styles.toggleButton} ${styles.primaryTheme} ${activeTheme === 'acocks-green' ? styles.active : ''}`}
+          onClick={() => handleThemeChange('acocks-green')}
+          title="Primary Default Theme: Acocks Green Practice (Birmingham B27 NHS & Private)"
         >
-          Modern
+          <span className={styles.themeDot} style={{ backgroundColor: '#0D631B' }} />
+          <span>Acocks Green (Primary)</span>
+          {activeTheme === 'acocks-green' && <Check size={12} className={styles.activeCheck} />}
         </button>
+
+        <button
+          type="button"
+          className={`${styles.toggleButton} ${styles.secondaryTheme} ${activeTheme === 'modern' ? styles.active : ''}`}
+          onClick={() => handleThemeChange('modern')}
+          title="Secondary Theme: Confident Doctor (Modern Medical Teal)"
+        >
+          <span className={styles.themeDot} style={{ backgroundColor: '#0D9488' }} />
+          <span>Confident Doctor (Secondary)</span>
+          {activeTheme === 'modern' && <Check size={12} className={styles.activeCheck} />}
+        </button>
+
         <button
           type="button"
           className={`${styles.toggleButton} ${activeTheme === 'classic' ? styles.active : ''}`}
           onClick={() => handleThemeChange('classic')}
-          title="Template 2: Classic Heritage"
+          title="Theme 3: Classic Heritage (Royal Oxford Navy)"
         >
-          Classic
+          <span className={styles.themeDot} style={{ backgroundColor: '#1E3A8A' }} />
+          <span>Classic</span>
+          {activeTheme === 'classic' && <Check size={12} className={styles.activeCheck} />}
         </button>
+
         <button
           type="button"
           className={`${styles.toggleButton} ${activeTheme === 'luxury' ? styles.active : ''}`}
           onClick={() => handleThemeChange('luxury')}
-          title="Template 3: Clinical Luxury"
+          title="Theme 4: Clinical Luxury (Obsidian & Gold)"
         >
-          Luxury
+          <span className={styles.themeDot} style={{ backgroundColor: '#D4AF37' }} />
+          <span>Luxury</span>
+          {activeTheme === 'luxury' && <Check size={12} className={styles.activeCheck} />}
         </button>
       </div>
     </div>
   );
 };
+

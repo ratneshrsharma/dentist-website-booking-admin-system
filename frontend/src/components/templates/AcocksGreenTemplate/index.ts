@@ -1,0 +1,1 @@
+export { AcocksGreenTemplate } from './AcocksGreenTemplate';

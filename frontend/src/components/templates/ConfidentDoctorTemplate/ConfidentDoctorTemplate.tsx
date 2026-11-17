@@ -1,0 +1,632 @@
+'use client';
+
+import React, { useState } from 'react';
+import styles from './ConfidentDoctorTemplate.module.scss';
+import { Navbar } from '@/components/organisms/Navbar/Navbar';
+import { Footer } from '@/components/organisms/Footer/Footer';
+import { Button } from '@/components/ui/Button/Button';
+import { Badge } from '@/components/ui/Badge/Badge';
+import {
+  Calendar,
+  Star,
+  ArrowRight,
+  CheckCircle2,
+  ChevronDown,
+  PhoneCall,
+  Sliders,
+} from 'lucide-react';
+
+interface ConfidentDoctorTemplateProps {
+  onOpenBooking: (serviceId?: number) => void;
+}
+
+export const ConfidentDoctorTemplate: React.FC<ConfidentDoctorTemplateProps> = ({
+  onOpenBooking,
+}) => {
+  // Before & After Makeover Slider State (0 to 100 percent)
+  const [sliderPosition, setSliderPosition] = useState<number>(50);
+
+  // WaaS Pricing Toggle: Annual vs Monthly Rental
+  const [billingPeriod, setBillingPeriod] = useState<'monthly' | 'annual'>('monthly');
+
+  // FAQ Accordion Active Index
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+
+  return (
+    <div className={styles.templateWrapper}>
+      {/* Top Navbar with Mega-Menus & Secondary Branding */}
+      <Navbar onOpenBooking={() => onOpenBooking()} />
+
+      <main className={styles.mainContent}>
+        {/* ========================================================
+            HERO SECTION: 3-Second Value Proposition & Doctor Spotlight
+            ======================================================== */}
+        <section className={styles.heroSection}>
+          <div className={styles.heroContainer}>
+            <div className={styles.heroContent}>
+              <div className={styles.templateBadgeRow}>
+                <span className={styles.templateBadge}>
+                  Template 1 &bull; Confident Doctor (Secondary)
+                </span>
+              </div>
+              <h1 className={styles.heroHeadline}>
+                Pain-Free Restorations. Confident Smiles for Life.
+              </h1>
+
+              <p className={styles.heroSubheadline}>
+                Experience the next standard in gentle, precision dental care. From single-visit 3D dental implants and Invisalign clear aligners to porcelain smile makeovers across 3 state-of-the-art metropolitan clinics.
+              </p>
+
+              <div className={styles.heroCtaGroup}>
+                <Button
+                  variant="primary"
+                  size="lg"
+                  icon={<Calendar size={18} />}
+                  onClick={() => onOpenBooking()}
+                >
+                  Schedule 3D Oral Scan & Consultation
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  icon={<PhoneCall size={18} />}
+                  onClick={() => (window.location.href = 'tel:+15550192830')}
+                >
+                  Emergency Care: +1 (555) 019-2830
+                </Button>
+              </div>
+
+              {/* Authority & Trust Metrics */}
+              <div className={styles.trustGrid}>
+                <div className={styles.trustItem}>
+                  <strong>4.98 / 5 Stars</strong>
+                  <span>2,450+ Verified Reviews</span>
+                </div>
+                <div className={styles.trustDivider} />
+                <div className={styles.trustItem}>
+                  <strong>15,000+</strong>
+                  <span>Successful Implants & Makeovers</span>
+                </div>
+                <div className={styles.trustDivider} />
+                <div className={styles.trustItem}>
+                  <strong>Board-Certified</strong>
+                  <span>Prosthodontists & Specialists</span>
+                </div>
+                <div className={styles.trustDivider} />
+                <div className={styles.trustItem}>
+                  <strong>3 Clinics</strong>
+                  <span>Full Digital Diagnostic Labs</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Hero Visual Spotlight: Board-Certified Doctor Card */}
+            <div className={styles.heroVisual}>
+              <div className={styles.doctorSpotlightCard}>
+                <div className={styles.cardHeader}>
+                  <Badge variant="success" size="sm">Available Today</Badge>
+                  <span className={styles.chairStatus}>2 Openings Left</span>
+                </div>
+
+                <div className={styles.doctorGraphic}>
+                  <div className={styles.doctorAvatarBox}>
+                    <img
+                      src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80"
+                      alt="Dr. Ethan Caldwell, DDS, FACP"
+                      className={styles.avatarImage}
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className={styles.doctorCredentials}>
+                    <h3>Dr. Ethan Caldwell, DDS, FACP</h3>
+                    <p className={styles.doctorTitle}>Clinical Director & Board-Certified Prosthodontist</p>
+                    <span className={styles.doctorMeta}>Midwestern University | 16+ Years Clinical Mastery</span>
+                  </div>
+                </div>
+
+                <div className={styles.doctorHighlights}>
+                  <div className={styles.highlightPill}>
+                    <CheckCircle2 size={14} color="#0D9488" />
+                    <span>Computer-Guided Implantology</span>
+                  </div>
+                  <div className={styles.highlightPill}>
+                    <CheckCircle2 size={14} color="#0D9488" />
+                    <span>IV Sedation & Sleep Dentistry</span>
+                  </div>
+                  <div className={styles.highlightPill}>
+                    <CheckCircle2 size={14} color="#0D9488" />
+                    <span>Custom Micro-Layered Veneers</span>
+                  </div>
+                </div>
+
+                <Button
+                  variant="primary"
+                  fullWidth
+                  size="md"
+                  icon={<Calendar size={16} />}
+                  onClick={() => onOpenBooking(1)}
+                >
+                  Book with Dr. Caldwell
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================
+            SERVICES & TREATMENTS BREAKDOWN (NasrTech REA Spec)
+            ======================================================== */}
+        <section id="services" className={styles.servicesSection}>
+          <div className={styles.container}>
+            <div className={styles.sectionTitleCenter}>
+              <span className={styles.sectionSubtitle}>Specialized Dental Services</span>
+              <h2>Comprehensive Restorative & Cosmetic Treatments</h2>
+              <p>Every procedure is engineered with digital precision, pain minimization, and lasting clinical longevity.</p>
+            </div>
+
+            <div className={styles.servicesGrid}>
+              {[
+                {
+                  id: 1,
+                  title: 'Comprehensive Diagnostic Exam',
+                  cat: 'Preventive Care',
+                  desc: 'High-resolution digital panoramic X-rays, 3D intraoral optical scanning, periodontal probe mapping, and oral cancer screening.',
+                  duration: '45 mins',
+                  price: '$89',
+                  badge: 'Essential',
+                },
+                {
+                  id: 2,
+                  title: 'Guided Dental Implants (All-on-4)',
+                  cat: 'Implantology',
+                  desc: 'Computer-guided titanium implant fixture placement with surgical guide stent and same-day provisional screw-retained crown.',
+                  duration: '90 mins',
+                  price: '$1,850',
+                  badge: 'Lifetime Warranty',
+                },
+                {
+                  id: 3,
+                  title: 'Invisalign Clear Aligners',
+                  cat: 'Orthodontics',
+                  desc: 'Discreet, custom-milled thermoplastic orthodontic aligners for teeth straightening, gap closure, and bite realignment.',
+                  duration: '30 mins',
+                  price: '$3,200',
+                  badge: 'Top Choice',
+                },
+                {
+                  id: 4,
+                  title: 'Porcelain Veneers & Makeovers',
+                  cat: 'Cosmetic',
+                  desc: 'Ultra-thin hand-crafted ceramic shells bonded to facial tooth surfaces to transform discoloration, gaps, and chips.',
+                  duration: '60 mins',
+                  price: '$950',
+                  badge: 'Natural Aesthetics',
+                },
+                {
+                  id: 5,
+                  title: 'Microscopic Endodontics (Root Canal)',
+                  cat: 'Endodontics',
+                  desc: 'Gentle rotary canal disinfection under high-magnification surgical microscope with 3D biocompatible obturation.',
+                  duration: '75 mins',
+                  price: '$650',
+                  badge: 'Pain-Free',
+                },
+                {
+                  id: 6,
+                  title: 'Emergency Dental Trauma & Relief',
+                  cat: '24/7 Emergency',
+                  desc: 'Immediate clinical intervention for severe acute toothache, crown fractures, dental abscesses, or facial trauma.',
+                  duration: '45 mins',
+                  price: '$150',
+                  badge: 'Immediate Standby',
+                  isEmergency: true,
+                },
+              ].map((service) => (
+                <div
+                  key={service.id}
+                  className={`${styles.serviceCard} ${service.isEmergency ? styles.emergencyCard : ''}`}
+                >
+                  <div className={styles.serviceHeader}>
+                    <span className={styles.serviceCategory}>{service.cat}</span>
+                    <Badge variant={service.isEmergency ? 'emergency' : 'primary'} size="sm">
+                      {service.badge}
+                    </Badge>
+                  </div>
+                  <h3>{service.title}</h3>
+                  <p>{service.desc}</p>
+                  <div className={styles.serviceFooter}>
+                    <div className={styles.servicePricing}>
+                      <span className={styles.priceLabel}>Starting from</span>
+                      <span className={styles.priceValue}>{service.price}</span>
+                    </div>
+                    <Button
+                      variant={service.isEmergency ? 'emergency' : 'primary'}
+                      size="sm"
+                      icon={<ArrowRight size={14} />}
+                      onClick={() => onOpenBooking(service.id)}
+                    >
+                      Book Slot
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================
+            BEFORE & AFTER SMILE MAKEOVER SLIDER (Interactive)
+            ======================================================== */}
+        <section id="makeover" className={styles.makeoverSection}>
+          <div className={styles.container}>
+            <div className={styles.makeoverGrid}>
+              <div className={styles.makeoverText}>
+                <span className={styles.sectionSubtitle}>Clinical Visual Proof</span>
+                <h2>Interactive Smile Transformations</h2>
+                <p>
+                  Drag the slider to compare pre-operative tooth discoloration and misalignment against our custom porcelain veneer restorations.
+                </p>
+
+                <div className={styles.transformationDetails}>
+                  <div className={styles.detailRow}>
+                    <CheckCircle2 size={16} color="#0D9488" />
+                    <div>
+                      <strong>Case #ADC-4102: Upper Arch Aesthetic Restoration</strong>
+                      <p>Corrected discoloration and enamel spacing with 8 handcrafted E-Max porcelain veneers.</p>
+                    </div>
+                  </div>
+                  <div className={styles.detailRow}>
+                    <CheckCircle2 size={16} color="#0D9488" />
+                    <div>
+                      <strong>Gentle Sedation Protocol</strong>
+                      <p>Full aesthetic treatment completed comfortably across two relaxing clinical visits.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <Button
+                  variant="primary"
+                  size="md"
+                  icon={<Calendar size={16} />}
+                  onClick={() => onOpenBooking(4)}
+                >
+                  Schedule Smile Consultation
+                </Button>
+              </div>
+
+              {/* Interactive Comparison Slider */}
+              <div className={styles.sliderContainer}>
+                <div className={styles.sliderWrapper}>
+                  {/* Before (Underneath) */}
+                  <div className={styles.beforeFrame}>
+                    <div className={styles.simulatedSmileBefore}>
+                      <img
+                        src="https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&w=800&q=80"
+                        alt="Pre-treatment dental alignment"
+                        className={styles.sliderImage}
+                        loading="lazy"
+                      />
+                      <div className={styles.imageOverlayLabel}>
+                        <strong>Before Treatment</strong>
+                        <span>Enamel Staining & Irregular Spacing</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* After (Clipped over top) */}
+                  <div
+                    className={styles.afterFrame}
+                    style={{ clipPath: `inset(0 0 0 ${sliderPosition}%)` }}
+                  >
+                    <div className={styles.simulatedSmileAfter}>
+                      <img
+                        src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=800&q=80"
+                        alt="Post-makeover radiant smile"
+                        className={styles.sliderImage}
+                        loading="lazy"
+                      />
+                      <div className={styles.imageOverlayLabel}>
+                        <strong>After Makeover</strong>
+                        <span>Handcrafted E-Max Porcelain Veneers</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Draggable Divider Line */}
+                  <div
+                    className={styles.sliderDivider}
+                    style={{ left: `${sliderPosition}%` }}
+                  >
+                    <div className={styles.sliderHandle}>
+                      <Sliders size={16} />
+                    </div>
+                  </div>
+
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={sliderPosition}
+                    className={styles.rangeOverlay}
+                    onChange={(e) => setSliderPosition(Number(e.target.value))}
+                    aria-label="Drag before and after transformation slider"
+                  />
+                </div>
+                <span className={styles.sliderHint}>&larr; Drag slider left and right to inspect result &rarr;</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================
+            DOCTORS & SPECIALISTS TEAM SECTION
+            ======================================================== */}
+        <section id="doctors" className={styles.doctorsSection}>
+          <div className={styles.container}>
+            <div className={styles.sectionTitleCenter}>
+              <span className={styles.sectionSubtitle}>Master Clinical Specialists</span>
+              <h2>Meet Our Attending Dental Team</h2>
+              <p>Multidisciplinary specialists collaborating to deliver exceptional oral healthcare under one roof.</p>
+            </div>
+
+            <div className={styles.doctorsGrid}>
+              {[
+                {
+                  id: 1,
+                  name: 'Dr. Ethan Caldwell, DDS, FACP',
+                  role: 'Clinical Director & Prosthodontist',
+                  school: 'Midwestern University College of Dental Medicine',
+                  exp: '16+ Years Experience',
+                  image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80',
+                  skills: ['Implantology', 'Full-Mouth Rehabilitation', 'All-on-4'],
+                },
+                {
+                  id: 2,
+                  name: 'Dr. Maya Lin, DMD, MS',
+                  role: 'Chief Orthodontist & Dentofacial Orthopedics',
+                  school: 'Pacific University School of Dentistry',
+                  exp: '12+ Years Experience',
+                  image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80',
+                  skills: ['Invisalign Clear Aligners', 'Interceptive Orthodontics', 'Bite Alignment'],
+                },
+                {
+                  id: 3,
+                  name: 'Dr. Marcus Vance, DDS',
+                  role: 'Endodontist & Microsurgical Specialist',
+                  school: 'American Dental Institute of Science',
+                  exp: '10+ Years Experience',
+                  image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&w=600&q=80',
+                  skills: ['Microscopic Root Canal', 'Apicoectomy', 'Dental Trauma Management'],
+                },
+                {
+                  id: 4,
+                  name: 'Dr. Olivia Harper, DDS',
+                  role: 'Pediatric Dental & Family Specialist',
+                  school: 'National Health Dental College',
+                  exp: '8+ Years Experience',
+                  image: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=600&q=80',
+                  skills: ['Gentle Pediatric Care', 'Preventive Sealants', 'Biofilm Elimination'],
+                },
+              ].map((doc) => (
+                <div key={doc.id} className={styles.doctorCard}>
+                  <div className={styles.docAvatarHeader}>
+                    <div className={styles.avatarCircle}>
+                      <img
+                        src={doc.image}
+                        alt={doc.name}
+                        className={styles.avatarImage}
+                        loading="lazy"
+                      />
+                    </div>
+                    <Badge variant="primary" size="sm">{doc.exp}</Badge>
+                  </div>
+                  <h3>{doc.name}</h3>
+                  <span className={styles.docRole}>{doc.role}</span>
+                  <p className={styles.docSchool}>{doc.school}</p>
+                  <div className={styles.skillPills}>
+                    {doc.skills.map((s, idx) => (
+                      <span key={idx} className={styles.skillPill}>{s}</span>
+                    ))}
+                  </div>
+                  <Button
+                    variant="outline"
+                    fullWidth
+                    size="sm"
+                    icon={<Calendar size={14} />}
+                    onClick={() => onOpenBooking(doc.id)}
+                  >
+                    View Available Slots
+                  </Button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================
+            WAAS PRICING & MEMBERSHIP CALCULATOR (/ux-ui-max-pro)
+            ======================================================== */}
+        <section id="pricing" className={styles.pricingSection}>
+          <div className={styles.container}>
+            <div className={styles.sectionTitleCenter}>
+              <span className={styles.sectionSubtitle}>Transparent Patient Economics</span>
+              <h2>Dental Membership & Care Plans</h2>
+              <p>No insurance? No problem. Receive comprehensive preventative care and 20% off all procedures.</p>
+
+              {/* Billing Cycle Switcher */}
+              <div className={styles.pricingToggleGroup}>
+                <button
+                  type="button"
+                  className={`${styles.toggleBtn} ${billingPeriod === 'monthly' ? styles.active : ''}`}
+                  onClick={() => setBillingPeriod('monthly')}
+                >
+                  Monthly Plan ($39/mo)
+                </button>
+                <button
+                  type="button"
+                  className={`${styles.toggleBtn} ${billingPeriod === 'annual' ? styles.active : ''}`}
+                  onClick={() => setBillingPeriod('annual')}
+                >
+                  Annual (Save 15% - $399/yr)
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.pricingCardsGrid}>
+              <div className={styles.pricingCard}>
+                <h3>Essential Dental Care</h3>
+                <span className={styles.planBadge}>Individual Care</span>
+                <div className={styles.priceRow}>
+                  <span className={styles.currency}>$</span>
+                  <strong className={styles.amount}>{billingPeriod === 'monthly' ? '39' : '33'}</strong>
+                  <span className={styles.period}>/month</span>
+                </div>
+                <p className={styles.planSub}>Ideal for adults seeking regular preventative oral maintenance.</p>
+                <ul className={styles.featureList}>
+                  <li><CheckCircle2 size={16} /> 2 Professional Cleanings & Exams per year</li>
+                  <li><CheckCircle2 size={16} /> Annual Digital 3D Panoramic X-Ray Scan</li>
+                  <li><CheckCircle2 size={16} /> 1 Emergency Exam with X-Ray included</li>
+                  <li><CheckCircle2 size={16} /> 20% Discount on Fillings, Implants & Veneers</li>
+                </ul>
+                <Button variant="outline" fullWidth size="md" onClick={() => onOpenBooking()}>
+                  Enroll in Essential
+                </Button>
+              </div>
+
+              <div className={`${styles.pricingCard} ${styles.popularCard}`}>
+                <div className={styles.popularRibbon}>Most Popular Plan</div>
+                <h3>Complete VIP Care</h3>
+                <span className={styles.planBadge}>Family & Cosmetic</span>
+                <div className={styles.priceRow}>
+                  <span className={styles.currency}>$</span>
+                  <strong className={styles.amount}>{billingPeriod === 'monthly' ? '79' : '67'}</strong>
+                  <span className={styles.period}>/month</span>
+                </div>
+                <p className={styles.planSub}>Comprehensive coverage for cosmetic whitening and dental restorative work.</p>
+                <ul className={styles.featureList}>
+                  <li><CheckCircle2 size={16} /> 4 Deep Cleanings & Periodontal Checks</li>
+                  <li><CheckCircle2 size={16} /> Complimentary Annual In-Office Teeth Whitening</li>
+                  <li><CheckCircle2 size={16} /> 24/7 Priority Emergency Access (Zero Wait)</li>
+                  <li><CheckCircle2 size={16} /> 25% Discount on Aligners & Dental Implants</li>
+                  <li><CheckCircle2 size={16} /> Free Oral Sedation for All Surgical Visits</li>
+                </ul>
+                <Button variant="primary" fullWidth size="md" onClick={() => onOpenBooking()}>
+                  Enroll in Complete VIP
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================
+            VERIFIED PATIENT REVIEWS & SOCIAL PROOF
+            ======================================================== */}
+        <section id="reviews" className={styles.reviewsSection}>
+          <div className={styles.container}>
+            <div className={styles.sectionTitleCenter}>
+              <span className={styles.sectionSubtitle}>Verified Patient Testimonials</span>
+              <h2>Real Experiences, Transformed Lives</h2>
+              <p>Read authenticated reviews from patients treated across our 3 clinic locations.</p>
+            </div>
+
+            <div className={styles.reviewsGrid}>
+              {[
+                {
+                  author: 'Jennifer Hayes',
+                  location: 'Central Practice (Austin)',
+                  review: 'Dr. Caldwell and the clinical team made my implant consultation so reassuring. The 3D imaging explained every step clearly, and the procedure was completely painless.',
+                  procedure: 'Dental Implant Consultation',
+                  stars: 5,
+                },
+                {
+                  author: 'Robert Martinez',
+                  location: 'Westside Cosmetic Studio',
+                  review: 'I started clear aligners 6 months ago with Dr. Lin. The digital scans are so fast and the progress has been incredible. Exceptional modern clinic with transparent pricing.',
+                  procedure: 'Invisalign Clear Aligners',
+                  stars: 5,
+                },
+                {
+                  author: 'Amanda Collins',
+                  location: 'Northside Family Center',
+                  review: 'Brought my two children for their routine dental cleanings. Dr. Harper has a gentle touch and made both kids feel completely at ease. Truly a warm, patient-first dental home.',
+                  procedure: 'Family Preventative Care',
+                  stars: 5,
+                },
+              ].map((rev, idx) => (
+                <div key={idx} className={styles.reviewCard}>
+                  <div className={styles.reviewStars}>
+                    {[...Array(rev.stars)].map((_, i) => (
+                      <Star key={i} size={15} fill="#F59E0B" color="#F59E0B" />
+                    ))}
+                  </div>
+                  <p className={styles.reviewBody}>&ldquo;{rev.review}&rdquo;</p>
+                  <div className={styles.reviewAuthor}>
+                    <strong>{rev.author}</strong>
+                    <span>{rev.procedure} • {rev.location}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================
+            CLINICAL FAQ ACCORDION
+            ======================================================== */}
+        <section id="faq" className={styles.faqSection}>
+          <div className={styles.containerNarrow}>
+            <div className={styles.sectionTitleCenter}>
+              <span className={styles.sectionSubtitle}>Patient Guidelines</span>
+              <h2>Frequently Asked Clinical Questions</h2>
+              <p>Everything you need to know about scheduling, dental anxiety, and insurance coverage.</p>
+            </div>
+
+            <div className={styles.faqList}>
+              {[
+                {
+                  q: 'Are your dental implant and restoration procedures pain-free?',
+                  a: 'Yes. We utilize computerized local anesthetic delivery (The Wand) alongside optional nitrous oxide or oral conscious sedation. Patients report feeling gentle pressure without discomfort.',
+                },
+                {
+                  q: 'How does real-time online appointment scheduling work?',
+                  a: 'Our booking wizard directly queries live doctor shift rosters and chair availability. Once you pick an opening, it is held instantly and you receive immediate SMS and WhatsApp confirmations.',
+                },
+                {
+                  q: 'Do you accept dental insurance and financing plans?',
+                  a: 'We accept all major PPO insurance networks and provide direct claim billing. We also offer 0% interest financing for up to 24 months through CareCredit and our in-house Dental Membership plan.',
+                },
+                {
+                  q: 'What should I do in an acute dental emergency?',
+                  a: 'Call our 24/7 Emergency Line immediately at (555) 019-2830 or use our WhatsApp Support Hub. Emergency patients receive priority immediate seating across our 3 branches.',
+                },
+              ].map((faq, idx) => (
+                <div
+                  key={idx}
+                  className={`${styles.faqItem} ${openFaq === idx ? styles.open : ''}`}
+                >
+                  <button
+                    type="button"
+                    className={styles.faqQuestion}
+                    onClick={() => setOpenFaq(openFaq === idx ? null : idx)}
+                    aria-expanded={openFaq === idx}
+                  >
+                    <span>{faq.q}</span>
+                    <ChevronDown size={18} className={styles.chevron} />
+                  </button>
+                  {openFaq === idx && (
+                    <div className={styles.faqAnswer}>
+                      <p>{faq.a}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      </main>
+
+      {/* Comprehensive Secondary Footer */}
+      <Footer />
+    </div>
+  );
+};

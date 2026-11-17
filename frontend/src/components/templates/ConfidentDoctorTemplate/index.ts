@@ -1,0 +1,1 @@
+export { ConfidentDoctorTemplate } from './ConfidentDoctorTemplate';

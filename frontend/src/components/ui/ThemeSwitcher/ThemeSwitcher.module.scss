@@ -16,7 +16,7 @@
   display: inline-flex;
   align-items: center;
   gap: $spacing-1;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: $font-weight-medium;
   color: var(--color-text-muted);
   padding-left: $spacing-2;
@@ -26,22 +26,31 @@
   }
 }
 
+.paletteIcon {
+  color: var(--color-primary);
+}
+
 .toggleGroup {
   display: inline-flex;
-  gap: 2px;
+  gap: 3px;
   background-color: var(--color-surface-muted);
-  padding: 2px;
+  padding: 3px;
   border-radius: $radius-full;
+  align-items: center;
 }
 
 .toggleButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 0.35rem 0.75rem;
-  font-size: 1rem;
+  font-size: 0.8125rem;
   font-weight: $font-weight-semibold;
   color: var(--color-text-muted);
   border-radius: $radius-full;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 
   &:hover {
     color: var(--color-text-main);
@@ -50,6 +59,19 @@
   &.active {
     background-color: var(--color-primary);
     color: #FFFFFF;
-    box-shadow: 0 2px 6px rgba(13, 148, 136, 0.3);
+    box-shadow: 0 2px 8px rgba(13, 99, 27, 0.25);
   }
 }
+
+.themeDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.activeCheck {
+  margin-left: 2px;
+}
+
