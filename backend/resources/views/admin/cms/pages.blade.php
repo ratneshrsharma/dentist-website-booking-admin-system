@@ -105,14 +105,14 @@
             <table class="table table-hover align-middle mb-0" id="cmsPagesTable">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-3">Page Name</th>
-                        <th>URL Slug</th>
-                        <th>Category</th>
-                        <th>Template Engine</th>
-                        <th>SEO Health</th>
-                        <th>Last Modified</th>
-                        <th>Status</th>
-                        <th class="text-end pe-3">Actions</th>
+                        <th class="ps-3 text-nowrap" style="min-width: 180px;">Page Name</th>
+                        <th class="text-nowrap" style="min-width: 140px;">URL Slug</th>
+                        <th class="text-nowrap" style="min-width: 130px;">Category</th>
+                        <th class="text-nowrap" style="min-width: 130px;">Template Engine</th>
+                        <th class="text-nowrap" style="min-width: 110px;">SEO Health</th>
+                        <th class="text-nowrap" style="min-width: 110px;">Last Modified</th>
+                        <th class="text-nowrap" style="min-width: 100px;">Status</th>
+                        <th class="text-end pe-3 text-nowrap" style="min-width: 130px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="cmsPagesTableBody">

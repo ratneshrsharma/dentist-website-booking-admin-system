@@ -34,9 +34,86 @@
             color: #1E293B;
         }
 
+        /* Professional Admin Readability Polish (Senior Dev Item 11) */
         .app-sidebar {
             background-color: var(--app-sidebar-bg) !important;
+            width: 260px !important;
         }
+
+        .sidebar-menu .nav-link {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.65rem !important;
+            padding: 0.55rem 0.85rem !important;
+            border-radius: 0.5rem !important;
+            transition: all 0.15s ease !important;
+        }
+
+        .sidebar-menu .nav-link p {
+            margin-bottom: 0 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            font-size: 0.875rem !important;
+            font-weight: 500 !important;
+            letter-spacing: -0.01em !important;
+        }
+
+        .sidebar-menu .nav-header {
+            letter-spacing: 0.06em !important;
+            font-size: 0.6875rem !important;
+            color: #94A3B8 !important;
+            padding: 0.65rem 0.85rem 0.25rem !important;
+            white-space: nowrap !important;
+        }
+
+        /* Responsive Layout Margins */
+        @media (min-width: 992px) {
+            .app-main, .app-header, .app-footer {
+                margin-left: 260px !important;
+            }
+        }
+
+        /* Global Table Readability & Wrap Prevention */
+        .table {
+            font-size: 0.875rem !important;
+        }
+
+        .table th {
+            font-size: 0.75rem !important;
+            font-weight: 700 !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            color: #475569 !important;
+            background-color: #F8FAFC !important;
+            border-bottom: 1px solid #E2E8F0 !important;
+            white-space: nowrap !important;
+            padding: 0.85rem 1rem !important;
+            vertical-align: middle !important;
+        }
+
+        .table td {
+            padding: 0.85rem 1rem !important;
+            vertical-align: middle !important;
+            border-bottom: 1px solid #F1F5F9 !important;
+            color: #1E293B !important;
+        }
+
+        .table .btn-group {
+            white-space: nowrap !important;
+            flex-wrap: nowrap !important;
+        }
+
+        .table-responsive {
+            border-radius: 0 0 0.75rem 0.75rem !important;
+        }
+
+        /* Column Width Classes to Prevent Text Squishing */
+        .col-nowrap { white-space: nowrap !important; }
+        .col-min-sm { min-width: 90px !important; }
+        .col-min-md { min-width: 140px !important; }
+        .col-min-lg { min-width: 200px !important; }
+        .col-min-xl { min-width: 260px !important; }
 
         .sidebar-brand {
             height: auto !important;

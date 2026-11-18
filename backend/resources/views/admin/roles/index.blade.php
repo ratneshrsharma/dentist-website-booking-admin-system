@@ -82,13 +82,13 @@
             <table class="table table-bordered align-middle mb-0 text-center text-sm">
                 <thead class="table-light">
                     <tr>
-                        <th class="text-start ps-3" style="min-width: 220px;">Module / Clinical Domain</th>
-                        <th>👑 Super Admin</th>
-                        <th>🏥 Clinic Admin</th>
-                        <th>🩺 Doctor (EMR)</th>
-                        <th>📅 Appt. Manager</th>
-                        <th>🌐 Website Mgr</th>
-                        <th>💳 Billing Officer</th>
+                        <th class="text-start ps-3 text-nowrap" style="min-width: 220px;">Module / Clinical Domain</th>
+                        <th class="text-nowrap" style="min-width: 140px;">👑 Super Admin</th>
+                        <th class="text-nowrap" style="min-width: 140px;">🏥 Clinic Admin</th>
+                        <th class="text-nowrap" style="min-width: 140px;">🩺 Doctor (EMR)</th>
+                        <th class="text-nowrap" style="min-width: 140px;">📅 Appt. Manager</th>
+                        <th class="text-nowrap" style="min-width: 140px;">🌐 Website Mgr</th>
+                        <th class="text-nowrap" style="min-width: 140px;">💳 Billing Officer</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -188,14 +188,14 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-3">Staff Name</th>
-                        <th>Email Address</th>
-                        <th>Assigned Role</th>
-                        <th>Assigned Facility</th>
-                        <th>2FA Status</th>
-                        <th>Last Active</th>
-                        <th>Account Status</th>
-                        <th class="text-end pe-3">Actions</th>
+                        <th class="ps-3 text-nowrap" style="min-width: 180px;">Staff Name</th>
+                        <th class="text-nowrap" style="min-width: 170px;">Email Address</th>
+                        <th class="text-nowrap" style="min-width: 150px;">Assigned Role</th>
+                        <th class="text-nowrap" style="min-width: 140px;">Assigned Facility</th>
+                        <th class="text-nowrap" style="min-width: 110px;">2FA Status</th>
+                        <th class="text-nowrap" style="min-width: 110px;">Last Active</th>
+                        <th class="text-nowrap" style="min-width: 110px;">Account Status</th>
+                        <th class="text-end pe-3 text-nowrap" style="min-width: 90px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>

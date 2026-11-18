@@ -102,16 +102,16 @@
             <table class="table table-hover align-middle mb-0" id="inventoryTable">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-3">Item SKU</th>
-                        <th>Material Description</th>
-                        <th>Category</th>
-                        <th>Assigned Branch</th>
-                        <th>In Stock</th>
-                        <th>Reorder Level</th>
-                        <th>Lot / Batch #</th>
-                        <th>Expiry Date</th>
-                        <th>Stock Health</th>
-                        <th class="text-end pe-3">Actions</th>
+                        <th class="ps-3 text-nowrap" style="width: 10%; min-width: 120px;">Item SKU</th>
+                        <th style="width: 22%; min-width: 220px;">Material Description</th>
+                        <th class="text-nowrap" style="width: 11%; min-width: 130px;">Category</th>
+                        <th class="text-nowrap" style="width: 13%; min-width: 140px;">Assigned Branch</th>
+                        <th class="text-nowrap" style="width: 8%; min-width: 85px;">In Stock</th>
+                        <th class="text-nowrap" style="width: 8%; min-width: 90px;">Reorder Level</th>
+                        <th class="text-nowrap" style="width: 8%; min-width: 100px;">Lot / Batch #</th>
+                        <th class="text-nowrap" style="width: 7%; min-width: 85px;">Expiry Date</th>
+                        <th class="text-nowrap" style="width: 10%; min-width: 110px;">Stock Health</th>
+                        <th class="text-end pe-3 text-nowrap" style="width: 13%; min-width: 140px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="inventoryTableBody">

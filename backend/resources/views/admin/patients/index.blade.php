@@ -102,15 +102,15 @@
             <table class="table table-hover align-middle mb-0" id="patientsTable">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-3">MRN / ID</th>
-                        <th>Patient Name</th>
-                        <th>Age / Gender</th>
-                        <th>Primary Contact</th>
-                        <th>Medical Alerts</th>
-                        <th>Assigned Doctor</th>
-                        <th>Last Treatment</th>
-                        <th>Status</th>
-                        <th class="text-end pe-3">Actions</th>
+                        <th class="ps-3 text-nowrap" style="width: 12%; min-width: 130px;">MRN / ID</th>
+                        <th style="width: 18%; min-width: 170px;">Patient Name</th>
+                        <th class="text-nowrap" style="width: 10%; min-width: 110px;">Age / Gender</th>
+                        <th class="text-nowrap" style="width: 15%; min-width: 160px;">Primary Contact</th>
+                        <th style="width: 13%; min-width: 140px;">Medical Alerts</th>
+                        <th class="text-nowrap" style="width: 12%; min-width: 140px;">Assigned Doctor</th>
+                        <th class="text-nowrap" style="width: 10%; min-width: 120px;">Last Treatment</th>
+                        <th class="text-nowrap" style="width: 8%; min-width: 110px;">Status</th>
+                        <th class="text-end pe-3 text-nowrap" style="width: 12%; min-width: 140px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="patientsTableBody">

@@ -85,12 +85,12 @@
                         <table class="table table-hover align-middle mb-0 small">
                             <thead class="table-light">
                                 <tr>
-                                    <th class="ps-3">Source URL</th>
-                                    <th>Target Destination</th>
-                                    <th>Status Code</th>
-                                    <th>Hits</th>
-                                    <th>Created</th>
-                                    <th class="text-end pe-3">Actions</th>
+                                    <th class="ps-3 text-nowrap" style="min-width: 200px;">Source URL</th>
+                                    <th class="text-nowrap" style="min-width: 200px;">Target Destination</th>
+                                    <th class="text-nowrap" style="min-width: 130px;">Status Code</th>
+                                    <th class="text-nowrap" style="min-width: 80px;">Hits</th>
+                                    <th class="text-nowrap" style="min-width: 100px;">Created</th>
+                                    <th class="text-end pe-3 text-nowrap" style="min-width: 90px;">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>

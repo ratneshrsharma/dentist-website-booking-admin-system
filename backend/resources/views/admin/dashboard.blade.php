@@ -164,11 +164,11 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Page Title & URL</th>
-                                <th>Category</th>
-                                <th>SEO Meta Title</th>
-                                <th>Status</th>
-                                <th class="text-end pe-3">Actions</th>
+                                <th class="text-nowrap" style="min-width: 200px;">Page Title & URL</th>
+                                <th class="text-nowrap" style="min-width: 140px;">Category</th>
+                                <th class="text-nowrap" style="min-width: 220px;">SEO Meta Title</th>
+                                <th class="text-nowrap" style="min-width: 120px;">Status</th>
+                                <th class="text-end pe-3 text-nowrap" style="min-width: 120px;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -419,12 +419,12 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Patient Name & MRN</th>
-                                <th>Scheduled Time</th>
-                                <th>Clinical Procedure</th>
-                                <th>Assigned Chair</th>
-                                <th>Status</th>
-                                <th class="text-end pe-3">Odontogram</th>
+                                <th class="text-nowrap" style="min-width: 170px;">Patient Name & MRN</th>
+                                <th class="text-nowrap" style="min-width: 130px;">Scheduled Time</th>
+                                <th style="min-width: 200px;">Clinical Procedure</th>
+                                <th class="text-nowrap" style="min-width: 120px;">Assigned Chair</th>
+                                <th class="text-nowrap" style="min-width: 110px;">Status</th>
+                                <th class="text-end pe-3 text-nowrap" style="min-width: 120px;">Odontogram</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -698,12 +698,12 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Patient Name</th>
-                                <th>Arrival Time</th>
-                                <th>Assigned Clinician</th>
-                                <th>Chair</th>
-                                <th>Intake Status</th>
-                                <th class="text-end pe-3">Action</th>
+                                <th class="text-nowrap" style="min-width: 170px;">Patient Name</th>
+                                <th class="text-nowrap" style="min-width: 120px;">Arrival Time</th>
+                                <th class="text-nowrap" style="min-width: 160px;">Assigned Clinician</th>
+                                <th class="text-nowrap" style="min-width: 120px;">Chair</th>
+                                <th class="text-nowrap" style="min-width: 120px;">Intake Status</th>
+                                <th class="text-end pe-3 text-nowrap" style="min-width: 110px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -923,12 +923,12 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Invoice #</th>
-                                <th>Patient Name</th>
-                                <th>Treatment & Codes</th>
-                                <th>Total Amount</th>
-                                <th>Status</th>
-                                <th class="text-end pe-3">Action</th>
+                                <th class="text-nowrap" style="min-width: 130px;">Invoice #</th>
+                                <th class="text-nowrap" style="min-width: 160px;">Patient Name</th>
+                                <th style="min-width: 220px;">Treatment & Codes</th>
+                                <th class="text-nowrap" style="min-width: 120px;">Total Amount</th>
+                                <th class="text-nowrap" style="min-width: 110px;">Status</th>
+                                <th class="text-end pe-3 text-nowrap" style="min-width: 110px;">Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -1164,12 +1164,12 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-light">
                             <tr>
-                                <th>Clinic Branch</th>
-                                <th>Doctor Shifts</th>
-                                <th>Active Chairs</th>
-                                <th>Today's Appts</th>
-                                <th>Revenue (MTD)</th>
-                                <th>Status</th>
+                                <th class="text-nowrap" style="min-width: 180px;">Clinic Branch</th>
+                                <th class="text-nowrap" style="min-width: 140px;">Doctor Shifts</th>
+                                <th class="text-nowrap" style="min-width: 140px;">Active Chairs</th>
+                                <th class="text-nowrap" style="min-width: 120px;">Today's Appts</th>
+                                <th class="text-nowrap" style="min-width: 130px;">Revenue (MTD)</th>
+                                <th class="text-nowrap" style="min-width: 100px;">Status</th>
                             </tr>
                         </thead>
                         <tbody>

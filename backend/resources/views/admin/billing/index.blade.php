@@ -111,16 +111,16 @@
             <table class="table table-hover align-middle mb-0" id="billingTable">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-3">Invoice #</th>
-                        <th>Patient & MRN</th>
-                        <th>Clinical Procedure</th>
-                        <th>Treating Doctor</th>
-                        <th>Total Fee</th>
-                        <th>Paid / Deposit</th>
-                        <th>Balance Due</th>
-                        <th>Status</th>
-                        <th>Date</th>
-                        <th class="text-end pe-3">Actions</th>
+                        <th class="ps-3 text-nowrap" style="width: 11%; min-width: 120px;">Invoice #</th>
+                        <th class="text-nowrap" style="width: 15%; min-width: 150px;">Patient & MRN</th>
+                        <th style="width: 20%; min-width: 190px;">Clinical Procedure</th>
+                        <th class="text-nowrap" style="width: 12%; min-width: 130px;">Treating Doctor</th>
+                        <th class="text-nowrap" style="width: 8%; min-width: 95px;">Total Fee</th>
+                        <th class="text-nowrap" style="width: 10%; min-width: 105px;">Paid / Deposit</th>
+                        <th class="text-nowrap" style="width: 9%; min-width: 95px;">Balance Due</th>
+                        <th class="text-nowrap" style="width: 8%; min-width: 95px;">Status</th>
+                        <th class="text-nowrap" style="width: 8%; min-width: 90px;">Date</th>
+                        <th class="text-end pe-3 text-nowrap" style="width: 12%; min-width: 150px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody id="billingTableBody">
