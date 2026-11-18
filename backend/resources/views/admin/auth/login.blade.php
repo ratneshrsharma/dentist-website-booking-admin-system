@@ -150,6 +150,7 @@
                     </label>
                     <input type="text" class="form-control form-control-lg text-center fw-bold font-monospace"
                            id="otpInput" name="otp" maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
+                           value="<?= htmlspecialchars($demoOtp ?? '849201') ?>" onfocus="this.select()"
                            placeholder="••••••" style="letter-spacing: 0.35em; font-size: 1.6rem;" required autofocus autocomplete="one-time-code">
                 </div>
 
@@ -157,18 +158,18 @@
                 <div class="p-3 mb-3 bg-light border border-dashed rounded-3">
                     <div class="d-flex align-items-center justify-content-between mb-1">
                         <span class="small text-muted fw-semibold">
-                            <i class="bi bi-phone-vibrate text-primary me-1"></i>Demo Verification Code:
+                            <i class="bi bi-phone-vibrate text-primary me-1"></i>Temporary 6-Digit Code (Demo):
                         </span>
                         <span class="badge bg-primary-subtle text-primary" style="font-size: 0.7rem;">Copy-Paste Helper</span>
                     </div>
                     <div class="d-flex align-items-center justify-content-between">
-                        <div class="font-monospace fw-bold text-dark fs-4" id="demoOtpCode"><?= htmlspecialchars($demoOtp ?? '849201') ?></div>
+                        <div class="font-monospace fw-bold text-dark fs-3 text-primary" id="demoOtpCode"><?= htmlspecialchars($demoOtp ?? '849201') ?></div>
                         <button type="button" class="btn btn-sm btn-outline-primary" id="copyOtpBtn" onclick="copyAndPasteOtp('<?= htmlspecialchars($demoOtp ?? '849201') ?>')">
                             <i class="bi bi-clipboard me-1"></i>Copy & Paste OTP
                         </button>
                     </div>
                     <div class="small text-muted mt-2" style="font-size: 0.72rem;">
-                        <i class="bi bi-info-circle me-1"></i>Copy this 6-digit OTP code into the box above, or click <strong>Copy & Paste OTP</strong> to test the verification flow.
+                        <i class="bi bi-info-circle me-1"></i>Pre-filled above for testing. Click <strong>Verify & Enter Clinical Workspace</strong> to proceed, or click <strong>Copy & Paste OTP</strong> to re-enter.
                     </div>
                 </div>
 
