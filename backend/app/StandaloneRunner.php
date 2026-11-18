@@ -607,221 +607,316 @@ class StandaloneRunner
             exit;
         }
 
-        // 4. Calendly-Style Real-Time Availability Slots
+        // 4. Calendly-Style Real-Time Availability Slots with Chair & Doctor Concurrency
         if ($uri === '/api/v1/availability/slots' || $uri === '/api/v1/appointments/slots') {
             $selectedDate = $_GET['date'] ?? date('Y-m-d');
+            $requestedDoctorId = isset($_GET['doctor_id']) ? (int)$_GET['doctor_id'] : null;
+            $requestedChairId = isset($_GET['chair_id']) ? (int)$_GET['chair_id'] : null;
 
-            // Morning and Afternoon Calendly time slots with realistic availability
-            $morningTimes = ['09:00', '09:30', '10:00', '10:30', '11:00', '11:30'];
-            $afternoonTimes = ['13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00'];
+            // Load existing appointments for date to calculate real-time concurrency
+            $storageDir = dirname(__DIR__) . '/storage/app';
+            $jsonFile = $storageDir . '/appointments.json';
+            $savedAppts = file_exists($jsonFile) ? (json_decode(file_get_contents($jsonFile), true) ?: []) : [];
+            $allDateAppts = array_filter($savedAppts, fn($a) => ($a['appointment_date'] ?? '') === $selectedDate && ($a['status'] ?? '') !== 'cancelled');
 
+            $allTimes = [
+                'morning' => ['08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30', '12:00'],
+                'afternoon' => ['13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30']
+            ];
+
+            $totalChairs = 6;
             $slots = [];
 
-            foreach ($morningTimes as $idx => $t) {
-                $isBooked = ($idx === 3); // 10:30 booked
-                $h = (int)substr($t, 0, 2);
-                $m = substr($t, 3, 2);
-                $display = ($h < 12 ? $h : $h - 12) . ':' . $m . ($h < 12 ? ' AM' : ' PM');
-                $slots[] = [
-                    'time' => $t,
-                    'display' => $display,
-                    'period' => 'morning',
-                    'available' => !$isBooked,
-                    'remaining_chairs' => $isBooked ? 0 : 3,
-                ];
-            }
+            foreach ($allTimes as $period => $times) {
+                foreach ($times as $t) {
+                    $slotMins = ((int)substr($t, 0, 2)) * 60 + ((int)substr($t, 3, 2));
+                    $slotEndMins = $slotMins + 45;
 
-            foreach ($afternoonTimes as $idx => $t) {
-                $isBooked = ($idx === 2); // 14:30 booked
-                $h = (int)substr($t, 0, 2);
-                $m = substr($t, 3, 2);
-                $display = ($h < 12 ? $h : $h - 12) . ':' . $m . ($h < 12 ? ' AM' : ' PM');
-                $slots[] = [
-                    'time' => $t,
-                    'display' => $display,
-                    'period' => 'afternoon',
-                    'available' => !$isBooked,
-                    'remaining_chairs' => $isBooked ? 0 : 2,
-                ];
+                    $occupiedChairs = 0;
+                    $doctorBooked = false;
+                    $chairBooked = false;
+
+                    foreach ($allDateAppts as $ea) {
+                        $eaStart = ((int)substr($ea['appointment_time'] ?? '10:00', 0, 2)) * 60 + ((int)substr($ea['appointment_time'] ?? '10:00', 3, 2));
+                        $eaDuration = (int)($ea['duration_minutes'] ?? 45);
+                        $eaEnd = $eaStart + $eaDuration;
+
+                        if (max($slotMins, $eaStart) < min($slotEndMins, $eaEnd)) {
+                            $occupiedChairs++;
+                            if ($requestedDoctorId && ((int)($ea['doctor_profile_id'] ?? $ea['doctor_id'] ?? 1) === $requestedDoctorId)) {
+                                $doctorBooked = true;
+                            }
+                            if ($requestedChairId && ((int)($ea['chair_id'] ?? 1) === $requestedChairId)) {
+                                $chairBooked = true;
+                            }
+                        }
+                    }
+
+                    $h = (int)substr($t, 0, 2);
+                    $m = substr($t, 3, 2);
+                    $display = ($h <= 12 ? $h : $h - 12) . ':' . $m . ($h < 12 ? ' AM' : ($h === 12 ? ' PM' : ' PM'));
+
+                    $isAvailable = ($occupiedChairs < $totalChairs) && !$doctorBooked && !$chairBooked;
+
+                    $slots[] = [
+                        'time' => $t,
+                        'display' => $display,
+                        'period' => $period,
+                        'available' => $isAvailable,
+                        'remaining_chairs' => max(0, $totalChairs - $occupiedChairs),
+                        'doctor_booked' => $doctorBooked,
+                        'chair_booked' => $chairBooked,
+                    ];
+                }
             }
 
             echo json_encode([
                 'success' => true,
                 'date' => $selectedDate,
+                'total_chairs' => $totalChairs,
+                'currency' => 'GBP',
+                'currency_symbol' => '£',
                 'slots' => $slots,
             ]);
             exit;
         }
 
-        // 5. Appointments API (List & Booking Submission)
+        // 5. Appointments API (List, Concurrency Check & Booking Submission)
         if ($uri === '/api/v1/appointments/book' || $uri === '/api/v1/appointments') {
+            $storageDir = dirname(__DIR__) . '/storage/app';
+            $jsonFile = $storageDir . '/appointments.json';
+            $savedAppts = file_exists($jsonFile) ? (json_decode(file_get_contents($jsonFile), true) ?: []) : [];
+
+            $defaultAppts = [
+                [
+                    'id' => 101,
+                    'booking_reference' => 'APT-2026-8942',
+                    'patient_id' => 1045,
+                    'patient_name' => 'David Sample',
+                    'patient_phone' => '+44 7700 900283',
+                    'patient_email' => 'david.sample@example.com',
+                    'doctor_id' => 1,
+                    'doctor_name' => 'Dr. Ethan Caldwell, DDS, FACP',
+                    'clinic_id' => 1,
+                    'clinic_name' => 'Advanced Dental Clinic (Central Practice)',
+                    'chair_id' => 2,
+                    'chair_name' => 'Chair 2 (Surgical Unit)',
+                    'appointment_date' => date('Y-m-d'),
+                    'appointment_time' => '10:30',
+                    'duration_minutes' => 60,
+                    'end_time' => '11:30',
+                    'treatment_type' => 'Dental Implants Consult',
+                    'fee' => 450.00,
+                    'status' => 'confirmed',
+                    'payment_status' => 'pending',
+                    'created_at' => date('Y-m-d 08:30:00'),
+                ],
+                [
+                    'id' => 102,
+                    'booking_reference' => 'APT-2026-8943',
+                    'patient_id' => 1043,
+                    'patient_name' => 'Marcus Sterling',
+                    'patient_phone' => '+44 7700 900123',
+                    'patient_email' => 'marcus.s@example.com',
+                    'doctor_id' => 2,
+                    'doctor_name' => 'Dr. Maya Lin, DMD, MS',
+                    'clinic_id' => 1,
+                    'clinic_name' => 'Advanced Dental Clinic (Central Practice)',
+                    'chair_id' => 4,
+                    'chair_name' => 'Chair 4 (Orthodontics & Aesthetics)',
+                    'appointment_date' => date('Y-m-d'),
+                    'appointment_time' => '11:15',
+                    'duration_minutes' => 45,
+                    'end_time' => '12:00',
+                    'treatment_type' => 'Invisalign Progress Check',
+                    'fee' => 2400.00,
+                    'status' => 'in_chair',
+                    'payment_status' => 'paid',
+                    'created_at' => date('Y-m-d 09:00:00'),
+                ],
+                [
+                    'id' => 103,
+                    'booking_reference' => 'APT-2026-8944',
+                    'patient_id' => 1044,
+                    'patient_name' => 'Sophia Patel',
+                    'patient_phone' => '+44 7890 123456',
+                    'patient_email' => 'sophia.patel@example.com',
+                    'doctor_id' => 3,
+                    'doctor_name' => 'Dr. Sarah Jenkins, DDS',
+                    'clinic_id' => 2,
+                    'clinic_name' => 'Advanced Dental Clinic (Westside Studio)',
+                    'chair_id' => 3,
+                    'chair_name' => 'Chair 3 (Restorative Operatory)',
+                    'appointment_date' => date('Y-m-d'),
+                    'appointment_time' => '14:00',
+                    'duration_minutes' => 60,
+                    'end_time' => '15:00',
+                    'treatment_type' => 'Root Canal Therapy Evaluation',
+                    'fee' => 750.00,
+                    'status' => 'confirmed',
+                    'payment_status' => 'pending',
+                    'created_at' => date('Y-m-d 10:15:00'),
+                ],
+            ];
+
             if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-                $storageDir = dirname(__DIR__) . '/storage/app';
-                $jsonFile = $storageDir . '/appointments.json';
-                $savedAppts = file_exists($jsonFile) ? (json_decode(file_get_contents($jsonFile), true) ?: []) : [];
-                $defaultAppts = [
-                    [
-                        'id' => 101,
-                        'booking_reference' => 'APT-2026-8942',
-                        'patient_name' => 'Eleanor Vance',
-                        'patient_phone' => '+447911123456',
-                        'patient_email' => 'eleanor.vance@example.co.uk',
-                        'doctor_name' => 'Dr. Ethan Caldwell, DDS, FACP',
-                        'clinic_name' => 'Advanced Dental Clinic (Central Practice)',
-                        'appointment_date' => date('Y-m-d'),
-                        'appointment_time' => '10:30',
-                        'treatment_type' => 'Dental Implants Consult',
-                        'status' => 'confirmed',
-                        'payment_status' => 'pending',
-                        'created_at' => date('Y-m-d 08:30:00'),
-                    ],
-                    [
-                        'id' => 102,
-                        'booking_reference' => 'APT-2026-8943',
-                        'patient_name' => 'Marcus Sterling',
-                        'patient_phone' => '+447700900123',
-                        'patient_email' => 'marcus.s@example.com',
-                        'doctor_name' => 'Dr. Maya Lin, DMD, MS',
-                        'clinic_name' => 'Advanced Dental Clinic (Central Practice)',
-                        'appointment_date' => date('Y-m-d'),
-                        'appointment_time' => '11:15',
-                        'treatment_type' => 'Invisalign Progress Check',
-                        'status' => 'in_chair',
-                        'payment_status' => 'paid',
-                        'created_at' => date('Y-m-d 09:00:00'),
-                    ],
-                    [
-                        'id' => 103,
-                        'booking_reference' => 'APT-2026-8944',
-                        'patient_name' => 'Sophia Patel',
-                        'patient_phone' => '+447890123456',
-                        'patient_email' => 'sophia.patel@example.com',
-                        'doctor_name' => 'Dr. Sarah Jenkins, DDS',
-                        'clinic_name' => 'Advanced Dental Clinic (Westside Studio)',
-                        'appointment_date' => date('Y-m-d'),
-                        'appointment_time' => '14:00',
-                        'treatment_type' => 'Root Canal Therapy Evaluation',
-                        'status' => 'confirmed',
-                        'payment_status' => 'pending',
-                        'created_at' => date('Y-m-d 10:15:00'),
-                    ],
-                ];
                 $merged = array_merge($savedAppts, $defaultAppts);
                 echo json_encode([
                     'success' => true,
                     'total' => count($merged),
+                    'currency' => 'GBP',
+                    'currency_symbol' => '£',
                     'data' => $merged,
                 ]);
                 exit;
             }
 
-            // POST Booking Submission
+            // POST Booking Submission with Strict Concurrency & Double-Booking Prevention
             $rawInput = file_get_contents('php://input');
             $payload = json_decode($rawInput, true) ?? $_POST;
 
+            $patientId = isset($payload['patient_id']) ? (int)$payload['patient_id'] : null;
             $patient = $payload['patient'] ?? [];
             $patientName = trim(($patient['firstName'] ?? '') . ' ' . ($patient['lastName'] ?? ''));
             if ($patientName === '') {
                 $patientName = trim(($payload['first_name'] ?? '') . ' ' . ($payload['last_name'] ?? ''));
             }
+            if ($patientName === '' && !empty($payload['patient_name'])) {
+                $patientName = trim($payload['patient_name']);
+            }
             if ($patientName === '') {
                 $patientName = 'Valued Patient';
             }
 
-            $phone = $patient['phone'] ?? $payload['phone'] ?? '';
-            $email = $patient['email'] ?? $payload['email'] ?? '';
+            $phone = $patient['phone'] ?? $payload['phone'] ?? $payload['patient_phone'] ?? '+44 7700 900000';
+            $email = $patient['email'] ?? $payload['email'] ?? $payload['patient_email'] ?? 'patient@example.co.uk';
             $date = $payload['appointmentDate'] ?? $payload['appointment_date'] ?? date('Y-m-d');
             $time = $payload['appointmentTime'] ?? $payload['appointment_time'] ?? '10:00';
+            $duration = (int)($payload['duration_minutes'] ?? $payload['duration'] ?? 45);
             $clinicId = (int)($payload['clinicId'] ?? $payload['clinic_id'] ?? 1);
-            $doctorId = (int)($payload['doctorProfileId'] ?? $payload['doctor_profile_id'] ?? 1);
+            $doctorId = (int)($payload['doctorProfileId'] ?? $payload['doctor_profile_id'] ?? $payload['doctor_id'] ?? 1);
+            $chairId = (int)($payload['chairId'] ?? $payload['chair_id'] ?? 1);
+            $treatmentType = $payload['treatment_type'] ?? $payload['treatmentType'] ?? 'General Consultation';
+            $treatmentFee = (float)($payload['fee'] ?? 120.00);
 
-            $refCode = 'ADC-' . mt_rand(100000, 999999);
-            $appointmentId = mt_rand(1000, 9999);
+            // Doctors Registry
+            $doctorsMap = [
+                1 => 'Dr. Ethan Caldwell, DDS, FACP (Prosthodontist)',
+                2 => 'Dr. Maya Lin, DMD, MS (Orthodontist & Pediatric)',
+                3 => 'Dr. Sarah Jenkins, DDS (Aesthetic Specialist)',
+            ];
+            $doctorName = $doctorsMap[$doctorId] ?? 'Dr. Ethan Caldwell, DDS, FACP';
 
-            // Map doctor & clinic names
-            $doctorName = ($doctorId === 2) ? 'Dr. Maya Lin, DMD, MS' : 'Dr. Ethan Caldwell, DDS, FACP';
+            // Chairs Registry
+            $chairsMap = [
+                1 => 'Chair 1 (Surgical Unit - Central HQ)',
+                2 => 'Chair 2 (General / Restorative - Central HQ)',
+                3 => 'Chair 3 (Orthodontics & Aesthetics - Central HQ)',
+                4 => 'Chair 4 (Endodontic Suite - Central HQ)',
+                5 => 'Chair 5 (Pediatric Suite - Central HQ)',
+                6 => 'Chair 6 (Studio Operatory A - Westside)',
+            ];
+            $chairName = $chairsMap[$chairId] ?? "Chair {$chairId}";
             $clinicName = ($clinicId === 2) ? 'Advanced Dental Clinic (Westside Studio)' : 'Advanced Dental Clinic (Central Practice)';
 
-            // Safe Database persistence if connected
-            if ($pdo) {
-                try {
-                    $pdo->exec("CREATE TABLE IF NOT EXISTS `appointments` (
-                        `id` bigint unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                        `booking_reference` varchar(50) NOT NULL UNIQUE,
-                        `clinic_id` bigint unsigned NOT NULL DEFAULT 1,
-                        `doctor_profile_id` bigint unsigned NOT NULL DEFAULT 1,
-                        `patient_name` varchar(255) NOT NULL,
-                        `patient_phone` varchar(50) NOT NULL,
-                        `patient_email` varchar(255) NOT NULL,
-                        `appointment_date` date NOT NULL,
-                        `appointment_time` varchar(20) NOT NULL,
-                        `chief_complaint` text,
-                        `status` varchar(50) NOT NULL DEFAULT 'confirmed',
-                        `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP
-                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+            // Time Calculation
+            $toMins = function(string $t): int {
+                $parts = explode(':', trim($t));
+                return ((int)$parts[0]) * 60 + ((int)($parts[1] ?? 0));
+            };
+            $candStartMins = $toMins($time);
+            $candEndMins = $candStartMins + $duration;
+            $endTimeStr = sprintf('%02d:%02d', intdiv($candEndMins, 60), $candEndMins % 60);
 
-                    $stmt = $pdo->prepare("INSERT INTO appointments
-                        (booking_reference, clinic_id, doctor_profile_id, patient_name, patient_phone, patient_email, appointment_date, appointment_time, chief_complaint, status)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'confirmed')");
-                    $stmt->execute([
-                        $refCode,
-                        $clinicId,
-                        $doctorId,
-                        $patientName,
-                        $phone,
-                        $email,
-                        $date,
-                        $time,
-                        $payload['intake']['chiefComplaint'] ?? 'Initial Consultation'
-                    ]);
-                    $appointmentId = (int)$pdo->lastInsertId();
-                } catch (\Throwable $e) {}
+            // =========================================================================
+            // STRICT CONCURRENCY VALIDATION: DOCTOR & CHAIR DOUBLE-BOOKING PREVENTION
+            // (Senior Developer Feedback Item 7)
+            // =========================================================================
+            $allCheckAppts = array_merge($savedAppts, $defaultAppts);
+            foreach ($allCheckAppts as $ex) {
+                if (($ex['appointment_date'] ?? '') !== $date) continue;
+                if (($ex['status'] ?? '') === 'cancelled' || ($ex['status'] ?? '') === 'no_show') continue;
+
+                $exStartMins = $toMins($ex['appointment_time'] ?? '10:00');
+                $exDuration = (int)($ex['duration_minutes'] ?? 45);
+                $exEndMins = $exStartMins + $exDuration;
+
+                // Overlap condition: max(candStart, exStart) < min(candEnd, exEnd)
+                $isOverlapping = max($candStartMins, $exStartMins) < min($candEndMins, $exEndMins);
+                if ($isOverlapping) {
+                    $exDocId = (int)($ex['doctor_profile_id'] ?? $ex['doctor_id'] ?? 1);
+                    $exChairId = (int)($ex['chair_id'] ?? 1);
+                    $exEndTime = $ex['end_time'] ?? sprintf('%02d:%02d', intdiv($exEndMins, 60), $exEndMins % 60);
+
+                    // 1. Doctor Double-Booking Conflict
+                    if ($exDocId === $doctorId) {
+                        http_response_code(409);
+                        echo json_encode([
+                            'success' => false,
+                            'error_code' => 'DOCTOR_DOUBLE_BOOKING',
+                            'message' => "Doctor Scheduling Conflict: {$doctorName} is already booked from {$ex['appointment_time']} to {$exEndTime} with patient {$ex['patient_name']}. Please choose a different slot or doctor.",
+                        ]);
+                        exit;
+                    }
+
+                    // 2. Chair Concurrency Conflict
+                    if ($exChairId === $chairId) {
+                        http_response_code(409);
+                        echo json_encode([
+                            'success' => false,
+                            'error_code' => 'CHAIR_DOUBLE_BOOKING',
+                            'message' => "Chair Concurrency Conflict: {$chairName} is already occupied from {$ex['appointment_time']} to {$exEndTime} by patient {$ex['patient_name']}. Please select another chair.",
+                        ]);
+                        exit;
+                    }
+                }
             }
 
-            // Save JSON audit log into backend storage
-            $storageDir = dirname(__DIR__) . '/storage/app';
-            if (!is_dir($storageDir)) {
-                @mkdir($storageDir, 0777, true);
-            }
+            // Generate Booking Ref & Record
+            $refCode = 'APT-2026-' . mt_rand(1000, 9999);
+            $appointmentId = mt_rand(1000, 9999);
+
             $record = [
-                'appointment_id' => $appointmentId,
+                'id' => $appointmentId,
                 'booking_reference' => $refCode,
+                'patient_id' => $patientId,
                 'patient_name' => $patientName,
                 'patient_phone' => $phone,
                 'patient_email' => $email,
+                'doctor_id' => $doctorId,
                 'doctor_name' => $doctorName,
+                'clinic_id' => $clinicId,
                 'clinic_name' => $clinicName,
+                'chair_id' => $chairId,
+                'chair_name' => $chairName,
                 'appointment_date' => $date,
                 'appointment_time' => $time,
+                'duration_minutes' => $duration,
+                'end_time' => $endTimeStr,
+                'treatment_type' => $treatmentType,
+                'fee' => $treatmentFee,
+                'currency' => 'GBP',
+                'currency_symbol' => '£',
                 'status' => 'confirmed',
                 'created_at' => date('Y-m-d H:i:s'),
             ];
-            $jsonFile = $storageDir . '/appointments.json';
-            $existing = file_exists($jsonFile) ? (json_decode(file_get_contents($jsonFile), true) ?: []) : [];
-            array_unshift($existing, $record);
-            @file_put_contents($jsonFile, json_encode(array_slice($existing, 0, 100), JSON_PRETTY_PRINT));
+
+            if (!is_dir($storageDir)) {
+                @mkdir($storageDir, 0777, true);
+            }
+            array_unshift($savedAppts, $record);
+            @file_put_contents($jsonFile, json_encode(array_slice($savedAppts, 0, 100), JSON_PRETTY_PRINT));
 
             // WhatsApp link pre-filled with confirmed appointment details
             $waCleanPhone = preg_replace('/[^0-9]/', '', $waNumber);
-            $waMsg = "Hello Advanced Dental Clinic! My appointment reference is *{$refCode}* for *{$patientName}* on *{$date}* at *{$time}* with *{$doctorName}* at *{$clinicName}*. Please confirm my clinical slot.";
+            $waMsg = "Hello Advanced Dental Clinic! My appointment reference is *{$refCode}* for *{$patientName}* on *{$date}* from *{$time}* to *{$endTimeStr}* ({$duration}m) with *{$doctorName}* in *{$chairName}*. Please confirm my clinical slot.";
             $waUrl = "https://wa.me/{$waCleanPhone}?text=" . urlencode($waMsg);
 
             echo json_encode([
                 'success' => true,
-                'message' => 'Appointment locked and confirmed successfully!',
-                'data' => [
-                    'appointment_id' => $appointmentId,
-                    'booking_reference' => $refCode,
-                    'patient_name' => $patientName,
-                    'doctor_name' => $doctorName,
-                    'clinic_name' => $clinicName,
-                    'appointment_date' => $date,
-                    'appointment_time' => $time,
-                    'status' => 'confirmed',
-                    'whatsapp_notified' => true,
-                    'email_notified' => true,
-                    'whatsapp_url' => $waUrl,
-                ],
+                'message' => 'Appointment locked and verified against chair & doctor concurrency!',
+                'data' => $record,
+                'whatsapp_url' => $waUrl,
             ]);
             exit;
         }
