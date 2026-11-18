@@ -1823,6 +1823,15 @@ class StandaloneRunner
             '/advanced-dental-clinic/',
         ], $rendered);
 
+        // General URL resolver for any {{ url('...') }} or {{ url("...") }} in Blade templates
+        $rendered = preg_replace_callback('/\{\{\s*url\([\'"]([^\'"]*)[\'"]\)\s*\}\}/', function ($m) {
+            $path = '/' . ltrim($m[1], '/');
+            if ($path === '//' || $path === '/') {
+                return '/advanced-dental-clinic/';
+            }
+            return '/advanced-dental-clinic' . $path;
+        }, $rendered);
+
         // Extract push blocks from child view (e.g. @push('styles') ... @endpush)
         $stacks = [];
         preg_match_all("/@push\('([^']+)'\)(.*?)@endpush/s", $contentHtml, $pushBlocks, PREG_SET_ORDER);
@@ -1995,6 +2004,16 @@ class StandaloneRunner
         $rendered = preg_replace('/@push\([^\)]+\)/', '', $rendered);
         $rendered = preg_replace('/@endpush/', '', $rendered);
         $rendered = preg_replace('/@extends\([^\)]+\)/', '', $rendered);
+
+        // Resolve all {{ url('...') }} or {{ url("...") }} across all sections and stacks
+        $rendered = preg_replace_callback('/\{\{\s*url\([\'"]([^\'"]*)[\'"]\)\s*\}\}/', function ($m) {
+            $path = '/' . ltrim($m[1], '/');
+            if ($path === '//' || $path === '/') {
+                return '/advanced-dental-clinic/';
+            }
+            return '/advanced-dental-clinic' . $path;
+        }, $rendered);
+
         $rendered = preg_replace('/\{\{.*?\}\}/', '', $rendered);
         $rendered = preg_replace('/@csrf/', '', $rendered);
         $rendered = preg_replace('/@method\([^\)]+\)/', '', $rendered);
