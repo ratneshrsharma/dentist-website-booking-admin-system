@@ -168,7 +168,7 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
           description:
             'Mercury-free, biomimetic resin composite restorations that blend seamlessly with your natural tooth shade, restoring strength and durability after decay.',
           link_text: 'Explore Restorations',
-          link_href: '/treatments/restorative',
+          link_href: '/treatments/crowns-and-bridges',
         },
         {
           number: '02',
@@ -178,7 +178,7 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
           description:
             'Deep ultrasonic scaling, stubborn stain removal with gentle airflow polishing, and personalized homecare instruction to reverse bleeding gums and eliminate halitosis.',
           link_text: 'View Hygiene Services',
-          link_href: '/treatments/hygiene',
+          link_href: '/treatments/general-dentistry#hygiene',
         },
         {
           number: '03',
@@ -188,17 +188,17 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
           description:
             'Preventative micro-coatings for children and decay-prone adults that seal deep biting grooves against food trap bacteria, paired with clinical-strength fluoride varnishes.',
           link_text: 'Learn About Prevention',
-          link_href: '/treatments/prevention',
+          link_href: '/treatments/general-dentistry#procedures',
         },
         {
           number: '04',
           icon: 'emergency',
-          title: 'Emergency Relief & Extractions',
+          title: 'Emergency Relief & Root Canals',
           duration: 'Same-Day Priority',
           description:
             'Rapid pain relief for severe pulpitis, cracked teeth, or painful wisdom teeth. When a tooth cannot be saved, we perform gentle, atraumatic extractions.',
           link_text: 'Emergency Dental Help',
-          link_href: '/treatments/emergency',
+          link_href: '/treatments/root-canal-treatment',
         },
       ],
     },

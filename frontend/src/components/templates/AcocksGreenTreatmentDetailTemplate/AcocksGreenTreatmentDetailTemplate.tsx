@@ -6,6 +6,7 @@ import { AcocksGreenHeader } from '@/components/organisms/AcocksGreenHeader/Acoc
 import { AcocksGreenFooter } from '@/components/organisms/AcocksGreenFooter/AcocksGreenFooter';
 import { BookingWizard } from '@/components/organisms/BookingWizard/BookingWizard';
 import { WhatsAppHub } from '@/components/ui/WhatsAppHub/WhatsAppHub';
+import { MobileAppNavBar } from '@/components/organisms/MobileAppNavBar';
 
 export interface TreatmentDetailData {
   slug?: string;
@@ -210,7 +211,7 @@ export const AcocksGreenTreatmentDetailTemplate: React.FC<AcocksGreenTreatmentDe
         </div>
       </div>
 
-      <main className="flex-1">
+      <main className="flex-1 pb-20 xl:pb-0">
         {/* 3. Hero Section */}
         <section className="relative overflow-hidden bg-gradient-to-b from-white via-teal-50/20 to-slate-50 pt-10 pb-16 lg:py-20 border-b border-slate-200/80">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -929,6 +930,13 @@ export const AcocksGreenTreatmentDetailTemplate: React.FC<AcocksGreenTreatmentDe
 
       {/* 11. WhatsApp Floating Triage Hub */}
       <WhatsAppHub />
+
+      {/* 12. App-like Mobile Bottom Navigation Bar */}
+      <MobileAppNavBar
+        onOpenBooking={() => handleBookingTrigger('Routine Examination')}
+        onOpenEmergency={onOpenEmergency}
+        phone={data.phone || '+44 121 765 2870'}
+      />
     </div>
   );
 };

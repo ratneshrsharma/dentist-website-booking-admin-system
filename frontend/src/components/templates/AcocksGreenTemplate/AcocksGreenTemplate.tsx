@@ -10,6 +10,7 @@ import { AcocksGreenReviews } from '@/components/organisms/AcocksGreenReviews';
 import { AcocksGreenSafetyCharter } from '@/components/organisms/AcocksGreenSafetyCharter';
 import { AcocksGreenContact } from '@/components/organisms/AcocksGreenContact';
 import { AcocksGreenFooter } from '@/components/organisms/AcocksGreenFooter';
+import { MobileAppNavBar } from '@/components/organisms/MobileAppNavBar';
 
 interface AcocksGreenTemplateProps {
   onOpenBooking: (serviceId?: number) => void;
@@ -28,7 +29,7 @@ export const AcocksGreenTemplate: React.FC<AcocksGreenTemplateProps> = ({
         onOpenEmergency={onOpenEmergency}
       />
 
-      <main className="flex-1 pt-28 bg-surface">
+      <main className="flex-1 pt-28 pb-20 xl:pb-0 bg-surface">
         {/* ========================================================
             PHASE 2: ACOCKS GREEN HERO & STATS SECTION
             ======================================================== */}
@@ -67,6 +68,12 @@ export const AcocksGreenTemplate: React.FC<AcocksGreenTemplateProps> = ({
 
       {/* Comprehensive Acocks Green NHS & Private Practice Footer */}
       <AcocksGreenFooter
+        onOpenBooking={() => onOpenBooking()}
+        onOpenEmergency={onOpenEmergency}
+      />
+
+      {/* App-like Sticky Mobile Bottom Navigation Bar */}
+      <MobileAppNavBar
         onOpenBooking={() => onOpenBooking()}
         onOpenEmergency={onOpenEmergency}
       />

@@ -90,39 +90,45 @@ export const AcocksGreenFooter: React.FC<AcocksGreenFooterProps> = ({
             </h4>
             <ul className="space-y-2.5 font-body-sm text-body-sm text-on-surface-variant">
               <li>
-                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments/general-dentistry" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
-                  <span>General NHS Dentistry</span>
+                  <span>General NHS Dentistry &amp; Exams</span>
                 </Link>
               </li>
               <li>
-                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments/dental-implants" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
-                  <span>Dental Hygiene &amp; Airflow Polish</span>
+                  <span>Dental Implants &amp; Bone Grafts</span>
                 </Link>
               </li>
               <li>
-                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments/crowns-and-bridges" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
                   <span>Restorative Crowns &amp; Bridges</span>
                 </Link>
               </li>
               <li>
-                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments/clear-aligners" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
-                  <span>Clear Aligners &amp; Orthodontics</span>
+                  <span>Clear Aligners (Invisalign®)</span>
                 </Link>
               </li>
               <li>
-                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments/root-canal-treatment" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
-                  <span>Root Canal (Endodontics)</span>
+                  <span>Root Canal Endodontics</span>
                 </Link>
               </li>
               <li>
-                <Link href="/treatments" className="hover:text-primary transition-colors flex items-center gap-1.5">
+                <Link href="/treatments/teeth-whitening" className="hover:text-primary transition-colors flex items-center gap-1.5">
                   <span className="material-symbols-outlined text-[14px] text-primary">chevron_right</span>
-                  <span>Pediatric &amp; Anxious Patient Care</span>
+                  <span>Boutique Teeth Whitening</span>
+                </Link>
+              </li>
+              <li className="pt-1 border-t border-border-subtle/50">
+                <Link href="/treatments" className="text-primary font-bold hover:underline transition-colors flex items-center gap-1 text-[13px]">
+                  <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+                  <span>View All Treatments &amp; NHS Fees</span>
                 </Link>
               </li>
             </ul>

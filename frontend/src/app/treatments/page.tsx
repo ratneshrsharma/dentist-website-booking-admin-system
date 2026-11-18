@@ -6,6 +6,7 @@ import { AcocksGreenHeader } from '@/components/organisms/AcocksGreenHeader/Acoc
 import { AcocksGreenFooter } from '@/components/organisms/AcocksGreenFooter/AcocksGreenFooter';
 import { BookingWizard } from '@/components/organisms/BookingWizard/BookingWizard';
 import { WhatsAppHub } from '@/components/ui/WhatsAppHub/WhatsAppHub';
+import { MobileAppNavBar } from '@/components/organisms/MobileAppNavBar';
 import { BrandPreloader } from '@/components/common/BrandPreloader';
 import { ThemeHydrator } from '@/components/common/ThemeHydrator';
 import { CodeInjector } from '@/components/common/CodeInjector';
@@ -19,6 +20,8 @@ import {
 
 interface ServiceItem {
   id: string | number;
+  slug?: string;
+  href?: string;
   category: string;
   categoryEyebrow?: string;
   icon?: string;
@@ -122,6 +125,8 @@ export default function TreatmentsPage() {
   const normalizedServices: ServiceItem[] = rawServices.length > 0
     ? rawServices.map((s, idx) => ({
         id: s.id || idx + 1,
+        slug: s.slug || (typeof s.id === 'string' ? s.id : undefined),
+        href: s.href || (s.slug ? `/treatments/${s.slug}` : `/treatments/general-dentistry`),
         category: s.category || 'general',
         categoryEyebrow: s.category_label || s.categoryEyebrow || 'Clinical Procedure',
         icon: s.icon || 'dentistry',
@@ -139,6 +144,8 @@ export default function TreatmentsPage() {
     : [
         {
           id: 1,
+          slug: 'general-dentistry',
+          href: '/treatments/general-dentistry',
           category: 'general',
           categoryEyebrow: 'Core Healthcare',
           icon: 'dentistry',
@@ -152,6 +159,8 @@ export default function TreatmentsPage() {
         },
         {
           id: 2,
+          slug: 'hygiene-and-prevention',
+          href: '/treatments/general-dentistry#hygiene',
           category: 'hygiene',
           categoryEyebrow: 'Periodontal Health',
           icon: 'clean_hands',
@@ -165,6 +174,8 @@ export default function TreatmentsPage() {
         },
         {
           id: 3,
+          slug: 'crowns-and-bridges',
+          href: '/treatments/crowns-and-bridges',
           category: 'restorative',
           categoryEyebrow: 'Structural Repair',
           icon: 'architecture',
@@ -178,6 +189,8 @@ export default function TreatmentsPage() {
         },
         {
           id: 4,
+          slug: 'clear-aligners',
+          href: '/treatments/clear-aligners',
           category: 'aesthetic',
           categoryEyebrow: 'Cosmetic Artistry',
           icon: 'auto_fix_high',
@@ -191,6 +204,8 @@ export default function TreatmentsPage() {
         },
         {
           id: 5,
+          slug: 'root-canal-treatment',
+          href: '/treatments/root-canal-treatment',
           category: 'emergency',
           categoryEyebrow: 'Urgent Intervention',
           icon: 'medical_services',
@@ -207,6 +222,8 @@ export default function TreatmentsPage() {
         },
         {
           id: 6,
+          slug: 'pediatric-dentistry',
+          href: '/treatments/general-dentistry#pediatric',
           category: 'general',
           categoryEyebrow: 'Family Dentistry',
           icon: 'family_restroom',
@@ -315,7 +332,7 @@ export default function TreatmentsPage() {
         onOpenEmergency={() => handleOpenBooking(1)}
       />
 
-      <main className="min-h-screen pt-28 bg-surface text-on-surface">
+      <main className="min-h-screen pt-28 pb-24 xl:pb-0 bg-surface text-on-surface">
         {/* ========================================================
             1. COMPACT INNER HERO BANNER & CATEGORY FILTERS
             ======================================================== */}
@@ -380,6 +397,36 @@ export default function TreatmentsPage() {
                     );
                   })}
                 </div>
+
+                {/* Quick Jump Procedure Pill Strip */}
+                <div className="mt-4 pt-3 border-t border-border-subtle/50">
+                  <span className="text-[11px] font-bold text-on-surface-variant uppercase tracking-wider block mb-2">
+                    Quick Clinical Procedure Guides:
+                  </span>
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {[
+                      { label: 'General Dentistry', href: '/treatments/general-dentistry' },
+                      { label: 'Dental Implants', href: '/treatments/dental-implants' },
+                      { label: 'Clear Aligners', href: '/treatments/clear-aligners' },
+                      { label: 'Crowns & Bridges', href: '/treatments/crowns-and-bridges' },
+                      { label: 'Root Canal Therapy', href: '/treatments/root-canal-treatment' },
+                      { label: 'Teeth Whitening', href: '/treatments/teeth-whitening' },
+                      { label: 'Porcelain Veneers', href: '/treatments/porcelain-veneers' },
+                      { label: 'All-on-4 Implants', href: '/treatments/all-on-4-dental-implants' },
+                    ].map((proc) => (
+                      <Link
+                        key={proc.href}
+                        href={proc.href}
+                        className="text-[11px] sm:text-[12px] px-2.5 py-1 rounded-md bg-surface-card hover:bg-primary hover:text-on-primary text-on-surface-variant border border-border-subtle/80 transition-all duration-150 inline-flex items-center gap-1 shadow-2xs group"
+                      >
+                        <span>{proc.label}</span>
+                        <span className="material-symbols-outlined text-[13px] group-hover:translate-x-0.5 transition-transform">
+                          arrow_forward
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               </div>
 
               {/* Clinical Lead & Surgery Trust Banner */}
@@ -421,12 +468,14 @@ export default function TreatmentsPage() {
                   className="service-card group bg-surface-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg"
                 >
                   <div className="relative h-56 w-full overflow-hidden bg-surface-container-high">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      alt={card.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      src={card.image}
-                    />
+                    <Link href={card.href || '/treatments/general-dentistry'} className="block w-full h-full">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        alt={card.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        src={card.image}
+                      />
+                    </Link>
                     <div
                       className={`absolute top-4 left-4 font-label-sm text-label-sm px-3 py-1 rounded-md shadow-sm flex items-center gap-1 ${card.badgeClass}`}
                     >
@@ -459,7 +508,9 @@ export default function TreatmentsPage() {
                       </div>
 
                       <h2 className="font-headline-sm text-headline-sm text-on-surface mb-3 group-hover:text-primary transition-colors">
-                        {card.title}
+                        <Link href={card.href || '/treatments/general-dentistry'} className="hover:underline">
+                          {card.title}
+                        </Link>
                       </h2>
 
                       <p className="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
@@ -497,15 +548,15 @@ export default function TreatmentsPage() {
                           <span className="material-symbols-outlined text-[16px]">call</span>
                         </a>
                       ) : (
-                        <a
-                          href="#quick-book"
-                          className="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary font-semibold group-hover:text-tertiary-container transition-colors"
+                        <Link
+                          href={card.href || '/treatments/general-dentistry'}
+                          className="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary font-semibold hover:text-primary-container transition-colors"
                         >
-                          <span>Guidance</span>
+                          <span>Full Guide</span>
                           <span className="material-symbols-outlined text-[16px] transition-transform duration-200 group-hover:translate-x-0.5">
                             arrow_forward
                           </span>
-                        </a>
+                        </Link>
                       )}
                     </div>
                   </div>
@@ -789,6 +840,14 @@ export default function TreatmentsPage() {
 
       {/* Emergency & WhatsApp Hub */}
       <WhatsAppHub onOpenBooking={() => handleOpenBooking()} />
+
+      {/* App-like Sticky Mobile Bottom Navigation Bar */}
+      <MobileAppNavBar
+        onOpenBooking={() => handleOpenBooking()}
+        onOpenEmergency={() => handleOpenBooking(1)}
+        phone={themeData?.branding?.phone || '+44 121 765 2870'}
+        whatsappNumber={themeData?.branding?.whatsapp || '919904379260'}
+      />
 
       {/* 5-Step Booking Wizard Modal */}
       <BookingWizard

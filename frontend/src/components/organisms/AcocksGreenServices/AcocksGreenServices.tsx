@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 
 interface AcocksGreenServicesProps {
   onOpenBooking?: (serviceId?: number) => void;
@@ -13,6 +14,7 @@ const servicesData = [
     badge1: 'Preventive',
     badge2: 'NHS / Private',
     icon: 'dentistry',
+    href: '/treatments/general-dentistry',
     description:
       'Routine dental health examinations, digital diagnostics, high-durability composite white fillings, gentle root canals, and ongoing prevention.',
     cta: 'Explore General Care',
@@ -23,9 +25,10 @@ const servicesData = [
     badge1: 'Gum Care',
     badge2: 'Airflow Polish',
     icon: 'clean_hands',
+    href: '/treatments/general-dentistry#hygiene',
     description:
       'Deep ultrasonic plaque scaling, stubborn nicotine and coffee stain removal, and periodontal disease therapy led by our dedicated hygienist Claire.',
-    cta: 'Meet Our Hygienist',
+    cta: 'Explore Hygiene Care',
   },
   {
     id: 3,
@@ -33,9 +36,10 @@ const servicesData = [
     badge1: 'Restorative',
     badge2: 'Crowns & Bridges',
     icon: 'vital_signs',
+    href: '/treatments/crowns-and-bridges',
     description:
       'Rebuild chewing function and oral harmony with customized ceramic crowns, bridges, durable inlays, and prosthetics designed for longevity.',
-    cta: 'View Treatments',
+    cta: 'View Restorations',
   },
   {
     id: 4,
@@ -43,9 +47,10 @@ const servicesData = [
     badge1: 'Cosmetic',
     badge2: 'Invisalign®',
     icon: 'auto_awesome',
+    href: '/treatments/clear-aligners',
     description:
       'Transform your smile with professional boutique teeth whitening, handcrafted porcelain veneers, and Invisalign® discreet clear aligner therapy.',
-    cta: 'Consult Aesthetic Team',
+    cta: 'Explore Aligners',
   },
 ];
 
@@ -79,11 +84,11 @@ export const AcocksGreenServices: React.FC<AcocksGreenServicesProps> = ({
             >
               <div>
                 {/* Medical Icon in Glowing Tile */}
-                <div className="w-14 h-14 rounded-xl bg-brand-accent-glow text-primary flex items-center justify-center mb-6 group-hover:scale-105 group-hover:bg-primary group-hover:text-on-primary transition-all duration-200">
+                <Link href={service.href} className="block w-14 h-14 rounded-xl bg-brand-accent-glow text-primary flex items-center justify-center mb-6 group-hover:scale-105 group-hover:bg-primary group-hover:text-on-primary transition-all duration-200">
                   <span className="material-symbols-outlined text-[30px]">
                     {service.icon}
                   </span>
-                </div>
+                </Link>
 
                 {/* Badges */}
                 <div className="flex items-center gap-2 mb-3 flex-wrap">
@@ -97,7 +102,9 @@ export const AcocksGreenServices: React.FC<AcocksGreenServicesProps> = ({
 
                 {/* Service Title */}
                 <h3 className="font-headline-sm text-headline-sm text-on-surface mb-3 group-hover:text-primary transition-colors font-bold">
-                  {service.title}
+                  <Link href={service.href} className="hover:underline">
+                    {service.title}
+                  </Link>
                 </h3>
 
                 {/* Description */}
@@ -106,19 +113,54 @@ export const AcocksGreenServices: React.FC<AcocksGreenServicesProps> = ({
                 </p>
               </div>
 
-              {/* Action Trigger */}
-              <button
-                type="button"
-                onClick={() => onOpenBooking?.(service.id)}
-                className="inline-flex items-center gap-2 font-label-md text-label-md text-primary hover:text-primary-container font-semibold transition-colors cursor-pointer pt-2 group-hover:underline"
-              >
-                <span>{service.cta}</span>
-                <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
-                  arrow_forward
-                </span>
-              </button>
+              {/* Action Triggers */}
+              <div className="pt-3 border-t border-border-subtle/60 flex items-center justify-between gap-2">
+                <Link
+                  href={service.href}
+                  className="inline-flex items-center gap-1 font-label-md text-[13px] text-primary hover:text-primary-container font-semibold transition-colors group-hover:underline"
+                >
+                  <span>{service.cta}</span>
+                  <span className="material-symbols-outlined text-[16px] group-hover:translate-x-0.5 transition-transform">
+                    arrow_forward
+                  </span>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => onOpenBooking?.(service.id)}
+                  className="p-1.5 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors cursor-pointer"
+                  title="Book this treatment"
+                  aria-label={`Book ${service.title}`}
+                >
+                  <span className="material-symbols-outlined text-[18px]">calendar_month</span>
+                </button>
+              </div>
             </div>
           ))}
+        </div>
+
+        {/* Bottom Banner Linking Directly to Full Catalog */}
+        <div className="mt-12 p-6 rounded-2xl bg-surface-container-low border border-border-subtle/80 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0 shadow-2xs">
+              <span className="material-symbols-outlined text-[20px]">medical_services</span>
+            </div>
+            <div>
+              <h4 className="font-headline-sm text-[16px] font-bold text-on-surface">
+                Looking for all treatments and NHS fee bandings?
+              </h4>
+              <p className="text-[13px] text-on-surface-variant">
+                Explore our full catalog of dental procedures, preventative treatments, and private cosmetic options.
+              </p>
+            </div>
+          </div>
+          <Link
+            href="/treatments"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-on-primary font-label-md text-label-md font-bold hover:bg-primary-container transition-colors shadow-sm shrink-0"
+          >
+            <span>View All Treatments Catalog</span>
+            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </Link>
         </div>
       </div>
     </section>
