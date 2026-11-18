@@ -302,28 +302,82 @@
                         <div class="small fw-bold text-dark mb-1"><i class="bi bi-shield-check text-success me-1"></i>Settlement & Tender Information</div>
                         <div class="small text-secondary mb-1">Payment Method: <strong><?= htmlspecialchars($invoice['method'] ?? 'Visa Card POS') ?></strong></div>
                         <div class="small text-secondary mb-1">Transaction Ref: <strong class="font-monospace">TXN-84920-<?= htmlspecialchars($invoice['id'] ?? '891') ?></strong></div>
-                        <div class="small text-secondary">Authorized By: <strong>Clinical Finance Desk (Terminal #04)</strong></div>
+                        <div class="small text-secondary mb-2">Authorized By: <strong>Clinical Finance Desk (Terminal #04)</strong></div>
+
+                        <?php if (!empty($invoice['payments'])): ?>
+                            <div class="border-top pt-2 mt-2">
+                                <span class="meta-label d-block mb-1" style="font-size: 0.7rem;">Payment & Installment Ledger:</span>
+                                <?php foreach ($invoice['payments'] as $p): ?>
+                                    <div class="d-flex justify-content-between small text-secondary py-0.5">
+                                        <span><i class="bi bi-clock-history text-muted me-1"></i><?= htmlspecialchars($p['date']) ?> - <?= htmlspecialchars($p['title']) ?> (<?= htmlspecialchars($p['method']) ?>)</span>
+                                        <strong class="text-dark">£<?= number_format((float)$p['amount'], 2) ?></strong>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
                 <div class="col-md-5">
                     <div class="d-flex justify-content-between py-1 border-bottom small">
-                        <span class="text-muted">Subtotal:</span>
-                        <span class="fw-semibold text-dark">£<?= number_format((float)($invoice['amount'] ?? 1650.00), 2) ?></span>
+                        <span class="text-muted">Total Procedure Fee:</span>
+                        <span class="fw-semibold text-dark">£<?= number_format((float)($invoice['total_amount'] ?? $invoice['amount'] ?? 1650.00), 2) ?></span>
                     </div>
+                    <?php if (!empty($invoice['advance_deposit']) && (float)$invoice['advance_deposit'] > 0): ?>
+                    <div class="d-flex justify-content-between py-1 border-bottom small">
+                        <span class="text-muted">Advance Deposit Paid:</span>
+                        <span class="fw-semibold text-primary">£<?= number_format((float)$invoice['advance_deposit'], 2) ?></span>
+                    </div>
+                    <?php endif; ?>
                     <div class="d-flex justify-content-between py-1 border-bottom small">
                         <span class="text-muted">Medical VAT (Exempt):</span>
                         <span class="fw-semibold text-success">£0.00</span>
                     </div>
                     <div class="d-flex justify-content-between py-2 align-items-center">
                         <span class="fw-bold text-dark fs-6">Amount Settled:</span>
-                        <span class="amount-highlight">£<?= number_format((float)($invoice['amount'] ?? 1650.00), 2) ?></span>
+                        <span class="amount-highlight">£<?= number_format((float)($invoice['amount_paid'] ?? $invoice['amount'] ?? 1650.00), 2) ?></span>
                     </div>
-                    <div class="d-flex justify-content-between py-1 small text-muted">
-                        <span>Balance Remaining:</span>
-                        <span class="fw-bold text-success">£0.00 (Settled in Full)</span>
+                    <div class="d-flex justify-content-between py-1 small">
+                        <span class="text-muted">Net Outstanding Balance:</span>
+                        <?php
+                            $bal = (float)($invoice['balance_due'] ?? 0.00);
+                            if ($bal <= 0):
+                        ?>
+                            <span class="fw-bold text-success">£0.00 (Settled in Full)</span>
+                        <?php else: ?>
+                            <span class="fw-bold text-danger fs-6">£<?= number_format($bal, 2) ?> Due</span>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>
+
+            <?php if (!empty($invoice['refund_history'])): ?>
+                <!-- Refund & Void Audit Notice -->
+                <div class="alert alert-danger border-danger-subtle rounded-3 p-3 mb-4">
+                    <div class="d-flex align-items-start gap-2">
+                        <i class="bi bi-exclamation-octagon-fill text-danger fs-4 mt-1"></i>
+                        <div class="w-100">
+                            <h6 class="fw-bold text-danger mb-1">Official Clinical Refund & Void Audit Record</h6>
+                            <?php foreach ($invoice['refund_history'] as $ref): ?>
+                                <div class="small text-dark mb-1">
+                                    <span class="badge bg-danger me-1"><?= htmlspecialchars($ref['type']) ?></span>
+                                    <?php if (!empty($ref['amount']) && (float)$ref['amount'] > 0): ?>
+                                        Refund Amount: <strong>£<?= number_format((float)$ref['amount'], 2) ?></strong> |
+                                    <?php endif; ?>
+                                    Timestamp: <strong><?= htmlspecialchars($ref['date']) ?></strong> |
+                                    Authorized Clinician: <strong><?= htmlspecialchars($ref['authorized_by']) ?></strong>
+                                </div>
+                                <div class="p-2 bg-white rounded border border-danger-subtle small text-secondary mb-1">
+                                    <strong class="text-danger d-block">Mandatory Clinical Rationale:</strong>
+                                    <?= htmlspecialchars($ref['reason']) ?>
+                                </div>
+                                <div class="small font-monospace text-muted" style="font-size: 0.72rem;">
+                                    Audit Signature: <?= htmlspecialchars($ref['hash']) ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <!-- Clinical Care & Post-Procedure Care Notes -->
             <div class="row g-3 mb-4">

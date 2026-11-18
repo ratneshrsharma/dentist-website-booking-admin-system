@@ -2711,8 +2711,17 @@ class StandaloneRunner
                 'procedure' => 'Guided Implant Surgical Placement (#19)',
                 'doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
                 'amount' => 1650.00,
+                'total_amount' => 1650.00,
+                'advance_deposit' => 500.00,
+                'amount_paid' => 1150.00,
+                'balance_due' => 500.00,
                 'method' => 'Visa Card POS (Auth #892410)',
-                'status' => 'Paid in Full',
+                'status' => 'Partial Paid (Bal: £500.00)',
+                'payments' => [
+                    ['date' => '15 Nov 2026', 'title' => 'Advance Surgery Booking Deposit', 'method' => 'Bank Transfer', 'amount' => 500.00, 'ref' => 'DEP-84920'],
+                    ['date' => '18 Nov 2026', 'title' => 'Stage 1 Implant Fixture Placement', 'method' => 'Visa Card POS', 'amount' => 650.00, 'ref' => 'POS-89241'],
+                ],
+                'refund_history' => [],
                 'items' => [
                     [
                         'code' => 'D6010',
@@ -2740,8 +2749,16 @@ class StandaloneRunner
                 'procedure' => 'Clear Aligner Monthly Refinement (Tray 8)',
                 'doctor' => 'Dr. Maya Lin, DDS',
                 'amount' => 280.00,
+                'total_amount' => 280.00,
+                'advance_deposit' => 280.00,
+                'amount_paid' => 280.00,
+                'balance_due' => 0.00,
                 'method' => 'Direct Debit',
                 'status' => 'Paid in Full',
+                'payments' => [
+                    ['date' => '21 Mar 2026', 'title' => 'Monthly Aligner Subscription Settlement', 'method' => 'Direct Debit', 'amount' => 280.00, 'ref' => 'DD-77291'],
+                ],
+                'refund_history' => [],
                 'items' => [
                     [
                         'code' => 'D8080',
@@ -2761,8 +2778,16 @@ class StandaloneRunner
                 'procedure' => 'Molar Endodontic Therapy & Core Build-Up',
                 'doctor' => 'Dr. Marcus Vance, DDS',
                 'amount' => 950.00,
+                'total_amount' => 950.00,
+                'advance_deposit' => 200.00,
+                'amount_paid' => 200.00,
+                'balance_due' => 750.00,
                 'method' => 'Dental Net Ins. Copay',
-                'status' => 'Insurance Pending',
+                'status' => 'Insurance Claim Pending (Bal: £750.00)',
+                'payments' => [
+                    ['date' => '20 Mar 2026', 'title' => 'Emergency Root Canal Triage Copay', 'method' => 'Cash POS', 'amount' => 200.00, 'ref' => 'COP-1029'],
+                ],
+                'refund_history' => [],
                 'items' => [
                     [
                         'code' => 'D3330',
@@ -2790,8 +2815,16 @@ class StandaloneRunner
                 'procedure' => 'Full Mouth Ultrasonic Debridement & Polish',
                 'doctor' => 'Dr. Ethan Caldwell, DDS',
                 'amount' => 120.00,
+                'total_amount' => 120.00,
+                'advance_deposit' => 0.00,
+                'amount_paid' => 120.00,
+                'balance_due' => 0.00,
                 'method' => 'Apple Pay Contactless',
                 'status' => 'Paid in Full',
+                'payments' => [
+                    ['date' => '20 Mar 2026', 'title' => 'Chairside POS Contactless Settlement', 'method' => 'Apple Pay Contactless', 'amount' => 120.00, 'ref' => 'AP-55210'],
+                ],
+                'refund_history' => [],
                 'items' => [
                     [
                         'code' => 'D4346',
@@ -2811,8 +2844,16 @@ class StandaloneRunner
                 'procedure' => 'Ceramic Crown Preparation & CAD/CAM Scan (#14)',
                 'doctor' => 'Dr. Maya Lin, DDS',
                 'amount' => 680.00,
+                'total_amount' => 680.00,
+                'advance_deposit' => 340.00,
+                'amount_paid' => 340.00,
+                'balance_due' => 340.00,
                 'method' => 'Mastercard POS',
-                'status' => 'Paid in Full',
+                'status' => 'Partial Paid (Bal: £340.00)',
+                'payments' => [
+                    ['date' => '19 Mar 2026', 'title' => '50% Laboratory Milling Advance Deposit', 'method' => 'Mastercard POS', 'amount' => 340.00, 'ref' => 'DEP-84915'],
+                ],
+                'refund_history' => [],
                 'items' => [
                     [
                         'code' => 'D2740',
@@ -2821,6 +2862,80 @@ class StandaloneRunner
                         'qty' => 1,
                         'unit_price' => 680.00,
                         'total' => 680.00,
+                    ],
+                ],
+            ],
+            'INV-2026-0886' => [
+                'id' => 'INV-2026-0886',
+                'date' => '18 Mar 2026, 15:45 PM',
+                'patient' => 'Robert Taylor',
+                'mrn' => 'MRN-2026-0204',
+                'procedure' => 'Surgical Wisdom Tooth Extraction (#32)',
+                'doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
+                'amount' => 420.00,
+                'total_amount' => 420.00,
+                'advance_deposit' => 420.00,
+                'amount_paid' => 0.00,
+                'balance_due' => 0.00,
+                'method' => 'Visa POS (Reversed)',
+                'status' => 'Refunded (£420.00)',
+                'payments' => [
+                    ['date' => '16 Mar 2026', 'title' => 'Initial Consultation & Surgical Deposit', 'method' => 'Visa POS', 'amount' => 420.00, 'ref' => 'DEP-84910'],
+                ],
+                'refund_history' => [
+                    [
+                        'type' => 'Full Clinical Refund',
+                        'amount' => 420.00,
+                        'date' => '18 Mar 2026, 14:15 PM',
+                        'reason' => 'Deep impaction adjacent to inferior alveolar nerve. Attending oral surgeon referred patient to Queen Elizabeth Hospital Maxillofacial Unit for CBCT 3D nerve canal decompression.',
+                        'authorized_by' => 'Dr. Ethan Caldwell, DDS, FACP',
+                        'hash' => 'sha256:d8a9f24b0178c93051ab880e66d41077'
+                    ]
+                ],
+                'items' => [
+                    [
+                        'code' => 'D7240',
+                        'title' => 'Removal of Impacted Tooth - Completely Bony (#32)',
+                        'description' => 'Surgical flap elevation, ostectomy, sectioning and primary closure',
+                        'qty' => 1,
+                        'unit_price' => 420.00,
+                        'total' => 420.00,
+                    ],
+                ],
+            ],
+            'INV-2026-0885' => [
+                'id' => 'INV-2026-0885',
+                'date' => '17 Mar 2026, 16:30 PM',
+                'patient' => 'Clara Evans',
+                'mrn' => 'MRN-2026-0189',
+                'procedure' => 'In-Office Power Dental Bleaching',
+                'doctor' => 'Dr. Marcus Vance, DMD',
+                'amount' => 350.00,
+                'total_amount' => 350.00,
+                'advance_deposit' => 0.00,
+                'amount_paid' => 0.00,
+                'balance_due' => 0.00,
+                'method' => 'None / Voided',
+                'status' => 'Voided',
+                'payments' => [],
+                'refund_history' => [
+                    [
+                        'type' => 'Administrative Clinical Void',
+                        'amount' => 0.00,
+                        'date' => '17 Mar 2026, 16:35 PM',
+                        'reason' => 'Patient acute dentin hypersensitivity demonstrated on cervical margin air blast test prior to peroxide gel activation. Procedure cancelled and desensitizing fluoride varnish applied.',
+                        'authorized_by' => 'Dr. Marcus Vance, DMD',
+                        'hash' => 'sha256:a1b2c3d4e5f60718293a4b5c6d7e8f90'
+                    ]
+                ],
+                'items' => [
+                    [
+                        'code' => 'D9972',
+                        'title' => 'External Bleaching - Per Arch - In-Office',
+                        'description' => 'Philips Zoom 25% hydrogen peroxide LED light-activated whitening',
+                        'qty' => 1,
+                        'unit_price' => 350.00,
+                        'total' => 350.00,
                     ],
                 ],
             ],
