@@ -413,6 +413,8 @@ export default function TreatmentsPage() {
                       { label: 'Teeth Whitening', href: '/treatments/teeth-whitening' },
                       { label: 'Porcelain Veneers', href: '/treatments/porcelain-veneers' },
                       { label: 'All-on-4 Implants', href: '/treatments/all-on-4-dental-implants' },
+                      { label: 'Computer Guided Surgery', href: '/treatments/computer-guided-implant-surgery' },
+                      { label: 'Cosmetic Dentistry', href: '/treatments/cosmetic-dentistry' },
                     ].map((proc) => (
                       <Link
                         key={proc.href}

@@ -33,14 +33,8 @@
                                     <optgroup label="Main Website Pages">
                                         <option value="home" selected>Home Page (/)</option>
                                         <option value="about-us">About Us (/about-us)</option>
-                                        <option value="our-team">Our Clinical Specialists (/our-team)</option>
-                                        <option value="technology">Technology & Sterilization (/technology)</option>
-                                        <option value="why-choose-us">Why Choose Us & Accreditations (/why-choose-us)</option>
-                                        <option value="contact">Contact & Branch Locations (/contact)</option>
-                                        <option value="patient-faq">Patient FAQs & Emergency Care (/patient-faq)</option>
-                                        <option value="plans-coverage">Insurance & Membership Plans (/plans-coverage)</option>
-                                        <option value="first-visit">First Visit Guide (/first-visit)</option>
-                                        <option value="smile-gallery">Smile Transformation Gallery (/smile-gallery)</option>
+                                        <option value="treatments">Treatments & Services Catalog (/treatments)</option>
+                                        <option value="contact">Contact & Surgery Location (/contact)</option>
                                     </optgroup>
                                     <optgroup label="Clinical Procedures">
                                         @foreach($treatments as $treatment)

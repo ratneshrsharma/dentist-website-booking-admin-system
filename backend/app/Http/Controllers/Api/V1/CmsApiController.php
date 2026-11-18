@@ -86,12 +86,12 @@ final class CmsApiController extends Controller
                 'navigation' => [
                     ['label' => 'Home', 'href' => '/'],
                     [
-                        'label' => 'About Us',
+                        'label' => 'About Our Surgery',
                         'items' => [
-                            ['label' => 'The Practice & Philosophy', 'href' => '/about-us', 'description' => 'American clinical standards & sterilization.'],
-                            ['label' => 'Our Specialist Team', 'href' => '/our-team', 'description' => 'Board-certified prosthodontists & surgeons.'],
-                            ['label' => 'Technology & 3D Imaging', 'href' => '/technology', 'description' => 'Low-dose CBCT & intraoral scanners.'],
-                            ['label' => 'Why Choose Us & Accreditations', 'href' => '/why-choose-us', 'description' => 'Hospital-grade infection control & zero-pain.'],
+                            ['label' => 'The Practice & Philosophy', 'href' => '/about-us', 'description' => 'NHS & Private Surgery clinical standards & care.'],
+                            ['label' => 'Meet Our Clinicians', 'href' => '/#team', 'description' => 'GDC-registered dentists & hygienists.'],
+                            ['label' => 'Our Surgery / Facilities', 'href' => '/#about', 'description' => 'Modern digital treatment suites on Warwick Road.'],
+                            ['label' => 'NHS Safety Charter', 'href' => '/#charter', 'description' => 'Official signatory to NHS Sexual Safety Charter.'],
                         ],
                     ],
                     [
@@ -102,13 +102,12 @@ final class CmsApiController extends Controller
                     [
                         'label' => 'Patient Resources',
                         'items' => [
-                            ['label' => 'First Visit Guide & Triage', 'href' => '/first-visit', 'description' => 'What to expect on your first appointment.'],
-                            ['label' => 'Plans & Insurance Coverage', 'href' => '/plans-coverage', 'description' => 'In-house membership savings & insurance.'],
-                            ['label' => 'Smile Gallery & Case Studies', 'href' => '/smile-gallery', 'description' => 'Verified before-and-after smile transformations.'],
-                            ['label' => 'Patient FAQs & Dental Advice', 'href' => '/patient-faq', 'description' => 'Clear answers to common patient questions.'],
+                            ['label' => 'NHS Fee Bandings & Pricing', 'href' => '/treatments#pricing', 'description' => 'Transparent statutory fee bands & private costs.'],
+                            ['label' => 'Verified Patient Reviews', 'href' => '/#reviews', 'description' => '4.9★ patient satisfaction ratings.'],
+                            ['label' => 'Surgery Location & Parking', 'href' => '/contact', 'description' => '1078 Warwick Road, Acocks Green B27 6BH.'],
                         ],
                     ],
-                    ['label' => 'Contact & Clinics', 'href' => '/contact'],
+                    ['label' => 'Contact & Location', 'href' => '/contact'],
                 ],
             ],
         ]);

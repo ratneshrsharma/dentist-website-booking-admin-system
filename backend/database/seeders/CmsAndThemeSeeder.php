@@ -291,7 +291,7 @@ final class CmsAndThemeSeeder extends Seeder
             ['source_url' => '/services/implants', 'target_url' => '/treatments/dental-implants', 'status_code' => 301],
             ['source_url' => '/services/aligners', 'target_url' => '/treatments/clear-aligners', 'status_code' => 301],
             ['source_url' => '/services/rct', 'target_url' => '/treatments/root-canal-treatment', 'status_code' => 301],
-            ['source_url' => '/doctors', 'target_url' => '/our-team', 'status_code' => 301],
+            ['source_url' => '/doctors', 'target_url' => '/about-us#team', 'status_code' => 301],
         ];
 
         foreach ($redirects as $redirect) {

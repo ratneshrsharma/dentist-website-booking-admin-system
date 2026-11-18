@@ -1,6 +1,6 @@
 /**
- * Advanced Dental Clinic - Navigation Hierarchy & Menu Data
- * Modeled on USDental.in Clinical Structure with 4 Treatment Pillars
+ * Acocks Green Dental Practice - Navigation Hierarchy & Menu Data
+ * Cleaned to canonical routes: Home (/), About (/about-us), Treatments (/treatments), Contact (/contact)
  */
 
 export interface NavItem {
@@ -31,32 +31,32 @@ export const MAIN_NAVIGATION: NavDropdown[] = [
     href: '/',
   },
   {
-    label: 'About Us',
+    label: 'About Our Surgery',
     items: [
       {
         label: 'The Practice & Philosophy',
         href: '/about-us',
-        description: 'American clinical standards, sterilization protocols & ethical patient care.',
+        description: 'B27 6BH NHS & Private Surgery standards, infection control & ethical patient care.',
       },
       {
-        label: 'Our Specialist Team',
-        href: '/our-team',
-        description: 'Board-certified prosthodontists, orthodontists, endodontists & surgeons.',
+        label: 'Meet Our Clinicians',
+        href: '/#team',
+        description: 'GDC-registered dentists, dental nurses & specialist dental hygienists.',
       },
       {
-        label: 'Technology & 3D Imaging',
-        href: '/technology',
-        description: 'Low-dose CBCT 3D X-rays, intraoral scanners, computer guided surgical navigation.',
+        label: 'Our Facilities & Surgery',
+        href: '/#about',
+        description: 'Low-dose digital radiography, modern treatment suites on Warwick Road.',
       },
       {
-        label: 'Why Choose Us & Accreditations',
-        href: '/why-choose-us',
-        description: 'Hospital-grade infection control, zero-pain anesthesia & verified patient outcomes.',
+        label: 'NHS Sexual Safety Charter',
+        href: '/#charter',
+        description: 'Official signatory committed to patient dignity and zero harassment.',
       },
     ],
   },
   {
-    label: 'Treatments & Procedures',
+    label: 'Treatments & Services',
     href: '/treatments',
     categories: [
       {
@@ -67,29 +67,24 @@ export const MAIN_NAVIGATION: NavDropdown[] = [
           {
             label: 'Dental Implants Overview',
             href: '/treatments/dental-implants',
-            description: 'Lifetime titanium & zirconia fixtures',
+            description: 'Lifetime Swiss-grade titanium & zirconia fixtures',
           },
           {
             label: 'Computer Guided Implant Surgery',
             href: '/treatments/computer-guided-implant-surgery',
             description: 'Sub-millimeter precision 3D surgical guides',
-            badge: 'Advanced',
+            badge: 'Keyhole',
           },
           {
-            label: 'All-on-4 / All-on-6 Systems',
+            label: 'All-on-4 / Same-Day Teeth',
             href: '/treatments/all-on-4-dental-implants',
-            description: 'Full-arch fixed teeth in 24–48 hours',
+            description: 'Full-arch fixed teeth in 24 hours',
             badge: 'Popular',
-          },
-          {
-            label: 'Full Mouth Rehabilitation',
-            href: '/treatments/full-mouth-rehabilitation',
-            description: 'Complete restorative smile reconstruction',
           },
         ],
       },
       {
-        category: 'Cosmetic Dentistry & Orthodontics',
+        category: 'Aesthetic Dentistry & Orthodontics',
         iconName: 'Smile',
         description: 'Aesthetic smile makeovers & aligners',
         items: [
@@ -99,91 +94,48 @@ export const MAIN_NAVIGATION: NavDropdown[] = [
             description: 'Custom aesthetic design & smile rejuvenation',
           },
           {
-            label: 'Clear Aligners (Invisible Braces)',
+            label: 'Clear Aligners (Invisalign®)',
             href: '/treatments/clear-aligners',
             description: 'Discreet orthodontic teeth straightening',
-            badge: 'No Metal',
+            badge: 'No Brackets',
           },
           {
-            label: 'Porcelain Veneers & Lumineers',
+            label: 'Porcelain Veneers',
             href: '/treatments/porcelain-veneers',
             description: 'Ultra-thin handcrafted ceramic veneers',
           },
           {
-            label: 'Laser Teeth Whitening',
+            label: 'Boutique Teeth Whitening',
             href: '/treatments/teeth-whitening',
-            description: 'Up to 8 shades brighter in a 45-min session',
-          },
-          {
-            label: 'Aesthetic Bonding & Tooth Gems',
-            href: '/treatments/aesthetic-bonding',
-            description: 'Seamless chip repair & smile accents',
+            description: 'Up to 8 shades brighter in clinic or at home',
           },
         ],
       },
       {
-        category: 'Gum Care & Periodontics',
-        iconName: 'Shield',
-        description: 'Advanced periodontal therapy & laser treatments',
-        items: [
-          {
-            label: 'Periodontal Care Overview',
-            href: '/treatments/gum-treatments',
-            description: 'Early and advanced gum disease treatment',
-          },
-          {
-            label: 'Deep Cleaning & Root Planing',
-            href: '/treatments/deep-cleaning-scaling',
-            description: 'Ultrasonic calculus removal & root smoothing',
-          },
-          {
-            label: 'Laser Gum Therapy',
-            href: '/treatments/laser-gum-treatment',
-            description: 'Minimally-invasive bacterial eradication',
-            badge: 'Painless',
-          },
-          {
-            label: 'Periodontal Surgery & Grafts',
-            href: '/treatments/gum-surgery',
-            description: 'Recession repair & pocket reduction surgery',
-          },
-        ],
-      },
-      {
-        category: 'General & Restorative Care',
+        category: 'General, Restorative & Emergency',
         iconName: 'Activity',
-        description: 'Everyday dentistry, pain relief & oral health',
+        description: 'Everyday NHS care, pain relief & restorations',
         items: [
           {
-            label: 'General Dentistry Overview',
+            label: 'General Dentistry & Exams',
             href: '/treatments/general-dentistry',
-            description: 'Comprehensive examinations & cleanings',
+            description: '14-point oral exams & preventative treatments',
           },
           {
-            label: 'Painless Root Canal (RCT)',
-            href: '/treatments/root-canal-treatment',
-            description: 'Microscopic rotary endodontics in one visit',
-            badge: 'Same Day',
-          },
-          {
-            label: 'Wisdom Tooth Gentle Extraction',
-            href: '/treatments/wisdom-tooth-extraction',
-            description: 'Impacted third molar removal with sedation',
+            label: 'Dental Hygiene & Airflow',
+            href: '/treatments/general-dentistry#hygiene',
+            description: 'Ultrasonic scaling & airflow stain removal',
           },
           {
             label: 'Zirconia Crowns & Ceramic Bridges',
             href: '/treatments/crowns-and-bridges',
-            description: 'Metal-free, natural-looking tooth restorations',
+            description: 'Monolithic zirconia & E-Max restorations',
           },
           {
-            label: 'Composite Fillings & Cavity Repair',
-            href: '/treatments/dental-fillings',
-            description: 'Durable, tooth-colored aesthetic resin',
-          },
-          {
-            label: 'Custom Dentures & Overdentures',
-            href: '/treatments/custom-dentures',
-            description: 'Comfortable precision-fit removable dentures',
+            label: 'Painless Root Canal (RCT)',
+            href: '/treatments/root-canal-treatment',
+            description: 'Rotary endodontics for acute pain relief',
+            badge: 'Same Day',
           },
         ],
       },
@@ -193,29 +145,24 @@ export const MAIN_NAVIGATION: NavDropdown[] = [
     label: 'Patient Resources',
     items: [
       {
-        label: 'First Visit Guide & Triage',
-        href: '/first-visit',
-        description: 'What to expect on your initial consultation & check-in.',
+        label: 'NHS Fee Bandings & Private Pricing',
+        href: '/treatments#pricing',
+        description: 'Transparent Band 1, 2, 3 statutory fees and private options.',
       },
       {
-        label: 'Plans & Insurance Coverage',
-        href: '/plans-coverage',
-        description: 'In-house membership savings & insurance reimbursement.',
+        label: 'Verified Patient Reviews',
+        href: '/#reviews',
+        description: '4.9★ patient satisfaction ratings on Google & NHS Choices.',
       },
       {
-        label: 'Smile Gallery & Case Studies',
-        href: '/smile-gallery',
-        description: 'Documented before-and-after smile transformations.',
-      },
-      {
-        label: 'Patient FAQs & Dental Advice',
-        href: '/patient-faq',
-        description: 'Answers to common questions regarding treatment, pain & cost.',
+        label: 'Surgery Location & Parking',
+        href: '/contact',
+        description: '1078 Warwick Road, Acocks Green, Birmingham B27 6BH.',
       },
     ],
   },
   {
-    label: 'Contact & Clinics',
+    label: 'Contact & Location',
     href: '/contact',
   },
 ];

@@ -2,19 +2,19 @@
 
 import React, { useState } from 'react';
 import styles from './TemplateSwitcher.module.scss';
-import { Palette, Check, Building2, Stethoscope, ChevronUp, ChevronDown } from 'lucide-react';
+import { Palette, Check, Building2, ChevronUp, ChevronDown } from 'lucide-react';
 
-export type TemplateType = 'acocks-green' | 'confident-doctor';
+export type TemplateType = 'acocks-green';
 
 export interface TemplateSwitcherProps {
-  activeTemplate: TemplateType;
-  onSelectTemplate: (template: TemplateType) => void;
+  activeTemplate?: TemplateType;
+  onSelectTemplate?: (template: TemplateType) => void;
   activeTheme?: string;
   onSelectTheme?: (theme: string) => void;
 }
 
 export const TemplateSwitcher: React.FC<TemplateSwitcherProps> = ({
-  activeTemplate,
+  activeTemplate: _activeTemplate = 'acocks-green',
   onSelectTemplate,
   activeTheme = 'acocks-green',
   onSelectTheme,
@@ -34,7 +34,7 @@ export const TemplateSwitcher: React.FC<TemplateSwitcherProps> = ({
             <span className={styles.livePulse} />
             <span className={styles.liveDot} />
           </div>
-          <span className={styles.labelText}>Template:</span>
+          <span className={styles.labelText}>Practice:</span>
         </div>
 
         {/* Template Selectors */}
@@ -42,35 +42,16 @@ export const TemplateSwitcher: React.FC<TemplateSwitcherProps> = ({
           {/* Primary Default: Acocks Green Practice */}
           <button
             type="button"
-            className={`${styles.templateBtn} ${styles.primaryBtn} ${
-              activeTemplate === 'acocks-green' ? styles.active : ''
-            }`}
-            onClick={() => onSelectTemplate('acocks-green')}
+            className={`${styles.templateBtn} ${styles.primaryBtn} ${styles.active}`}
+            onClick={() => onSelectTemplate?.('acocks-green')}
             title="Primary Default: Acocks Green Dental Practice (Birmingham NHS & Private Surgery)"
           >
             <span className={styles.pillIcon}>
               <Building2 size={14} />
             </span>
             <span className={styles.templateName}>Acocks Green</span>
-            <span className={styles.roleBadgePrimary}>Primary (Default)</span>
-            {activeTemplate === 'acocks-green' && <Check size={13} className={styles.checkIcon} />}
-          </button>
-
-          {/* Secondary: Confident Doctor Template */}
-          <button
-            type="button"
-            className={`${styles.templateBtn} ${styles.secondaryBtn} ${
-              activeTemplate === 'confident-doctor' ? styles.active : ''
-            }`}
-            onClick={() => onSelectTemplate('confident-doctor')}
-            title="Secondary Template: Confident Doctor (US Metro Multi-Clinic System)"
-          >
-            <span className={styles.pillIcon}>
-              <Stethoscope size={14} />
-            </span>
-            <span className={styles.templateName}>Confident Doctor</span>
-            <span className={styles.roleBadgeSecondary}>Secondary</span>
-            {activeTemplate === 'confident-doctor' && <Check size={13} className={styles.checkIcon} />}
+            <span className={styles.roleBadgePrimary}>Primary Practice</span>
+            <Check size={13} className={styles.checkIcon} />
           </button>
         </div>
 
