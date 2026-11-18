@@ -174,7 +174,7 @@ class StandaloneRunner
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, Accept, X-Requested-With');
 
-        if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
             http_response_code(200);
             exit;
         }
@@ -264,6 +264,17 @@ class StandaloneRunner
                     }
                 }
             } catch (\Throwable $e) {}
+        }
+
+        // Global Theme Tokens (Acocks Green British Healthcare System)
+        if ($uri === '/api/v1/theme/global') {
+            $defaultTheme = self::getDefaultThemeData();
+            $storage = self::getCmsStorageData();
+            if (isset($storage['theme']) && is_array($storage['theme'])) {
+                $defaultTheme = array_merge($defaultTheme, $storage['theme']);
+            }
+            echo json_encode(['success' => true, 'data' => $defaultTheme]);
+            exit;
         }
 
         if ($uri === '/api/v1/theme/settings' || $uri === '/api/v1/theme-settings' || $uri === '/api/v1/settings') {
@@ -1189,59 +1200,28 @@ class StandaloneRunner
             exit;
         }
 
-        // 11. Yoast SEO & Scripts API (Single & Global)
-        if ($uri === '/api/v1/seo' || str_starts_with($uri, '/api/v1/seo/metadata') || str_starts_with($uri, '/api/v1/seo/')) {
+        // 11. Yoast SEO Metadata API (Endpoint 2: /api/v1/cms/seo/{slug} & /api/v1/seo/metadata/{slug})
+        if (str_starts_with($uri, '/api/v1/cms/seo') || str_starts_with($uri, '/api/v1/seo/metadata') || $uri === '/api/v1/seo') {
             $slug = 'home';
-            if (str_starts_with($uri, '/api/v1/seo/metadata/')) {
+            if (str_starts_with($uri, '/api/v1/cms/seo/')) {
+                $slug = trim(str_replace('/api/v1/cms/seo/', '', $uri), '/');
+            } elseif (str_starts_with($uri, '/api/v1/seo/metadata/')) {
                 $slug = trim(str_replace('/api/v1/seo/metadata/', '', $uri), '/');
-            } elseif (str_starts_with($uri, '/api/v1/seo/')) {
-                $sub = trim(str_replace('/api/v1/seo/', '', $uri), '/');
-                if ($sub !== 'redirects' && $sub !== '') {
-                    $slug = $sub;
-                }
+            } elseif (isset($_GET['slug'])) {
+                $slug = trim($_GET['slug'], '/');
+            }
+            $slug = explode('?', $slug)[0];
+            if ($slug === '' || $slug === '/') {
+                $slug = 'home';
             }
 
-            if ($uri !== '/api/v1/seo/redirects') {
-                $seoData = [
-                    'page_slug' => $slug,
-                    'title' => 'Advanced Dental Clinic | Multi-Specialty Dental Care & Restorations',
-                    'meta_title' => 'Advanced Dental Clinic | Multi-Specialty Dental Care & Restorations',
-                    'meta_description' => 'Board-certified dental specialists offering computer-guided implants, Invisalign, pain-free sedation, and 24/7 online booking in Austin, Denver, and Charlotte.',
-                    'canonical_url' => 'https://demo.ratneshsharma.com/advanced-dental-clinic/' . ($slug === 'home' ? '' : $slug),
-                    'open_graph' => [
-                        'og_title' => 'Advanced Dental Clinic | Multi-Specialty Restorations',
-                        'og_description' => 'Modern pain-free dentistry with 3D digital planning, board-certified specialists, and transparent pricing.',
-                        'og_type' => 'website',
-                        'og_image' => 'https://demo.ratneshsharma.com/advanced-dental-clinic/images/og-clinic-banner.jpg',
-                        'og_url' => 'https://demo.ratneshsharma.com/advanced-dental-clinic/' . ($slug === 'home' ? '' : $slug),
-                    ],
-                    'twitter_card' => [
-                        'card' => 'summary_large_image',
-                        'site' => '@AdvancedDentalPRO',
-                        'title' => 'Advanced Dental Clinic | Modern Restorative Dentistry',
-                        'description' => 'Pain-free implantology, Invisalign clear aligners, and cosmetic veneers.',
-                    ],
-                    'json_ld_schema' => [
-                        '@context' => 'https://schema.org',
-                        '@type' => 'Dentist',
-                        'name' => 'Advanced Dental Clinic',
-                        'telephone' => $waNumber,
-                        'url' => 'https://demo.ratneshsharma.com/advanced-dental-clinic/',
-                        'priceRange' => '$$',
-                        'address' => [
-                            '@type' => 'PostalAddress',
-                            'streetAddress' => '100 Healthcare Boulevard, Suite 400',
-                            'addressLocality' => 'Austin',
-                            'addressRegion' => 'TX',
-                            'postalCode' => '78701',
-                            'addressCountry' => 'US',
-                        ]
-                    ],
-                    'redirects_count' => 6,
-                ];
-                echo json_encode(['success' => true, 'data' => $seoData]);
-                exit;
-            }
+            $storage = self::getCmsStorageData();
+            $defaultSeo = self::getDefaultSeoData($slug);
+            $storedSeo = $storage['pages'][$slug]['seo'] ?? [];
+            $seoData = array_merge($defaultSeo, $storedSeo);
+
+            echo json_encode(['success' => true, 'data' => $seoData]);
+            exit;
         }
 
         if ($uri === '/api/v1/seo/redirects') {
@@ -1259,10 +1239,123 @@ class StandaloneRunner
             exit;
         }
 
-        // 12. Website CMS Pages API (Single & List)
+        // 12. Dual-Scope Custom Code Injection API (Endpoint 4: /api/v1/cms/code-injection/{slug} & /api/v1/cms/custom-code)
+        if (str_starts_with($uri, '/api/v1/cms/code-injection') || $uri === '/api/v1/cms/custom-code') {
+            $slug = 'home';
+            if (str_starts_with($uri, '/api/v1/cms/code-injection/')) {
+                $slug = trim(str_replace('/api/v1/cms/code-injection/', '', $uri), '/');
+            } elseif (isset($_GET['page'])) {
+                $slug = trim($_GET['page'], '/');
+            }
+            $slug = explode('?', $slug)[0];
+            if ($slug === '' || $slug === '/') {
+                $slug = 'home';
+            }
+
+            $storage = self::getCmsStorageData();
+            $defaultCode = self::getDefaultCodeInjection($slug);
+
+            $common = $storage['common_code'] ?? $defaultCode['common'];
+            $pageCode = $storage['pages'][$slug]['code_injection'] ?? $defaultCode['page'];
+
+            $merged = [
+                'custom_css' => trim(($common['custom_css'] ?? '') . "\n\n" . ($pageCode['custom_css'] ?? '')),
+                'head_scripts' => trim(($common['head_scripts'] ?? '') . "\n\n" . ($pageCode['head_scripts'] ?? '')),
+                'body_scripts' => trim(($common['body_scripts'] ?? '') . "\n\n" . ($pageCode['body_scripts'] ?? '')),
+            ];
+
+            echo json_encode([
+                'success' => true,
+                'data' => [
+                    'slug' => $slug,
+                    'common' => $common,
+                    'page' => $pageCode,
+                    'merged' => $merged,
+                ]
+            ]);
+            exit;
+        }
+
+        // 13. Persistent CMS Page Save Handler (POST /api/v1/admin/cms/pages/save & /api/v1/cms/pages/save)
+        if ($uri === '/api/v1/admin/cms/pages/save' || $uri === '/api/v1/cms/pages/save') {
+            $rawInput = file_get_contents('php://input');
+            $payload = json_decode($rawInput, true) ?? $_POST;
+
+            $slug = trim($payload['slug'] ?? '', '/');
+            if ($slug === '' || $slug === '/') {
+                $slug = 'home';
+            }
+
+            $storage = self::getCmsStorageData();
+            if (!isset($storage['pages'])) {
+                $storage['pages'] = [];
+            }
+            if (!isset($storage['common_code'])) {
+                $defaultCode = self::getDefaultCodeInjection($slug);
+                $storage['common_code'] = $defaultCode['common'];
+            }
+
+            // Update Global Common Code Injection if submitted
+            if (isset($payload['common_code']) && is_array($payload['common_code'])) {
+                $storage['common_code'] = [
+                    'custom_css' => $payload['common_code']['custom_css'] ?? ($storage['common_code']['custom_css'] ?? ''),
+                    'head_scripts' => $payload['common_code']['head_scripts'] ?? ($storage['common_code']['head_scripts'] ?? ''),
+                    'body_scripts' => $payload['common_code']['body_scripts'] ?? ($storage['common_code']['body_scripts'] ?? ''),
+                ];
+            }
+
+            // Get existing or default page data
+            $existingPage = $storage['pages'][$slug] ?? ($slug === 'treatments' ? self::getDefaultTreatmentsContent() : ($slug === 'home' ? self::getDefaultHomeContent() : [
+                'slug' => $slug,
+                'title' => ucwords(str_replace(['-', '/'], ' ', $slug)),
+                'seo' => self::getDefaultSeoData($slug),
+            ]));
+
+            // Merge page content fields
+            if (isset($payload['title'])) $existingPage['title'] = trim((string)$payload['title']);
+            if (isset($payload['eyebrow'])) $existingPage['eyebrow'] = trim((string)$payload['eyebrow']);
+            if (isset($payload['subtitle'])) $existingPage['subtitle'] = trim((string)$payload['subtitle']);
+            if (isset($payload['badge'])) $existingPage['badge'] = trim((string)$payload['badge']);
+            if (isset($payload['categories']) && is_array($payload['categories'])) $existingPage['categories'] = $payload['categories'];
+            if (isset($payload['services']) && is_array($payload['services'])) $existingPage['services'] = $payload['services'];
+            if (isset($payload['pricing_matrix']) && is_array($payload['pricing_matrix'])) $existingPage['pricing_matrix'] = $payload['pricing_matrix'];
+            if (isset($payload['pillars']) && is_array($payload['pillars'])) $existingPage['clinical_pillars'] = $payload['pillars'];
+            if (isset($payload['consultation_cta']) && is_array($payload['consultation_cta'])) $existingPage['consultation_cta'] = $payload['consultation_cta'];
+
+            // Merge SEO fields
+            if (isset($payload['seo']) && is_array($payload['seo'])) {
+                $defaultSeo = self::getDefaultSeoData($slug);
+                $existingPage['seo'] = array_merge($defaultSeo, $existingPage['seo'] ?? [], $payload['seo']);
+            }
+
+            // Merge Page-Specific Code Injection
+            if (isset($payload['code_injection']) && is_array($payload['code_injection'])) {
+                $existingPage['code_injection'] = [
+                    'custom_css' => $payload['code_injection']['custom_css'] ?? ($existingPage['code_injection']['custom_css'] ?? ''),
+                    'head_scripts' => $payload['code_injection']['head_scripts'] ?? ($existingPage['code_injection']['head_scripts'] ?? ''),
+                    'body_scripts' => $payload['code_injection']['body_scripts'] ?? ($existingPage['code_injection']['body_scripts'] ?? ''),
+                ];
+            }
+
+            $storage['pages'][$slug] = $existingPage;
+            self::saveCmsStorageData($storage);
+
+            echo json_encode([
+                'success' => true,
+                'message' => "Page '{$slug}' content, SEO metadata, and custom code injection saved successfully.",
+                'data' => [
+                    'slug' => $slug,
+                    'page' => $existingPage,
+                    'common_code' => $storage['common_code'],
+                ],
+            ]);
+            exit;
+        }
+
+        // 14. Website CMS Pages Content API (Endpoint 1: /api/v1/cms/pages/{slug} & /api/v1/cms-pages/{slug})
         if (str_starts_with($uri, '/api/v1/cms-pages') || str_starts_with($uri, '/api/v1/cms/pages')) {
             $slug = trim(preg_replace('#^/api/v1/cms(?:-pages|/pages)/?#', '', $uri), '/');
-            if ($slug === '' || $slug === 'index') {
+            if ($slug === '' || $slug === 'index' || $slug === 'list') {
                 echo json_encode(['success' => true, 'data' => [
                     ['id' => 1, 'title' => 'Home', 'slug' => '/', 'template' => 'acocks-green', 'status' => 'published'],
                     ['id' => 2, 'title' => 'Treatments & Services', 'slug' => 'treatments', 'template' => 'clinical-catalog', 'status' => 'published'],
@@ -1274,221 +1367,35 @@ class StandaloneRunner
                 exit;
             }
 
+            $storage = self::getCmsStorageData();
+
             // Rich structured content for Treatments & Services Main Catalog Page
             if ($slug === 'treatments' || $slug === 'treatments/index') {
+                $treatmentsData = $storage['pages']['treatments'] ?? self::getDefaultTreatmentsContent();
                 echo json_encode([
                     'success' => true,
-                    'data' => [
-                        'slug' => 'treatments',
-                        'title' => 'Treatments & Services',
-                        'eyebrow' => 'Evidence-Based Dental Excellence',
-                        'subtitle' => 'From routine NHS prevention to advanced private smile rehabilitation, explore our comprehensive range of clinical dental treatments in Acocks Green, Birmingham.',
-                        'badge' => 'B27 6BH Dental Surgery',
-                        'breadcrumbs' => ['Home', 'Treatments & Services'],
-                        'doctor' => [
-                            'name' => 'Dr. Richard C. Williams',
-                            'title' => 'Clinical Director & Lead Implant Surgeon',
-                            'credentials' => 'BDS (Birm), MJDF RCS (Eng), PgCert Implantology',
-                            'gdc_number' => 'GDC No: 178924',
-                            'avatar' => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=300',
-                        ],
-                        'categories' => [
-                            ['id' => 'all', 'label' => 'All Services', 'icon' => 'dentistry'],
-                            ['id' => 'general', 'label' => 'General Dentistry', 'icon' => 'medical_services'],
-                            ['id' => 'hygiene', 'label' => 'Hygiene & Prevention', 'icon' => 'clean_hands'],
-                            ['id' => 'restorative', 'label' => 'Restorative Care', 'icon' => 'healing'],
-                            ['id' => 'aesthetic', 'label' => 'Aesthetic & Cosmetic', 'icon' => 'auto_awesome'],
-                            ['id' => 'emergency', 'label' => 'Emergency & Surgery', 'icon' => 'emergency'],
-                        ],
-                        'services' => [
-                            [
-                                'id' => 1,
-                                'slug' => 'routine-examinations',
-                                'category' => 'general',
-                                'category_label' => 'General Dentistry',
-                                'title' => 'Routine Examinations & Check-ups',
-                                'badge' => 'NHS & Private',
-                                'excerpt' => 'Comprehensive oral health assessments, low-dose digital radiographs, periodontal screening, and early cancer detection for patients of all ages.',
-                                'features' => [
-                                    'Low-Dose Digital Bitewing Radiographs',
-                                    'BPE Periodontal Screening & Gum Health Score',
-                                    'Soft Tissue & Oral Cancer Screening Protocol'
-                                ],
-                                'nhs_band' => 'Band 1 (£26.80)',
-                                'private_from' => '£45.00',
-                                'image' => 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800',
-                                'link' => '/treatments/general-dentistry'
-                            ],
-                            [
-                                'id' => 2,
-                                'slug' => 'hygiene-periodontal-therapy',
-                                'category' => 'hygiene',
-                                'category_label' => 'Hygiene & Prevention',
-                                'title' => 'Dental Hygiene & Periodontal Therapy',
-                                'badge' => 'Direct Access Available',
-                                'excerpt' => 'Professional ultrasonic scaling, targeted stain removal with AirFlow technology, and personalized periodontal maintenance to preserve bone support.',
-                                'features' => [
-                                    'AirFlow High-Precision Polish & Stain Removal',
-                                    'Ultrasonic Plaque & Subgingival Calculus Debridement',
-                                    'Personalized Gum Health & Interdental Protocol'
-                                ],
-                                'nhs_band' => 'Band 2 (£73.50 if clinically needed)',
-                                'private_from' => '£65.00',
-                                'image' => 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=800',
-                                'link' => '/treatments/hygiene'
-                            ],
-                            [
-                                'id' => 3,
-                                'slug' => 'crowns-bridges-restorative',
-                                'category' => 'restorative',
-                                'category_label' => 'Restorative Care',
-                                'title' => 'Crowns, Bridges & Restorative Dentistry',
-                                'badge' => 'High-Durability Ceramics',
-                                'excerpt' => 'Rebuilding broken or decayed teeth with biocompatible, natural-looking porcelain, lithium disilicate (E-Max), and high-strength zirconia prosthetics.',
-                                'features' => [
-                                    'Monolithic Zirconia & E-Max Ceramic Formulations',
-                                    'Precision Digital Impressions (No Messy Trays)',
-                                    'Multi-Unit Fixed Bridges for Gap Replacement'
-                                ],
-                                'nhs_band' => 'Band 3 (£319.10)',
-                                'private_from' => '£495.00',
-                                'image' => 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=800',
-                                'link' => '/treatments/restorative'
-                            ],
-                            [
-                                'id' => 4,
-                                'slug' => 'clear-aligners-orthodontics',
-                                'category' => 'aesthetic',
-                                'category_label' => 'Aesthetic & Cosmetic',
-                                'title' => 'Clear Aligners & Orthodontic Realignment',
-                                'badge' => 'Invisalign & ClearCorrect',
-                                'excerpt' => 'Discreet, removable clear aligners engineered to straighten crooked, crowded, or spaced teeth predictably without fixed metal brackets.',
-                                'features' => [
-                                    'Custom 3D ClinCheck Virtual Outcome Simulation',
-                                    'Transparent, Removable & Lifestyle-Friendly',
-                                    'Includes Complimentary Teeth Whitening at Completion'
-                                ],
-                                'nhs_band' => 'Private Only',
-                                'private_from' => '£1,495.00',
-                                'image' => 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800',
-                                'link' => '/treatments/clear-aligners'
-                            ],
-                            [
-                                'id' => 5,
-                                'slug' => 'composite-bonding-cosmetic',
-                                'category' => 'aesthetic',
-                                'category_label' => 'Aesthetic & Cosmetic',
-                                'title' => 'Composite Bonding & Aesthetic Contouring',
-                                'badge' => 'Same-Day Transformation',
-                                'excerpt' => 'Minimally invasive resin artistry to repair chipped edges, close unwanted gaps (diastemas), and harmonize tooth symmetry in a single appointment.',
-                                'features' => [
-                                    'Zero or Minimal Enamel Removal (Preserves Natural Tooth)',
-                                    'Single-Visit Chairside Sculpting & High Polish',
-                                    'Color-Matched Micro-Hybrid Composite Resins'
-                                ],
-                                'nhs_band' => 'Private Only',
-                                'private_from' => '£110.00 per tooth',
-                                'image' => 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&q=80&w=800',
-                                'link' => '/treatments/composite-bonding'
-                            ],
-                            [
-                                'id' => 6,
-                                'slug' => 'emergency-dental-relief',
-                                'category' => 'emergency',
-                                'category_label' => 'Emergency & Surgery',
-                                'title' => 'Emergency Dental Care & Same-Day Relief',
-                                'badge' => 'Same-Day Slots Guaranteed',
-                                'excerpt' => 'Rapid-response triage and diagnosis for severe toothaches, dental abscesses, broken teeth, lost restorations, and acute facial trauma.',
-                                'features' => [
-                                    'Priority Same-Day Appointments Available Mon–Sat',
-                                    'Immediate Diagnostic Radiographs & Pulp Vitality Testing',
-                                    'Definitive Pain Relief & Infection Management Protocols'
-                                ],
-                                'nhs_band' => 'Urgent (£26.80)',
-                                'private_from' => '£65.00 + treatment',
-                                'image' => 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800',
-                                'link' => '/treatments/emergency'
-                            ]
-                        ],
-                        'pricing_matrix' => [
-                            'nhs_bands' => [
-                                [
-                                    'band' => 'Band 1',
-                                    'price' => '£26.80',
-                                    'description' => 'Covers clinical examination, diagnosis, advice, radiographs, scale & polish if clinically necessary, and preventive care plan.'
-                                ],
-                                [
-                                    'band' => 'Band 2',
-                                    'price' => '£73.50',
-                                    'description' => 'Covers everything in Band 1 plus additional treatment including fillings, root canal therapy, and tooth extractions.'
-                                ],
-                                [
-                                    'band' => 'Band 3',
-                                    'price' => '£319.10',
-                                    'description' => 'Covers everything in Bands 1 and 2 plus complex laboratory-fabricated items including crowns, dentures, and bridges.'
-                                ],
-                                [
-                                    'band' => 'Urgent Emergency',
-                                    'price' => '£26.80',
-                                    'description' => 'Emergency pain relief, temporary fillings, or clinical triage if you require urgent dental attention.'
-                                ]
-                            ],
-                            'private_options' => [
-                                ['procedure' => 'Private Routine Clinical Examination', 'price' => 'from £45.00'],
-                                ['procedure' => 'Direct Access Hygiene / AirFlow Polish', 'price' => 'from £65.00'],
-                                ['procedure' => 'Tooth-Coloured Composite Restoration', 'price' => 'from £110.00'],
-                                ['procedure' => 'High-Strength Porcelain / Zirconia Crown', 'price' => 'from £495.00'],
-                                ['procedure' => 'Clear Aligner Therapy (Single Arch)', 'price' => 'from £1,495.00'],
-                                ['procedure' => 'Single Dental Implant (Fixture & Abutment)', 'price' => 'from £1,850.00']
-                            ],
-                            'finance_note' => '0% Interest-free patient payment plans available over 6 to 12 months for private treatment plans exceeding £500.'
-                        ],
-                        'clinical_pillars' => [
-                            [
-                                'id' => 'digital_precision',
-                                'icon' => 'biotech',
-                                'title' => 'Digital Workflow & 3D Imaging',
-                                'description' => 'Low-dose digital bitewings, high-resolution intraoral scanning, and precision diagnostics reduce chair time and eliminate uncomfortable impression trays.'
-                            ],
-                            [
-                                'id' => 'nhs_private',
-                                'icon' => 'verified',
-                                'title' => 'NHS & Private Parallel Care',
-                                'description' => 'We operate an integrated care model offering both standard NHS dental fee bands and advanced private cosmetic solutions under one registered surgery roof.'
-                            ],
-                            [
-                                'id' => 'nervous_patients',
-                                'icon' => 'spa',
-                                'title' => 'Gentle, Nervous Patient Protocol',
-                                'description' => 'Our clinical team is trained in empathetic, anxiety-reducing dentistry. We move at your pace, explain each step, and offer numbing gels before local anaesthesia.'
-                            ],
-                            [
-                                'id' => 'emergency_access',
-                                'icon' => 'emergency',
-                                'title' => 'Dedicated Emergency Access',
-                                'description' => 'We reserve daily clinical emergency slots for acute toothache, broken crowns, dental abscesses, and urgent pain relief in Acocks Green B27.'
-                            ]
-                        ],
-                        'consultation_cta' => [
-                            'headline' => 'Ready to Plan Your Treatment?',
-                            'description' => 'Book a comprehensive dental examination or speak with our clinical reception team today. We welcome both NHS registered and new private patients.',
-                            'phone' => '+44 121 765 2870',
-                            'address' => '1078 Warwick Road, Acocks Green, Birmingham B27 6BH',
-                            'hours' => 'Mon - Fri: 8:30am - 5:30pm',
-                            'cta_primary' => 'Book Online Now',
-                            'cta_secondary' => 'Call Practice Reception'
-                        ],
-                        'seo' => [
-                            'meta_title' => 'Treatments & Services | Acocks Green Dental Practice Birmingham',
-                            'meta_description' => 'Explore our full range of NHS and private dental treatments in Acocks Green, Birmingham B27 6BH. Routine check-ups, hygiene, crowns, aligners, and emergency care.',
-                            'canonical_url' => 'https://acocksgreendentalpractice.co.uk/treatments',
-                        ]
-                    ]
+                    'data' => $treatmentsData
+                ]);
+                exit;
+            }
+
+            // Rich structured content for Home Portal Page
+            if ($slug === 'home' || $slug === '/') {
+                $homeData = $storage['pages']['home'] ?? self::getDefaultHomeContent();
+                echo json_encode([
+                    'success' => true,
+                    'data' => $homeData
                 ]);
                 exit;
             }
 
             // Specific page content for requested slug
+            $storedPage = $storage['pages'][$slug] ?? null;
+            if ($storedPage) {
+                echo json_encode(['success' => true, 'data' => $storedPage]);
+                exit;
+            }
+
             echo json_encode([
                 'success' => true,
                 'data' => [
@@ -1505,13 +1412,10 @@ class StandaloneRunner
                         [
                             'id' => 'intro',
                             'title' => 'Clinical Overview',
-                            'content' => '<p>Advanced Dental Clinic delivers evidence-based, patient-centric dental care utilizing digital intraoral scanners, 3D CBCT imaging, and pain-free restorative protocols.</p>',
+                            'content' => '<p>Acocks Green Dental Practice delivers evidence-based, patient-centric dental care utilizing digital intraoral scanners, 3D CBCT imaging, and pain-free restorative protocols.</p>',
                         ]
                     ],
-                    'seo' => [
-                        'meta_title' => ucwords(str_replace(['-', '/'], [' ', ' - '], $slug)) . ' | Advanced Dental Clinic',
-                        'meta_description' => 'Discover world-class dental procedures and compassionate patient care at Advanced Dental Clinic.',
-                    ]
+                    'seo' => self::getDefaultSeoData($slug)
                 ]
             ]);
             exit;
@@ -2272,5 +2176,481 @@ class StandaloneRunner
         header('Content-Type: text/html; charset=utf-8');
         echo $html;
         exit;
+    }
+
+    private static ?array $cmsStorageCache = null;
+
+    public static function getCmsStorageData(bool $forceRefresh = false): array
+    {
+        if (self::$cmsStorageCache !== null && !$forceRefresh) {
+            return self::$cmsStorageCache;
+        }
+
+        $storageDir = dirname(__DIR__) . '/storage/app';
+        if (!is_dir($storageDir)) {
+            @mkdir($storageDir, 0775, true);
+        }
+        $file = $storageDir . '/cms_pages.json';
+        if (file_exists($file)) {
+            $json = json_decode((string)file_get_contents($file), true);
+            if (is_array($json)) {
+                self::$cmsStorageCache = $json;
+                return self::$cmsStorageCache;
+            }
+        }
+        self::$cmsStorageCache = [];
+        return self::$cmsStorageCache;
+    }
+
+    public static function saveCmsStorageData(array $data): bool
+    {
+        $storageDir = dirname(__DIR__) . '/storage/app';
+        if (!is_dir($storageDir)) {
+            @mkdir($storageDir, 0775, true);
+        }
+        $file = $storageDir . '/cms_pages.json';
+        self::$cmsStorageCache = $data;
+        return (bool)file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES), LOCK_EX);
+    }
+
+    public static function getDefaultThemeData(): array
+    {
+        return [
+            'theme_name' => 'acocks-green',
+            'display_name' => 'Acocks Green Dental Practice (Primary British Healthcare Theme)',
+            'colors' => [
+                'primary' => '#005f73',
+                'primary_hover' => '#004352',
+                'secondary' => '#0a9396',
+                'secondary_hover' => '#005f73',
+                'accent' => '#ee9b00',
+                'surface' => '#ffffff',
+                'surface_muted' => '#f4f6f8',
+                'surface_dark' => '#101d24',
+                'text_primary' => '#001e28',
+                'text_secondary' => '#3a5a68',
+                'text_muted' => '#6b828d',
+                'border' => '#e2e8f0',
+                'border_light' => '#edf2f7',
+                'nhs_blue' => '#005eb8',
+            ],
+            'typography' => [
+                'font_family_heading' => "'Plus Jakarta Sans', sans-serif",
+                'font_family_body' => "'Plus Jakarta Sans', sans-serif",
+                'font_family_serif' => "'Playfair Display', serif",
+                'google_fonts_url' => 'https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Work+Sans:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap',
+            ],
+            'branding' => [
+                'clinic_name' => 'Acocks Green Dental Practice',
+                'tagline' => 'NHS & Private Family Dental Surgery Birmingham B27',
+                'logo_url' => '/images/acocks-green-logo.png',
+                'phone' => '+44 121 765 2870',
+                'whatsapp' => '+919904379260',
+                'address' => '1078 Warwick Road, Acocks Green, Birmingham B27 6BH',
+            ],
+            'tokens' => [
+                'border_radius' => '0.75rem',
+                'container_max_width' => '1280px',
+                'nav_height' => '80px',
+            ]
+        ];
+    }
+
+    public static function getDefaultTreatmentsContent(): array
+    {
+        return [
+            'slug' => 'treatments',
+            'title' => 'Treatments & Services',
+            'eyebrow' => 'Evidence-Based Dental Excellence',
+            'subtitle' => 'From routine NHS prevention to advanced private smile rehabilitation, explore our comprehensive range of clinical dental treatments in Acocks Green, Birmingham.',
+            'badge' => 'B27 6BH Dental Surgery',
+            'breadcrumbs' => ['Home', 'Treatments & Services'],
+            'doctor' => [
+                'name' => 'Dr. Richard C. Williams',
+                'title' => 'Clinical Director & Lead Implant Surgeon',
+                'credentials' => 'BDS (Birm), MJDF RCS (Eng), PgCert Implantology',
+                'gdc_number' => 'GDC No: 178924',
+                'avatar' => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=300',
+            ],
+            'categories' => [
+                ['id' => 'all', 'label' => 'All Services', 'icon' => 'dentistry'],
+                ['id' => 'general', 'label' => 'General Dentistry', 'icon' => 'medical_services'],
+                ['id' => 'hygiene', 'label' => 'Hygiene & Prevention', 'icon' => 'clean_hands'],
+                ['id' => 'restorative', 'label' => 'Restorative Care', 'icon' => 'healing'],
+                ['id' => 'aesthetic', 'label' => 'Aesthetic & Cosmetic', 'icon' => 'auto_awesome'],
+                ['id' => 'emergency', 'label' => 'Emergency & Surgery', 'icon' => 'emergency'],
+            ],
+            'services' => [
+                [
+                    'id' => 1,
+                    'slug' => 'routine-examinations',
+                    'category' => 'general',
+                    'category_label' => 'General Dentistry',
+                    'title' => 'Routine Examinations & Check-ups',
+                    'badge' => 'NHS & Private',
+                    'excerpt' => 'Comprehensive oral health assessments, low-dose digital radiographs, periodontal screening, and early cancer detection for patients of all ages.',
+                    'features' => [
+                        'Low-Dose Digital Bitewing Radiographs',
+                        'BPE Periodontal Screening & Gum Health Score',
+                        'Soft Tissue & Oral Cancer Screening Protocol'
+                    ],
+                    'nhs_band' => 'Band 1 (£26.80)',
+                    'private_from' => '£45.00',
+                    'image' => 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800',
+                    'link' => '/treatments/general-dentistry'
+                ],
+                [
+                    'id' => 2,
+                    'slug' => 'hygiene-periodontal-therapy',
+                    'category' => 'hygiene',
+                    'category_label' => 'Hygiene & Prevention',
+                    'title' => 'Dental Hygiene & Periodontal Therapy',
+                    'badge' => 'Direct Access Available',
+                    'excerpt' => 'Professional ultrasonic scaling, targeted stain removal with AirFlow technology, and personalized periodontal maintenance to preserve bone support.',
+                    'features' => [
+                        'AirFlow High-Precision Polish & Stain Removal',
+                        'Ultrasonic Plaque & Subgingival Calculus Debridement',
+                        'Personalized Gum Health & Interdental Protocol'
+                    ],
+                    'nhs_band' => 'Band 2 (£73.50 if clinically needed)',
+                    'private_from' => '£65.00',
+                    'image' => 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=800',
+                    'link' => '/treatments/hygiene'
+                ],
+                [
+                    'id' => 3,
+                    'slug' => 'crowns-bridges-restorative',
+                    'category' => 'restorative',
+                    'category_label' => 'Restorative Care',
+                    'title' => 'Crowns, Bridges & Restorative Dentistry',
+                    'badge' => 'High-Durability Ceramics',
+                    'excerpt' => 'Rebuilding broken or decayed teeth with biocompatible, natural-looking porcelain, lithium disilicate (E-Max), and high-strength zirconia prosthetics.',
+                    'features' => [
+                        'Monolithic Zirconia & E-Max Ceramic Formulations',
+                        'Precision Digital Impressions (No Messy Trays)',
+                        'Multi-Unit Fixed Bridges for Gap Replacement'
+                    ],
+                    'nhs_band' => 'Band 3 (£319.10)',
+                    'private_from' => '£495.00',
+                    'image' => 'https://images.unsplash.com/photo-1598256989800-fe5f95da9787?auto=format&fit=crop&q=80&w=800',
+                    'link' => '/treatments/restorative'
+                ],
+                [
+                    'id' => 4,
+                    'slug' => 'clear-aligners-orthodontics',
+                    'category' => 'aesthetic',
+                    'category_label' => 'Aesthetic & Cosmetic',
+                    'title' => 'Clear Aligners & Orthodontic Realignment',
+                    'badge' => 'Invisalign & ClearCorrect',
+                    'excerpt' => 'Discreet, removable clear aligners engineered to straighten crooked, crowded, or spaced teeth predictably without fixed metal brackets.',
+                    'features' => [
+                        'Custom 3D ClinCheck Virtual Outcome Simulation',
+                        'Transparent, Removable & Lifestyle-Friendly',
+                        'Includes Complimentary Teeth Whitening at Completion'
+                    ],
+                    'nhs_band' => 'Private Only',
+                    'private_from' => '£1,495.00',
+                    'image' => 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800',
+                    'link' => '/treatments/clear-aligners'
+                ],
+                [
+                    'id' => 5,
+                    'slug' => 'composite-bonding-cosmetic',
+                    'category' => 'aesthetic',
+                    'category_label' => 'Aesthetic & Cosmetic',
+                    'title' => 'Composite Bonding & Aesthetic Contouring',
+                    'badge' => 'Same-Day Transformation',
+                    'excerpt' => 'Minimally invasive resin artistry to repair chipped edges, close unwanted gaps (diastemas), and harmonize tooth symmetry in a single appointment.',
+                    'features' => [
+                        'Zero or Minimal Enamel Removal (Preserves Natural Tooth)',
+                        'Single-Visit Chairside Sculpting & High Polish',
+                        'Color-Matched Micro-Hybrid Composite Resins'
+                    ],
+                    'nhs_band' => 'Private Only',
+                    'private_from' => '£110.00 per tooth',
+                    'image' => 'https://images.unsplash.com/photo-1609840114035-3c981b782dfe?auto=format&fit=crop&q=80&w=800',
+                    'link' => '/treatments/composite-bonding'
+                ],
+                [
+                    'id' => 6,
+                    'slug' => 'emergency-dental-relief',
+                    'category' => 'emergency',
+                    'category_label' => 'Emergency & Surgery',
+                    'title' => 'Emergency Dental Care & Same-Day Relief',
+                    'badge' => 'Same-Day Slots Guaranteed',
+                    'excerpt' => 'Rapid-response triage and diagnosis for severe toothaches, dental abscesses, broken teeth, lost restorations, and acute facial trauma.',
+                    'features' => [
+                        'Priority Same-Day Appointments Available Mon–Sat',
+                        'Immediate Diagnostic Radiographs & Pulp Vitality Testing',
+                        'Definitive Pain Relief & Infection Management Protocols'
+                    ],
+                    'nhs_band' => 'Urgent (£26.80)',
+                    'private_from' => '£65.00 + treatment',
+                    'image' => 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800',
+                    'link' => '/treatments/emergency'
+                ]
+            ],
+            'pricing_matrix' => [
+                'nhs_bands' => [
+                    [
+                        'band' => 'Band 1',
+                        'price' => '£26.80',
+                        'description' => 'Covers clinical examination, diagnosis, advice, radiographs, scale & polish if clinically necessary, and preventive care plan.'
+                    ],
+                    [
+                        'band' => 'Band 2',
+                        'price' => '£73.50',
+                        'description' => 'Covers everything in Band 1 plus additional treatment including fillings, root canal therapy, and tooth extractions.'
+                    ],
+                    [
+                        'band' => 'Band 3',
+                        'price' => '£319.10',
+                        'description' => 'Covers everything in Bands 1 and 2 plus complex laboratory-fabricated items including crowns, dentures, and bridges.'
+                    ],
+                    [
+                        'band' => 'Urgent Emergency',
+                        'price' => '£26.80',
+                        'description' => 'Emergency pain relief, temporary fillings, or clinical triage if you require urgent dental attention.'
+                    ]
+                ],
+                'private_options' => [
+                    ['procedure' => 'Private Routine Clinical Examination', 'price' => 'from £45.00'],
+                    ['procedure' => 'Direct Access Hygiene / AirFlow Polish', 'price' => 'from £65.00'],
+                    ['procedure' => 'Tooth-Coloured Composite Restoration', 'price' => 'from £110.00'],
+                    ['procedure' => 'High-Strength Porcelain / Zirconia Crown', 'price' => 'from £495.00'],
+                    ['procedure' => 'Clear Aligner Therapy (Single Arch)', 'price' => 'from £1,495.00'],
+                    ['procedure' => 'Single Dental Implant (Fixture & Abutment)', 'price' => 'from £1,850.00']
+                ],
+                'finance_note' => '0% Interest-free patient payment plans available over 6 to 12 months for private treatment plans exceeding £500.'
+            ],
+            'clinical_pillars' => [
+                [
+                    'id' => 'digital_precision',
+                    'icon' => 'biotech',
+                    'title' => 'Digital Workflow & 3D Imaging',
+                    'description' => 'Low-dose digital bitewings, high-resolution intraoral scanning, and precision diagnostics reduce chair time and eliminate uncomfortable impression trays.'
+                ],
+                [
+                    'id' => 'nhs_private',
+                    'icon' => 'verified',
+                    'title' => 'NHS & Private Parallel Care',
+                    'description' => 'We operate an integrated care model offering both standard NHS dental fee bands and advanced private cosmetic solutions under one registered surgery roof.'
+                ],
+                [
+                    'id' => 'nervous_patients',
+                    'icon' => 'spa',
+                    'title' => 'Gentle, Nervous Patient Protocol',
+                    'description' => 'Our clinical team is trained in empathetic, anxiety-reducing dentistry. We move at your pace, explain each step, and offer numbing gels before local anaesthesia.'
+                ],
+                [
+                    'id' => 'emergency_access',
+                    'icon' => 'emergency',
+                    'title' => 'Dedicated Emergency Access',
+                    'description' => 'We reserve daily clinical emergency slots for acute toothache, broken crowns, dental abscesses, and urgent pain relief in Acocks Green B27.'
+                ]
+            ],
+            'consultation_cta' => [
+                'headline' => 'Ready to Plan Your Treatment?',
+                'description' => 'Book a comprehensive dental examination or speak with our clinical reception team today. We welcome both NHS registered and new private patients.',
+                'phone' => '+44 121 765 2870',
+                'address' => '1078 Warwick Road, Acocks Green, Birmingham B27 6BH',
+                'hours' => 'Mon - Fri: 8:30am - 5:30pm',
+                'cta_primary' => 'Book Online Now',
+                'cta_secondary' => 'Call Practice Reception'
+            ],
+            'seo' => self::getDefaultSeoData('treatments')
+        ];
+    }
+
+    public static function getDefaultHomeContent(): array
+    {
+        return [
+            'slug' => 'home',
+            'title' => 'Home',
+            'eyebrow' => 'B27 6BH Birmingham Dental Surgery',
+            'headline' => 'Welcoming NHS & Private Dental Patients in Acocks Green',
+            'subtitle' => 'High-quality, gentle family dentistry, routine check-ups, dental implants, Invisalign clear aligners, and dedicated daily emergency slots.',
+            'hero' => [
+                'headline' => 'Welcoming NHS & Private Dental Patients in Acocks Green',
+                'eyebrow' => 'B27 6BH Birmingham Dental Surgery',
+                'subtitle' => 'High-quality, gentle family dentistry, routine check-ups, dental implants, Invisalign clear aligners, and dedicated daily emergency slots.',
+                'cta_primary' => 'Book Consultation',
+                'cta_secondary' => 'Call Practice Reception',
+                'phone' => '+44 121 765 2870',
+                'stats' => [
+                    ['label' => 'Registered Patients', 'value' => '15,000+'],
+                    ['label' => 'Google Patient Rating', 'value' => '4.9 ★'],
+                    ['label' => 'Emergency Triage', 'value' => 'Same-Day'],
+                    ['label' => 'Experience in B27', 'value' => '25+ Years'],
+                ],
+            ],
+            'director' => [
+                'name' => 'Dr. Richard C. Williams',
+                'title' => 'Clinical Director & Lead Implant Surgeon',
+                'credentials' => 'BDS (Birm), MJDF RCS (Eng), PgCert Implantology',
+                'gdc_number' => 'GDC No: 178924',
+                'avatar' => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=300',
+                'quote' => 'For over two decades, our practice has served the families of Acocks Green and Solihull with compassionate, clinical excellence.',
+            ],
+            'clinical_pillars' => [
+                [
+                    'id' => 'digital_precision',
+                    'icon' => 'biotech',
+                    'title' => 'Digital Workflow & 3D Imaging',
+                    'description' => 'Low-dose digital bitewings, high-resolution intraoral scanning, and precision diagnostics reduce chair time and eliminate uncomfortable impression trays.'
+                ],
+                [
+                    'id' => 'nhs_private',
+                    'icon' => 'verified',
+                    'title' => 'NHS & Private Parallel Care',
+                    'description' => 'We operate an integrated care model offering both standard NHS dental fee bands and advanced private cosmetic solutions under one registered surgery roof.'
+                ],
+                [
+                    'id' => 'nervous_patients',
+                    'icon' => 'spa',
+                    'title' => 'Gentle, Nervous Patient Protocol',
+                    'description' => 'Our clinical team is trained in empathetic, anxiety-reducing dentistry. We move at your pace, explain each step, and offer numbing gels before local anaesthesia.'
+                ],
+                [
+                    'id' => 'emergency_access',
+                    'icon' => 'emergency',
+                    'title' => 'Dedicated Emergency Access',
+                    'description' => 'We reserve daily clinical emergency slots for acute toothache, broken crowns, dental abscesses, and urgent pain relief in Acocks Green B27.'
+                ]
+            ],
+            'consultation_cta' => [
+                'headline' => 'Ready to Plan Your Treatment?',
+                'description' => 'Book a comprehensive dental examination or speak with our clinical reception team today. We welcome both NHS registered and new private patients.',
+                'phone' => '+44 121 765 2870',
+                'address' => '1078 Warwick Road, Acocks Green, Birmingham B27 6BH',
+                'hours' => 'Mon - Fri: 8:30am - 5:30pm',
+                'cta_primary' => 'Book Online Now',
+                'cta_secondary' => 'Call Practice Reception'
+            ],
+            'seo' => self::getDefaultSeoData('home')
+        ];
+    }
+
+    public static function getDefaultSeoData(string $slug): array
+    {
+        $cleanSlug = trim($slug, '/');
+        if ($cleanSlug === '' || $cleanSlug === 'home' || $cleanSlug === 'index') {
+            return [
+                'slug' => 'home',
+                'meta_title' => 'Acocks Green Dental Practice | NHS & Private Family Dental Care Birmingham B27',
+                'meta_description' => 'Welcoming NHS & private dental patients across Birmingham B27. Board-certified dentists, emergency triage, hygiene, restorative dentistry, cosmetic veneers, and Invisalign clear aligners.',
+                'keywords' => ['Acocks Green Dental Practice', 'Dentist Birmingham B27', 'NHS Dentist Birmingham', 'Emergency Dentist Birmingham', 'Dental Implants', 'Invisalign Clear Aligners', 'Tarlok Marok', 'Dr Atandrilla Das'],
+                'canonical_url' => 'https://acocksgreendentalpractice.co.uk/',
+                'og_title' => 'Acocks Green Dental Practice | NHS & Private Family Dental Care Birmingham B27',
+                'og_description' => 'Welcoming NHS & private dental patients across Birmingham B27. High-quality family dental care, emergency appointments, and cosmetic transformations.',
+                'og_image' => 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200',
+                'og_type' => 'website',
+                'twitter_card' => 'summary_large_image',
+                'robots' => 'index, follow',
+                'schema_json' => [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'Dentist',
+                    'name' => 'Acocks Green Dental Practice',
+                    'image' => 'https://acocksgreendentalpractice.co.uk/images/acocks-green-logo.png',
+                    'url' => 'https://acocksgreendentalpractice.co.uk/',
+                    'telephone' => '+44 121 765 2870',
+                    'priceRange' => '£ - £££',
+                    'address' => [
+                        '@type' => 'PostalAddress',
+                        'streetAddress' => '1078 Warwick Road, Acocks Green',
+                        'addressLocality' => 'Birmingham',
+                        'postalCode' => 'B27 6BH',
+                        'addressCountry' => 'GB',
+                    ],
+                ],
+            ];
+        }
+
+        if ($cleanSlug === 'treatments' || str_starts_with($cleanSlug, 'treatments/')) {
+            return [
+                'slug' => 'treatments',
+                'meta_title' => 'Treatments & Services | Acocks Green Dental Practice Birmingham',
+                'meta_description' => 'Explore our full range of NHS and private dental treatments in Acocks Green, Birmingham B27 6BH. Routine check-ups, hygiene, crowns, aligners, and emergency care.',
+                'keywords' => ['Acocks Green Dental Practice', 'Dentist Birmingham B27', 'NHS Dentist Birmingham', 'NHS Dental Band Fees', 'Dental Implants Birmingham', 'Invisalign Clear Aligners', 'Emergency Dentist B27'],
+                'canonical_url' => 'https://acocksgreendentalpractice.co.uk/treatments',
+                'og_title' => 'Treatments & Services | Acocks Green Dental Practice Birmingham',
+                'og_description' => 'NHS & Private dental treatments in Acocks Green Birmingham. Emergency, Hygiene, Restorative & Cosmetic dentistry.',
+                'og_image' => 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200',
+                'og_type' => 'website',
+                'twitter_card' => 'summary_large_image',
+                'robots' => 'index, follow',
+                'schema_json' => [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'MedicalWebPage',
+                    'name' => 'Treatments & Clinical Services - Acocks Green Dental Practice',
+                    'description' => 'Comprehensive catalogue of NHS bands and private dental treatments available in Birmingham B27.',
+                    'url' => 'https://acocksgreendentalpractice.co.uk/treatments',
+                    'medicalAudience' => 'Patients requiring NHS and private dental care',
+                ],
+            ];
+        }
+
+        $formattedTitle = ucwords(str_replace(['-', '/'], [' ', ' - '], $cleanSlug));
+        return [
+            'slug' => $cleanSlug,
+            'meta_title' => $formattedTitle . ' | Acocks Green Dental Practice',
+            'meta_description' => 'Learn more about ' . $formattedTitle . ' at Acocks Green Dental Practice Birmingham B27.',
+            'keywords' => ['Acocks Green Dental Practice', $formattedTitle, 'Dentist Birmingham B27'],
+            'canonical_url' => 'https://acocksgreendentalpractice.co.uk/' . $cleanSlug,
+            'og_title' => $formattedTitle . ' | Acocks Green Dental Practice',
+            'og_description' => 'NHS & Private dental care in Acocks Green Birmingham.',
+            'og_image' => 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=1200',
+            'og_type' => 'website',
+            'twitter_card' => 'summary_large_image',
+            'robots' => 'index, follow',
+        ];
+    }
+
+    public static function getDefaultCodeInjection(string $slug): array
+    {
+        $cleanSlug = trim($slug, '/');
+        if ($cleanSlug === '' || $cleanSlug === 'index') {
+            $cleanSlug = 'home';
+        }
+
+        $common = [
+            'custom_css' => "/* Global British Healthcare Aesthetic Enhancements */\n:root {\n  --brand-scroll-smooth: smooth;\n  --brand-transition-standard: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);\n}",
+            'head_scripts' => "<!-- Google Tag Manager (Acocks Green Dental Practice - Sitewide) -->\n<script>\n(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-AGD2026');\nconsole.log('[Analytics] Sitewide GTM Loaded');\n</script>",
+            'body_scripts' => "<!-- Acocks Green Patient Safety & WhatsApp Support Widget -->\n<script>\nwindow.acocksGreenLiveSupport = {\n  practice: 'Acocks Green Dental Practice',\n  phone: '+44 121 765 2870',\n  emergencyDirect: '+919904379260'\n};\nconsole.log('[Widget] Sitewide Live Support Loaded');\n</script>",
+        ];
+
+        $pageSpecific = [];
+        if ($cleanSlug === 'treatments' || str_starts_with($cleanSlug, 'treatments/')) {
+            $pageSpecific = [
+                'custom_css' => "/* Treatments Page Specific Dynamic Polish */\n.treatment-card-hover {\n  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;\n}\n.treatment-card-hover:hover {\n  transform: translateY(-4px);\n}",
+                'head_scripts' => "<script>\nconsole.log('[Page] Treatments & Services catalog initialized');\n</script>",
+                'body_scripts' => "<script>\nconsole.log('[Tracking] Treatments conversion listener ready');\n</script>",
+            ];
+        } elseif ($cleanSlug === 'home') {
+            $pageSpecific = [
+                'custom_css' => "/* Home Page Hero Animation Polish */\n.acocks-hero-glow {\n  box-shadow: 0 20px 40px -15px rgba(0, 95, 115, 0.15);\n}",
+                'head_scripts' => "<script>\nconsole.log('[Page] Home portal initialized');\n</script>",
+                'body_scripts' => "<script>\nconsole.log('[Tracking] Home page view logged');\n</script>",
+            ];
+        } else {
+            $pageSpecific = [
+                'custom_css' => "/* Page specific overrides for " . htmlspecialchars($cleanSlug) . " */",
+                'head_scripts' => "<!-- Head scripts for " . htmlspecialchars($cleanSlug) . " -->",
+                'body_scripts' => "<!-- Body scripts for " . htmlspecialchars($cleanSlug) . " -->",
+            ];
+        }
+
+        $merged = [
+            'custom_css' => trim(($common['custom_css'] ?? '') . "\n\n" . ($pageSpecific['custom_css'] ?? '')),
+            'head_scripts' => trim(($common['head_scripts'] ?? '') . "\n\n" . ($pageSpecific['head_scripts'] ?? '')),
+            'body_scripts' => trim(($common['body_scripts'] ?? '') . "\n\n" . ($pageSpecific['body_scripts'] ?? '')),
+        ];
+
+        return [
+            'slug' => $cleanSlug,
+            'common' => $common,
+            'page' => $pageSpecific,
+            'merged' => $merged,
+        ];
     }
 }

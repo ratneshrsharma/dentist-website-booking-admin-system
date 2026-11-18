@@ -56,9 +56,15 @@ Route::prefix('v1')->middleware(['throttle:60,1'])->group(function (): void {
     Route::get('/cms/treatments', [CmsApiController::class, 'treatments']);
     Route::get('/cms/treatments/{slug}', [CmsApiController::class, 'treatmentBySlug']);
     Route::get('/cms/pages/{slug}', [CmsApiController::class, 'pageByKey']);
+    Route::get('/cms/seo/{slug}', [CmsApiController::class, 'seo']);
+    Route::get('/cms/code-injection/{slug}', [CmsApiController::class, 'codeInjection']);
+    Route::get('/cms/custom-code', [CmsApiController::class, 'codeInjection']);
+    Route::post('/cms/pages/save', [CmsApiController::class, 'savePage']);
+    Route::post('/admin/cms/pages/save', [CmsApiController::class, 'savePage']);
 
     // 7. Visual Theme Customizer API
     Route::get('/theme/settings', [ThemeApiController::class, 'settings']);
+    Route::get('/theme/global', [ThemeApiController::class, 'global']);
 
     // 8. Yoast-Style SEO & URL Redirects Engine
     Route::get('/seo/metadata/{slug}', [SeoApiController::class, 'metadata']);
