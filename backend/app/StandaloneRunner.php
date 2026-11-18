@@ -1350,12 +1350,13 @@ class StandaloneRunner
                 $storage['common_code'] = $defaultCode['common'];
             }
 
-            // Update Global Common Code Injection if submitted
-            if (isset($payload['common_code']) && is_array($payload['common_code'])) {
+            // Update Global Common Code Injection if submitted (supports nested array or flat form fields)
+            $commonSubmitted = $payload['common_code'] ?? null;
+            if (is_array($commonSubmitted) || isset($payload['common_custom_css']) || isset($payload['common_head_scripts']) || isset($payload['common_body_scripts'])) {
                 $storage['common_code'] = [
-                    'custom_css' => $payload['common_code']['custom_css'] ?? ($storage['common_code']['custom_css'] ?? ''),
-                    'head_scripts' => $payload['common_code']['head_scripts'] ?? ($storage['common_code']['head_scripts'] ?? ''),
-                    'body_scripts' => $payload['common_code']['body_scripts'] ?? ($storage['common_code']['body_scripts'] ?? ''),
+                    'custom_css' => $commonSubmitted['custom_css'] ?? $commonSubmitted['common_custom_css'] ?? $payload['common_custom_css'] ?? ($storage['common_code']['custom_css'] ?? ''),
+                    'head_scripts' => $commonSubmitted['head_scripts'] ?? $commonSubmitted['common_head_scripts'] ?? $payload['common_head_scripts'] ?? ($storage['common_code']['head_scripts'] ?? ''),
+                    'body_scripts' => $commonSubmitted['body_scripts'] ?? $commonSubmitted['common_body_scripts'] ?? $payload['common_body_scripts'] ?? ($storage['common_code']['body_scripts'] ?? ''),
                 ];
             }
 
@@ -1383,12 +1384,13 @@ class StandaloneRunner
                 $existingPage['seo'] = array_merge($defaultSeo, $existingPage['seo'] ?? [], $payload['seo']);
             }
 
-            // Merge Page-Specific Code Injection
-            if (isset($payload['code_injection']) && is_array($payload['code_injection'])) {
+            // Merge Page-Specific Code Injection (supports nested or flat form fields)
+            $pageCodeSubmitted = $payload['code_injection'] ?? null;
+            if (is_array($pageCodeSubmitted) || isset($payload['page_custom_css']) || isset($payload['page_head_scripts']) || isset($payload['page_body_scripts'])) {
                 $existingPage['code_injection'] = [
-                    'custom_css' => $payload['code_injection']['custom_css'] ?? ($existingPage['code_injection']['custom_css'] ?? ''),
-                    'head_scripts' => $payload['code_injection']['head_scripts'] ?? ($existingPage['code_injection']['head_scripts'] ?? ''),
-                    'body_scripts' => $payload['code_injection']['body_scripts'] ?? ($existingPage['code_injection']['body_scripts'] ?? ''),
+                    'custom_css' => $pageCodeSubmitted['custom_css'] ?? $pageCodeSubmitted['page_custom_css'] ?? $payload['page_custom_css'] ?? ($existingPage['code_injection']['custom_css'] ?? ''),
+                    'head_scripts' => $pageCodeSubmitted['head_scripts'] ?? $pageCodeSubmitted['page_head_scripts'] ?? $payload['page_head_scripts'] ?? ($existingPage['code_injection']['head_scripts'] ?? ''),
+                    'body_scripts' => $pageCodeSubmitted['body_scripts'] ?? $pageCodeSubmitted['page_body_scripts'] ?? $payload['page_body_scripts'] ?? ($existingPage['code_injection']['body_scripts'] ?? ''),
                 ];
             }
 
