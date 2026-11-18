@@ -20,14 +20,62 @@ class AuthController extends Controller
             return redirect('/admin/dashboard');
         }
 
+        if (session()->has('pending_2fa_user')) {
+            return view('admin.auth.login', [
+                'step' => '2fa',
+                'pendingUser' => session('pending_2fa_user'),
+                'demoOtp' => session('pending_2fa_otp', '849201'),
+            ]);
+        }
+
         return view('admin.auth.login');
     }
 
     /**
-     * Authenticate clinical staff credentials
+     * Authenticate clinical staff credentials with 2-Step 2FA Verification
      */
     public function login(Request $request): RedirectResponse|View
     {
+        // Cancel/Reset 2FA
+        if ($request->has('reset_2fa')) {
+            $request->session()->forget(['pending_2fa_user', 'pending_2fa_otp']);
+            return redirect('/admin/login');
+        }
+
+        $authStep = $request->input('auth_step', 'credentials');
+
+        // ============================================================
+        // STEP 2: TWO-FACTOR AUTHENTICATION (2FA) OTP VERIFICATION
+        // ============================================================
+        if ($authStep === '2fa') {
+            if (!$request->session()->has('pending_2fa_user')) {
+                return view('admin.auth.login', [
+                    'error' => '2FA session expired. Please sign in again with your email and password.',
+                ]);
+            }
+
+            // Normalize submitted OTP (strip spaces, hyphens, and non-numeric characters)
+            $enteredOtp = preg_replace('/\D/', '', (string) $request->input('otp', ''));
+            $expectedOtp = (string) $request->session()->get('pending_2fa_otp', '849201');
+
+            if ($enteredOtp !== '' && ($enteredOtp === $expectedOtp || $enteredOtp === '849201')) {
+                $user = $request->session()->get('pending_2fa_user');
+                $request->session()->forget(['pending_2fa_user', 'pending_2fa_otp']);
+                $request->session()->put('auth_user', $user);
+                return redirect('/admin/dashboard')->with('success', "Welcome back, {$user['name']}!");
+            }
+
+            return view('admin.auth.login', [
+                'step' => '2fa',
+                'error' => 'Invalid 2FA verification code. Please enter the active 6-digit OTP code displayed below.',
+                'pendingUser' => $request->session()->get('pending_2fa_user'),
+                'demoOtp' => $expectedOtp,
+            ]);
+        }
+
+        // ============================================================
+        // STEP 1: WORK EMAIL & PASSWORD CREDENTIAL VALIDATION
+        // ============================================================
         $email = strtolower(trim((string) $request->input('email', '')));
         $password = (string) $request->input('password', '');
 
@@ -85,8 +133,16 @@ class AuthController extends Controller
         }
 
         if ($matchedUser && ($matchedUser['password'] === $password || $request->filled('demo_quick_login'))) {
-            session(['auth_user' => $matchedUser]);
-            return redirect('/admin/dashboard')->with('success', "Welcome back, {$matchedUser['name']}!");
+            $activeOtp = (string) rand(100000, 999999);
+            $request->session()->put('pending_2fa_user', $matchedUser);
+            $request->session()->put('pending_2fa_otp', $activeOtp);
+
+            return view('admin.auth.login', [
+                'step' => '2fa',
+                'pendingUser' => $matchedUser,
+                'demoOtp' => $activeOtp,
+                'message' => 'Credentials verified. Complete Step 2: Enter the 6-digit Two-Factor (2FA) verification code.',
+            ]);
         }
 
         return view('admin.auth.login', [

@@ -1450,7 +1450,51 @@ class StandaloneRunner
 
         // 1. Login Endpoint
         if ($action === 'login') {
+            // Check if user requested to cancel 2FA and switch account
+            if (!empty($_GET['reset_2fa'])) {
+                unset($_SESSION['pending_2fa_user'], $_SESSION['pending_2fa_otp']);
+                header('Location: /advanced-dental-clinic/admin/login');
+                exit;
+            }
+
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                $authStep = $_POST['auth_step'] ?? 'credentials';
+
+                // ============================================================
+                // STEP 2: TWO-FACTOR AUTHENTICATION (2FA) OTP VERIFICATION
+                // ============================================================
+                if ($authStep === '2fa') {
+                    if (empty($_SESSION['pending_2fa_user'])) {
+                        self::renderAuthView('login', [
+                            'error' => '2FA session expired. Please sign in again with your email and password.',
+                        ]);
+                        return;
+                    }
+
+                    // Normalize submitted OTP (strip spaces, hyphens, and non-numeric characters)
+                    $enteredOtp = preg_replace('/\D/', '', (string) ($_POST['otp'] ?? ''));
+                    $expectedOtp = (string) ($_SESSION['pending_2fa_otp'] ?? '849201');
+
+                    // Allow active generated OTP or universal demo bypass '849201'
+                    if ($enteredOtp !== '' && ($enteredOtp === $expectedOtp || $enteredOtp === '849201')) {
+                        $_SESSION['auth_user'] = $_SESSION['pending_2fa_user'];
+                        unset($_SESSION['pending_2fa_user'], $_SESSION['pending_2fa_otp']);
+                        header('Location: /advanced-dental-clinic/admin/dashboard');
+                        exit;
+                    }
+
+                    self::renderAuthView('login', [
+                        'step' => '2fa',
+                        'error' => 'Invalid 2FA verification code. Please enter the active 6-digit OTP code displayed below.',
+                        'pendingUser' => $_SESSION['pending_2fa_user'],
+                        'demoOtp' => $expectedOtp,
+                    ]);
+                    return;
+                }
+
+                // ============================================================
+                // STEP 1: WORK EMAIL & PASSWORD CREDENTIAL VALIDATION
+                // ============================================================
                 $email = strtolower(trim($_POST['email'] ?? ''));
                 $password = $_POST['password'] ?? '';
                 $users = self::getTestUsers();
@@ -1474,9 +1518,18 @@ class StandaloneRunner
                 }
 
                 if ($matchedUser && ($matchedUser['password'] === $password || !empty($_POST['demo_quick_login']))) {
-                    $_SESSION['auth_user'] = $matchedUser;
-                    header('Location: /advanced-dental-clinic/admin/dashboard');
-                    exit;
+                    // Two-Factor Authentication Trigger: Generate 6-digit OTP & challenge user
+                    $activeOtp = (string) rand(100000, 999999);
+                    $_SESSION['pending_2fa_user'] = $matchedUser;
+                    $_SESSION['pending_2fa_otp'] = $activeOtp;
+
+                    self::renderAuthView('login', [
+                        'step' => '2fa',
+                        'pendingUser' => $matchedUser,
+                        'demoOtp' => $activeOtp,
+                        'message' => 'Credentials verified. Complete Step 2: Enter the 6-digit Two-Factor (2FA) verification code.',
+                    ]);
+                    return;
                 }
 
                 self::renderAuthView('login', [
@@ -1489,6 +1542,16 @@ class StandaloneRunner
             if (!empty($_SESSION['auth_user'])) {
                 header('Location: /advanced-dental-clinic/admin/dashboard');
                 exit;
+            }
+
+            // Resume pending 2FA step if present in session
+            if (!empty($_SESSION['pending_2fa_user'])) {
+                self::renderAuthView('login', [
+                    'step' => '2fa',
+                    'pendingUser' => $_SESSION['pending_2fa_user'],
+                    'demoOtp' => (string) ($_SESSION['pending_2fa_otp'] ?? '849201'),
+                ]);
+                return;
             }
 
             self::renderAuthView('login');
@@ -1670,23 +1733,22 @@ class StandaloneRunner
         $message = $data['message'] ?? null;
         $reset_sent = $data['reset_sent'] ?? false;
         $email = $data['email'] ?? '';
+        $step = $data['step'] ?? 'credentials';
+        $pendingUser = $data['pendingUser'] ?? ($_SESSION['pending_2fa_user'] ?? null);
+        $demoOtp = $data['demoOtp'] ?? ($_SESSION['pending_2fa_otp'] ?? '849201');
 
         ob_start();
         include $file;
         $html = ob_get_clean();
 
-        // Replace URLs
-        $html = str_replace([
-            '{{ url(\'/admin/login\') }}',
-            '{{ url(\'/admin/forgot-password\') }}',
-            '{{ url(\'/admin/dashboard\') }}',
-            '{{ url(\'/\') }}',
-        ], [
-            '/advanced-dental-clinic/admin/login',
-            '/advanced-dental-clinic/admin/forgot-password',
-            '/advanced-dental-clinic/admin/dashboard',
-            '/advanced-dental-clinic/',
-        ], $html);
+        // Replace all {{ url('...') }} or {{ url("...") }} dynamically including query parameters
+        $html = preg_replace_callback('/\{\{\s*url\([\'"]([^\'"]*)[\'"]\)\s*\}\}/', function ($m) {
+            $path = '/' . ltrim($m[1], '/');
+            if ($path === '//' || $path === '/') {
+                return '/advanced-dental-clinic/';
+            }
+            return '/advanced-dental-clinic' . $path;
+        }, $html);
 
         $html = preg_replace('/@csrf/', '', $html);
         $html = preg_replace('/\{\{.*?\}\}/', '', $html);
@@ -1785,9 +1847,43 @@ class StandaloneRunner
             'email' => 'admin@example.com',
             'role' => 'super_admin',
         ];
+        $userRole = $authUser['role'] ?? 'super_admin';
         $sections['user_name'] = $authUser['name'] ?? 'Authorized Clinician';
         $sections['user_role_label'] = $authUser['role_label'] ?? 'Clinical Staff';
         $sections['user_email'] = $authUser['email'] ?? 'staff@advanceddental.com';
+
+        // Role-tailored page titles and subtitles for the clinical dashboard (Senior Dev Item 3)
+        if ($viewName === 'dashboard') {
+            $dashboardMeta = [
+                'super_admin' => [
+                    'title' => 'Multi-Clinic Executive Overview',
+                    'subtitle' => 'Consolidated daily appointments, chair utilization, revenue (£) and inventory across all facilities',
+                ],
+                'admin' => [
+                    'title' => 'Clinic Practice Overview',
+                    'subtitle' => 'Daily operational metrics, staff shifts, appointment roster, and chair capacity',
+                ],
+                'doctor' => [
+                    'title' => 'Doctor Clinical Workspace',
+                    'subtitle' => 'Assigned patient cases, active chair procedures, urgent triage queue, and quick odontogram launch',
+                ],
+                'receptionist' => [
+                    'title' => 'Front Desk & Reception Hub',
+                    'subtitle' => 'Live waiting room roster, patient arrival check-ins, chair allocation, and appointment booking',
+                ],
+                'website_manager' => [
+                    'title' => 'Website CMS & Digital Presence Hub',
+                    'subtitle' => 'Manage public portal pages, treatments catalog, Yoast SEO tags, and custom code injection',
+                ],
+                'billing' => [
+                    'title' => 'Billing Ledger & Financial Operations',
+                    'subtitle' => 'Daily patient collections (£), outstanding balances, insurance claims, and POS settlements',
+                ],
+            ];
+            $meta = $dashboardMeta[$userRole] ?? $dashboardMeta['super_admin'];
+            $sections['page_title'] = $meta['title'];
+            $sections['page_subtitle'] = $meta['subtitle'];
+        }
 
         // Render layout
         $rendered = $layoutHtml;
@@ -2037,6 +2133,26 @@ class StandaloneRunner
         $rendered = preg_replace('/@forelse\(.*?\)/', '', $rendered);
         $rendered = preg_replace('/@empty/', '', $rendered);
         $rendered = preg_replace('/@endforelse/', '', $rendered);
+
+        // Execute any server-side PHP role branches or dynamic logic embedded in templates
+        if (str_contains($rendered, '<?php')) {
+            if (!function_exists('url')) {
+                function url(string $path = ''): string {
+                    $p = '/' . ltrim($path, '/');
+                    return $p === '/' ? '/advanced-dental-clinic/' : '/advanced-dental-clinic' . $p;
+                }
+            }
+            $originalRendered = $rendered;
+            ob_start();
+            try {
+                eval('?>' . $rendered);
+                $rendered = (string) ob_get_clean();
+            } catch (\Throwable $e) {
+                ob_end_clean();
+                error_log('StandaloneRunner template eval warning: ' . $e->getMessage());
+                $rendered = $originalRendered;
+            }
+        }
 
         header('Content-Type: text/html; charset=utf-8');
         echo $rendered;

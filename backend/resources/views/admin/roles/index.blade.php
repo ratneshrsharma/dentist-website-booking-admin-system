@@ -48,7 +48,7 @@
                 <div>
                     <span class="text-muted small fw-medium d-block">2FA Enforced</span>
                     <h3 class="fw-bold mb-0 text-dark">100% Active</h3>
-                    <span class="text-muted small mt-1">TOTP / Hardware Keys</span>
+                    <span class="badge bg-success-subtle text-success small mt-1"><i class="bi bi-shield-check me-1"></i>OTP Verification Active</span>
                 </div>
             </div>
         </div>
