@@ -182,6 +182,19 @@ final class CmsApiController extends Controller
             ]);
         }
 
+        if (($slug === 'general-dentistry' || $slug === 'treatments/general-dentistry' || str_starts_with($slug, 'treatments/')) && !$page) {
+            $default = class_exists(StandaloneRunner::class)
+                ? StandaloneRunner::getDefaultTreatmentDetailContent($slug)
+                : [
+                    'slug' => $slug,
+                    'title' => 'General Dentistry & Routine Dental Check-ups in Birmingham',
+                ];
+            return response()->json([
+                'success' => true,
+                'data' => $default,
+            ]);
+        }
+
         if (($slug === 'home' || $slug === 'index' || $slug === '') && !$page) {
             $default = class_exists(StandaloneRunner::class)
                 ? StandaloneRunner::getDefaultHomeContent()

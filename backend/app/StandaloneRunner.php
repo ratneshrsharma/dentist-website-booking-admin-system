@@ -1359,10 +1359,11 @@ class StandaloneRunner
                 echo json_encode(['success' => true, 'data' => [
                     ['id' => 1, 'title' => 'Home', 'slug' => '/', 'template' => 'acocks-green', 'status' => 'published'],
                     ['id' => 2, 'title' => 'Treatments & Services', 'slug' => 'treatments', 'template' => 'clinical-catalog', 'status' => 'published'],
-                    ['id' => 3, 'title' => 'About Us', 'slug' => 'about-us', 'template' => 'editorial', 'status' => 'published'],
-                    ['id' => 4, 'title' => 'Dental Implants', 'slug' => 'treatments/dental-implants', 'template' => 'procedure-detail', 'status' => 'published'],
-                    ['id' => 5, 'title' => 'Clear Aligners', 'slug' => 'treatments/clear-aligners', 'template' => 'procedure-detail', 'status' => 'published'],
-                    ['id' => 6, 'title' => 'Contact & Practice Locations', 'slug' => 'contact', 'template' => 'contact-split', 'status' => 'published'],
+                    ['id' => 3, 'title' => 'General Dentistry & Routine Check-ups', 'slug' => 'treatments/general-dentistry', 'template' => 'procedure-detail', 'status' => 'published'],
+                    ['id' => 4, 'title' => 'About Us', 'slug' => 'about-us', 'template' => 'editorial', 'status' => 'published'],
+                    ['id' => 5, 'title' => 'Dental Implants', 'slug' => 'treatments/dental-implants', 'template' => 'procedure-detail', 'status' => 'published'],
+                    ['id' => 6, 'title' => 'Clear Aligners', 'slug' => 'treatments/clear-aligners', 'template' => 'procedure-detail', 'status' => 'published'],
+                    ['id' => 7, 'title' => 'Contact & Practice Locations', 'slug' => 'contact', 'template' => 'contact-split', 'status' => 'published'],
                 ]]);
                 exit;
             }
@@ -1385,6 +1386,18 @@ class StandaloneRunner
                 echo json_encode([
                     'success' => true,
                     'data' => $homeData
+                ]);
+                exit;
+            }
+
+            // Rich structured content for Treatment Procedure Detail Pages (e.g. general-dentistry, treatments/general-dentistry)
+            if ($slug === 'general-dentistry' || str_starts_with($slug, 'treatments/') || $slug === 'treatments/general-dentistry') {
+                $treatmentDetailData = $storage['pages'][$slug]
+                    ?? $storage['pages'][str_replace('treatments/', '', $slug)]
+                    ?? self::getDefaultTreatmentDetailContent($slug);
+                echo json_encode([
+                    'success' => true,
+                    'data' => $treatmentDetailData
                 ]);
                 exit;
             }
@@ -2481,6 +2494,462 @@ class StandaloneRunner
         ];
     }
 
+    public static function getDefaultTreatmentDetailContent(string $slug = 'general-dentistry'): array
+    {
+        $cleanSlug = trim(str_replace('treatments/', '', $slug), '/');
+        if ($cleanSlug === '' || $cleanSlug === 'general-dentistry' || $cleanSlug === 'routine-check-ups') {
+            return [
+                'slug' => 'general-dentistry',
+                'title' => 'General Dentistry & Routine Dental Check-ups in Birmingham',
+                'eyebrow' => 'CORE HEALTHCARE & PREVENTATIVE CARE',
+                'subtitle' => 'Comprehensive oral examinations, gentle precision care, low-dose digital radiographs, and bespoke preventative care to safeguard your smile for life. Available under NHS dental bands and private pathways.',
+                'badge' => 'B27 6BH NHS & Private Surgery',
+                'phone' => '+44 121 765 2870',
+                'breadcrumbs' => ['Home', 'Treatments & Services', 'General Dentistry & Routine Check-ups'],
+                'feature_badges' => [
+                    ['icon' => 'verified', 'text' => 'NHS & Private Available'],
+                    ['icon' => 'schedule', 'text' => 'Same-Day Emergency Relief'],
+                    ['icon' => 'radiology', 'text' => 'Digital Low-Dose Radiography'],
+                    ['icon' => 'favorite', 'text' => 'Gentle Phobic-Friendly Care'],
+                ],
+                'hero_image' => 'https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&q=80&w=1200',
+                'hero_badge' => [
+                    'title' => 'Gentle Dental Check • Digital Precision X-Rays',
+                    'subtitle' => 'NHS Standard & Comprehensive Private',
+                ],
+                'what_includes' => [
+                    'eyebrow' => 'CLINICAL PRECISION',
+                    'title' => 'What Happens During Your 14-Point Dental Check-Up?',
+                    'subtitle' => 'Our thorough 30-minute examinations evaluate teeth, gums, jaw joints, bite dynamics, and soft tissues for early detection and peace of mind. We believe proactive care prevents complex future procedures.',
+                    'diagnostic_cards' => [
+                        [
+                            'number' => '01',
+                            'icon' => 'health_and_safety',
+                            'title' => 'Oral Health & Cancer Screening',
+                            'badge' => 'Soft Tissue & Lymph Nodes',
+                            'description' => 'Every routine check-up includes a systematic physical and visual screening of your tongue, cheeks, palate, and throat tissues to detect any early mucosal changes or precancerous abnormalities long before symptoms develop.',
+                            'checklist' => [
+                                'Comprehensive oral mucosal inspection',
+                                'TMJ & jaw alignment assessment',
+                                'Bite & occlusal wear pattern check',
+                            ],
+                        ],
+                        [
+                            'number' => '02',
+                            'icon' => 'radiology',
+                            'title' => 'Low-Dose Digital X-Rays & Imaging',
+                            'badge' => 'Instant Chairside Clarity',
+                            'description' => 'When clinically justified, we capture ultra-low-radiation digital bitewing radiographs. These reveal hidden interdental decay, root health, bone density levels, and pathology beneath existing restorations without uncomfortable physical film plates.',
+                            'checklist' => [
+                                'Up to 90% reduced radiation exposure',
+                                'Instant chairside monitor review',
+                                'Early hidden decay detection',
+                            ],
+                        ],
+                        [
+                            'number' => '03',
+                            'icon' => 'cleaning_services',
+                            'title' => 'Preventative Scale, Polish & Gum Triage',
+                            'badge' => 'Basic Periodontal Examination',
+                            'description' => 'We map your Basic Periodontal Examination (BPE) scores across all six sextants to identify early gingivitis or subgingival calculus. If indicated under Band 1, a basic preventative scale is performed to preserve gum attachment.',
+                            'checklist' => [
+                                '6-point BPE periodontal scoring',
+                                'Plaque and calculus removal',
+                                'Personalized flossing advice',
+                            ],
+                        ],
+                    ],
+                    'nervous_patient_banner' => [
+                        'icon' => 'favorite',
+                        'title' => 'New Patient or Nervous Visitor?',
+                        'description' => 'Our gentle Birmingham clinicians take extra time to explain every step, ensuring painless, relaxed examinations.',
+                        'cta_text' => 'Register as a New Patient',
+                        'cta_link' => '#quick-book',
+                    ],
+                ],
+                'procedures' => [
+                    'eyebrow' => 'RESTORATIVE & PREVENTATIVE SERVICES',
+                    'title' => 'Complete Everyday Dental Solutions Under One Roof',
+                    'subtitle' => 'From preventative maintenance and discreet composite repairs to emergency toothache triage, we provide gentle, long-lasting clinical care tailored to your exact smile goals.',
+                    'items' => [
+                        [
+                            'number' => '01',
+                            'icon' => 'dental_services',
+                            'title' => 'Tooth-Coloured Composite Fillings',
+                            'duration' => '30-45 mins',
+                            'description' => 'Mercury-free, biomimetic resin composite restorations that blend seamlessly with your natural tooth shade, restoring strength and durability after decay.',
+                            'link_text' => 'Explore Restorations',
+                            'link_href' => '/treatments/restorative',
+                        ],
+                        [
+                            'number' => '02',
+                            'icon' => 'water_drop',
+                            'title' => 'Dental Hygiene & Periodontal Care',
+                            'duration' => '30 mins',
+                            'description' => 'Deep ultrasonic scaling, stubborn stain removal with gentle airflow polishing, and personalized homecare instruction to reverse bleeding gums and eliminate halitosis.',
+                            'link_text' => 'View Hygiene Services',
+                            'link_href' => '/treatments/hygiene',
+                        ],
+                        [
+                            'number' => '03',
+                            'icon' => 'verified_user',
+                            'title' => 'Fissure Sealants & Fluoride Varnishes',
+                            'duration' => '15-20 mins',
+                            'description' => 'Preventative micro-coatings for children and decay-prone adults that seal deep biting grooves against food trap bacteria, paired with clinical-strength fluoride varnishes.',
+                            'link_text' => 'Learn About Prevention',
+                            'link_href' => '/treatments/prevention',
+                        ],
+                        [
+                            'number' => '04',
+                            'icon' => 'emergency',
+                            'title' => 'Emergency Relief & Extractions',
+                            'duration' => 'Same-Day Priority',
+                            'description' => 'Rapid pain relief for severe pulpitis, cracked teeth, or painful wisdom teeth. When a tooth cannot be saved, we perform gentle, atraumatic extractions.',
+                            'link_text' => 'Emergency Dental Help',
+                            'link_href' => '/treatments/emergency',
+                        ],
+                    ],
+                ],
+                'pricing' => [
+                    'eyebrow' => 'TRANSPARENT COSTS',
+                    'title' => 'Clear Pricing: NHS Bands & Private Options',
+                    'subtitle' => 'We believe in honest, predictable clinical care with zero hidden costs. Choose between standard NHS tiered bandings or our enhanced private restorative treatments.',
+                    'cards' => [
+                        [
+                            'badge' => 'NHS Fee Band 1',
+                            'title' => 'NHS Dental Examination',
+                            'price' => '£26.80',
+                            'price_note' => 'fixed statutory fee',
+                            'popular' => false,
+                            'features' => [
+                                'Clinical diagnosis and consultation',
+                                'Full soft tissue cancer screening',
+                                'Diagnostic digital X-rays (if clinically indicated)',
+                                'Basic scale & polish (if clinically required)',
+                                'Personalized oral health prevention advice',
+                            ],
+                            'cta_text' => 'Book NHS Appointment',
+                            'cta_type' => 'nhs',
+                        ],
+                        [
+                            'badge' => 'Most Popular Choice',
+                            'title' => 'Private Comprehensive Check',
+                            'price' => '£55.00',
+                            'price_note' => 'all inclusive',
+                            'popular' => true,
+                            'features' => [
+                                'Extended 30-minute consultation time',
+                                'Digital intraoral photographic tour',
+                                'All diagnostic bitewing radiographs included',
+                                'Written bespoke treatment roadmap',
+                                'Zero NHS waiting list / flexible appointment times',
+                            ],
+                            'cta_text' => 'Book Private Check-up',
+                            'cta_type' => 'private',
+                        ],
+                        [
+                            'badge' => 'Enhanced Preventative Pack',
+                            'title' => 'Routine Check + Airflow Hygiene',
+                            'price' => '£110.00',
+                            'price_note' => 'save £10 combined',
+                            'popular' => false,
+                            'features' => [
+                                'Everything included in Private Comprehensive Check',
+                                '30-minute thorough dental hygiene therapy',
+                                'Subgingival ultrasonic plaque removal',
+                                'High-gloss polishing and stain removal',
+                                'Direct priority booking access',
+                            ],
+                            'cta_text' => 'Book Combined Care',
+                            'cta_type' => 'combined',
+                        ],
+                    ],
+                    'comparison_table' => [
+                        'title' => 'NHS vs Private: Key Differences at a Glance',
+                        'headers' => ['Feature / Pathway', 'NHS Dental Care', 'Private Dental Care'],
+                        'rows' => [
+                            [
+                                'feature' => 'Availability & Waiting Times',
+                                'nhs' => 'Subject to NHS capacity & fixed appointment slots',
+                                'private' => 'Priority bookings, early morning & evening availability',
+                            ],
+                            [
+                                'feature' => 'Materials & Aesthetics',
+                                'nhs' => 'Standard amalgam fillings on posterior molars',
+                                'private' => 'Natural tooth-coloured composite & aesthetic ceramics throughout',
+                            ],
+                            [
+                                'feature' => 'Appointment Duration',
+                                'nhs' => 'Standard clinical appointment length (15-20 mins)',
+                                'private' => 'Extended 30-45 minute appointments with full intraoral tour',
+                            ],
+                            [
+                                'feature' => 'Emergency Booking',
+                                'nhs' => 'Limited daily triage slots during core surgery hours',
+                                'private' => 'Same-day priority emergency appointments guaranteed',
+                            ],
+                        ],
+                    ],
+                ],
+                'faqs' => [
+                    'eyebrow' => 'CLINICAL REASSURANCE',
+                    'title' => 'Frequently Asked Questions About Routine Check-ups',
+                    'subtitle' => 'Clear answers to common questions about dental examinations, NHS fees, and patient comfort.',
+                    'items' => [
+                        [
+                            'question' => 'How often should I attend for a routine dental check-up?',
+                            'answer' => 'For most healthy adult patients, the standard clinical recommendation is every 6 months. However, depending on your individual gum health, decay history, or lifestyle factors (such as smoking or diabetes), your dentist may recommend an interval between 3 and 12 months in accordance with NICE guidelines.',
+                        ],
+                        [
+                            'question' => 'Are digital dental X-rays safe?',
+                            'answer' => 'Yes, absolutely. Our Acocks Green surgery uses state-of-the-art digital dental radiography, which produces up to 90% less radiation than conventional physical dental film. A standard set of dental bitewing X-rays exposes you to less radiation than a standard 2-hour commercial flight.',
+                        ],
+                        [
+                            'question' => 'Who is eligible for free NHS dental treatment?',
+                            'answer' => 'Under NHS regulations, dental treatment is free if, when treatment starts, you are under 18 (or under 19 and in full-time education), pregnant or have had a baby in the last 12 months, or hold a qualifying valid exemption certificate such as Income Support or Universal Credit.',
+                        ],
+                        [
+                            'question' => 'What should I do if I feel nervous or dental phobic?',
+                            'answer' => 'Please let our friendly team know when booking or upon arrival! Our dentists are exceptionally gentle and experienced with dental anxiety. We will happily arrange an introductory consultation where no treatment is performed, agree on a "stop signal" during examination, and explain every step in plain language.',
+                        ],
+                        [
+                            'question' => 'Can I combine NHS check-ups with private cosmetic treatments?',
+                            'answer' => 'Yes, this is very common. You can receive your routine check-up and clinically necessary care under standard NHS bandings, while choosing private aesthetic options—such as tooth-coloured white fillings on back teeth, airflow stain removal, or clear aligner orthodontics—on a private basis.',
+                        ],
+                    ],
+                ],
+                'consultation_cta' => [
+                    'eyebrow' => 'SEAMLESS SCHEDULING',
+                    'title' => 'Reserve Your Routine Check-Up Today',
+                    'subtitle' => 'Join thousands of satisfied Birmingham families enjoying gentle, trusted dental care on Warwick Road. Book your appointment online or call our friendly team.',
+                    'phone' => '+44 121 765 2870',
+                    'address' => '1078 Warwick Road, Acocks Green, Birmingham B27 6BH',
+                    'hours' => 'Mon–Fri: 8:30am – 5:30pm',
+                    'cta_primary' => 'Book Appointment Online',
+                    'cta_secondary' => 'Call Reception: 0121 765 2870',
+                    'reassurance_badges' => [
+                        'Confidential & GDPR Compliant',
+                        'No Obligation Assessment',
+                        'GDC Registered Dentists',
+                    ],
+                ],
+                'seo' => self::getDefaultSeoData('general-dentistry'),
+            ];
+        }
+
+        // Generic fallback for any other specialized treatment procedure
+        $formattedTitle = ucwords(str_replace(['-', '/'], [' ', ' - '], $cleanSlug));
+        return [
+            'slug' => $cleanSlug,
+            'title' => $formattedTitle . ' in Birmingham',
+            'eyebrow' => 'EVIDENCE-BASED CLINICAL CARE',
+            'subtitle' => 'Advanced, gentle ' . strtolower($formattedTitle) . ' delivered by experienced clinicians at Acocks Green Dental Practice.',
+            'badge' => 'B27 6BH Birmingham Surgery',
+            'phone' => '+44 121 765 2870',
+            'breadcrumbs' => ['Home', 'Treatments & Services', $formattedTitle],
+            'feature_badges' => [
+                ['icon' => 'verified', 'text' => 'NHS & Private Available'],
+                ['icon' => 'schedule', 'text' => 'Priority Booking Access'],
+                ['icon' => 'radiology', 'text' => 'Digital Precision Care'],
+                ['icon' => 'favorite', 'text' => 'Gentle Phobic-Friendly Care'],
+            ],
+            'hero_image' => 'https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&q=80&w=1200',
+            'hero_badge' => [
+                'title' => $formattedTitle . ' • Modern Clinical Standards',
+                'subtitle' => 'Comprehensive Assessment & Long-Term Solutions',
+            ],
+            'what_includes' => [
+                'eyebrow' => 'CLINICAL PROTOCOL',
+                'title' => 'What to Expect During Your ' . $formattedTitle . ' Consultation',
+                'subtitle' => 'A structured clinical examination, full photographic tour, diagnostic imaging, and transparent discussion of treatment options.',
+                'diagnostic_cards' => [
+                    [
+                        'number' => '01',
+                        'icon' => 'health_and_safety',
+                        'title' => 'Diagnostic Assessment',
+                        'badge' => 'Full Clinical Triage',
+                        'description' => 'Comprehensive assessment tailored to ' . strtolower($formattedTitle) . ' including digital imaging and symptom review.',
+                        'checklist' => ['Personalized evaluation', 'Bite & tissue assessment', 'Full clinical breakdown'],
+                    ],
+                    [
+                        'number' => '02',
+                        'icon' => 'radiology',
+                        'title' => 'Precision 3D/Digital Imaging',
+                        'badge' => 'Chairside Analysis',
+                        'description' => 'Ultra-low dose radiographs or digital intraoral scans to assess exact bone architecture and root positioning.',
+                        'checklist' => ['High resolution imaging', 'Clear chairside explanation', 'Zero guesswork'],
+                    ],
+                    [
+                        'number' => '03',
+                        'icon' => 'cleaning_services',
+                        'title' => 'Tailored Treatment Plan',
+                        'badge' => 'Transparent Breakdown',
+                        'description' => 'Clear written breakdown of procedure timeline, clinician recommendations, and itemized fees.',
+                        'checklist' => ['Itemized fee quote', '0% finance options discussed', 'No obligation timeline'],
+                    ],
+                ],
+                'nervous_patient_banner' => [
+                    'icon' => 'favorite',
+                    'title' => 'Nervous or Anxious Patient?',
+                    'description' => 'We welcome nervous patients with gentle pacing, numbing gels, and full control over your appointment.',
+                    'cta_text' => 'Book Gentle Consultation',
+                    'cta_link' => '#quick-book',
+                ],
+            ],
+            'procedures' => [
+                'eyebrow' => 'COMPREHENSIVE RESTORATIONS',
+                'title' => 'Everyday Solutions Related to ' . $formattedTitle,
+                'subtitle' => 'Explore complementary treatments and preventative protocols designed to maintain your smile.',
+                'items' => [
+                    [
+                        'number' => '01',
+                        'icon' => 'dental_services',
+                        'title' => 'Tooth-Coloured Composite Fillings',
+                        'duration' => '30-45 mins',
+                        'description' => 'Mercury-free, biomimetic resin composite restorations that blend seamlessly with natural enamel.',
+                        'link_text' => 'Explore Restorations',
+                        'link_href' => '/treatments/restorative',
+                    ],
+                    [
+                        'number' => '02',
+                        'icon' => 'water_drop',
+                        'title' => 'Dental Hygiene & Periodontal Care',
+                        'duration' => '30 mins',
+                        'description' => 'Gentle ultrasonic scaling and airflow stain removal to keep gum tissue healthy.',
+                        'link_text' => 'View Hygiene Services',
+                        'link_href' => '/treatments/hygiene',
+                    ],
+                    [
+                        'number' => '03',
+                        'icon' => 'verified_user',
+                        'title' => 'Preventative Dental Care',
+                        'duration' => '15-20 mins',
+                        'description' => 'Sealants and protective varnishes to defend against future cavity development.',
+                        'link_text' => 'Learn About Prevention',
+                        'link_href' => '/treatments/prevention',
+                    ],
+                    [
+                        'number' => '04',
+                        'icon' => 'emergency',
+                        'title' => 'Emergency Pain Relief',
+                        'duration' => 'Same-Day Priority',
+                        'description' => 'Dedicated slots for dental emergencies, toothache, or broken restorations.',
+                        'link_text' => 'Emergency Dental Help',
+                        'link_href' => '/treatments/emergency',
+                    ],
+                ],
+            ],
+            'pricing' => [
+                'eyebrow' => 'TRANSPARENT COSTS',
+                'title' => 'Clear Pricing for ' . $formattedTitle,
+                'subtitle' => 'Predictable fees with zero hidden charges. Itemized quotes provided prior to initiating treatment.',
+                'cards' => [
+                    [
+                        'badge' => 'Standard Care',
+                        'title' => 'Initial Consultation',
+                        'price' => '£45.00',
+                        'price_note' => 'diagnostic review',
+                        'popular' => false,
+                        'features' => [
+                            'Comprehensive clinical examination',
+                            'Discussion of treatment goals',
+                            'Digital X-rays if required',
+                            'Written treatment roadmap',
+                        ],
+                        'cta_text' => 'Book Consultation',
+                        'cta_type' => 'consultation',
+                    ],
+                    [
+                        'badge' => 'Most Selected',
+                        'title' => 'Standard Treatment Package',
+                        'price' => 'from £110.00',
+                        'price_note' => 'customized plan',
+                        'popular' => true,
+                        'features' => [
+                            'Complete treatment execution',
+                            'High-grade biocompatible materials',
+                            'Post-procedure follow-up check',
+                            '0% interest-free finance available',
+                        ],
+                        'cta_text' => 'Book Treatment',
+                        'cta_type' => 'treatment',
+                    ],
+                    [
+                        'badge' => 'Comprehensive',
+                        'title' => 'Advanced Complete Care',
+                        'price' => 'from £250.00',
+                        'price_note' => 'full restoration',
+                        'popular' => false,
+                        'features' => [
+                            'Multi-stage clinical rehabilitation',
+                            'Laboratory-fabricated precision fit',
+                            'Extended warranty on restorations',
+                            'Dedicated clinician continuity',
+                        ],
+                        'cta_text' => 'Discuss Advanced Care',
+                        'cta_type' => 'advanced',
+                    ],
+                ],
+                'comparison_table' => [
+                    'title' => 'Treatment Options Comparison',
+                    'headers' => ['Criteria', 'NHS Pathway', 'Private Pathway'],
+                    'rows' => [
+                        [
+                            'feature' => 'Availability & Waiting Times',
+                            'nhs' => 'Standard NHS queue & clinic hours',
+                            'private' => 'Flexible early morning / late evening priority',
+                        ],
+                        [
+                            'feature' => 'Aesthetic Options',
+                            'nhs' => 'Clinically functional standard materials',
+                            'private' => 'Premium cosmetic shade matching & ceramics',
+                        ],
+                        [
+                            'feature' => 'Appointment Duration',
+                            'nhs' => '15-20 minutes',
+                            'private' => '30-45 minutes dedicated chair time',
+                        ],
+                    ],
+                ],
+            ],
+            'faqs' => [
+                'eyebrow' => 'PATIENT GUIDANCE',
+                'title' => 'Frequently Asked Questions',
+                'subtitle' => 'Common questions regarding ' . strtolower($formattedTitle) . ' at Acocks Green Dental Practice.',
+                'items' => [
+                    [
+                        'question' => 'How long does this treatment take?',
+                        'answer' => 'Treatment durations vary depending on complexity. An initial examination typically takes 20-30 minutes, after which our dentist will provide a clear step-by-step timeline.',
+                    ],
+                    [
+                        'question' => 'Is financing available?',
+                        'answer' => 'Yes, for private treatments over £500, we offer 0% interest-free finance options spread over 6 to 12 months to make high-quality care accessible.',
+                    ],
+                    [
+                        'question' => 'Will the procedure be painful?',
+                        'answer' => 'Patient comfort is our top priority. We use effective modern local anaesthetics and gentle numbing gels, ensuring your treatment is comfortable and stress-free.',
+                    ],
+                ],
+            ],
+            'consultation_cta' => [
+                'eyebrow' => 'GET IN TOUCH',
+                'title' => 'Book Your ' . $formattedTitle . ' Consultation',
+                'subtitle' => 'Our experienced team is here to help you achieve a healthy, confident smile.',
+                'phone' => '+44 121 765 2870',
+                'address' => '1078 Warwick Road, Acocks Green, Birmingham B27 6BH',
+                'hours' => 'Mon–Fri: 8:30am – 5:30pm',
+                'cta_primary' => 'Book Appointment Online',
+                'cta_secondary' => 'Call Reception: 0121 765 2870',
+                'reassurance_badges' => [
+                    'Confidential & GDPR Compliant',
+                    'No Obligation Assessment',
+                    'GDC Registered Dentists',
+                ],
+            ],
+            'seo' => self::getDefaultSeoData($cleanSlug),
+        ];
+    }
+
     public static function getDefaultHomeContent(): array
     {
         return [
@@ -2580,6 +3049,41 @@ class StandaloneRunner
                         'addressLocality' => 'Birmingham',
                         'postalCode' => 'B27 6BH',
                         'addressCountry' => 'GB',
+                    ],
+                ],
+            ];
+        }
+
+        if ($cleanSlug === 'general-dentistry' || $cleanSlug === 'treatments/general-dentistry') {
+            return [
+                'slug' => 'treatments/general-dentistry',
+                'meta_title' => 'General Dentistry & Routine Dental Check-ups Birmingham | Acocks Green Dental Practice',
+                'meta_description' => 'Gentle routine dental examinations, low-dose digital X-rays, and comprehensive preventative care in Acocks Green, Birmingham B27 6BH. NHS & Private patients welcome.',
+                'keywords' => ['Acocks Green Dental Practice', 'Dentist Birmingham B27', 'Dental Check-up Birmingham', 'NHS Dentist Acocks Green', 'Routine Dental Examination', 'Private Dentist Birmingham'],
+                'canonical_url' => 'https://acocksgreendentalpractice.co.uk/treatments/general-dentistry',
+                'og_title' => 'General Dentistry & Routine Dental Check-ups in Birmingham | Acocks Green Dental Practice',
+                'og_description' => 'Comprehensive oral examinations, gentle precision care, low-dose digital radiographs, and bespoke preventative care to safeguard your smile for life.',
+                'og_image' => 'https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&q=80&w=1200',
+                'og_type' => 'website',
+                'twitter_card' => 'summary_large_image',
+                'robots' => 'index, follow',
+                'schema_json' => [
+                    '@context' => 'https://schema.org',
+                    '@type' => 'MedicalProcedure',
+                    'name' => 'General Dentistry & Routine Dental Examination',
+                    'description' => 'Comprehensive 14-point oral health assessment, soft tissue screening, low-dose digital radiographs, and preventative periodontal care.',
+                    'procedureType' => 'Diagnostic & Preventative Dentistry',
+                    'provider' => [
+                        '@type' => 'Dentist',
+                        'name' => 'Acocks Green Dental Practice',
+                        'telephone' => '+44 121 765 2870',
+                        'address' => [
+                            '@type' => 'PostalAddress',
+                            'streetAddress' => '1078 Warwick Road, Acocks Green',
+                            'addressLocality' => 'Birmingham',
+                            'postalCode' => 'B27 6BH',
+                            'addressCountry' => 'GB',
+                        ],
                     ],
                 ],
             ];
