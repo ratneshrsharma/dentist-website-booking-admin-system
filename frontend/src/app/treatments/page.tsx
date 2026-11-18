@@ -6,262 +6,110 @@ import { AcocksGreenHeader } from '@/components/organisms/AcocksGreenHeader/Acoc
 import { AcocksGreenFooter } from '@/components/organisms/AcocksGreenFooter/AcocksGreenFooter';
 import { BookingWizard } from '@/components/organisms/BookingWizard/BookingWizard';
 import { WhatsAppHub } from '@/components/ui/WhatsAppHub/WhatsAppHub';
+import { BrandPreloader } from '@/components/common/BrandPreloader';
+import { ThemeHydrator } from '@/components/common/ThemeHydrator';
+import { CodeInjector } from '@/components/common/CodeInjector';
+import {
+  cmsService,
+  CmsPageContent,
+  CmsPageSeo,
+  GlobalThemeConfig,
+  CodeInjectionData,
+} from '@/services/cms.service';
 
-// Initial resilient fallback data matching CMS Website Management & Acocks Green Clinical System
-const INITIAL_CMS_TREATMENTS = {
-  eyebrow: 'OUR CLINICAL SERVICES & PROCEDURES',
-  title: 'Comprehensive Dental Care & Specialized Treatments',
-  subtitle:
-    'From essential routine NHS care to advanced cosmetic smile makeovers and restorative procedures in Acocks Green, Birmingham. Delivered with gentle compassion and state-of-the-art diagnostics.',
-  categories: [
-    { id: 'all', label: 'All Services' },
-    { id: 'general', label: 'General Dentistry' },
-    { id: 'hygiene', label: 'Hygiene & Prevention' },
-    { id: 'restorative', label: 'Restorative Dentistry' },
-    { id: 'aesthetic', label: 'Aesthetic & Cosmetic' },
-    { id: 'emergency', label: 'Emergency & Surgery' },
-  ],
-  services: [
-    {
-      id: 1,
-      category: 'general',
-      categoryEyebrow: 'Core Healthcare',
-      icon: 'dentistry',
-      badge: 'NHS & Private Available',
-      badgeClass: 'bg-primary text-on-primary',
-      title: 'General Dentistry & Routine Check-ups',
-      description:
-        'Thorough digital oral examinations, low-dose digital radiographs, routine cleaning, gentle composite fillings, and preventative treatments designed to maintain lifelong dental health.',
-      features: [
-        'Comprehensive Oral Health Exam',
-        'Preventative Sealants & Fluoride',
-        'High-durability Tooth-Coloured Fillings',
-        'Digital Diagnostics',
-      ],
-      image:
-        'https://lh3.googleusercontent.com/aida/ALJJyrBulpLAFKRcjrRGV6hulvVqTB_rylHNa1m79uzT1KOptIUdEQlbsIdBtjKKhY-4imQeQRBCad4E3wgyJN4aNGDfiL73ORavlpjtXWneM74i_j5cT7DpDhAsvlMinjPXDf3ufvMWE_xMI-fZ4_4H6fVZc-seyiL4IPS4LdyN0hIL1ArRgFqHO29uWKhEL5GIPlmT0mCjCONg3zJEXosyzBOWIBthmahxmy2c-j-xLg9_',
-      ctaText: 'View General Dentistry Details',
-    },
-    {
-      id: 2,
-      category: 'hygiene',
-      categoryEyebrow: 'Periodontal Health',
-      icon: 'clean_hands',
-      badge: 'Led by Claire (Hygienist)',
-      badgeClass: 'bg-tertiary-container text-on-primary',
-      title: 'Dental Hygiene & Airflow Periodontics',
-      description:
-        'Specialist ultrasonic periodontal deep cleaning, gentle stubborn stain removal (tea, coffee, tobacco), airflow polish therapy, and personalized plaque defense coaching.',
-      features: [
-        'Ultrasonic Scaling & Polishing',
-        'Airflow Stain Removal Treatment',
-        'Gingival & Periodontal Assessment',
-        'Personalized Home Care Plans',
-      ],
-      image:
-        'https://lh3.googleusercontent.com/aida/ALJJyrC3kB9wbfNCQ8zjPfAniHa05giYtxRDiO5WHljU7BjQWp2DBSndqgwSHtqUcaGJorilRTthHpDfq5vmlvCmmw9-eWc5Lsl-oHEbmE9NtqyC8mHOU7uCyXU2Vec9QNHgNZSkRDoqu0tt2yMStVb_Ta60bO9vEYEPDrzBH4ludY8iIaXytrlDkOtv8XhD4tzMDjqU5Fr_MPUY_V4dvQ_89APb60Tfsl1BBeT1N0DQJ6e-6Q',
-      ctaText: 'Explore Hygiene Services',
-    },
-    {
-      id: 3,
-      category: 'restorative',
-      categoryEyebrow: 'Structural Repair',
-      icon: 'architecture',
-      badge: 'Function & Biomechanics',
-      badgeClass: 'bg-secondary text-on-secondary',
-      title: 'Restorative Dentistry & Dental Crowns',
-      description:
-        'Rebuild chewing function, comfort, and structural integrity with precision custom ceramic crowns, bridge work, root canal therapy, and long-lasting prosthetics.',
-      features: [
-        'Custom Porcelain & Zirconia Crowns',
-        'Root Canal Endodontic Therapy',
-        'Fixed Bridgework & Inlays/Onlays',
-        'Tooth Wear & Bite Rehabilitation',
-      ],
-      image:
-        'https://lh3.googleusercontent.com/aida/ALJJyrDPUq5ohOJ-ZEgA0z8fZ0Ny8xwYb0gAFbKmCTeAdlTzuvtHVtjzbx_4vXZWqzzHoxTtuqCmjl2wHTlqdj0mEk0UeBQMl5f_RwGv3Vn-kcBjbyF4rpaE9WGzD-0lti9csVOvtFlaeJpmSYmTk47jZZHzKXtluORH5Yix-U-saz8J8fAdRj3uct8isBDFPZVhqBplvNqrlhaK9D1ZuyzBnBDA9hF705iJInkP-qW-D6-O-Q',
-      ctaText: 'Learn About Restorative Care',
-    },
-    {
-      id: 4,
-      category: 'aesthetic',
-      categoryEyebrow: 'Cosmetic Artistry',
-      icon: 'auto_fix_high',
-      badge: 'Boutique Smile Design',
-      badgeClass: 'bg-primary-container text-on-primary',
-      title: 'Aesthetic Dentistry & Invisalign® Aligners',
-      description:
-        'Transform and illuminate your smile with professional boutique whitening treatments, bespoke handcrafted veneers, composite bonding, and discreet clear aligners.',
-      features: [
-        'Invisalign® Clear Aligner Therapy',
-        'Boutique Teeth Whitening Systems',
-        'Handcrafted Porcelain Veneers',
-        'Minimally Invasive Composite Bonding',
-      ],
-      image:
-        'https://lh3.googleusercontent.com/aida/ALJJyrAQ-F1QuRaRrEd6FO4rB8ZvgBInl_6NGw3m5qTdAD6ft5AVqjSJt2pnhFLMkhcy30r82pynr0xWmUXphGOIEYXSTnqYkLI7Ybf30wNQHeLKwPA1-H257X2ZjKnovt45mYM7ivHcn2D9p_hpZS50gzDZSvs-5afZjOejZFbdiK5MiRR1pt1rZDL0AQt2lCFfMGHXM7Ta32BgCRJiqbuKTqBVJu-kjQBCyMGLcLmSyW06',
-      ctaText: 'Discover Aesthetic Options',
-    },
-    {
-      id: 5,
-      category: 'emergency',
-      categoryEyebrow: 'Urgent Intervention',
-      icon: 'medical_services',
-      iconColor: 'text-status-error',
-      badge: 'Same-Day Emergency Slots',
-      badgeClass: 'bg-status-error text-on-error',
-      badgeIcon: 'alarm_on',
-      title: 'Emergency Dental Care & Urgent Pain Relief',
-      description:
-        'Rapid triage and immediate pain relief for severe toothache, broken teeth, lost fillings, dental abscesses, or facial trauma. Priority same-day bookings available.',
-      features: [
-        'Immediate Triage on +44 121 765 2870',
-        'Acute Pulpitis & Abscess Treatment',
-        'Temporary & Urgent Restorations',
-        'Gentle Extraction when Required',
-      ],
-      image:
-        'https://lh3.googleusercontent.com/aida/ALJJyrBcbHFf72C77aVCUJUqKG_wMcQ96MHwndkHljTZQTge2WyNvRxft4HbcWsF7eJxg347VvGHmdMpoOc3LvQho_dEU--KG2jkpNZ-IKwPY8tbFG_SMF6dMj8VPBBlHbpX5_0Qfyfe1rqJ3nsHMSUfWmAvLHEWo2omHCaxFxegt5k23pyUfzMYz0jjEa8rbzNHDK267WYwfMnlmeiEpIWRVh1VGoPox9ZskfxqGCYkm1ppyA',
-      ctaText: 'Emergency Care Guidance',
-      ctaPhone: true,
-    },
-    {
-      id: 6,
-      category: 'general',
-      categoryEyebrow: 'Family Dentistry',
-      icon: 'family_restroom',
-      badge: 'Child-Friendly Environment',
-      badgeClass: 'bg-secondary-container text-on-secondary-container',
-      title: 'Pediatric & Family Dentistry',
-      description:
-        'A welcoming, reassuring environment for young patients. Fostering positive attitudes toward oral care through gentle examinations and preventive advice.',
-      features: [
-        'Gentle First Dental Visits',
-        'Fissure Sealants & Fluoride Varnishes',
-        'Diet & Sugar Acid Advice',
-        'Early Orthodontic Monitoring',
-      ],
-      image:
-        'https://lh3.googleusercontent.com/aida/ALJJyrAjr3mnx__gb3icEsidfNmN0Yo6SfWItzxqvKPt0BHI-BgWjtfZ7dxRK_mFr319KIaMV1fLsMfTgBACJbQQZCc_2lGVgavBj6hsNKJkpmGqzjuJIkAnzz4pxSruMh4CSYpJUOab7wCqkYZsiKr6aJuJ5RWzw1OeCKE11bMraDRgDLvzYr6_SDI1JxDvLl0gMm8zyxovQi1MVn9a3EplE8ZnkGJYeJLr0jRbkJ5yU90Whw',
-      ctaText: 'Family Dentistry Services',
-    },
-  ],
-  pricingNhs: [
-    {
-      band: 'Band 1 Treatment',
-      desc: 'Check-up, digital x-rays, basic polish & diagnosis',
-      price: '£26.80',
-    },
-    {
-      band: 'Band 2 Treatment',
-      desc: 'Fillings, root canal therapy & tooth extractions',
-      price: '£73.50',
-    },
-    {
-      band: 'Band 3 Treatment',
-      desc: 'Complex crowns, precision bridges & full/partial dentures',
-      price: '£319.10',
-    },
-    {
-      band: 'Urgent Care Band',
-      desc: 'Immediate emergency relief, triage & temporary dressing',
-      price: '£26.80',
-      isUrgent: true,
-    },
-  ],
-  pricingPrivate: [
-    {
-      service: 'Hygiene Airflow Polish',
-      desc: '30-min intensive ultrasonic scale & air polish stain removal',
-      price: '£65.00',
-      prefix: 'From',
-    },
-    {
-      service: 'Boutique Teeth Whitening',
-      desc: 'Customized take-home whitening trays with high-strength gel',
-      price: '£299.00',
-      prefix: 'From',
-    },
-    {
-      service: 'Composite Bonding',
-      desc: 'Micro-layer aesthetic sculpting per tooth with zero drilling',
-      price: '£150.00',
-      prefix: 'Per Tooth',
-    },
-    {
-      service: 'Invisalign® Clear Consultation',
-      desc: 'Full 3D digital scan & computerized treatment smile simulator',
-      price: 'Complimentary',
-      prefix: '',
-    },
-  ],
-  pillars: [
-    {
-      icon: 'radiology',
-      title: 'Modern Digital Technology',
-      description:
-        'Ultra-low radiation digital radiography and high-definition intraoral cameras for precise, comfortable diagnoses.',
-      tag: 'Digital Precision',
-    },
-    {
-      icon: 'favorite',
-      title: 'Welcoming Phobic Patients',
-      description:
-        'A gentle, unhurried bedside manner designed specifically to dissolve dental anxiety, panic, and sensory discomfort.',
-      tag: 'Gentle Pacing',
-    },
-    {
-      icon: 'calendar_clock',
-      title: 'Flexible Appointments',
-      description:
-        'Early morning slots from 8:30 AM and guaranteed priority emergency triage windows throughout each working day.',
-      tag: 'Prompt Access',
-    },
-    {
-      icon: 'verified',
-      title: 'Strict NHS & CQC Safety',
-      description:
-        'Strict compliance with Care Quality Commission infection controls, NHS safety charters, and gold-standard autoclaving.',
-      tag: '100% CQC Compliant',
-    },
-  ],
-};
+interface ServiceItem {
+  id: string | number;
+  category: string;
+  categoryEyebrow?: string;
+  icon?: string;
+  iconColor?: string;
+  badge?: string;
+  badgeClass?: string;
+  badgeIcon?: string;
+  title: string;
+  description: string;
+  features?: string[];
+  image: string;
+  ctaText?: string;
+  ctaPhone?: boolean;
+}
+
+interface NhsBandItem {
+  band: string;
+  desc: string;
+  price: string;
+  isUrgent?: boolean;
+}
+
+interface PrivatePriceItem {
+  service: string;
+  desc: string;
+  price: string;
+  prefix?: string;
+}
+
+interface ClinicalPillarItem {
+  icon: string;
+  title: string;
+  description: string;
+  tag: string;
+}
 
 export default function TreatmentsPage() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<number | undefined>(undefined);
   const [activeCategory, setActiveCategory] = useState<string>('all');
-  const [cmsContent, setCmsContent] = useState(INITIAL_CMS_TREATMENTS);
 
-  // Maintain Acocks Green clinical theme
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      document.documentElement.setAttribute('data-theme', 'acocks-green');
-    }
-  }, []);
+  // Loading state orchestrated with BrandPreloader
+  const [loading, setLoading] = useState(true);
 
-  // Fetch dynamic CMS data from backend API
+  // Dynamic API state
+  const [pageData, setPageData] = useState<CmsPageContent | null>(null);
+  const [, setSeoData] = useState<CmsPageSeo | null>(null);
+  const [themeData, setThemeData] = useState<GlobalThemeConfig | null>(null);
+  const [codeData, setCodeData] = useState<CodeInjectionData | null>(null);
+
+  // Parallel Axios API Data Hydration
   useEffect(() => {
-    const fetchCmsData = async () => {
+    let isMounted = true;
+
+    async function hydratePage() {
       try {
-        const res = await fetch('/api/v1/cms/pages/treatments');
-        if (res.ok) {
-          const data = await res.json();
-          if (data?.success && data?.data) {
-            const d = data.data;
-            setCmsContent((prev) => ({
-              ...prev,
-              title: d.title || prev.title,
-              eyebrow: d.eyebrow || prev.eyebrow,
-              subtitle: d.subtitle || prev.subtitle,
-            }));
+        const [content, seo, theme, code] = await Promise.all([
+          cmsService.getPageContent('treatments'),
+          cmsService.getPageSeo('treatments'),
+          cmsService.getGlobalTheme(),
+          cmsService.getCodeInjection('treatments'),
+        ]);
+
+        if (isMounted) {
+          setPageData(content);
+          setSeoData(seo);
+          setThemeData(theme);
+          setCodeData(code);
+
+          // Update Document Title & Meta Description dynamically
+          if (seo?.meta_title && typeof document !== 'undefined') {
+            document.title = seo.meta_title;
           }
         }
-      } catch {
-        // Gracefully use complete local fallback for offline static export
+      } catch (err) {
+        console.error('[TreatmentsPage] API Hydration Error:', err);
+      } finally {
+        if (isMounted) {
+          // Give CSS custom properties and DOM layout 250ms to settle for buttery smooth reveal
+          setTimeout(() => {
+            setLoading(false);
+          }, 250);
+        }
       }
+    }
+
+    hydratePage();
+
+    return () => {
+      isMounted = false;
     };
-    fetchCmsData();
   }, []);
 
   const handleOpenBooking = (serviceId?: number) => {
@@ -269,13 +117,199 @@ export default function TreatmentsPage() {
     setBookingOpen(true);
   };
 
-  const filteredServices =
-    activeCategory === 'all'
-      ? cmsContent.services
-      : cmsContent.services.filter((s) => s.category === activeCategory);
+  // Derive dynamic services
+  const rawServices: any[] = (pageData?.services as any[]) || [];
+  const normalizedServices: ServiceItem[] = rawServices.length > 0
+    ? rawServices.map((s, idx) => ({
+        id: s.id || idx + 1,
+        category: s.category || 'general',
+        categoryEyebrow: s.category_label || s.categoryEyebrow || 'Clinical Procedure',
+        icon: s.icon || 'dentistry',
+        iconColor: s.iconColor || 'text-primary',
+        badge: s.badge || (s.nhs_available ? 'NHS & Private' : 'Private Care'),
+        badgeClass: s.badgeClass || (s.category === 'emergency' ? 'bg-status-error text-on-error' : 'bg-primary text-on-primary'),
+        badgeIcon: s.badgeIcon || (s.category === 'emergency' ? 'alarm_on' : undefined),
+        title: s.title || 'Specialized Dental Treatment',
+        description: s.description || s.excerpt || 'Evidence-based clinical dentistry performed with advanced technology.',
+        features: Array.isArray(s.features) ? s.features : ['Digital Radiographic Diagnostics', 'Care Quality Commission Regulated', 'Gentle Patient Care Protocols'],
+        image: s.image || 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800',
+        ctaText: s.ctaText || 'View Details',
+        ctaPhone: s.category === 'emergency',
+      }))
+    : [
+        {
+          id: 1,
+          category: 'general',
+          categoryEyebrow: 'Core Healthcare',
+          icon: 'dentistry',
+          badge: 'NHS & Private Available',
+          badgeClass: 'bg-primary text-on-primary',
+          title: 'General Dentistry & Routine Check-ups',
+          description: 'Thorough digital oral examinations, low-dose digital radiographs, routine cleaning, gentle composite fillings, and preventative treatments.',
+          features: ['Comprehensive Oral Health Exam', 'Preventative Sealants & Fluoride', 'High-durability Tooth-Coloured Fillings', 'Digital Diagnostics'],
+          image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=800',
+          ctaText: 'View General Dentistry Details',
+        },
+        {
+          id: 2,
+          category: 'hygiene',
+          categoryEyebrow: 'Periodontal Health',
+          icon: 'clean_hands',
+          badge: 'Specialist Hygienist Clinic',
+          badgeClass: 'bg-teal-700 text-white',
+          title: 'Dental Hygiene & Airflow Periodontics',
+          description: 'Specialist ultrasonic periodontal deep cleaning, gentle stubborn stain removal (tea, coffee, tobacco), airflow polish therapy.',
+          features: ['Ultrasonic Scaling & Polishing', 'Airflow Stain Removal Treatment', 'Gingival & Periodontal Assessment', 'Personalized Home Care Plans'],
+          image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800',
+          ctaText: 'Explore Hygiene Services',
+        },
+        {
+          id: 3,
+          category: 'restorative',
+          categoryEyebrow: 'Structural Repair',
+          icon: 'architecture',
+          badge: 'Function & Biomechanics',
+          badgeClass: 'bg-secondary text-on-secondary',
+          title: 'Restorative Dentistry & Dental Crowns',
+          description: 'Rebuild chewing function, comfort, and structural integrity with precision custom ceramic crowns, bridge work, and root canal therapy.',
+          features: ['Custom Porcelain & Zirconia Crowns', 'Root Canal Endodontic Therapy', 'Fixed Bridgework & Inlays/Onlays', 'Tooth Wear & Bite Rehabilitation'],
+          image: 'https://images.unsplash.com/photo-1629909615184-74f495363b67?auto=format&fit=crop&q=80&w=800',
+          ctaText: 'Learn About Restorative Care',
+        },
+        {
+          id: 4,
+          category: 'aesthetic',
+          categoryEyebrow: 'Cosmetic Artistry',
+          icon: 'auto_fix_high',
+          badge: 'Boutique Smile Design',
+          badgeClass: 'bg-primary-container text-on-primary',
+          title: 'Aesthetic Dentistry & Invisalign® Aligners',
+          description: 'Transform and illuminate your smile with professional boutique whitening treatments, bespoke handcrafted veneers, and clear aligners.',
+          features: ['Invisalign® Clear Aligner Therapy', 'Boutique Teeth Whitening Systems', 'Handcrafted Porcelain Veneers', 'Minimally Invasive Composite Bonding'],
+          image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&q=80&w=800',
+          ctaText: 'Discover Aesthetic Options',
+        },
+        {
+          id: 5,
+          category: 'emergency',
+          categoryEyebrow: 'Urgent Intervention',
+          icon: 'medical_services',
+          iconColor: 'text-status-error',
+          badge: 'Same-Day Emergency Slots',
+          badgeClass: 'bg-status-error text-on-error',
+          badgeIcon: 'alarm_on',
+          title: 'Emergency Dental Care & Urgent Pain Relief',
+          description: 'Rapid triage and immediate pain relief for severe toothache, broken teeth, lost fillings, dental abscesses, or facial trauma.',
+          features: ['Immediate Triage on +44 121 765 2870', 'Acute Pulpitis & Abscess Treatment', 'Temporary & Urgent Restorations', 'Gentle Extraction when Required'],
+          image: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&q=80&w=800',
+          ctaText: 'Emergency Care Guidance',
+          ctaPhone: true,
+        },
+        {
+          id: 6,
+          category: 'general',
+          categoryEyebrow: 'Family Dentistry',
+          icon: 'family_restroom',
+          badge: 'Child-Friendly Environment',
+          badgeClass: 'bg-secondary-container text-on-secondary-container',
+          title: 'Pediatric & Family Dentistry',
+          description: 'A welcoming, reassuring environment for young patients. Fostering positive attitudes toward oral care through gentle examinations.',
+          features: ['Gentle First Dental Visits', 'Fissure Sealants & Fluoride Varnishes', 'Diet & Sugar Acid Advice', 'Early Orthodontic Monitoring'],
+          image: 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80&w=800',
+          ctaText: 'Family Dentistry Services',
+        },
+      ];
+
+  // Derive dynamic categories
+  const categoriesList = pageData?.categories && pageData.categories.length > 0
+    ? pageData.categories.map((c) => ({ id: c.id, label: c.name }))
+    : [
+        { id: 'all', label: 'All Services' },
+        { id: 'general', label: 'General Dentistry' },
+        { id: 'hygiene', label: 'Hygiene & Prevention' },
+        { id: 'restorative', label: 'Restorative Dentistry' },
+        { id: 'aesthetic', label: 'Aesthetic & Cosmetic' },
+        { id: 'emergency', label: 'Emergency & Surgery' },
+      ];
+
+  const filteredServices = activeCategory === 'all'
+    ? normalizedServices
+    : normalizedServices.filter((s) => s.category === activeCategory);
+
+  // Derive NHS pricing
+  const pricingMatrixRaw: any = pageData?.pricing_matrix || {};
+  const nhsBands: NhsBandItem[] = (pricingMatrixRaw.nhs_bands || pricingMatrixRaw.nhs || []).map((b: any) => ({
+    band: b.band || 'Standard NHS Band',
+    desc: b.description || b.desc || 'Routine care, diagnostics and restorations',
+    price: b.price || '£26.80',
+    isUrgent: b.band?.toLowerCase().includes('urgent') || b.isUrgent,
+  }));
+
+  const defaultNhsBands: NhsBandItem[] = [
+    { band: 'Band 1 Treatment', desc: 'Check-up, digital x-rays, basic polish & diagnosis', price: '£26.80' },
+    { band: 'Band 2 Treatment', desc: 'Fillings, root canal therapy & tooth extractions', price: '£73.50' },
+    { band: 'Band 3 Treatment', desc: 'Complex crowns, precision bridges & full/partial dentures', price: '£319.10' },
+    { band: 'Urgent Care Band', desc: 'Immediate emergency relief, triage & temporary dressing', price: '£26.80', isUrgent: true },
+  ];
+
+  const activeNhsBands = nhsBands.length > 0 ? nhsBands : defaultNhsBands;
+
+  // Derive Private pricing
+  const privateOptions: PrivatePriceItem[] = (pricingMatrixRaw.private_options || pricingMatrixRaw.private || []).map((p: any) => ({
+    service: p.procedure || p.service || 'Private Dental Option',
+    desc: p.description || p.desc || 'Custom materials and extended clinical appointment time',
+    price: p.price || 'From £65.00',
+    prefix: p.prefix || '',
+  }));
+
+  const defaultPrivateOptions: PrivatePriceItem[] = [
+    { service: 'Hygiene Airflow Polish', desc: '30-min intensive ultrasonic scale & air polish stain removal', price: '£65.00', prefix: 'From' },
+    { service: 'Boutique Teeth Whitening', desc: 'Customized take-home whitening trays with high-strength gel', price: '£299.00', prefix: 'From' },
+    { service: 'Composite Bonding', desc: 'Micro-layer aesthetic sculpting per tooth with zero drilling', price: '£150.00', prefix: 'Per Tooth' },
+    { service: 'Invisalign® Clear Consultation', desc: 'Full 3D digital scan & computerized treatment smile simulator', price: 'Complimentary', prefix: '' },
+  ];
+
+  const activePrivateOptions = privateOptions.length > 0 ? privateOptions : defaultPrivateOptions;
+
+  // Derive Clinical Pillars
+  const rawPillars: any[] = (pageData?.clinical_pillars || pageData?.pillars || []) as any[];
+  const activePillars: ClinicalPillarItem[] = rawPillars.length > 0
+    ? rawPillars.map((p) => ({
+        icon: p.icon || 'verified',
+        title: p.title || 'Clinical Excellence',
+        description: p.description || 'Delivering highest standards of clinical precision and patient reassurance.',
+        tag: p.tag || 'CQC Regulated',
+      }))
+    : [
+        { icon: 'radiology', title: 'Modern Digital Technology', description: 'Ultra-low radiation digital radiography and high-definition intraoral cameras for precise, comfortable diagnoses.', tag: 'Digital Precision' },
+        { icon: 'favorite', title: 'Welcoming Phobic Patients', description: 'A gentle, unhurried bedside manner designed specifically to dissolve dental anxiety, panic, and sensory discomfort.', tag: 'Gentle Pacing' },
+        { icon: 'calendar_clock', title: 'Flexible Appointments', description: 'Early morning slots from 8:30 AM and guaranteed priority emergency triage windows throughout each working day.', tag: 'Prompt Access' },
+        { icon: 'verified', title: 'Strict NHS & CQC Safety', description: 'Strict compliance with Care Quality Commission infection controls, NHS safety charters, and gold-standard autoclaving.', tag: '100% CQC Compliant' },
+      ];
+
+  // Derive Consultation CTA
+  const ctaRaw: any = pageData?.consultation_cta || {};
+  const ctaHeadline = ctaRaw.headline || 'Not Sure Which Treatment is Right for You?';
+  const ctaDesc = ctaRaw.description || 'Speak directly with our clinical team or book a consultation at our Warwick Road surgery. We will guide you through all NHS and private options clearly, with zero obligation.';
+  const ctaPhone = ctaRaw.phone || themeData?.branding?.phone || '+44 121 765 2870';
+  const clinicAddress = ctaRaw.address || themeData?.branding?.address || '1078 Warwick Road, Acocks Green, Birmingham B27 6BH';
+  const clinicHours = ctaRaw.hours || 'Mon-Fri 8:30 AM – 5:30 PM';
 
   return (
     <>
+      {/* 1. Custom Brand Animated Preloader */}
+      <BrandPreloader
+        isLoading={loading}
+        clinicName={themeData?.branding?.clinic_name || 'Acocks Green Dental Practice'}
+        badge={pageData?.badge || 'B27 6BH NHS & Private Surgery'}
+        message="Connecting Clinical Systems, Theme Tokens & Dynamic CMS..."
+      />
+
+      {/* 2. Dynamic Theme Customizer & Custom Code Injector */}
+      <ThemeHydrator initialTheme={themeData} />
+      <CodeInjector initialCode={codeData} slug="treatments" />
+
+      {/* 3. Global Practice Navigation Header */}
       <AcocksGreenHeader
         onOpenBooking={() => handleOpenBooking()}
         onOpenEmergency={() => handleOpenBooking(1)}
@@ -308,15 +342,16 @@ export default function TreatmentsPage() {
                 </nav>
 
                 <span className="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase tracking-widest block mb-1.5 font-bold">
-                  {cmsContent.eyebrow}
+                  {pageData?.eyebrow || 'OUR CLINICAL SERVICES & PROCEDURES'}
                 </span>
 
                 <h1 className="font-display-hero text-[32px] sm:text-[38px] lg:text-display-hero text-on-surface mb-2 tracking-tight leading-tight">
-                  {cmsContent.title}
+                  {pageData?.title || 'Comprehensive Dental Care & Specialized Treatments'}
                 </h1>
 
                 <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-4 max-w-2xl">
-                  {cmsContent.subtitle}
+                  {pageData?.subtitle ||
+                    'From essential routine NHS care to advanced cosmetic smile makeovers and restorative procedures in Acocks Green, Birmingham. Delivered with gentle compassion and state-of-the-art diagnostics.'}
                 </p>
 
                 {/* Filter Pills Group */}
@@ -325,7 +360,7 @@ export default function TreatmentsPage() {
                   id="service-filter-group"
                   role="tablist"
                 >
-                  {cmsContent.categories.map((cat) => {
+                  {categoriesList.map((cat) => {
                     const isActive = activeCategory === cat.id;
                     return (
                       <button
@@ -351,9 +386,9 @@ export default function TreatmentsPage() {
               <div className="lg:col-span-5 relative">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
-                  alt="Warm professional photo of friendly UK dentist doctor smiling warmly in modern clean dental clinic surgery"
+                  alt="Friendly UK dentist doctor smiling warmly in modern clean dental clinic surgery"
                   className="rounded-2xl shadow-md border border-border-subtle/80 object-cover h-64 lg:h-72 w-full"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCzsykyKI2PU6E0wW2t2do2Qt2jbZzaqv_u_IJJfWkGvhSuGk34VpR3MY2x4tckcQ7PvE8fx9330s7IMyCF22GzBT7fwxSeNcAOOD7tpfAxTZzm7QZCMGl6HzbuEloTxaCtsTeKlfT5IMQkb87H0BQKnEXK2e9CMWx1fSlXVcpfVg5S-JRnPWoyF_vquS3r9UtLCekgTGZVu6dH9nXrVl1I2ZJ-m95ISoH2D2GD9IF"
+                  src="https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=800"
                 />
                 <div className="absolute bottom-3 left-3 right-3 bg-surface-card/95 backdrop-blur-md px-4 py-2.5 rounded-xl border border-border-subtle shadow-sm flex items-center justify-between">
                   <div>
@@ -432,7 +467,7 @@ export default function TreatmentsPage() {
                       </p>
 
                       <ul className="flex flex-col gap-2.5 mb-6 text-on-surface-variant font-body-sm text-body-sm">
-                        {card.features.map((feat, i) => (
+                        {(card.features || []).map((feat, i) => (
                           <li key={i} className="flex items-center gap-2">
                             <span className="material-symbols-outlined text-primary text-[18px]">
                               check_circle
@@ -446,7 +481,7 @@ export default function TreatmentsPage() {
                     <div className="pt-4 border-t border-border-subtle flex items-center justify-between gap-3">
                       <button
                         type="button"
-                        onClick={() => handleOpenBooking(card.id)}
+                        onClick={() => handleOpenBooking(Number(card.id) || 1)}
                         className="inline-flex items-center gap-1.5 font-label-md text-label-md bg-primary-container text-on-primary px-3.5 py-2 rounded-lg shadow-xs hover:bg-primary transition-colors cursor-pointer"
                       >
                         <span className="material-symbols-outlined text-[16px]">calendar_month</span>
@@ -525,7 +560,7 @@ export default function TreatmentsPage() {
                   </div>
 
                   <div className="space-y-3.5">
-                    {cmsContent.pricingNhs.map((band, idx) => (
+                    {activeNhsBands.map((band, idx) => (
                       <div
                         key={idx}
                         className="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"
@@ -578,7 +613,7 @@ export default function TreatmentsPage() {
                   </div>
 
                   <div className="space-y-3.5">
-                    {cmsContent.pricingPrivate.map((item, idx) => (
+                    {activePrivateOptions.map((item, idx) => (
                       <div
                         key={idx}
                         className="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"
@@ -637,7 +672,7 @@ export default function TreatmentsPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {cmsContent.pillars.map((pillar, idx) => (
+              {activePillars.map((pillar, idx) => (
                 <div
                   key={idx}
                   className="bg-surface-card p-6 rounded-2xl border border-border-subtle shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between"
@@ -679,10 +714,10 @@ export default function TreatmentsPage() {
                     NEED CLINICAL ADVICE FIRST?
                   </span>
                   <h2 className="font-headline-lg text-[32px] sm:text-headline-lg text-on-primary mb-4 tracking-tight leading-tight">
-                    Not Sure Which Treatment is Right for You?
+                    {ctaHeadline}
                   </h2>
                   <p className="font-body-lg text-body-lg text-surface-container-low mb-8 leading-relaxed">
-                    Speak directly with our clinical team or book a consultation at our Warwick Road surgery. We will guide you through all NHS and private options clearly, with zero obligation.
+                    {ctaDesc}
                   </p>
 
                   <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
@@ -696,10 +731,10 @@ export default function TreatmentsPage() {
                     </button>
                     <a
                       className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-primary-fixed font-label-md text-label-md px-6 py-3.5 rounded-lg border border-primary-fixed/20 transition-all duration-200"
-                      href="tel:+441217652870"
+                      href={`tel:${ctaPhone.replace(/\s+/g, '')}`}
                     >
                       <span className="material-symbols-outlined text-[18px]">call</span>
-                      <span>Call Triage: +44 121 765 2870</span>
+                      <span>Call Triage: {ctaPhone}</span>
                     </a>
                   </div>
 
@@ -708,24 +743,40 @@ export default function TreatmentsPage() {
                       <span className="material-symbols-outlined text-[18px] text-primary-fixed">
                         pin_drop
                       </span>
-                      <span>1078 Warwick Road, Acocks Green, Birmingham B27 6BH</span>
+                      <span>{clinicAddress}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="material-symbols-outlined text-[18px] text-primary-fixed">
                         schedule
                       </span>
-                      <span>Mon-Fri 8:30 AM – 5:30 PM</span>
+                      <span>{clinicHours}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="lg:col-span-5">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    alt="Friendly receptionist or female dental nurse wearing medical scrubs on phone and tablet at modern dental clinic reception desk"
-                    className="rounded-2xl overflow-hidden shadow-lg border border-white/10 w-full h-64 lg:h-72 object-cover"
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOTQNJkx83b7VwmVKlFNM8zuZvRtH__mUxQwiHZ8SgGxQMU7ZWrmUlZ1oZSfEqrkA-N_lfiC6Cu09nZaTnwr1MNtjdN_LCrVrjn4Kb5snLRDBXgKvRFtgIC5xiUwbP_WRGtvmE33RNYTYkBbbl-1Plcxh33tK4vvXM45TX65ALHdsxlTq0aUWyVySHfal3hjqoYiiqQkuoUeIhGPId83l_Zfsuyxr1Y1kZ3gcU7NbW"
-                  />
+                <div className="lg:col-span-5 hidden lg:block">
+                  <div className="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/15 text-on-primary">
+                    <h3 className="font-headline-sm text-headline-sm mb-3">
+                      Priority Consultation Triage
+                    </h3>
+                    <p className="font-body-sm text-body-sm text-surface-container-low mb-4">
+                      Same-day emergency assessments and smile makeover consultations booked in under 60 seconds.
+                    </p>
+                    <ul className="space-y-2 text-surface-container-low font-body-sm text-body-sm">
+                      <li className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-primary-fixed text-[18px]">check_circle</span>
+                        <span>0% Interest Patient Financing</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-primary-fixed text-[18px]">check_circle</span>
+                        <span>Full Digital 3D Optical Scan</span>
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <span className="material-symbols-outlined text-primary-fixed text-[18px]">check_circle</span>
+                        <span>NHS &amp; Private Integrated Surgery</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
@@ -733,15 +784,17 @@ export default function TreatmentsPage() {
         </section>
       </main>
 
+      {/* Practice Footer */}
+      <AcocksGreenFooter onOpenBooking={() => handleOpenBooking()} />
+
+      {/* Emergency & WhatsApp Hub */}
       <WhatsAppHub onOpenBooking={() => handleOpenBooking()} />
+
+      {/* 5-Step Booking Wizard Modal */}
       <BookingWizard
         isOpen={bookingOpen}
         onClose={() => setBookingOpen(false)}
         preselectedServiceId={selectedServiceId}
-      />
-      <AcocksGreenFooter
-        onOpenBooking={() => handleOpenBooking()}
-        onOpenEmergency={() => handleOpenBooking(1)}
       />
     </>
   );
