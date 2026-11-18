@@ -826,29 +826,64 @@ class StandaloneRunner
             exit;
         }
 
-        // 6. EMR Odontogram API (32-Tooth 5-Surface Clinical Engine)
+        // 6. EMR Odontogram & Clinical Lifecycle API
+        if (str_starts_with($uri, '/api/v1/emr/lifecycle')) {
+            $rawInput = file_get_contents('php://input');
+            $payload = json_decode($rawInput, true) ?? $_POST;
+            $patientId = (int)($payload['patient_id'] ?? 1045);
+            $newStage = strtolower(trim((string)($payload['stage'] ?? 'in_chair')));
+
+            $registry = self::getPatientRegistry();
+            $patient = $registry[$patientId] ?? $registry[1045];
+            $invoiceRef = 'INV-2026-' . $patientId;
+
+            echo json_encode([
+                'success' => true,
+                'patient_id' => $patientId,
+                'patient_name' => $patient['name'],
+                'old_stage' => $patient['lifecycle_stage'],
+                'new_stage' => $newStage,
+                'invoice_reference' => $invoiceRef,
+                'message' => "Patient {$patient['name']} clinical lifecycle advanced to " . strtoupper(str_replace('_', ' ', $newStage)) . '.',
+                'timestamp' => date('Y-m-d H:i:s'),
+            ]);
+            exit;
+        }
+
         if (str_starts_with($uri, '/api/v1/emr/odontogram')) {
             if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $rawInput = file_get_contents('php://input');
                 $payload = json_decode($rawInput, true) ?? $_POST;
-                $patientId = (int)($payload['patient_id'] ?? 1042);
-                $toothNumber = (int)($payload['tooth_number'] ?? 19);
-                $surface = strtoupper(trim($payload['surface'] ?? 'O'));
-                $condition = strtolower(trim($payload['condition'] ?? 'caries'));
+                $patientId = (int)($payload['patient_id'] ?? 1045);
+                $toothNumber = $payload['tooth_number'] ?? 19;
+                $surface = strtoupper(trim((string)($payload['surface'] ?? 'O')));
+                $condition = strtolower(trim((string)($payload['condition'] ?? 'caries')));
                 $pocketDepth = (float)($payload['pocket_depth'] ?? 3.5);
                 $notes = $payload['clinical_notes'] ?? 'Clinical chart updated via EMR API.';
+                $clinician = $payload['clinician'] ?? 'Dr. Ethan Caldwell, DDS';
+
+                $registry = self::getPatientRegistry();
+                $patient = $registry[$patientId] ?? $registry[1045];
+                $fdiMap = self::getToothFdiMapping();
+                $fdiNumber = $fdiMap[$toothNumber] ?? $toothNumber;
+
+                $hash = 'sha256:' . substr(hash('sha256', $patientId . $toothNumber . $surface . $condition . microtime(true)), 0, 16);
 
                 echo json_encode([
                     'success' => true,
-                    'message' => "Odontogram chart for tooth #{$toothNumber} surface {$surface} updated successfully.",
+                    'message' => "Odontogram chart for Tooth #{$toothNumber} (FDI {$fdiNumber}) surface {$surface} updated successfully.",
                     'data' => [
                         'record_id' => mt_rand(8000, 9999),
                         'patient_id' => $patientId,
+                        'patient_name' => $patient['name'],
                         'tooth_number' => $toothNumber,
+                        'fdi_number' => $fdiNumber,
                         'surface' => $surface,
                         'condition' => $condition,
                         'pocket_depth' => $pocketDepth,
                         'clinical_notes' => $notes,
+                        'signing_clinician' => $clinician,
+                        'audit_hash' => $hash,
                         'updated_at' => date('c'),
                     ]
                 ]);
@@ -856,26 +891,19 @@ class StandaloneRunner
             }
 
             // GET /api/v1/emr/odontogram or /api/v1/emr/odontogram/{patient_id}
-            $patientId = 1042;
-            if (preg_match('#^/api/v1/emr/odontogram/(\d+)$#', $uri, $m)) {
+            $patientId = 1045;
+            if (isset($_GET['patient_id']) && is_numeric($_GET['patient_id'])) {
+                $patientId = (int)$_GET['patient_id'];
+            } elseif (preg_match('#^/api/v1/emr/odontogram/(\d+)$#', $uri, $m)) {
                 $patientId = (int)$m[1];
             }
+
+            $registry = self::getPatientRegistry();
+            $patientData = $registry[$patientId] ?? $registry[1045];
+
             echo json_encode([
                 'success' => true,
-                'data' => [
-                    'patient_id' => $patientId,
-                    'patient_name' => 'Eleanor Vance',
-                    'chart_type' => 'universal_numbering_32',
-                    'last_charted' => date('Y-m-d'),
-                    'charting_doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
-                    'chart' => [
-                        ['tooth' => 1, 'status' => 'sound', 'surfaces' => ['O' => 'sound', 'M' => 'sound', 'D' => 'sound', 'B' => 'sound', 'L' => 'sound'], 'pocket_depth' => 2.0],
-                        ['tooth' => 3, 'status' => 'crown', 'material' => 'zirconia', 'surfaces' => ['O' => 'restored', 'M' => 'restored', 'D' => 'restored', 'B' => 'restored', 'L' => 'restored'], 'pocket_depth' => 2.5],
-                        ['tooth' => 14, 'status' => 'caries', 'surfaces' => ['O' => 'caries', 'M' => 'sound', 'D' => 'sound', 'B' => 'sound', 'L' => 'sound'], 'pocket_depth' => 3.0, 'notes' => 'Occlusal fissure caries, scheduled for composite restoration'],
-                        ['tooth' => 19, 'status' => 'rct', 'surfaces' => ['O' => 'composite', 'M' => 'sound', 'D' => 'sound', 'B' => 'sound', 'L' => 'sound'], 'pocket_depth' => 3.5, 'notes' => 'Root canal obturation complete, crown build-up intact'],
-                        ['tooth' => 30, 'status' => 'implant', 'implant_brand' => 'Straumann BLX 4.1mm', 'surfaces' => ['O' => 'implant_crown', 'M' => 'implant_crown', 'D' => 'implant_crown', 'B' => 'implant_crown', 'L' => 'implant_crown'], 'pocket_depth' => 2.0],
-                    ]
-                ]
+                'data' => $patientData,
             ]);
             exit;
         }
@@ -908,92 +936,24 @@ class StandaloneRunner
                 exit;
             }
 
-            // GET /api/v1/patients
+            // GET /api/v1/patients - Unified EMR Registry with GBP (£) balances
             $search = strtolower(trim($_GET['search'] ?? ''));
-            $patients = [
-                [
-                    'id' => 1042,
-                    'chart_number' => 'EHR-2026-1042',
-                    'name' => 'Eleanor Vance',
-                    'first_name' => 'Eleanor',
-                    'last_name' => 'Vance',
-                    'dob' => '1988-04-12',
-                    'age' => 38,
-                    'gender' => 'female',
-                    'phone' => '+447911123456',
-                    'email' => 'eleanor.vance@example.co.uk',
-                    'medical_alerts' => ['Penicillin Allergy'],
-                    'assigned_doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
-                    'assigned_clinic' => 'Central Practice (HQ)',
-                    'last_visit' => '2026-10-15',
-                    'next_appointment' => '2026-11-15 10:30',
-                    'balance_due' => 0.00,
-                ],
-                [
-                    'id' => 1043,
-                    'chart_number' => 'EHR-2026-1043',
-                    'name' => 'Marcus Sterling',
-                    'first_name' => 'Marcus',
-                    'last_name' => 'Sterling',
-                    'dob' => '1994-09-21',
-                    'age' => 32,
-                    'gender' => 'male',
-                    'phone' => '+447700900123',
-                    'email' => 'marcus.s@example.com',
-                    'medical_alerts' => [],
-                    'assigned_doctor' => 'Dr. Maya Lin, DMD, MS',
-                    'assigned_clinic' => 'Central Practice (HQ)',
-                    'last_visit' => '2026-11-01',
-                    'next_appointment' => '2026-11-20 11:15',
-                    'balance_due' => 2400.00,
-                ],
-                [
-                    'id' => 1044,
-                    'chart_number' => 'EHR-2026-1044',
-                    'name' => 'Sophia Patel',
-                    'first_name' => 'Sophia',
-                    'last_name' => 'Patel',
-                    'dob' => '1982-12-05',
-                    'age' => 43,
-                    'gender' => 'female',
-                    'phone' => '+447890123456',
-                    'email' => 'sophia.patel@example.com',
-                    'medical_alerts' => ['Type 2 Diabetes'],
-                    'assigned_doctor' => 'Dr. Sarah Jenkins, DDS',
-                    'assigned_clinic' => 'Westside Studio',
-                    'last_visit' => '2026-09-28',
-                    'next_appointment' => '2026-11-18 14:00',
-                    'balance_due' => 1250.00,
-                ],
-                [
-                    'id' => 1045,
-                    'chart_number' => 'EHR-2026-1045',
-                    'name' => 'David Kim',
-                    'first_name' => 'David',
-                    'last_name' => 'Kim',
-                    'dob' => '1975-06-30',
-                    'age' => 51,
-                    'gender' => 'male',
-                    'phone' => '+447998877665',
-                    'email' => 'david.kim@example.com',
-                    'medical_alerts' => ['Latex Sensitivity', 'Hypertension'],
-                    'assigned_doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
-                    'assigned_clinic' => 'Central Practice (HQ)',
-                    'last_visit' => '2026-10-22',
-                    'next_appointment' => '2026-12-01 09:30',
-                    'balance_due' => 150.00,
-                ],
-            ];
+            $registry = self::getPatientRegistry();
+            $patients = array_values($registry);
 
             if ($search !== '') {
                 $patients = array_values(array_filter($patients, function ($p) use ($search) {
-                    return str_contains(strtolower($p['name']), $search) || str_contains($p['phone'], $search);
+                    return str_contains(strtolower($p['name']), $search)
+                        || str_contains(strtolower($p['phone']), $search)
+                        || str_contains(strtolower($p['mrn'] ?? ''), $search);
                 }));
             }
 
             echo json_encode([
                 'success' => true,
                 'total' => count($patients),
+                'currency' => 'GBP',
+                'currency_symbol' => '£',
                 'data' => $patients,
             ]);
             exit;
@@ -1758,6 +1718,483 @@ class StandaloneRunner
         exit;
     }
 
+    /**
+     * Anatomic FDI ISO 3950 to Universal conversion lookup table
+     * Covers 32 permanent adult teeth (#1-#32) and 20 primary pediatric teeth (#A-#T)
+     */
+    public static function getToothFdiMapping(): array
+    {
+        return [
+            // Maxillary Adult (Upper Arch): Universal 1 - 16 -> FDI 18 - 28
+            1 => 18, 2 => 17, 3 => 16, 4 => 15, 5 => 14, 6 => 13, 7 => 12, 8 => 11,
+            9 => 21, 10 => 22, 11 => 23, 12 => 24, 13 => 25, 14 => 26, 15 => 27, 16 => 28,
+            // Mandibular Adult (Lower Arch): Universal 17 - 32 -> FDI 38 - 48
+            17 => 38, 18 => 37, 19 => 36, 20 => 35, 21 => 34, 22 => 33, 23 => 32, 24 => 31,
+            25 => 41, 26 => 42, 27 => 43, 28 => 44, 29 => 45, 30 => 46, 31 => 47, 32 => 48,
+            // Deciduous Primary Teeth (Pediatric Upper Arch): Universal A - J -> FDI 55 - 65
+            'A' => 55, 'B' => 54, 'C' => 53, 'D' => 52, 'E' => 51,
+            'F' => 61, 'G' => 62, 'H' => 63, 'I' => 64, 'J' => 65,
+            // Deciduous Primary Teeth (Pediatric Lower Arch): Universal K - T -> FDI 75 - 85
+            'K' => 75, 'L' => 74, 'M' => 73, 'N' => 72, 'O' => 71,
+            'P' => 81, 'Q' => 82, 'R' => 83, 'S' => 84, 'T' => 85,
+        ];
+    }
+
+    /**
+     * Unified Clinical EMR Patient Registry
+     * Provides authentic patient records with individual anatomical charts,
+     * staged treatment plans in GBP (£), digital X-rays, and immutable audit ledgers.
+     */
+    public static function getPatientRegistry(): array
+    {
+        return [
+            1045 => [
+                'id' => 1045,
+                'mrn' => 'MRN-2026-0001',
+                'chart_number' => 'EHR-2026-1045',
+                'name' => 'David Sample',
+                'first_name' => 'David',
+                'last_name' => 'Sample',
+                'dob' => '1988-06-14',
+                'age' => 38,
+                'gender' => 'Male',
+                'phone' => '+44 7700 900283',
+                'email' => 'david.sample@example.com',
+                'medical_alerts' => ['Penicillin Allergy', 'Hypertension'],
+                'attending_doctor' => 'Dr. Ethan Caldwell, DDS, FACP (Prosthodontist)',
+                'assigned_doctor' => 'Dr. Ethan Caldwell, DDS, FACP',
+                'clinic_branch' => 'Central Practice (HQ)',
+                'assigned_clinic' => 'Central Practice (HQ)',
+                'chair' => 'Chair 2 (Surgical Suite)',
+                'dentition' => 'adult',
+                'dentition_type' => 'adult', // adult (32) or pediatric (20)
+                'numbering_system' => 'universal', // universal or fdi
+                'last_visit' => '2026-11-14',
+                'next_appointment' => '2026-11-18 10:30',
+                'balance_due' => 2089.00,
+                'lifecycle_stage' => 'in_chair', // booked, arrived, in_chair, billing, settled
+                'lifecycle_steps' => [
+                    'booked' => ['title' => 'Booked', 'time' => '10:00 AM', 'done' => true, 'desc' => 'Scheduled via Online Portal'],
+                    'arrived' => ['title' => 'Arrived & Checked In', 'time' => '10:18 AM', 'done' => true, 'desc' => 'Waiting room intake confirmed'],
+                    'in_chair' => ['title' => 'In Chair (EMR)', 'time' => '10:25 AM', 'done' => true, 'active' => true, 'desc' => 'Chair 2 - Active Surface Charting'],
+                    'billing' => ['title' => 'Send to Billing', 'time' => 'Pending', 'done' => false, 'desc' => 'Auto-generate invoice #INV-1045'],
+                    'settled' => ['title' => 'Settled & Recall', 'time' => 'Pending', 'done' => false, 'desc' => '6-Month Hygiene Recall'],
+                ],
+                'chart_conditions' => [
+                    19 => ['occlusal' => 'caries', 'distal' => 'caries'],
+                    14 => ['occlusal' => 'filling', 'mesial' => 'filling'],
+                    30 => ['occlusal' => 'implant'],
+                    3 => ['occlusal' => 'crown'],
+                ],
+                'active_findings' => [
+                    ['tooth' => 19, 'fdi' => 36, 'surface' => 'Occlusal & Distal', 'condition' => 'caries', 'title' => 'Deep Dentinal Caries (Lower Left 1st Molar)', 'severity' => 'danger'],
+                    ['tooth' => 14, 'fdi' => 26, 'surface' => 'Mesial-Occlusal', 'condition' => 'filling', 'title' => 'Existing MOD Composite Restoration', 'severity' => 'primary'],
+                    ['tooth' => 30, 'fdi' => 46, 'surface' => 'Center Fixture', 'condition' => 'implant', 'title' => 'Guided Implant Fixture Integrated', 'severity' => 'success'],
+                    ['tooth' => 3, 'fdi' => 16, 'surface' => 'Full Crown', 'condition' => 'crown', 'title' => 'Porcelain-Fused-to-Zirconia Crown', 'severity' => 'warning'],
+                ],
+                'treatment_plan' => [
+                    'plan_ref' => 'TP-2026-1045',
+                    'phase_name' => 'Stage 2 of 3: Surgical & Restorative Reconstruction',
+                    'progress_percent' => 50,
+                    'total_cost' => 2089.00,
+                    'currency' => 'GBP',
+                    'currency_symbol' => '£',
+                    'items' => [
+                        [
+                            'id' => 'TP-ITM-1',
+                            'phase' => 'Phase 1: Emergency & Pain Relief',
+                            'badge' => 'bg-danger',
+                            'tooth' => 'Tooth #19 (FDI 36)',
+                            'title' => 'Microscopic Pulpectomy & Chemo-Mechanical Prep',
+                            'notes' => 'Rotary canal extirpation, calcium hydroxide medicament',
+                            'fee' => 450.00,
+                        ],
+                        [
+                            'id' => 'TP-ITM-2',
+                            'phase' => 'Phase 2: Restorative',
+                            'badge' => 'bg-warning text-dark',
+                            'tooth' => 'Tooth #19 (FDI 36)',
+                            'title' => 'Full Zirconia Monolithic Crown & Core Build-Up',
+                            'notes' => 'CAD/CAM digital scan, cemented with resin cement',
+                            'fee' => 750.00,
+                        ],
+                        [
+                            'id' => 'TP-ITM-3',
+                            'phase' => 'Phase 3: Implantology & Surgical',
+                            'badge' => 'bg-primary',
+                            'tooth' => 'Tooth #30 (FDI 46)',
+                            'title' => 'Straumann BLX 4.1mm Guided Implant Placement',
+                            'notes' => 'Surgical guide stent, SLA active surface, titanium healing collar',
+                            'fee' => 889.00,
+                        ],
+                    ]
+                ],
+                'xrays' => [
+                    [
+                        'id' => 'XR-1045-01',
+                        'title' => 'Panoramic OPG Radiograph (Full Dentition)',
+                        'date' => '2026-11-15',
+                        'modality' => 'OPG Digital 2D',
+                        'thumbnail' => '/images/hero-1.webp',
+                        'notes' => 'Bilateral condyles intact. Sufficient alveolar ridge height in quadrant 4 for guided fixture.',
+                    ],
+                    [
+                        'id' => 'XR-1045-02',
+                        'title' => 'Periapical High-Resolution RVG Sensor #19',
+                        'date' => '2026-11-18',
+                        'modality' => 'Digital RVG Sensor',
+                        'thumbnail' => '/images/hero-1.webp',
+                        'notes' => 'Deep distal radiolucency encroaching on pulp chamber. Periodontal ligament intact.',
+                    ],
+                    [
+                        'id' => 'XR-1045-03',
+                        'title' => 'CBCT 3D Volumetric Cross-Section #30',
+                        'date' => '2026-11-10',
+                        'modality' => 'CBCT 80x80 FOV',
+                        'thumbnail' => '/images/hero-1.webp',
+                        'notes' => '11.8mm bone height above inferior alveolar nerve. 6.2mm buccolingual ridge width.',
+                    ],
+                ],
+                'audit_log' => [
+                    ['timestamp' => '2026-11-18 10:28:14', 'clinician' => 'Dr. Ethan Caldwell', 'action' => 'Tooth #19 Surface D charted Caries', 'hash' => 'sha256:8f41...b32c'],
+                    ['timestamp' => '2026-11-18 10:26:02', 'clinician' => 'Dr. Ethan Caldwell', 'action' => 'Tooth #19 Surface O charted Caries', 'hash' => 'sha256:1a99...e44f'],
+                    ['timestamp' => '2026-11-18 10:20:45', 'clinician' => 'Emily Watson (Reception)', 'action' => 'Lifecycle advanced: Arrived -> In Chair (Chair 2)', 'hash' => 'sha256:c02d...719b'],
+                    ['timestamp' => '2026-11-14 09:15:00', 'clinician' => 'Dr. Ethan Caldwell', 'action' => 'Baseline electronic clinical chart initialized for David Sample', 'hash' => 'sha256:7e10...901a'],
+                ]
+            ],
+            1042 => [
+                'id' => 1042,
+                'mrn' => 'MRN-2026-0042',
+                'chart_number' => 'EHR-2026-1042',
+                'name' => 'Sarah Jenkins',
+                'first_name' => 'Sarah',
+                'last_name' => 'Jenkins',
+                'dob' => '1992-03-24',
+                'age' => 34,
+                'gender' => 'Female',
+                'phone' => '+44 7911 123456',
+                'email' => 'sarah.jenkins@example.co.uk',
+                'medical_alerts' => ['Latex Allergy'],
+                'attending_doctor' => 'Dr. Sarah Jenkins, DDS (Aesthetic Specialist)',
+                'assigned_doctor' => 'Dr. Sarah Jenkins, DDS',
+                'clinic_branch' => 'Westside Studio',
+                'assigned_clinic' => 'Westside Studio',
+                'chair' => 'Chair 1',
+                'dentition' => 'adult',
+                'dentition_type' => 'adult',
+                'numbering_system' => 'universal',
+                'last_visit' => '2026-10-14',
+                'next_appointment' => '2026-11-18 11:00',
+                'balance_due' => 620.00,
+                'lifecycle_stage' => 'arrived',
+                'lifecycle_steps' => [
+                    'booked' => ['title' => 'Booked', 'time' => '11:00 AM', 'done' => true, 'desc' => 'Scheduled Aesthetic Evaluation'],
+                    'arrived' => ['title' => 'Arrived & Checked In', 'time' => '10:52 AM', 'done' => true, 'active' => true, 'desc' => 'Waiting in Patient Lounge'],
+                    'in_chair' => ['title' => 'In Chair (EMR)', 'time' => 'Pending', 'done' => false, 'desc' => 'Chair 1 - Next in Queue'],
+                    'billing' => ['title' => 'Send to Billing', 'time' => 'Pending', 'done' => false, 'desc' => 'Invoice pending chair completion'],
+                    'settled' => ['title' => 'Settled & Recall', 'time' => 'Pending', 'done' => false, 'desc' => 'Recall pending'],
+                ],
+                'chart_conditions' => [
+                    3 => ['occlusal' => 'crown'],
+                    12 => ['occlusal' => 'caries', 'mesial' => 'caries'],
+                ],
+                'active_findings' => [
+                    ['tooth' => 3, 'fdi' => 16, 'surface' => 'Crown', 'condition' => 'crown', 'title' => 'Porcelain Crown (Upper Right 1st Molar)', 'severity' => 'warning'],
+                    ['tooth' => 12, 'fdi' => 24, 'surface' => 'MO Fissure', 'condition' => 'caries', 'title' => 'Mesio-Occlusal Enamel Caries', 'severity' => 'danger'],
+                ],
+                'treatment_plan' => [
+                    'plan_ref' => 'TP-2026-1042',
+                    'phase_name' => 'Stage 1 of 2: Restorative & Cosmetic Whitening',
+                    'progress_percent' => 25,
+                    'total_cost' => 620.00,
+                    'currency' => 'GBP',
+                    'currency_symbol' => '£',
+                    'items' => [
+                        [
+                            'id' => 'TP-ITM-101',
+                            'phase' => 'Phase 1: Restorative',
+                            'badge' => 'bg-warning text-dark',
+                            'tooth' => 'Tooth #12 (FDI 24)',
+                            'title' => '2-Surface Composite Resin Restoration (MO)',
+                            'notes' => 'Nano-hybrid composite, bonded with Scotchbond Universal',
+                            'fee' => 180.00,
+                        ],
+                        [
+                            'id' => 'TP-ITM-102',
+                            'phase' => 'Phase 2: Aesthetic',
+                            'badge' => 'bg-success',
+                            'tooth' => 'Upper Arch (6 Teeth)',
+                            'title' => 'Enlighten Evolution Professional Teeth Whitening',
+                            'notes' => 'Bespoke sealed whitening trays + 16% CP home regimen',
+                            'fee' => 440.00,
+                        ]
+                    ]
+                ],
+                'xrays' => [
+                    [
+                        'id' => 'XR-1042-01',
+                        'title' => 'Bitewing Left & Right High-Resolution',
+                        'date' => '2026-10-14',
+                        'modality' => 'Digital Bitewing',
+                        'thumbnail' => '/images/hero-1.webp',
+                        'notes' => 'Clean margin on Tooth #3 crown. Incipient mesial enamel lesion on Tooth #12.',
+                    ],
+                ],
+                'audit_log' => [
+                    ['timestamp' => '2026-11-18 10:52:10', 'clinician' => 'Emily Watson', 'action' => 'Patient checked in at reception desk', 'hash' => 'sha256:d812...a901'],
+                    ['timestamp' => '2026-10-14 11:20:00', 'clinician' => 'Dr. Sarah Jenkins', 'action' => 'Baseline EMR record created', 'hash' => 'sha256:22fa...88bc'],
+                ]
+            ],
+            1046 => [ // PEDIATRIC PATIENT!
+                'id' => 1046,
+                'mrn' => 'MRN-2026-0046',
+                'chart_number' => 'EHR-2026-1046',
+                'name' => 'Leo Carter (Pediatric)',
+                'first_name' => 'Leo',
+                'last_name' => 'Carter',
+                'dob' => '2019-05-18',
+                'age' => 7,
+                'gender' => 'Male',
+                'phone' => '+44 7900 445566 (Mother: Rachel Carter)',
+                'email' => 'rachel.carter@example.com',
+                'medical_alerts' => ['Mild Asthma (Inhaler with Mother)'],
+                'attending_doctor' => 'Dr. Maya Lin, DMD, MS (Pediatric Dental Specialist)',
+                'assigned_doctor' => 'Dr. Maya Lin, DMD, MS',
+                'clinic_branch' => 'Central Practice (HQ)',
+                'assigned_clinic' => 'Central Practice (HQ)',
+                'chair' => 'Chair 5 (Pediatric Suite)',
+                'dentition' => 'pediatric',
+                'dentition_type' => 'pediatric', // 20 primary teeth A-T (FDI 51-85)
+                'numbering_system' => 'universal',
+                'last_visit' => '2026-11-02',
+                'next_appointment' => '2026-11-18 09:30',
+                'balance_due' => 280.00,
+                'lifecycle_stage' => 'in_chair',
+                'lifecycle_steps' => [
+                    'booked' => ['title' => 'Booked', 'time' => '09:30 AM', 'done' => true, 'desc' => 'Pediatric Checkup & Fluoride'],
+                    'arrived' => ['title' => 'Arrived', 'time' => '09:22 AM', 'done' => true, 'desc' => 'Arrived with Mother'],
+                    'in_chair' => ['title' => 'In Chair (Pediatric)', 'time' => '09:35 AM', 'done' => true, 'active' => true, 'desc' => 'Chair 5 - Gentle Care Mode'],
+                    'billing' => ['title' => 'Send to Billing', 'time' => 'Pending', 'done' => false, 'desc' => 'Child Dental Benefits / Private'],
+                    'settled' => ['title' => 'Settled & Recall', 'time' => 'Pending', 'done' => false, 'desc' => '3-Month Pediatric Fluoride Recall'],
+                ],
+                'chart_conditions' => [
+                    'B' => ['occlusal' => 'caries'], // Upper Right 1st Primary Molar (FDI 54)
+                    'I' => ['occlusal' => 'filling'], // Upper Left 1st Primary Molar (FDI 64)
+                    'S' => ['occlusal' => 'healthy'], // Lower Right 1st Primary Molar (FDI 84)
+                ],
+                'active_findings' => [
+                    ['tooth' => 'B', 'fdi' => 54, 'surface' => 'Occlusal Pit', 'condition' => 'caries', 'title' => 'Primary Tooth B (FDI 54) - Enamel Caries', 'severity' => 'danger'],
+                    ['tooth' => 'I', 'fdi' => 64, 'surface' => 'Occlusal', 'condition' => 'filling', 'title' => 'Primary Tooth I (FDI 64) - Fissure Sealant Present', 'severity' => 'primary'],
+                ],
+                'treatment_plan' => [
+                    'plan_ref' => 'TP-2026-1046',
+                    'phase_name' => 'Pediatric Prevention & Sealant Plan',
+                    'progress_percent' => 60,
+                    'total_cost' => 280.00,
+                    'currency' => 'GBP',
+                    'currency_symbol' => '£',
+                    'items' => [
+                        [
+                            'id' => 'TP-ITM-201',
+                            'phase' => 'Phase 1: Preventive Care',
+                            'badge' => 'bg-info text-dark',
+                            'tooth' => 'All Primary Molars',
+                            'title' => 'Topical Fluoride Varnish Application (5% NaF)',
+                            'notes' => 'Duraphat dental suspension for caries remineralisation',
+                            'fee' => 65.00,
+                        ],
+                        [
+                            'id' => 'TP-ITM-202',
+                            'phase' => 'Phase 2: Restorative (Gentle)',
+                            'badge' => 'bg-warning text-dark',
+                            'tooth' => 'Primary Tooth B (FDI 54)',
+                            'title' => 'Glass Ionomer Cement (Fuji IX) Conservative Restoration',
+                            'notes' => 'Minimal intervention, fluoride-releasing bioactive filling',
+                            'fee' => 115.00,
+                        ],
+                        [
+                            'id' => 'TP-ITM-203',
+                            'phase' => 'Phase 3: Prevention',
+                            'badge' => 'bg-success',
+                            'tooth' => 'Teeth A, J, K, T',
+                            'title' => 'Penta-Seal Pit & Fissure Sealants (4 Molars)',
+                            'notes' => 'Resin light-cure protective barrier on deep fissures',
+                            'fee' => 100.00,
+                        ],
+                    ]
+                ],
+                'xrays' => [
+                    [
+                        'id' => 'XR-1046-01',
+                        'title' => 'Pediatric Bite-Wings (Low-Dose ALARA Protocol)',
+                        'date' => '2026-11-02',
+                        'modality' => 'Pediatric Low-Dose Digital',
+                        'thumbnail' => '/images/hero-1.webp',
+                        'notes' => 'Developing permanent teeth and bone height healthy. No interproximal caries.',
+                    ]
+                ],
+                'audit_log' => [
+                    ['timestamp' => '2026-11-18 09:36:12', 'clinician' => 'Dr. Maya Lin', 'action' => 'Primary Tooth B charted Caries on occlusal surface', 'hash' => 'sha256:4a01...f991'],
+                    ['timestamp' => '2026-11-18 09:22:00', 'clinician' => 'Emily Watson', 'action' => 'Patient arrived with mother Rachel Carter', 'hash' => 'sha256:bb12...3341'],
+                ]
+            ],
+            1043 => [
+                'id' => 1043,
+                'mrn' => 'MRN-2026-0043',
+                'chart_number' => 'EHR-2026-1043',
+                'name' => 'Marcus Sterling',
+                'first_name' => 'Marcus',
+                'last_name' => 'Sterling',
+                'dob' => '1994-09-21',
+                'age' => 32,
+                'gender' => 'Male',
+                'phone' => '+44 7700 900123',
+                'email' => 'marcus.s@example.com',
+                'medical_alerts' => [],
+                'attending_doctor' => 'Dr. Maya Lin, DMD, MS',
+                'assigned_doctor' => 'Dr. Maya Lin, DMD, MS',
+                'clinic_branch' => 'Central Practice (HQ)',
+                'assigned_clinic' => 'Central Practice (HQ)',
+                'chair' => 'Chair 4',
+                'dentition' => 'adult',
+                'dentition_type' => 'adult',
+                'numbering_system' => 'universal',
+                'last_visit' => '2026-11-01',
+                'next_appointment' => '2026-11-20 11:15',
+                'balance_due' => 2400.00,
+                'lifecycle_stage' => 'booked',
+                'lifecycle_steps' => [
+                    'booked' => ['title' => 'Booked', 'time' => '14:00 PM', 'done' => true, 'active' => true, 'desc' => 'Scheduled for Orthodontic Consult'],
+                    'arrived' => ['title' => 'Arrived', 'time' => 'Pending', 'done' => false, 'desc' => 'Awaiting arrival at 13:45'],
+                    'in_chair' => ['title' => 'In Chair (EMR)', 'time' => 'Pending', 'done' => false, 'desc' => 'Chair 4'],
+                    'billing' => ['title' => 'Send to Billing', 'time' => 'Pending', 'done' => false, 'desc' => 'Invisalign Treatment Package'],
+                    'settled' => ['title' => 'Settled & Recall', 'time' => 'Pending', 'done' => false, 'desc' => 'Recall pending'],
+                ],
+                'chart_conditions' => [
+                    8 => ['occlusal' => 'healthy'],
+                    9 => ['occlusal' => 'healthy'],
+                ],
+                'active_findings' => [
+                    ['tooth' => 8, 'fdi' => 11, 'surface' => 'Labial', 'condition' => 'healthy', 'title' => 'Class I Incisal Crowding', 'severity' => 'primary'],
+                ],
+                'treatment_plan' => [
+                    'plan_ref' => 'TP-2026-1043',
+                    'phase_name' => 'Clear Aligner Comprehensive Plan',
+                    'progress_percent' => 10,
+                    'total_cost' => 2400.00,
+                    'currency' => 'GBP',
+                    'currency_symbol' => '£',
+                    'items' => [
+                        [
+                            'id' => 'TP-ITM-301',
+                            'phase' => 'Phase 1: Orthodontics',
+                            'badge' => 'bg-primary',
+                            'tooth' => 'Upper & Lower Arches',
+                            'title' => 'Invisalign Comprehensive Clear Aligners (24 Trays)',
+                            'notes' => 'iTero Element 5D digital scan with SmartTrack material',
+                            'fee' => 2400.00,
+                        ]
+                    ]
+                ],
+                'xrays' => [
+                    [
+                        'id' => 'XR-1043-01',
+                        'title' => 'Lateral Cephalometric Radiograph',
+                        'date' => '2026-11-01',
+                        'modality' => 'Digital Ceph',
+                        'thumbnail' => '/images/hero-1.webp',
+                        'notes' => 'SNA 82°, SNB 80°, ANB 2°. Normal skeletal Class I pattern.',
+                    ]
+                ],
+                'audit_log' => [
+                    ['timestamp' => '2026-11-01 10:00:00', 'clinician' => 'Dr. Maya Lin', 'action' => 'Orthodontic records and scan completed', 'hash' => 'sha256:cc99...0011'],
+                ]
+            ],
+            1044 => [
+                'id' => 1044,
+                'mrn' => 'MRN-2026-0044',
+                'chart_number' => 'EHR-2026-1044',
+                'name' => 'Sophia Patel',
+                'first_name' => 'Sophia',
+                'last_name' => 'Patel',
+                'dob' => '1982-12-05',
+                'age' => 43,
+                'gender' => 'Female',
+                'phone' => '+44 7890 123456',
+                'email' => 'sophia.patel@example.com',
+                'medical_alerts' => ['Type 2 Diabetes'],
+                'attending_doctor' => 'Dr. Sarah Jenkins, DDS',
+                'assigned_doctor' => 'Dr. Sarah Jenkins, DDS',
+                'clinic_branch' => 'Westside Studio',
+                'assigned_clinic' => 'Westside Studio',
+                'chair' => 'Chair 3',
+                'dentition' => 'adult',
+                'dentition_type' => 'adult',
+                'numbering_system' => 'universal',
+                'last_visit' => '2026-09-28',
+                'next_appointment' => '2026-11-18 14:00',
+                'balance_due' => 1250.00,
+                'lifecycle_stage' => 'billing',
+                'lifecycle_steps' => [
+                    'booked' => ['title' => 'Booked', 'time' => '08:30 AM', 'done' => true, 'desc' => 'Scheduled Crown Delivery'],
+                    'arrived' => ['title' => 'Arrived', 'time' => '08:25 AM', 'done' => true, 'desc' => 'Arrived on schedule'],
+                    'in_chair' => ['title' => 'In Chair (EMR)', 'time' => '08:32 AM', 'done' => true, 'desc' => 'Treatment complete'],
+                    'billing' => ['title' => 'Send to Billing', 'time' => '09:15 AM', 'done' => true, 'active' => true, 'desc' => 'Invoice #INV-2026-0021 generated (£1,250.00)'],
+                    'settled' => ['title' => 'Settled & Recall', 'time' => 'Pending', 'done' => false, 'desc' => 'Pending POS Settlement'],
+                ],
+                'chart_conditions' => [
+                    30 => ['occlusal' => 'root_canal'],
+                    31 => ['occlusal' => 'crown'],
+                ],
+                'active_findings' => [
+                    ['tooth' => 30, 'fdi' => 46, 'surface' => 'Completed RCT', 'condition' => 'root_canal', 'title' => 'Root Canal Obturation (Tooth #30)', 'severity' => 'info'],
+                    ['tooth' => 31, 'fdi' => 47, 'surface' => 'Crown', 'condition' => 'crown', 'title' => 'Milled E-Max Crown (Tooth #31)', 'severity' => 'warning'],
+                ],
+                'treatment_plan' => [
+                    'plan_ref' => 'TP-2026-1044',
+                    'phase_name' => 'Restorative Completion',
+                    'progress_percent' => 90,
+                    'total_cost' => 1250.00,
+                    'currency' => 'GBP',
+                    'currency_symbol' => '£',
+                    'items' => [
+                        [
+                            'id' => 'TP-ITM-401',
+                            'phase' => 'Phase 2: Restorative',
+                            'badge' => 'bg-warning text-dark',
+                            'tooth' => 'Tooth #31 (FDI 47)',
+                            'title' => 'IPS e.max CAD Ceramic Crown Fit & Cementation',
+                            'notes' => 'RelyX Unicem 2 self-adhesive resin cementation',
+                            'fee' => 750.00,
+                        ],
+                        [
+                            'id' => 'TP-ITM-402',
+                            'phase' => 'Phase 1: Endodontics',
+                            'badge' => 'bg-info text-dark',
+                            'tooth' => 'Tooth #30 (FDI 46)',
+                            'title' => 'Molar Rotary Endodontic Therapy & Core',
+                            'notes' => 'Warm vertical condensation obturation complete',
+                            'fee' => 500.00,
+                        ]
+                    ]
+                ],
+                'xrays' => [
+                    [
+                        'id' => 'XR-1044-01',
+                        'title' => 'Final Post-Obturation Periapical #30 & #31',
+                        'date' => '2026-11-18',
+                        'modality' => 'Digital RVG',
+                        'thumbnail' => '/images/hero-1.webp',
+                        'notes' => 'Dense gutta-percha seal to radiographic apex across all 3 canals. Crown margin sealed.',
+                    ]
+                ],
+                'audit_log' => [
+                    ['timestamp' => '2026-11-18 09:15:20', 'clinician' => 'Dr. Sarah Jenkins', 'action' => 'Treatment complete. Sent to billing desk.', 'hash' => 'sha256:77bb...12cc'],
+                ]
+            ]
+        ];
+    }
+
     private static function renderForbiddenView(string $module, array $authUser): void
     {
         $viewsDir = dirname(__DIR__) . '/resources/views';
@@ -1883,6 +2320,15 @@ class StandaloneRunner
             $meta = $dashboardMeta[$userRole] ?? $dashboardMeta['super_admin'];
             $sections['page_title'] = $meta['title'];
             $sections['page_subtitle'] = $meta['subtitle'];
+        }
+
+        // Dynamic patient resolution for Odontogram EMR (Senior Dev Item 1 & 8)
+        if ($viewName === 'odontogram') {
+            $patientId = (int)($_GET['patient_id'] ?? 1045);
+            $registry = self::getPatientRegistry();
+            $patient = $registry[$patientId] ?? $registry[1045];
+            $sections['page_title'] = "Digital Dental Chart: {$patient['name']}";
+            $sections['page_subtitle'] = "Patient Record: {$patient['name']} ({$patient['mrn']}) • {$patient['attending_doctor']} • {$patient['chair']}";
         }
 
         // Render layout

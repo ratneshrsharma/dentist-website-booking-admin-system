@@ -114,8 +114,8 @@
                     </tr>
                 </thead>
                 <tbody id="patientsTableBody">
-                    <!-- Patient 1 -->
-                    <tr id="patient-row-1" data-mrn="MRN-2026-0001" data-name="David Sample" data-age="38" data-gender="Male" data-phone="+1 (555) 019-2830" data-email="patient@example.com" data-alerts="Penicillin Allergy, Hypertension" data-doctor="Dr. Ethan Caldwell" data-treatment="Guided Implant #19" data-status="Active In-Treatment">
+                    <!-- Patient 1: David Sample (ID: 1045) -->
+                    <tr id="patient-row-1" data-patient-id="1045" data-mrn="MRN-2026-0001" data-name="David Sample" data-age="38" data-gender="Male" data-phone="+44 7700 900283" data-email="david.sample@example.com" data-alerts="Penicillin Allergy, Hypertension" data-doctor="Dr. Ethan Caldwell, DDS, FACP" data-treatment="Guided Implant #19" data-status="Active In-Treatment">
                         <td class="ps-3"><span class="fw-bold text-teal patient-mrn" style="color: #0D9488;">MRN-2026-0001</span></td>
                         <td>
                             <div class="d-flex align-items-center">
@@ -124,20 +124,20 @@
                                 </div>
                                 <div>
                                     <span class="fw-bold text-dark d-block patient-name">David Sample</span>
-                                    <small class="text-muted">Registered: 14 Jan 2026</small>
+                                    <small class="text-muted">Registered: 14 Jan 2026 • ID: #1045</small>
                                 </div>
                             </div>
                         </td>
                         <td class="patient-age-gender">38 yrs / Male</td>
                         <td>
-                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+1 (555) 019-2830</span>
-                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>patient@example.com</small>
+                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+44 7700 900283</span>
+                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>david.sample@example.com</small>
                         </td>
                         <td class="patient-alerts-cell">
                             <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-1"><i class="bi bi-exclamation-circle me-1"></i>Penicillin Allergy</span>
                             <span class="badge bg-warning-subtle text-warning border border-warning-subtle d-block">Hypertension</span>
                         </td>
-                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Ethan Caldwell</span></td>
+                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Ethan Caldwell, DDS</span></td>
                         <td>
                             <span class="d-block small text-dark patient-treatment">Guided Implant #19</span>
                             <small class="text-muted">3 days ago</small>
@@ -145,7 +145,7 @@
                         <td><span class="badge bg-success-subtle text-success patient-status-badge">Active In-Treatment</span></td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-outline-secondary" title="Open Odontogram Chart">
+                                <a href="{{ url('/admin/emr/odontogram?patient_id=1045') }}" class="btn btn-outline-secondary" title="Open David Sample's Odontogram (#1045)">
                                     <i class="bi bi-diagram-3-fill text-teal" style="color: #0D9488;"></i>
                                 </a>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openViewEhrModal('patient-row-1')" title="View Full EHR">
@@ -161,37 +161,37 @@
                         </td>
                     </tr>
 
-                    <!-- Patient 2 -->
-                    <tr id="patient-row-2" data-mrn="MRN-2026-0042" data-name="Emma Jenkins" data-age="29" data-gender="Female" data-phone="+1 (555) 019-8472" data-email="emma.j@example.com" data-alerts="None" data-doctor="Dr. Maya Lin" data-treatment="Invisalign Tray 8 Fitting" data-status="Active In-Treatment">
+                    <!-- Patient 2: Sarah Jenkins (ID: 1042) -->
+                    <tr id="patient-row-2" data-patient-id="1042" data-mrn="MRN-2026-0042" data-name="Sarah Jenkins" data-age="34" data-gender="Female" data-phone="+44 7911 123456" data-email="sarah.jenkins@example.co.uk" data-alerts="Latex Allergy" data-doctor="Dr. Sarah Jenkins, DDS" data-treatment="Composite Restoration #12" data-status="Active In-Treatment">
                         <td class="ps-3"><span class="fw-bold text-teal patient-mrn" style="color: #0D9488;">MRN-2026-0042</span></td>
                         <td>
                             <div class="d-flex align-items-center">
                                 <div class="rounded-circle bg-indigo text-white d-flex align-items-center justify-content-center me-2 fw-semibold patient-avatar" style="width: 34px; height: 34px; background: #6366F1; font-size: 0.8rem;">
-                                    EJ
+                                    SJ
                                 </div>
                                 <div>
-                                    <span class="fw-bold text-dark d-block patient-name">Emma Jenkins</span>
-                                    <small class="text-muted">Registered: 28 Feb 2026</small>
+                                    <span class="fw-bold text-dark d-block patient-name">Sarah Jenkins</span>
+                                    <small class="text-muted">Registered: 28 Feb 2026 • ID: #1042</small>
                                 </div>
                             </div>
                         </td>
-                        <td class="patient-age-gender">29 yrs / Female</td>
+                        <td class="patient-age-gender">34 yrs / Female</td>
                         <td>
-                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+1 (555) 019-8472</span>
-                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>emma.j@example.com</small>
+                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+44 7911 123456</span>
+                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>sarah.jenkins@example.co.uk</small>
                         </td>
                         <td class="patient-alerts-cell">
-                            <span class="badge bg-success-subtle text-success border border-success-subtle">No Medical Alerts</span>
+                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle"><i class="bi bi-exclamation-circle me-1"></i>Latex Allergy</span>
                         </td>
-                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Maya Lin</span></td>
+                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Sarah Jenkins, DDS</span></td>
                         <td>
-                            <span class="d-block small text-dark patient-treatment">Invisalign Tray 8 Fitting</span>
+                            <span class="d-block small text-dark patient-treatment">Composite Restoration #12</span>
                             <small class="text-muted">Yesterday</small>
                         </td>
                         <td><span class="badge bg-success-subtle text-success patient-status-badge">Active In-Treatment</span></td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-outline-secondary" title="Open Odontogram Chart">
+                                <a href="{{ url('/admin/emr/odontogram?patient_id=1042') }}" class="btn btn-outline-secondary" title="Open Sarah Jenkins's Odontogram (#1042)">
                                     <i class="bi bi-diagram-3-fill text-teal" style="color: #0D9488;"></i>
                                 </a>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openViewEhrModal('patient-row-2')" title="View Full EHR">
@@ -207,38 +207,37 @@
                         </td>
                     </tr>
 
-                    <!-- Patient 3 -->
-                    <tr id="patient-row-3" data-mrn="MRN-2026-0098" data-name="Michael Brown" data-age="52" data-gender="Male" data-phone="+1 (555) 019-3310" data-email="mbrown@example.com" data-alerts="Latex Allergy, Type 2 Diabetes" data-doctor="Dr. Marcus Vance" data-treatment="Endodontic RCT #30" data-status="Follow-Up Required">
-                        <td class="ps-3"><span class="fw-bold text-teal patient-mrn" style="color: #0D9488;">MRN-2026-0098</span></td>
+                    <!-- Patient 3: Marcus Sterling (ID: 1043) -->
+                    <tr id="patient-row-3" data-patient-id="1043" data-mrn="MRN-2026-0043" data-name="Marcus Sterling" data-age="32" data-gender="Male" data-phone="+44 7700 900123" data-email="marcus.s@example.com" data-alerts="None" data-doctor="Dr. Maya Lin, DMD, MS" data-treatment="Invisalign Tray 1 Consult" data-status="Active In-Treatment">
+                        <td class="ps-3"><span class="fw-bold text-teal patient-mrn" style="color: #0D9488;">MRN-2026-0043</span></td>
                         <td>
                             <div class="d-flex align-items-center">
                                 <div class="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center me-2 fw-semibold patient-avatar" style="width: 34px; height: 34px; background: #0284C7; font-size: 0.8rem;">
-                                    MB
+                                    MS
                                 </div>
                                 <div>
-                                    <span class="fw-bold text-dark d-block patient-name">Michael Brown</span>
-                                    <small class="text-muted">Registered: 05 Mar 2026</small>
+                                    <span class="fw-bold text-dark d-block patient-name">Marcus Sterling</span>
+                                    <small class="text-muted">Registered: 05 Mar 2026 • ID: #1043</small>
                                 </div>
                             </div>
                         </td>
-                        <td class="patient-age-gender">52 yrs / Male</td>
+                        <td class="patient-age-gender">32 yrs / Male</td>
                         <td>
-                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+1 (555) 019-3310</span>
-                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>mbrown@example.com</small>
+                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+44 7700 900123</span>
+                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>marcus.s@example.com</small>
                         </td>
                         <td class="patient-alerts-cell">
-                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle mb-1"><i class="bi bi-exclamation-circle me-1"></i>Latex Allergy</span>
-                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle d-block">Type 2 Diabetes</span>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">No Medical Alerts</span>
                         </td>
-                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Marcus Vance</span></td>
+                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Maya Lin, DMD</span></td>
                         <td>
-                            <span class="d-block small text-dark patient-treatment">Endodontic RCT #30</span>
+                            <span class="d-block small text-dark patient-treatment">Invisalign Clear Aligners</span>
                             <small class="text-muted">12 Mar 2026</small>
                         </td>
-                        <td><span class="badge bg-warning-subtle text-warning patient-status-badge">Follow-Up Required</span></td>
+                        <td><span class="badge bg-primary-subtle text-primary patient-status-badge">Active In-Treatment</span></td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-outline-secondary" title="Open Odontogram Chart">
+                                <a href="{{ url('/admin/emr/odontogram?patient_id=1043') }}" class="btn btn-outline-secondary" title="Open Marcus Sterling's Odontogram (#1043)">
                                     <i class="bi bi-diagram-3-fill text-teal" style="color: #0D9488;"></i>
                                 </a>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openViewEhrModal('patient-row-3')" title="View Full EHR">
@@ -254,37 +253,37 @@
                         </td>
                     </tr>
 
-                    <!-- Patient 4 -->
-                    <tr id="patient-row-4" data-mrn="MRN-2026-0112" data-name="Sophia Turner" data-age="9" data-gender="Female" data-phone="+1 (555) 019-9941" data-email="turner.family@example.com" data-alerts="None" data-doctor="Dr. Olivia Harper" data-treatment="Pediatric Fluoride & Sealants" data-status="Routine Recall Due">
-                        <td class="ps-3"><span class="fw-bold text-teal patient-mrn" style="color: #0D9488;">MRN-2026-0112</span></td>
+                    <!-- Patient 4: Leo Carter (Pediatric) (ID: 1046) -->
+                    <tr id="patient-row-4" data-patient-id="1046" data-mrn="MRN-2026-0046" data-name="Leo Carter (Pediatric)" data-age="7" data-gender="Male" data-phone="+44 7900 445566" data-email="rachel.carter@example.com" data-alerts="Mild Asthma (Inhaler)" data-doctor="Dr. Maya Lin, DMD, MS" data-treatment="Pediatric Primary Tooth B Filling" data-status="Active In-Treatment">
+                        <td class="ps-3"><span class="fw-bold text-teal patient-mrn" style="color: #0D9488;">MRN-2026-0046</span></td>
                         <td>
                             <div class="d-flex align-items-center">
                                 <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-2 fw-semibold patient-avatar" style="width: 34px; height: 34px; background: #EC4899; font-size: 0.8rem;">
-                                    ST
+                                    LC
                                 </div>
                                 <div>
-                                    <span class="fw-bold text-dark d-block patient-name">Sophia Turner</span>
-                                    <small class="text-muted">Registered: 18 Mar 2026</small>
+                                    <span class="fw-bold text-dark d-block patient-name">Leo Carter <span class="badge bg-warning text-dark" style="font-size: 0.65rem;">Pediatric</span></span>
+                                    <small class="text-muted">Registered: 18 Mar 2026 • ID: #1046</small>
                                 </div>
                             </div>
                         </td>
-                        <td class="patient-age-gender">9 yrs / Female</td>
+                        <td class="patient-age-gender">7 yrs / Male</td>
                         <td>
-                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+1 (555) 019-9941</span>
-                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>turner.family@example.com</small>
+                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+44 7900 445566 (Mother)</span>
+                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>rachel.carter@example.com</small>
                         </td>
                         <td class="patient-alerts-cell">
-                            <span class="badge bg-success-subtle text-success border border-success-subtle">No Medical Alerts</span>
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle"><i class="bi bi-lungs me-1"></i>Mild Asthma (Inhaler)</span>
                         </td>
-                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Olivia Harper</span></td>
+                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Maya Lin (Pediatric)</span></td>
                         <td>
                             <span class="d-block small text-dark patient-treatment">Pediatric Fluoride & Sealants</span>
                             <small class="text-muted">19 Mar 2026</small>
                         </td>
-                        <td><span class="badge bg-secondary-subtle text-secondary patient-status-badge">Routine Recall Due</span></td>
+                        <td><span class="badge bg-info-subtle text-info patient-status-badge">In Chair Now</span></td>
                         <td class="text-end pe-3">
                             <div class="btn-group btn-group-sm">
-                                <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-outline-secondary" title="Open Odontogram Chart">
+                                <a href="{{ url('/admin/emr/odontogram?patient_id=1046') }}" class="btn btn-outline-secondary" title="Open Leo Carter's Pediatric Odontogram (#1046)">
                                     <i class="bi bi-diagram-3-fill text-teal" style="color: #0D9488;"></i>
                                 </a>
                                 <button type="button" class="btn btn-outline-secondary" onclick="openViewEhrModal('patient-row-4')" title="View Full EHR">
@@ -294,6 +293,52 @@
                                     <i class="bi bi-pencil"></i>
                                 </button>
                                 <button type="button" class="btn btn-outline-danger" onclick="openDeletePatientModal('patient-row-4')" title="Archive Patient">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+
+                    <!-- Patient 5: Sophia Patel (ID: 1044) -->
+                    <tr id="patient-row-5" data-patient-id="1044" data-mrn="MRN-2026-0044" data-name="Sophia Patel" data-age="43" data-gender="Female" data-phone="+44 7890 123456" data-email="sophia.patel@example.com" data-alerts="Type 2 Diabetes" data-doctor="Dr. Sarah Jenkins, DDS" data-treatment="IPS e.max Crown Fit #31" data-status="Treatment Complete / Billing">
+                        <td class="ps-3"><span class="fw-bold text-teal patient-mrn" style="color: #0D9488;">MRN-2026-0044</span></td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="rounded-circle text-white d-flex align-items-center justify-content-center me-2 fw-semibold patient-avatar" style="width: 34px; height: 34px; background: #8B5CF6; font-size: 0.8rem;">
+                                    SP
+                                </div>
+                                <div>
+                                    <span class="fw-bold text-dark d-block patient-name">Sophia Patel</span>
+                                    <small class="text-muted">Registered: 28 Sep 2026 • ID: #1044</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="patient-age-gender">43 yrs / Female</td>
+                        <td>
+                            <span class="d-block small text-dark patient-phone"><i class="bi bi-telephone me-1 text-muted"></i>+44 7890 123456</span>
+                            <small class="text-muted patient-email"><i class="bi bi-envelope me-1 text-muted"></i>sophia.patel@example.com</small>
+                        </td>
+                        <td class="patient-alerts-cell">
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle"><i class="bi bi-activity me-1"></i>Type 2 Diabetes</span>
+                        </td>
+                        <td><span class="fw-semibold text-dark patient-doctor">Dr. Sarah Jenkins, DDS</span></td>
+                        <td>
+                            <span class="d-block small text-dark patient-treatment">Crown Fit & Cementation #31</span>
+                            <small class="text-muted">Today (09:15)</small>
+                        </td>
+                        <td><span class="badge bg-warning-subtle text-warning patient-status-badge">Billing Pending (£1,250)</span></td>
+                        <td class="text-end pe-3">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/admin/emr/odontogram?patient_id=1044') }}" class="btn btn-outline-secondary" title="Open Sophia Patel's Odontogram (#1044)">
+                                    <i class="bi bi-diagram-3-fill text-teal" style="color: #0D9488;"></i>
+                                </a>
+                                <button type="button" class="btn btn-outline-secondary" onclick="openViewEhrModal('patient-row-5')" title="View Full EHR">
+                                    <i class="bi bi-file-earmark-medical"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="openEditPatientModal('patient-row-5')" title="Edit Record">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-danger" onclick="openDeletePatientModal('patient-row-5')" title="Archive Patient">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
@@ -415,7 +460,7 @@
                         </div>
                     </div>
                     <div>
-                        <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-sm btn-primary" style="background-color: var(--app-primary); border-color: var(--app-primary);">
+                        <a href="{{ url('/admin/emr/odontogram?patient_id=1045') }}" id="viewEhrOdontogramBtn" class="btn btn-sm btn-primary" style="background-color: var(--app-primary); border-color: var(--app-primary);">
                             <i class="bi bi-diagram-3-fill me-1"></i>Open Odontogram Chart
                         </a>
                     </div>
@@ -652,7 +697,7 @@
                 <td><span class="badge bg-success-subtle text-success patient-status-badge">Active In-Treatment</span></td>
                 <td class="text-end pe-3">
                     <div class="btn-group btn-group-sm">
-                        <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-outline-secondary" title="Open Odontogram Chart">
+                        <a href="{{ url('/admin/emr/odontogram') }}?patient_id=${rowId.replace('patient-row-', '')}" class="btn btn-outline-secondary" title="Open Odontogram Chart">
                             <i class="bi bi-diagram-3-fill text-teal" style="color: #0D9488;"></i>
                         </a>
                         <button type="button" class="btn btn-outline-secondary" onclick="openViewEhrModal('${rowId}')" title="View Full EHR">
@@ -683,6 +728,7 @@
         const row = document.getElementById(rowId);
         if (!row) return;
 
+        const patientId = row.getAttribute('data-patient-id') || '1045';
         const mrn = row.getAttribute('data-mrn');
         const name = row.getAttribute('data-name');
         const age = row.getAttribute('data-age');
@@ -700,6 +746,13 @@
         document.getElementById('viewEhrEmail').innerText = email;
         document.getElementById('viewEhrDoctor').innerText = doctor;
         document.getElementById('viewEhrLatestTreatment').innerText = treatment;
+
+        // Dynamic patient chart routing
+        const odontogramBtn = document.getElementById('viewEhrOdontogramBtn');
+        if (odontogramBtn) {
+            odontogramBtn.href = `{{ url('/admin/emr/odontogram') }}?patient_id=${patientId}`;
+            odontogramBtn.innerHTML = `<i class="bi bi-diagram-3-fill me-1"></i>Open ${name}'s Odontogram (#${patientId})`;
+        }
 
         const initials = name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
         document.getElementById('viewEhrAvatar').innerText = initials;
