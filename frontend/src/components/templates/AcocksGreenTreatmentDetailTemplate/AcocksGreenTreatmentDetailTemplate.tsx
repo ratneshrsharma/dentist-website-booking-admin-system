@@ -435,11 +435,13 @@ export const AcocksGreenTreatmentDetailTemplate: React.FC<AcocksGreenTreatmentDe
                   className="bg-white rounded-2xl p-6 border border-slate-200/90 hover:border-teal-400 transition-all duration-300 hover:shadow-lg flex flex-col justify-between group"
                 >
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 group-hover:bg-teal-700 group-hover:text-white flex items-center justify-center transition-colors">
-                        <span className="material-symbols-outlined text-[24px]">{proc.icon}</span>
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="w-11 h-11 rounded-xl bg-teal-50 text-teal-700 group-hover:bg-teal-700 group-hover:text-white flex items-center justify-center transition-colors shrink-0 overflow-hidden">
+                        <span className="material-symbols-outlined text-[24px] select-none">
+                          {proc.icon === 'dental_services' ? 'dentistry' : proc.icon}
+                        </span>
                       </div>
-                      <span className="text-[11px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full">
+                      <span className="text-[11px] font-semibold bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full shrink-0">
                         {proc.duration}
                       </span>
                     </div>

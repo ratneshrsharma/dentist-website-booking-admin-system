@@ -10,6 +10,12 @@
   flex-direction: column;
   align-items: flex-end;
   gap: $spacing-3;
+
+  // On mobile & tablets (<1200px), MobileAppNavBar provides integrated bottom-dock WhatsApp access.
+  // Hide standalone floating button on mobile to avoid layout overlap & vertical misalignment.
+  @media (max-width: 1199px) {
+    display: none !important;
+  }
 }
 
 .triggerButton {
