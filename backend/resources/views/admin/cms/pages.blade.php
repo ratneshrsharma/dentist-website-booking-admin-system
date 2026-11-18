@@ -187,6 +187,33 @@
                         </td>
                     </tr>
 
+                    <!-- Page: General Dentistry & Routine Check-ups (Inner Procedure Template) -->
+                    <tr id="page-row-general-dentistry" data-title="General Dentistry & Routine Dental Check-ups" data-subtitle="Comprehensive oral examinations, gentle precision care, low-dose digital radiographs & NHS Band 1" data-slug="/treatments/general-dentistry" data-category="Treatments" data-status="Published">
+                        <td class="ps-3">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge px-2 py-1" style="background: #0F766E; color: #fff;"><i class="bi bi-shield-check"></i></span>
+                                <div>
+                                    <span class="fw-bold text-dark d-block page-title">General Dentistry & Routine Dental Check-ups</span>
+                                    <small class="text-muted page-subtitle">14-Point Check-up, 4 Everyday Procedures, 3-Tier Pricing & NHS vs Private</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td><span class="badge bg-light text-dark border fw-mono page-slug">/treatments/general-dentistry</span></td>
+                        <td><span class="badge text-teal page-cat" style="background: #CCFBF1; color: #0F766E;">Treatments</span></td>
+                        <td>Acocks Green Detail</td>
+                        <td><span class="badge bg-success-subtle text-success"><i class="bi bi-check-circle me-1"></i>Score: 100</span></td>
+                        <td><span class="small text-muted page-date">21 Mar 2026</span></td>
+                        <td><span class="badge bg-success page-status">Published</span></td>
+                        <td class="text-end pe-3">
+                            <div class="btn-group btn-group-sm">
+                                <a href="{{ url('/treatments/general-dentistry') }}" target="_blank" class="btn btn-outline-secondary" title="View Live Treatment Detail"><i class="bi bi-eye"></i></a>
+                                <button type="button" class="btn btn-outline-secondary" onclick="openEditCmsModal('page-row-general-dentistry')" title="Edit Treatment Content, SEO & Code"><i class="bi bi-pencil"></i></button>
+                                <a href="{{ url('/admin/seo-manager') }}" class="btn btn-outline-secondary" title="Yoast Meta & Schema"><i class="bi bi-search"></i></a>
+                                <button type="button" class="btn btn-outline-danger" onclick="deleteCmsPage('page-row-general-dentistry')" title="Unpublish / Delete"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+
                     <!-- Page 3 -->
                     <tr id="page-row-3" data-title="Dental Implants" data-subtitle="Single, Multiple & Full-Arch Guided Restorations" data-slug="/treatments/dental-implants" data-category="Treatments" data-status="Published">
                         <td class="ps-3">
