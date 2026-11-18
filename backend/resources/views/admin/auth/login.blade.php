@@ -150,26 +150,26 @@
                     </label>
                     <input type="text" class="form-control form-control-lg text-center fw-bold font-monospace"
                            id="otpInput" name="otp" maxlength="6" pattern="[0-9]{6}" inputmode="numeric"
-                           value="<?= htmlspecialchars($demoOtp ?? '849201') ?>" onfocus="this.select()"
+                           value=""
                            placeholder="••••••" style="letter-spacing: 0.35em; font-size: 1.6rem;" required autofocus autocomplete="one-time-code">
                 </div>
 
-                <!-- Interactive OTP Display Directly Below Input (As specifically requested by user for manual copy-paste) -->
+                <!-- Interactive OTP Display Directly Below Input (For Manual Copy & Paste) -->
                 <div class="p-3 mb-3 bg-light border border-dashed rounded-3">
                     <div class="d-flex align-items-center justify-content-between mb-1">
                         <span class="small text-muted fw-semibold">
-                            <i class="bi bi-phone-vibrate text-primary me-1"></i>Temporary 6-Digit Code (Demo):
+                            <i class="bi bi-shield-lock text-primary me-1"></i>Temporary 6-Digit Code (Demo):
                         </span>
-                        <span class="badge bg-primary-subtle text-primary" style="font-size: 0.7rem;">Copy-Paste Helper</span>
+                        <span class="badge bg-primary-subtle text-primary" style="font-size: 0.7rem;">Manual Copy & Paste</span>
                     </div>
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div class="font-monospace fw-bold text-dark fs-3 text-primary" id="demoOtpCode"><?= htmlspecialchars($demoOtp ?? '849201') ?></div>
-                        <button type="button" class="btn btn-sm btn-outline-primary" id="copyOtpBtn" onclick="copyAndPasteOtp('<?= htmlspecialchars($demoOtp ?? '849201') ?>')">
-                            <i class="bi bi-clipboard me-1"></i>Copy & Paste OTP
+                    <div class="d-flex align-items-center justify-content-between py-1">
+                        <div class="font-monospace fw-bold text-dark fs-3 text-primary user-select-all" id="demoOtpCode" title="Double click to select"><?= htmlspecialchars($demoOtp ?? '849201') ?></div>
+                        <button type="button" class="btn btn-sm btn-outline-primary" id="copyOtpBtn" onclick="copyOtpOnly('<?= htmlspecialchars($demoOtp ?? '849201') ?>')">
+                            <i class="bi bi-clipboard me-1"></i>Copy Code
                         </button>
                     </div>
                     <div class="small text-muted mt-2" style="font-size: 0.72rem;">
-                        <i class="bi bi-info-circle me-1"></i>Pre-filled above for testing. Click <strong>Verify & Enter Clinical Workspace</strong> to proceed, or click <strong>Copy & Paste OTP</strong> to re-enter.
+                        <i class="bi bi-info-circle me-1"></i>Copy the 6-digit code above and manually paste (<kbd>Ctrl+V</kbd>) into the verification box.
                     </div>
                 </div>
 
@@ -339,26 +339,30 @@
         });
     }
 
-    // 2FA OTP Copy-Paste Helper (Explicit user requirement)
-    function copyAndPasteOtp(code) {
-        const otpInput = document.getElementById('otpInput');
+    // 2FA OTP Copy Only (User manually pastes into input box)
+    function copyOtpOnly(code) {
         const copyBtn = document.getElementById('copyOtpBtn');
         const cleanCode = String(code).replace(/\D/g, '').slice(0, 6);
 
-        if (otpInput) {
-            otpInput.value = cleanCode;
-            otpInput.focus();
-            otpInput.classList.add('is-valid');
-        }
-
-        // Copy to system clipboard
+        // Copy to system clipboard only (do NOT auto-fill input)
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(cleanCode).catch(() => {});
+        } else {
+            // Fallback selection for older browsers
+            const range = document.createRange();
+            const sel = window.getSelection();
+            const codeEl = document.getElementById('demoOtpCode');
+            if (codeEl && sel) {
+                range.selectNodeContents(codeEl);
+                sel.removeAllRanges();
+                sel.addRange(range);
+                try { document.execCommand('copy'); } catch (e) {}
+            }
         }
 
         if (copyBtn) {
             const origHtml = copyBtn.innerHTML;
-            copyBtn.innerHTML = '<i class="bi bi-check-lg me-1 text-success"></i>Copied & Pasted!';
+            copyBtn.innerHTML = '<i class="bi bi-check-lg me-1 text-success"></i>Copied!';
             copyBtn.classList.remove('btn-outline-primary');
             copyBtn.classList.add('btn-success', 'text-white');
             setTimeout(() => {
@@ -366,6 +370,12 @@
                 copyBtn.classList.remove('btn-success', 'text-white');
                 copyBtn.classList.add('btn-outline-primary');
             }, 1800);
+        }
+
+        // Focus the OTP input so user can directly paste (Ctrl+V)
+        const otpInput = document.getElementById('otpInput');
+        if (otpInput) {
+            otpInput.focus();
         }
     }
 </script>
