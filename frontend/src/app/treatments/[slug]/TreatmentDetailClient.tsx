@@ -25,7 +25,8 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
   slug,
   initialData,
 }) => {
-  const [loading, setLoading] = useState(true);
+  // 0ms Zero-Loading Strategy: Instant pre-rendered SSG with zero artificial delays
+  const loading = false;
   const bespokeData = getTreatmentDetailBySlug(slug);
   const [pageData, setPageData] = useState<TreatmentDetailData>(
     initialData || bespokeData
@@ -64,13 +65,6 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
         }
       } catch (err) {
         console.warn(`[TreatmentDetailClient] CMS API hydration for '${slug}' fell back to local dataset:`, err);
-      } finally {
-        if (isMounted) {
-          // Allow theme tokens and layout to stabilize smoothly
-          setTimeout(() => {
-            setLoading(false);
-          }, 250);
-        }
       }
     }
 

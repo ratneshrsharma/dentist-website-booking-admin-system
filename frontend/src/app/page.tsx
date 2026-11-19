@@ -20,8 +20,8 @@ export default function HomePage() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<number | undefined>(undefined);
 
-  // Loading state orchestrated with BrandPreloader to prevent FOUC / layout shifts
-  const [loading, setLoading] = useState(true);
+  // 0ms Zero-Loading Strategy: Instant SSG rendering with zero artificial delay
+  const loading = false;
 
   // Dynamic API state
   const [, setPageData] = useState<CmsPageContent | null>(null);
@@ -58,13 +58,6 @@ export default function HomePage() {
         }
       } catch (err) {
         console.error('[HomePage] API Hydration Error:', err);
-      } finally {
-        if (isMounted) {
-          // Allow theme tokens and CSS variables 200ms to settle for buttery smooth reveal
-          setTimeout(() => {
-            setLoading(false);
-          }, 200);
-        }
       }
     }
 
