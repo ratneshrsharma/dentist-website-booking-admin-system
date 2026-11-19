@@ -19,40 +19,27 @@ export const BrandPreloader: React.FC<BrandPreloaderProps> = ({
   message = 'Connecting Clinical Systems & Theme Tokens...',
   onFinish,
 }) => {
-  // Check if session has already seen initial preloader once
-  const [shouldRender, setShouldRender] = useState(false);
+  const [shouldRender, setShouldRender] = useState(true);
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
-    // Zero-loading rule: Never block client-side route transitions
-    if (typeof window !== 'undefined') {
-      const alreadySeen = sessionStorage.getItem('brand_preloader_seen');
-      if (alreadySeen || !isLoading) {
-        setShouldRender(false);
-        if (onFinish) onFinish();
-        return;
-      }
+    if (!isLoading) {
+      // Brief settling buffer to ensure CSS, fonts and layout tokens are fully computed
+      const settleTimer = setTimeout(() => {
+        setIsFadingOut(true);
+        const hideTimer = setTimeout(() => {
+          setShouldRender(false);
+          if (onFinish) onFinish();
+        }, 300);
+        return () => clearTimeout(hideTimer);
+      }, 150);
 
-      // First hard load only
-      setShouldRender(true);
-      sessionStorage.setItem('brand_preloader_seen', 'true');
-    }
-  }, [isLoading, onFinish]);
-
-  useEffect(() => {
-    if (!isLoading && shouldRender) {
-      setIsFadingOut(true);
-      // Fast 100ms fade-out for zero perceived loading delay
-      const timer = setTimeout(() => {
-        setShouldRender(false);
-        if (onFinish) onFinish();
-      }, 100);
-      return () => clearTimeout(timer);
+      return () => clearTimeout(settleTimer);
     }
     return undefined;
-  }, [isLoading, shouldRender, onFinish]);
+  }, [isLoading, onFinish]);
 
-  if (!shouldRender || !isLoading) {
+  if (!shouldRender) {
     return null;
   }
 

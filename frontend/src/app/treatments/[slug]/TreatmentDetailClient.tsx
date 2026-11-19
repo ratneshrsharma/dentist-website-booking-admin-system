@@ -25,8 +25,7 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
   slug,
   initialData,
 }) => {
-  // 0ms Zero-Loading Strategy: Instant pre-rendered SSG with zero artificial delays
-  const loading = false;
+  const [mounted, setMounted] = useState(false);
   const bespokeData = getTreatmentDetailBySlug(slug);
   const [pageData, setPageData] = useState<TreatmentDetailData>(
     initialData || bespokeData
@@ -36,6 +35,7 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
   const [, setCodeData] = useState<CodeInjectionData | null>(null);
 
   useEffect(() => {
+    setMounted(true);
     let isMounted = true;
 
     async function hydrateTreatmentDetail() {
@@ -83,7 +83,7 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
   return (
     <>
       {/* 1. Clinic Brand Preloader for smooth seamless load */}
-      <BrandPreloader isLoading={loading} message="Loading Clinical Systems..." />
+      <BrandPreloader isLoading={!mounted} message="Loading Clinical Systems..." />
 
       {/* 2. Global CSS Custom Variables Token Hydrator */}
       <ThemeHydrator />
@@ -91,10 +91,10 @@ export const TreatmentDetailClient: React.FC<TreatmentDetailClientProps> = ({
       {/* 3. Dual-Scope Custom Code Injector (GTM, Scripts, Per-Page CSS) */}
       <CodeInjector slug={slug} />
 
-      {/* 4. Full Acocks Green Treatment Detail Template */}
+      {/* 4. Full Acocks Green Treatment Detail Template with Smooth Fade Entrance */}
       <div
-        className={`transition-opacity duration-500 ${
-          loading ? 'opacity-0 pointer-events-none' : 'opacity-100 pointer-events-auto'
+        className={`transition-opacity duration-300 ${
+          mounted ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
         }`}
       >
         <AcocksGreenTreatmentDetailTemplate data={activeData} />

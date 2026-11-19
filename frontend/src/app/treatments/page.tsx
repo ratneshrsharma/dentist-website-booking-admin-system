@@ -43,8 +43,8 @@ export default function TreatmentsPage() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<number | undefined>(undefined);
 
-  // 0ms Loading strategy: false by default for instant SSG rendering
-  const loading = false;
+  // Graceful mounting state
+  const [mounted, setMounted] = useState(false);
 
   // Dynamic API state
   const [pageData, setPageData] = useState<CmsPageContent | null>(null);
@@ -54,6 +54,7 @@ export default function TreatmentsPage() {
 
   // Parallel Axios API Data Hydration
   useEffect(() => {
+    setMounted(true);
     let isMounted = true;
 
     async function hydratePage() {
@@ -109,7 +110,7 @@ export default function TreatmentsPage() {
   return (
     <>
       <BrandPreloader
-        isLoading={loading}
+        isLoading={!mounted}
         clinicName={themeData?.branding?.clinic_name || 'Acocks Green Dental Practice'}
         badge={pageData?.badge || 'B27 6BH NHS & Private Surgery'}
         message="Synchronizing Clinical Catalog..."
@@ -118,12 +119,13 @@ export default function TreatmentsPage() {
       <ThemeHydrator initialTheme={themeData} />
       <CodeInjector initialCode={codeData} slug="treatments" />
 
-      <AcocksGreenHeader
-        onOpenBooking={() => handleOpenBooking()}
-        onOpenEmergency={() => handleOpenBooking(3)}
-      />
+      <div className={`transition-opacity duration-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+        <AcocksGreenHeader
+          onOpenBooking={() => handleOpenBooking()}
+          onOpenEmergency={() => handleOpenBooking(3)}
+        />
 
-      <main className="min-h-screen pt-28 pb-24 xl:pb-0 bg-surface text-on-surface">
+        <main className="min-h-screen pt-28 pb-24 xl:pb-0 bg-surface text-on-surface">
         {/* Inner Banner with Breadcrumb & Lead Clinician */}
         <InnerBanner
           title={pageData?.title || 'Comprehensive Dental Care & Specialized Treatments'}
@@ -174,6 +176,7 @@ export default function TreatmentsPage() {
         onOpenBooking={() => handleOpenBooking()}
         onOpenEmergency={() => handleOpenBooking(3)}
       />
+      </div>
 
       <WhatsAppHub onOpenBooking={() => handleOpenBooking()} />
 

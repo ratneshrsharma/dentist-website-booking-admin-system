@@ -235,7 +235,7 @@ export const AcocksGreenHeader: React.FC<AcocksGreenHeaderProps> = ({
                             </div>
                           </Link>
                           <Link
-                            href="/treatments/general-dentistry#hygiene"
+                            href="/treatments/hygiene-airflow"
                             onClick={() => setTreatmentsDropdownOpen(false)}
                             className="p-2 rounded-xl hover:bg-surface-container-low transition-colors group flex items-start gap-2.5"
                           >

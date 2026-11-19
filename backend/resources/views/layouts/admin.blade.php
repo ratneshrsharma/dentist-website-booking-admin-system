@@ -26,6 +26,8 @@
             --app-accent: #F59E0B;
             --app-dark: #0F172A;
             --app-sidebar-bg: #1E293B;
+            --lte-sidebar-width: 260px;
+            --app-sidebar-width: 260px;
             --font-family-base: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
             --border-slate: #E2E8F0;
             --card-bg: #FFFFFF;
@@ -203,11 +205,9 @@
             white-space: nowrap !important;
         }
 
-        /* Responsive Layout Margins */
-        @media (min-width: 992px) {
-            .app-main, .app-header, .app-footer {
-                margin-left: 260px !important;
-            }
+        /* Ensure no double-margin or white gap between sidebar and content */
+        .app-wrapper {
+            --lte-sidebar-width: 260px;
         }
 
         /* Global Table Readability & Wrap Prevention */

@@ -46,7 +46,7 @@ export const CLINICAL_9_TREATMENTS: TreatmentItem[] = [
   {
     id: 2,
     slug: 'hygiene-airflow',
-    href: '/treatments/general-dentistry#hygiene',
+    href: '/treatments/hygiene-airflow',
     category: 'hygiene',
     categoryGroup: 'general',
     categoryLabel: 'Hygiene & Prevention',

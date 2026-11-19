@@ -123,7 +123,7 @@ export const MAIN_NAVIGATION: NavDropdown[] = [
           },
           {
             label: 'Dental Hygiene & Airflow',
-            href: '/treatments/general-dentistry#hygiene',
+            href: '/treatments/hygiene-airflow',
             description: 'Ultrasonic scaling & airflow stain removal',
           },
           {

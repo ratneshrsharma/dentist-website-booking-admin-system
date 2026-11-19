@@ -3533,7 +3533,7 @@ class StandaloneRunner
                     'nhs_band' => 'Band 2 (£73.50 if clinically needed)',
                     'private_from' => '£65.00',
                     'image' => 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=800',
-                    'link' => '/treatments/general-dentistry#hygiene'
+                    'link' => '/treatments/hygiene-airflow'
                 ],
                 [
                     'id' => 3,
@@ -4020,7 +4020,7 @@ class StandaloneRunner
                         'duration' => '30 mins',
                         'description' => 'Gentle ultrasonic scaling and airflow stain removal to keep gum tissue healthy.',
                         'link_text' => 'View Hygiene Services',
-                        'link_href' => '/treatments/general-dentistry#hygiene',
+                        'link_href' => '/treatments/hygiene-airflow',
                     ],
                     [
                         'number' => '03',
@@ -4977,7 +4977,7 @@ class StandaloneRunner
                             'duration' => '30 Mins',
                             'description' => 'High-pressure water, air, and fine powder jet polishing to erase stubborn tea and smoking stains.',
                             'link_text' => 'View Airflow Polish',
-                            'link_href' => '/treatments/general-dentistry#hygiene',
+                            'link_href' => '/treatments/hygiene-airflow',
                         ],
                     ],
                 ],

@@ -386,6 +386,38 @@ export const TREATMENTS_REGISTRY: Record<string, TreatmentDetail> = {
       keywords: 'laser teeth whitening, professional whitening, teeth bleach, bright smile, cosmetic dental'
     }
   },
+  'hygiene-airflow': {
+    slug: 'hygiene-airflow',
+    title: 'Dental Hygiene & Airflow Polish Therapy',
+    category: 'Hygiene & Preventive Care',
+    subtitle: 'Specialist ultrasonic scaling, subgingival plaque removal, and high-precision Airflow stain removal.',
+    heroImage: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=1200&q=80',
+    overview:
+      'Dental hygiene and Airflow therapy provide professional periodontal care, removing hardened calculus, plaque biofilms, and stubborn tooth stains caused by coffee, tea, and red wine with zero discomfort.',
+    benefits: [
+      'Eliminates gingivitis and early periodontal gum disease',
+      'Removes stubborn tobacco, tea, and coffee stains instantly',
+      'Ultrasonic scaling for deep subgingival calculus removal',
+      'Airflow warm water and fine powder gentle polishing',
+    ],
+    procedureSteps: [
+      { step: 1, title: 'Periodontal Gum Assessment', description: 'BPE scoring to evaluate gum health and pocket depths.' },
+      { step: 2, title: 'Ultrasonic Plaque & Calculus Scaling', description: 'Gentle vibrational scaling to break down hardened tartar.' },
+      { step: 3, title: 'Airflow Polish Jet Application', description: 'Warm water and fine erythritol powder to erase surface stains.' },
+      { step: 4, title: 'Fluoride Polish & Homecare Guidance', description: 'Remineralizing enamel and personalized interdental brushing tips.' },
+    ],
+    faqs: [
+      { question: 'Does Airflow dental hygiene hurt?', answer: 'Not at all. Airflow uses warm water and fine powder particles, making it extremely gentle and comfortable compared to traditional scraping.' }
+    ],
+    duration: '30 to 45 Minutes',
+    recoveryTime: 'Immediate',
+    costEstimate: 'From £65.00',
+    seo: {
+      metaTitle: 'Dental Hygiene & Airflow Therapy Birmingham | Acocks Green Dental',
+      metaDescription: 'Professional ultrasonic scaling and Airflow stain removal at Acocks Green Dental Practice, Birmingham B27 6BH.',
+      keywords: 'dental hygiene, airflow polish, scale and polish, gum treatment, Birmingham dentist'
+    }
+  },
   'general-dentistry': {
     slug: 'general-dentistry',
     title: 'General Dentistry & Preventive Care',

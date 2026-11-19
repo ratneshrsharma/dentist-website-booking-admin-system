@@ -1,5 +1,24 @@
 # Daily Execution Log - Advanced Dental Clinic CMS & Frontend Overhaul
 
+## [2026-11-19 - 03:45 PM] - Dedicated Hygiene Route, Preloader Graceful Transition & Admin Layout Fix
+- **Author:** Ratnesh Sharma / AI Assistant
+- **Status:** Completed, Built, Synced to XAMPP & Verified.
+- **Accomplishments:**
+  1. **Dedicated Dental Hygiene & Airflow Therapy Route (`/treatments/hygiene-airflow`):**
+     - Eliminated hash redirect (`general-dentistry#hygiene`) by implementing dedicated SSG page `/treatments/hygiene-airflow`.
+     - Added bespoke clinical dataset in `treatmentDetails.ts` and `treatments.ts` (Airflow jet polishing, biofilm removal, £65.00 pricing, 30 min duration, FAQ accordion).
+     - Updated header navigation and treatment registries across frontend and backend.
+  2. **Graceful Loading & Smooth Page Entrance Transitions:**
+     - Enhanced `BrandPreloader` to guard HTML delivery and CSS hydration gracefully without flash of unstyled content.
+     - Added smooth opacity fade entrance (`transition-opacity duration-300`) across `page.tsx`, `TreatmentDetailClient.tsx`, and `treatments/page.tsx`.
+  3. **Admin UI Layout Gap Fix (`backend/resources/views/layouts/admin.blade.php`):**
+     - Fixed AdminLTE 4 double-margin issue causing white gap beside sidebar by properly binding `--lte-sidebar-width: 260px` to `.app-wrapper` and removing conflicting hardcoded margins.
+  4. **Next.js 15 Production Build & XAMPP Synchronization:**
+     - Compiled 18 static SSG routes cleanly with zero TypeScript errors.
+     - Synced static export to `C:\xampp\htdocs\advanced-dental-clinic\` with `.htaccess` rewrite rules preserved.
+
+---
+
 ## [2026-11-19 - 03:15 PM] - Zero-Loading Hardening, Stale Cache Eviction & Verified XAMPP Production Sync
 - **Author:** Ratnesh Sharma / AI Assistant
 - **Status:** Completed, Built, Synced to XAMPP & Verified.

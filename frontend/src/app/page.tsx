@@ -20,8 +20,8 @@ export default function HomePage() {
   const [bookingOpen, setBookingOpen] = useState(false);
   const [selectedServiceId, setSelectedServiceId] = useState<number | undefined>(undefined);
 
-  // 0ms Zero-Loading Strategy: Instant SSG rendering with zero artificial delay
-  const loading = false;
+  // Graceful loading & smooth transition state
+  const [mounted, setMounted] = useState(false);
 
   // Dynamic API state
   const [, setPageData] = useState<CmsPageContent | null>(null);
@@ -30,6 +30,7 @@ export default function HomePage() {
   const [codeData, setCodeData] = useState<CodeInjectionData | null>(null);
 
   useEffect(() => {
+    setMounted(true);
     if (typeof window !== 'undefined') {
       document.documentElement.setAttribute('data-theme', 'acocks-green');
     }
@@ -77,7 +78,7 @@ export default function HomePage() {
     <>
       {/* 1. Custom Brand Animated Preloader */}
       <BrandPreloader
-        isLoading={loading}
+        isLoading={!mounted}
         clinicName={themeData?.branding?.clinic_name || 'Acocks Green Dental Practice'}
         badge="B27 6BH NHS & Private Surgery"
         message="Connecting Clinical Systems, Theme Tokens & Dynamic CMS..."
@@ -87,11 +88,13 @@ export default function HomePage() {
       <ThemeHydrator initialTheme={themeData} />
       <CodeInjector initialCode={codeData} slug="home" />
 
-      {/* 3. Main Theme Template: Acocks Green Dental Practice */}
-      <AcocksGreenTemplate
-        onOpenBooking={handleOpenBooking}
-        onOpenEmergency={() => handleOpenBooking(1)}
-      />
+      {/* 3. Main Theme Template: Acocks Green Dental Practice with Smooth Fade Entrance */}
+      <div className={`transition-opacity duration-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+        <AcocksGreenTemplate
+          onOpenBooking={handleOpenBooking}
+          onOpenEmergency={() => handleOpenBooking(1)}
+        />
+      </div>
 
       {/* 4. Floating Emergency & Inquiries WhatsApp Hub */}
       <WhatsAppHub onOpenBooking={() => handleOpenBooking()} />
