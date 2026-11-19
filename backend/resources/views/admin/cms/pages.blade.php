@@ -17,64 +17,64 @@
 <div class="row g-3 mb-4">
     <!-- Stat 1 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 p-3 me-3" style="background-color: #CCFBF1; color: #0F766E;">
-                    <i class="bi bi-file-earmark-code fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Published Pages</span>
-                    <h3 class="fw-bold mb-0 text-dark" id="statPublishedPages">24 Pages</h3>
-                    <span class="badge bg-success-subtle text-success small mt-1">100% Pre-rendered</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Published Pages</span>
+                <div class="stat-value" id="statPublishedPages">24 Pages</div>
+                <span class="badge bg-success-subtle text-success stat-meta">
+                    <i class="bi bi-check-circle me-1"></i> 100% Pre-rendered
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-primary">
+                <i class="bi bi-file-earmark-code"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 2 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 p-3 me-3" style="background-color: #E0E7FF; color: #4338CA;">
-                    <i class="bi bi-layers-fill fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Active Theme Template</span>
-                    <h3 class="fw-bold mb-0 text-dark">Template 1</h3>
-                    <span class="text-muted small mt-1">Confident Doctor (Modern Trust)</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Active Theme Template</span>
+                <div class="stat-value">Template 1</div>
+                <span class="badge bg-primary-subtle text-primary stat-meta">
+                    <i class="bi bi-shield-check me-1"></i> Confident Doctor
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-info">
+                <i class="bi bi-layers-fill"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 3 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 p-3 me-3" style="background-color: #FEF3C7; color: #D97706;">
-                    <i class="bi bi-palette2 fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Fluid Edge-to-Edge</span>
-                    <h3 class="fw-bold mb-0 text-dark">Active</h3>
-                    <span class="text-muted small mt-1">0px Horizontal Overflow</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Layout Architecture</span>
+                <div class="stat-value text-warning">Fluid</div>
+                <span class="badge bg-warning-subtle text-warning stat-meta">
+                    <i class="bi bi-phone me-1"></i> 0px Overflow Edge-to-Edge
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-warning">
+                <i class="bi bi-palette2"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 4 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 p-3 me-3" style="background-color: #DCFCE7; color: #15803D;">
-                    <i class="bi bi-speedometer2 fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Core Web Vitals</span>
-                    <h3 class="fw-bold mb-0 text-dark">99/100</h3>
-                    <span class="badge bg-success-subtle text-success small mt-1">Lighthouse Performance</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Core Web Vitals</span>
+                <div class="stat-value text-success">99/100</div>
+                <span class="badge bg-success-subtle text-success stat-meta">
+                    <i class="bi bi-lightning-charge me-1"></i> Lighthouse High Speed
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-success">
+                <i class="bi bi-speedometer2"></i>
             </div>
         </div>
     </div>

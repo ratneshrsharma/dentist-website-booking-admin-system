@@ -14,67 +14,68 @@
 <!-- Feedback Alert Toast -->
 <div id="patientAlertPlaceholder" class="mb-3"></div>
 
+<!-- Top Statistics Cards (shadcn-ui tokens) -->
 <div class="row g-3 mb-4">
     <!-- Stat 1 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 bg-teal-subtle text-teal p-3 me-3" style="background-color: #CCFBF1; color: #0F766E;">
-                    <i class="bi bi-people-fill fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Active Patients</span>
-                    <h3 class="fw-bold mb-0 text-dark" id="statPatientCount">1,428</h3>
-                    <span class="badge bg-success-subtle text-success small mt-1">+48 this month</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Active Patients</span>
+                <div class="stat-value text-dark" id="statPatientCount">1,428</div>
+                <span class="badge bg-success-subtle text-success stat-meta">
+                    <i class="bi bi-arrow-up-right me-1"></i> +48 this month
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-primary">
+                <i class="bi bi-people-fill"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 2 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 bg-danger-subtle text-danger p-3 me-3" style="background-color: #FEE2E2; color: #DC2626;">
-                    <i class="bi bi-exclamation-triangle-fill fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Medical Alert Tags</span>
-                    <h3 class="fw-bold mb-0 text-dark">184</h3>
-                    <span class="text-muted small mt-1">Allergies & Systemic</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Medical Alert Tags</span>
+                <div class="stat-value text-danger">184</div>
+                <span class="badge bg-danger-subtle text-danger stat-meta">
+                    <i class="bi bi-exclamation-triangle-fill me-1"></i> Allergies & Systemic
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-danger">
+                <i class="bi bi-shield-exclamation"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 3 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 bg-warning-subtle text-warning p-3 me-3" style="background-color: #FEF3C7; color: #D97706;">
-                    <i class="bi bi-bell-fill fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Recalls Due (6-Mo)</span>
-                    <h3 class="fw-bold mb-0 text-dark">92</h3>
-                    <span class="text-muted small mt-1">Prophylaxis follow-up</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Recalls Due (6-Mo)</span>
+                <div class="stat-value text-warning">92</div>
+                <span class="badge bg-warning-subtle text-warning stat-meta">
+                    <i class="bi bi-bell-fill me-1"></i> Prophylaxis recall
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-warning">
+                <i class="bi bi-calendar-event"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 4 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 bg-primary-subtle text-primary p-3 me-3" style="background-color: #E0E7FF; color: #4338CA;">
-                    <i class="bi bi-shield-check fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">HIPAA Verified</span>
-                    <h3 class="fw-bold mb-0 text-dark">100%</h3>
-                    <span class="text-muted small mt-1">Signed consent forms</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">EMR Consent Status</span>
+                <div class="stat-value text-success">100%</div>
+                <span class="badge bg-success-subtle text-success stat-meta">
+                    <i class="bi bi-shield-check me-1"></i> Signed Consents
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-success">
+                <i class="bi bi-file-earmark-check-fill"></i>
             </div>
         </div>
     </div>

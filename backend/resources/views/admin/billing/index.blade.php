@@ -19,68 +19,68 @@
 <!-- Feedback Toast Alert Placeholder -->
 <div id="billingAlertPlaceholder" class="mb-3"></div>
 
-<!-- Top Statistics Cards -->
+<!-- Top Statistics Cards (shadcn-ui tokens) -->
 <div class="row g-3 mb-4">
     <!-- Stat 1 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 p-3 me-3" style="background-color: #DCFCE7; color: #15803D;">
-                    <i class="bi bi-cash-stack fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Today's Collections</span>
-                    <h3 class="fw-bold mb-0 text-dark" id="statTodayCollections">£4,850.00</h3>
-                    <span class="badge bg-success-subtle text-success small mt-1" id="statSettledCount">6 settled invoices</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Today's Collections</span>
+                <div class="stat-value text-success" id="statTodayCollections">£4,850.00</div>
+                <span class="badge bg-success-subtle text-success stat-meta" id="statSettledCount">
+                    <i class="bi bi-receipt me-1"></i> 6 settled invoices
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-success">
+                <i class="bi bi-cash-stack"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 2 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 p-3 me-3" style="background-color: #FEF3C7; color: #D97706;">
-                    <i class="bi bi-shield-check fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Advance Deposits Held</span>
-                    <h3 class="fw-bold mb-0 text-dark" id="statAdvanceDeposits">£1,520.00</h3>
-                    <span class="text-muted small mt-1">Escrowed surgical & lab prep</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Advance Deposits Held</span>
+                <div class="stat-value text-warning" id="statAdvanceDeposits">£1,520.00</div>
+                <span class="badge bg-warning-subtle text-warning stat-meta">
+                    <i class="bi bi-shield-check me-1"></i> Escrowed surgical prep
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-warning">
+                <i class="bi bi-piggy-bank-fill"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 3 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 p-3 me-3" style="background-color: #FEE2E2; color: #DC2626;">
-                    <i class="bi bi-exclamation-circle fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Accounts Receivable (Due)</span>
-                    <h3 class="fw-bold mb-0 text-danger" id="statAccountsReceivable">£1,590.00</h3>
-                    <span class="text-muted small mt-1">3 active patient balances</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Accounts Receivable (Due)</span>
+                <div class="stat-value text-danger" id="statAccountsReceivable">£1,590.00</div>
+                <span class="badge bg-danger-subtle text-danger stat-meta">
+                    <i class="bi bi-exclamation-circle me-1"></i> 3 active patient balances
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-danger">
+                <i class="bi bi-exclamation-triangle-fill"></i>
             </div>
         </div>
     </div>
 
     <!-- Stat 4 -->
     <div class="col-12 col-sm-6 col-xl-3">
-        <div class="card border-0 shadow-sm rounded-3 h-100">
-            <div class="card-body p-3 d-flex align-items-center">
-                <div class="rounded-3 p-3 me-3" style="background-color: #CCFBF1; color: #0F766E;">
-                    <i class="bi bi-shield-lock fs-3"></i>
-                </div>
-                <div>
-                    <span class="text-muted small fw-medium d-block">Refunds & Voids Audited</span>
-                    <h3 class="fw-bold mb-0 text-dark" id="statRefundsAudited">£420.00</h3>
-                    <span class="badge bg-secondary-subtle text-secondary small mt-1">2 clinical audit records</span>
-                </div>
+        <div class="stat-card">
+            <div class="stat-card-content">
+                <span class="stat-label">Refunds & Voids Audited</span>
+                <div class="stat-value text-secondary" id="statRefundsAudited">£420.00</div>
+                <span class="badge bg-secondary-subtle text-secondary stat-meta">
+                    <i class="bi bi-shield-lock me-1"></i> 2 clinical audit records
+                </span>
+            </div>
+            <div class="stat-icon-wrapper stat-icon-info">
+                <i class="bi bi-arrow-counterclockwise"></i>
             </div>
         </div>
     </div>
