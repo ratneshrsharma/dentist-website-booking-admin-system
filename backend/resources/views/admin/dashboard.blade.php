@@ -5,21 +5,21 @@
 @section('page_subtitle', 'Role-tailored clinical, administrative, and website operations')
 
 @section('page_actions')
-    <div class="d-flex gap-2">
-        <a href="{{ url('/admin/appointments/calendar') }}" class="btn btn-sm btn-primary" data-roles="super_admin,admin,receptionist">
-            <i class="bi bi-calendar-plus me-1"></i> Quick Walk-In Booking
+    <div class="d-flex gap-2 flex-wrap justify-content-sm-end align-items-center">
+        <a href="{{ url('/admin/appointments/calendar') }}" class="btn btn-sm btn-primary shadow-sm" data-roles="super_admin,admin,receptionist">
+            <i class="bi bi-calendar-plus me-1.5"></i> Quick Walk-In Booking
         </a>
-        <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-sm btn-outline-secondary" data-roles="super_admin,admin,doctor">
-            <i class="bi bi-diagram-3 me-1"></i> Launch Odontogram EMR
+        <a href="{{ url('/admin/emr/odontogram') }}" class="btn btn-sm btn-outline-secondary shadow-sm" data-roles="super_admin,admin,doctor">
+            <i class="bi bi-diagram-3 me-1.5"></i> Launch Odontogram EMR
         </a>
-        <a href="{{ url('/admin/cms-pages') }}" class="btn btn-sm btn-primary" data-roles="website_manager">
-            <i class="bi bi-globe me-1"></i> Manage CMS Pages
+        <a href="{{ url('/admin/cms-pages') }}" class="btn btn-sm btn-primary shadow-sm" data-roles="website_manager">
+            <i class="bi bi-globe me-1.5"></i> Manage CMS Pages
         </a>
-        <a href="{{ url('/admin/theme-customizer') }}" class="btn btn-sm btn-outline-secondary" data-roles="website_manager">
-            <i class="bi bi-palette2 me-1"></i> Theme Customizer
+        <a href="{{ url('/admin/theme-customizer') }}" class="btn btn-sm btn-outline-secondary shadow-sm" data-roles="website_manager">
+            <i class="bi bi-palette2 me-1.5"></i> Theme Customizer
         </a>
-        <a href="{{ url('/admin/billing') }}" class="btn btn-sm btn-primary" data-roles="billing">
-            <i class="bi bi-receipt me-1"></i> New Billing Invoice
+        <a href="{{ url('/admin/billing') }}" class="btn btn-sm btn-primary shadow-sm" data-roles="billing">
+            <i class="bi bi-receipt me-1.5"></i> New Billing Invoice
         </a>
     </div>
 @endsection
@@ -84,69 +84,61 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
     <!-- Row 1: Website & SEO KPIs -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Published CMS Pages</span>
-                        <h3 class="fw-bold mb-0 mt-1">4 Active</h3>
-                        <span class="badge bg-success-subtle text-success small mt-1">
-                            <i class="bi bi-check-circle"></i> 100% API Hydrated
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-primary-subtle text-primary p-3">
-                        <i class="bi bi-globe fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Published CMS Pages</span>
+                    <div class="stat-value">4 Active</div>
+                    <span class="badge bg-success-subtle text-success stat-meta">
+                        <i class="bi bi-check-circle me-1"></i> 100% API Hydrated
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-primary">
+                    <i class="bi bi-globe"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Yoast SEO Score</span>
-                        <h3 class="fw-bold mb-0 mt-1">100% Score</h3>
-                        <span class="badge bg-success-subtle text-success small mt-1">
-                            <i class="bi bi-shield-check"></i> Meta & Schema Ready
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-success-subtle text-success p-3">
-                        <i class="bi bi-search fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Yoast SEO Score</span>
+                    <div class="stat-value">100% Score</div>
+                    <span class="badge bg-success-subtle text-success stat-meta">
+                        <i class="bi bi-shield-check me-1"></i> Meta & Schema Ready
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-success">
+                    <i class="bi bi-search"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Code Injection</span>
-                        <h3 class="fw-bold mb-0 mt-1">GTM & Scripts</h3>
-                        <span class="badge bg-info-subtle text-info small mt-1">
-                            <i class="bi bi-code-slash"></i> Head & Body Active
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-info-subtle text-info p-3">
-                        <i class="bi bi-code-square fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Code Injection</span>
+                    <div class="stat-value">GTM & Scripts</div>
+                    <span class="badge bg-info-subtle text-info stat-meta">
+                        <i class="bi bi-code-slash me-1"></i> Head & Body Active
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-info">
+                    <i class="bi bi-code-square"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">301 Redirect Rules</span>
-                        <h3 class="fw-bold mb-0 mt-1">14 Rules</h3>
-                        <span class="badge bg-warning-subtle text-warning small mt-1">
-                            <i class="bi bi-arrow-left-right"></i> Zero 404 Leaks
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-warning-subtle text-warning p-3">
-                        <i class="bi bi-signpost-split fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">301 Redirect Rules</span>
+                    <div class="stat-value">14 Rules</div>
+                    <span class="badge bg-warning-subtle text-warning stat-meta">
+                        <i class="bi bi-arrow-left-right me-1"></i> Zero 404 Leaks
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-warning">
+                    <i class="bi bi-signpost-split"></i>
                 </div>
             </div>
         </div>
@@ -339,69 +331,61 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
     <!-- Row 1: Doctor KPIs (No financial revenues) -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">My Assigned Patients</span>
-                        <h3 class="fw-bold mb-0 mt-1">12 Patients</h3>
-                        <span class="badge bg-primary-subtle text-primary small mt-1">
-                            <i class="bi bi-person-check"></i> 4 Completed • 8 Pending
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-primary-subtle text-primary p-3">
-                        <i class="bi bi-people-fill fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">My Assigned Patients</span>
+                    <div class="stat-value">12 Patients</div>
+                    <span class="badge bg-primary-subtle text-primary stat-meta">
+                        <i class="bi bi-person-check me-1"></i> 4 Completed • 8 Pending
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-primary">
+                    <i class="bi bi-people-fill"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Next Case in Chair</span>
-                        <h3 class="fw-bold mb-0 mt-1">Chair 1</h3>
-                        <span class="badge bg-danger-subtle text-danger small mt-1">
-                            <i class="bi bi-heart-pulse"></i> Sarah Jenkins (Pulpitis)
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-danger-subtle text-danger p-3">
-                        <i class="bi bi-hospital fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Next Case in Chair</span>
+                    <div class="stat-value">Chair 1</div>
+                    <span class="badge bg-danger-subtle text-danger stat-meta">
+                        <i class="bi bi-heart-pulse me-1"></i> Sarah Jenkins (Pulpitis)
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-danger">
+                    <i class="bi bi-hospital"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Pending Odontograms</span>
-                        <h3 class="fw-bold mb-0 mt-1">3 Charts</h3>
-                        <span class="badge bg-warning-subtle text-warning small mt-1">
-                            <i class="bi bi-clock-history"></i> EMR Charting Required
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-warning-subtle text-warning p-3">
-                        <i class="bi bi-diagram-3-fill fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Pending Odontograms</span>
+                    <div class="stat-value">3 Charts</div>
+                    <span class="badge bg-warning-subtle text-warning stat-meta">
+                        <i class="bi bi-clock-history me-1"></i> EMR Charting Required
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-warning">
+                    <i class="bi bi-diagram-3-fill"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Urgent Clinical Queue</span>
-                        <h3 class="fw-bold mb-0 mt-1">2 Urgent</h3>
-                        <span class="badge bg-danger text-white small mt-1">
-                            <i class="bi bi-exclamation-triangle"></i> Priority Triage
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-danger-subtle text-danger p-3">
-                        <i class="bi bi-lightning-charge fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Urgent Clinical Queue</span>
+                    <div class="stat-value">2 Urgent</div>
+                    <span class="badge bg-danger text-white stat-meta">
+                        <i class="bi bi-exclamation-triangle me-1"></i> Priority Triage
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-danger">
+                    <i class="bi bi-lightning-charge"></i>
                 </div>
             </div>
         </div>
@@ -618,69 +602,61 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
     <!-- Row 1: Receptionist KPIs (No clinical diagnoses, no financial ledgers) -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Today's Appointments</span>
-                        <h3 class="fw-bold mb-0 mt-1">42 Total</h3>
-                        <span class="badge bg-primary-subtle text-primary small mt-1">
-                            <i class="bi bi-calendar-check"></i> Scheduled Roster
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-primary-subtle text-primary p-3">
-                        <i class="bi bi-calendar-event fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Today's Appointments</span>
+                    <div class="stat-value">42 Total</div>
+                    <span class="badge bg-primary-subtle text-primary stat-meta">
+                        <i class="bi bi-calendar-check me-1"></i> Scheduled Roster
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-primary">
+                    <i class="bi bi-calendar-event"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Waiting Room</span>
-                        <h3 class="fw-bold mb-0 mt-1">4 Waiting</h3>
-                        <span class="badge bg-warning-subtle text-warning small mt-1">
-                            <i class="bi bi-hourglass-split"></i> Avg wait: 8 mins
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-warning-subtle text-warning p-3">
-                        <i class="bi bi-people fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Waiting Room</span>
+                    <div class="stat-value">4 Waiting</div>
+                    <span class="badge bg-warning-subtle text-warning stat-meta">
+                        <i class="bi bi-hourglass-split me-1"></i> Avg wait: 8 mins
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-warning">
+                    <i class="bi bi-people"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Chair Utilization</span>
-                        <h3 class="fw-bold mb-0 mt-1"><?= $totalActiveChairs ?> of <?= $totalCapacityChairs ?> Active</h3>
-                        <span class="badge bg-success-subtle text-success small mt-1">
-                            <i class="bi bi-check-circle"></i> <?= $occupancyPercentage ?>% Capacity
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-success-subtle text-success p-3">
-                        <i class="bi bi-person-wheelchair fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Chair Utilization</span>
+                    <div class="stat-value"><?= $totalActiveChairs ?> of <?= $totalCapacityChairs ?> Active</div>
+                    <span class="badge bg-success-subtle text-success stat-meta">
+                        <i class="bi bi-check-circle me-1"></i> <?= $occupancyPercentage ?>% Capacity
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-success">
+                    <i class="bi bi-person-wheelchair"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Walk-In Inquiries</span>
-                        <h3 class="fw-bold mb-0 mt-1">6 Enquiries</h3>
-                        <span class="badge bg-info-subtle text-info small mt-1">
-                            <i class="bi bi-person-plus"></i> Registered Today
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-info-subtle text-info p-3">
-                        <i class="bi bi-person-badge fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Walk-In Inquiries</span>
+                    <div class="stat-value">6 Enquiries</div>
+                    <span class="badge bg-info-subtle text-info stat-meta">
+                        <i class="bi bi-person-plus me-1"></i> Registered Today
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-info">
+                    <i class="bi bi-person-badge"></i>
                 </div>
             </div>
         </div>
@@ -843,69 +819,61 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
     <!-- Row 1: Billing & Accounts KPIs (Consistent GBP £ Currency) -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Daily Collections</span>
-                        <h3 class="fw-bold mb-0 mt-1 text-success">£14,850</h3>
-                        <span class="badge bg-success-subtle text-success small mt-1">
-                            <i class="bi bi-check-circle"></i> 28 Invoices Settled
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-success-subtle text-success p-3">
-                        <i class="bi bi-cash-stack fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Daily Collections</span>
+                    <div class="stat-value text-success">£14,850</div>
+                    <span class="badge bg-success-subtle text-success stat-meta">
+                        <i class="bi bi-check-circle me-1"></i> 28 Invoices Settled
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-success">
+                    <i class="bi bi-cash-stack"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Outstanding Balances</span>
-                        <h3 class="fw-bold mb-0 mt-1 text-danger">£3,420</h3>
-                        <span class="badge bg-danger-subtle text-danger small mt-1">
-                            <i class="bi bi-exclamation-octagon"></i> 6 Partial Balances Due
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-danger-subtle text-danger p-3">
-                        <i class="bi bi-receipt fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Outstanding Balances</span>
+                    <div class="stat-value text-danger">£3,420</div>
+                    <span class="badge bg-danger-subtle text-danger stat-meta">
+                        <i class="bi bi-exclamation-octagon me-1"></i> 6 Partial Balances Due
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-danger">
+                    <i class="bi bi-receipt"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Pending Insurance Claims</span>
-                        <h3 class="fw-bold mb-0 mt-1">7 Claims</h3>
-                        <span class="badge bg-warning-subtle text-warning small mt-1">
-                            <i class="bi bi-hourglass-split"></i> Awaiting Bupa / AXA
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-warning-subtle text-warning p-3">
-                        <i class="bi bi-shield-check fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Pending Insurance Claims</span>
+                    <div class="stat-value">7 Claims</div>
+                    <span class="badge bg-warning-subtle text-warning stat-meta">
+                        <i class="bi bi-hourglass-split me-1"></i> Awaiting Bupa / AXA
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-warning">
+                    <i class="bi bi-shield-check"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">POS Settlement Rate</span>
-                        <h3 class="fw-bold mb-0 mt-1">98.4%</h3>
-                        <span class="badge bg-primary-subtle text-primary small mt-1">
-                            <i class="bi bi-credit-card"></i> Contactless & Chip
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-primary-subtle text-primary p-3">
-                        <i class="bi bi-credit-card-2-front fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">POS Settlement Rate</span>
+                    <div class="stat-value">98.4%</div>
+                    <span class="badge bg-primary-subtle text-primary stat-meta">
+                        <i class="bi bi-credit-card me-1"></i> Contactless & Chip
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-primary">
+                    <i class="bi bi-credit-card-2-front"></i>
                 </div>
             </div>
         </div>
@@ -1083,69 +1051,61 @@ $occupancyPercentage = round(($totalActiveChairs / $totalCapacityChairs) * 100, 
     <!-- Row 1: KPI Statistics Widgets (Synchronized Numbers & GBP £ Currency) -->
     <div class="row g-3 mb-4">
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Today's Appointments</span>
-                        <h3 class="fw-bold mb-0 mt-1">42</h3>
-                        <span class="badge bg-success-subtle text-success small mt-1">
-                            <i class="bi bi-arrow-up-right"></i> 14% vs yesterday
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-primary-subtle text-primary p-3">
-                        <i class="bi bi-calendar-check fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Today's Appointments</span>
+                    <div class="stat-value">42</div>
+                    <span class="badge bg-success-subtle text-success stat-meta">
+                        <i class="bi bi-arrow-up-right me-1"></i> 14% vs yesterday
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-primary">
+                    <i class="bi bi-calendar-check"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Chair Occupancy Rate</span>
-                        <h3 class="fw-bold mb-0 mt-1"><?= $occupancyPercentage ?>%</h3>
-                        <span class="badge bg-success-subtle text-success small mt-1">
-                            <i class="bi bi-check-circle"></i> <?= $totalActiveChairs ?> of <?= $totalCapacityChairs ?> chairs active
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-success-subtle text-success p-3">
-                        <i class="bi bi-person-wheelchair fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Chair Occupancy Rate</span>
+                    <div class="stat-value"><?= $occupancyPercentage ?>%</div>
+                    <span class="badge bg-success-subtle text-success stat-meta">
+                        <i class="bi bi-check-circle me-1"></i> <?= $totalActiveChairs ?> of <?= $totalCapacityChairs ?> chairs active
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-success">
+                    <i class="bi bi-person-wheelchair"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Daily Billed Revenue</span>
-                        <h3 class="fw-bold mb-0 mt-1">£14,850</h3>
-                        <span class="badge bg-primary-subtle text-primary small mt-1">
-                            <i class="bi bi-receipt"></i> 28 Invoices Settled
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-warning-subtle text-warning p-3">
-                        <i class="bi bi-cash-stack fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Daily Billed Revenue</span>
+                    <div class="stat-value text-success">£14,850</div>
+                    <span class="badge bg-primary-subtle text-primary stat-meta">
+                        <i class="bi bi-receipt me-1"></i> 28 Invoices Settled
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-warning">
+                    <i class="bi bi-cash-stack"></i>
                 </div>
             </div>
         </div>
 
         <div class="col-12 col-sm-6 col-xl-3">
-            <div class="card p-3 bg-white border-0 shadow-sm rounded-3">
-                <div class="d-flex align-items-center justify-content-between">
-                    <div>
-                        <span class="text-muted small fw-semibold text-uppercase">Active Clinical Patients</span>
-                        <h3 class="fw-bold mb-0 mt-1">3,420</h3>
-                        <span class="badge bg-info-subtle text-info small mt-1">
-                            <i class="bi bi-shield-check"></i> EMR Charts Synced
-                        </span>
-                    </div>
-                    <div class="rounded-3 bg-info-subtle text-info p-3">
-                        <i class="bi bi-people-fill fs-3"></i>
-                    </div>
+            <div class="stat-card">
+                <div class="stat-card-content">
+                    <span class="stat-label">Active Clinical Patients</span>
+                    <div class="stat-value">3,420</div>
+                    <span class="badge bg-info-subtle text-info stat-meta">
+                        <i class="bi bi-shield-check me-1"></i> EMR Charts Synced
+                    </span>
+                </div>
+                <div class="stat-icon-wrapper stat-icon-info">
+                    <i class="bi bi-people-fill"></i>
                 </div>
             </div>
         </div>

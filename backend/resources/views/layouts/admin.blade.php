@@ -22,16 +22,152 @@
         :root {
             --app-primary: #0D9488;
             --app-primary-hover: #0F766E;
+            --app-primary-light: #F0FDFA;
             --app-accent: #F59E0B;
             --app-dark: #0F172A;
             --app-sidebar-bg: #1E293B;
             --font-family-base: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+            --border-slate: #E2E8F0;
+            --card-bg: #FFFFFF;
         }
 
         body {
             font-family: var(--font-family-base);
             background-color: #F8FAFC;
             color: #1E293B;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* shadcn-ui Button Tokens */
+        .btn-primary {
+            background-color: var(--app-primary) !important;
+            border-color: var(--app-primary) !important;
+            color: #FFFFFF !important;
+            font-weight: 600 !important;
+            letter-spacing: -0.01em !important;
+            border-radius: 0.5rem !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+            transition: all 0.15s ease !important;
+        }
+        .btn-primary:hover, .btn-primary:focus {
+            background-color: var(--app-primary-hover) !important;
+            border-color: var(--app-primary-hover) !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 6px -1px rgba(13, 148, 136, 0.2) !important;
+            transform: translateY(-1px);
+        }
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline-secondary {
+            background-color: #FFFFFF !important;
+            border-color: #E2E8F0 !important;
+            color: #334155 !important;
+            font-weight: 500 !important;
+            letter-spacing: -0.01em !important;
+            border-radius: 0.5rem !important;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.03) !important;
+            transition: all 0.15s ease !important;
+        }
+        .btn-outline-secondary:hover {
+            background-color: #F8FAFC !important;
+            border-color: #CBD5E1 !important;
+            color: #0F172A !important;
+            transform: translateY(-1px);
+        }
+
+        /* shadcn-ui Stat Card Tokens (Eliminates Margin & Icon Overlaps) */
+        .stat-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+            min-height: 104px;
+        }
+        .stat-card:hover {
+            box-shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+            border-color: #CBD5E1;
+            transform: translateY(-1px);
+        }
+        .stat-card-content {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            flex: 1;
+        }
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #64748B;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .stat-value {
+            font-size: 1.625rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #0F172A;
+            line-height: 1.2;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+        }
+        .stat-meta {
+            font-size: 0.72rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+        .stat-icon-wrapper {
+            width: 52px;
+            height: 52px;
+            min-width: 52px;
+            min-height: 52px;
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 1.5rem;
+            box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+        }
+        .stat-icon-primary {
+            background-color: #F0FDFA;
+            color: #0D9488;
+            border: 1px solid #CCFBF1;
+        }
+        .stat-icon-success {
+            background-color: #F0FDF4;
+            color: #16A34A;
+            border: 1px solid #DCFCE7;
+        }
+        .stat-icon-warning {
+            background-color: #FFFBEB;
+            color: #D97706;
+            border: 1px solid #FEF3C7;
+        }
+        .stat-icon-info {
+            background-color: #F0F9FF;
+            color: #0284C7;
+            border: 1px solid #E0F2FE;
+        }
+        .stat-icon-danger {
+            background-color: #FEF2F2;
+            color: #DC2626;
+            border: 1px solid #FEE2E2;
         }
 
         /* Professional Admin Readability Polish (Senior Dev Item 11) */
