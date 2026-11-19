@@ -19,25 +19,40 @@ export const BrandPreloader: React.FC<BrandPreloaderProps> = ({
   message = 'Connecting Clinical Systems & Theme Tokens...',
   onFinish,
 }) => {
-  const [shouldRender, setShouldRender] = useState(true);
+  // Check if session has already seen initial preloader once
+  const [shouldRender, setShouldRender] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
 
   useEffect(() => {
-    if (!isLoading) {
+    // Zero-loading rule: Never block client-side route transitions
+    if (typeof window !== 'undefined') {
+      const alreadySeen = sessionStorage.getItem('brand_preloader_seen');
+      if (alreadySeen || !isLoading) {
+        setShouldRender(false);
+        if (onFinish) onFinish();
+        return;
+      }
+
+      // First hard load only
+      setShouldRender(true);
+      sessionStorage.setItem('brand_preloader_seen', 'true');
+    }
+  }, [isLoading, onFinish]);
+
+  useEffect(() => {
+    if (!isLoading && shouldRender) {
       setIsFadingOut(true);
+      // Fast 100ms fade-out for zero perceived loading delay
       const timer = setTimeout(() => {
         setShouldRender(false);
         if (onFinish) onFinish();
-      }, 500);
+      }, 100);
       return () => clearTimeout(timer);
     }
-
-    setShouldRender(true);
-    setIsFadingOut(false);
     return undefined;
-  }, [isLoading, onFinish]);
+  }, [isLoading, shouldRender, onFinish]);
 
-  if (!shouldRender) {
+  if (!shouldRender || !isLoading) {
     return null;
   }
 
@@ -51,7 +66,7 @@ export const BrandPreloader: React.FC<BrandPreloaderProps> = ({
       aria-label="Loading clinical page content"
     >
       <div className={styles.preloaderCard}>
-        {/* Animated Brand Circular Badge with Pulse Glow */}
+        {/* Animated Brand Circular Badge */}
         <div className={styles.logoWrapper}>
           <div className={styles.logoGlow} />
           <div className={styles.logoRing} />

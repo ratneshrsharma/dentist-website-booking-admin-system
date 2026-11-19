@@ -1409,19 +1409,92 @@ class StandaloneRunner
             exit;
         }
 
+        // Trash endpoint
+        if ($uri === '/api/v1/admin/cms/pages/trash' || $uri === '/api/v1/cms/pages/trash') {
+            $rawInput = file_get_contents('php://input');
+            $payload = json_decode($rawInput, true) ?? $_POST;
+            $slug = trim($payload['slug'] ?? '', '/');
+            if ($slug === '') {
+                echo json_encode(['success' => false, 'message' => 'Slug is required']);
+                exit;
+            }
+            $storage = self::getCmsStorageData();
+            if (!isset($storage['trash'])) $storage['trash'] = [];
+            $storage['trash'][$slug] = true;
+            self::saveCmsStorageData($storage);
+            echo json_encode(['success' => true, 'message' => "Page '{$slug}' moved to trash."]);
+            exit;
+        }
+
+        // Restore endpoint
+        if ($uri === '/api/v1/admin/cms/pages/restore' || $uri === '/api/v1/cms/pages/restore') {
+            $rawInput = file_get_contents('php://input');
+            $payload = json_decode($rawInput, true) ?? $_POST;
+            $slug = trim($payload['slug'] ?? '', '/');
+            $storage = self::getCmsStorageData();
+            if (isset($storage['trash'][$slug])) {
+                unset($storage['trash'][$slug]);
+                self::saveCmsStorageData($storage);
+            }
+            echo json_encode(['success' => true, 'message' => "Page '{$slug}' restored successfully."]);
+            exit;
+        }
+
+        // Force Delete endpoint
+        if ($uri === '/api/v1/admin/cms/pages/force-delete' || $uri === '/api/v1/cms/pages/force-delete') {
+            $rawInput = file_get_contents('php://input');
+            $payload = json_decode($rawInput, true) ?? $_POST;
+            $slug = trim($payload['slug'] ?? '', '/');
+            $storage = self::getCmsStorageData();
+            if (isset($storage['pages'][$slug])) {
+                unset($storage['pages'][$slug]);
+            }
+            if (isset($storage['trash'][$slug])) {
+                unset($storage['trash'][$slug]);
+            }
+            self::saveCmsStorageData($storage);
+            echo json_encode(['success' => true, 'message' => "Page '{$slug}' permanently deleted."]);
+            exit;
+        }
+
         // 14. Website CMS Pages Content API (Endpoint 1: /api/v1/cms/pages/{slug} & /api/v1/cms-pages/{slug})
         if (str_starts_with($uri, '/api/v1/cms-pages') || str_starts_with($uri, '/api/v1/cms/pages')) {
             $slug = trim(preg_replace('#^/api/v1/cms(?:-pages|/pages)/?#', '', $uri), '/');
             if ($slug === '' || $slug === 'index' || $slug === 'list') {
-                echo json_encode(['success' => true, 'data' => [
-                    ['id' => 1, 'title' => 'Home', 'slug' => '/', 'template' => 'acocks-green', 'status' => 'published'],
-                    ['id' => 2, 'title' => 'Treatments & Services', 'slug' => 'treatments', 'template' => 'clinical-catalog', 'status' => 'published'],
-                    ['id' => 3, 'title' => 'General Dentistry & Routine Check-ups', 'slug' => 'treatments/general-dentistry', 'template' => 'procedure-detail', 'status' => 'published'],
-                    ['id' => 4, 'title' => 'About Us', 'slug' => 'about-us', 'template' => 'editorial', 'status' => 'published'],
-                    ['id' => 5, 'title' => 'Dental Implants', 'slug' => 'treatments/dental-implants', 'template' => 'procedure-detail', 'status' => 'published'],
-                    ['id' => 6, 'title' => 'Clear Aligners', 'slug' => 'treatments/clear-aligners', 'template' => 'procedure-detail', 'status' => 'published'],
-                    ['id' => 7, 'title' => 'Contact & Practice Locations', 'slug' => 'contact', 'template' => 'contact-split', 'status' => 'published'],
-                ]]);
+                $allPages = self::getAllCmsPagesList();
+                $statusFilter = $_GET['status'] ?? 'all';
+                $categoryFilter = $_GET['category'] ?? 'all';
+                $search = trim($_GET['search'] ?? '');
+
+                $published = 0; $draft = 0; $trash = 0;
+                foreach ($allPages as $p) {
+                    if ($p['status'] === 'published') $published++;
+                    elseif ($p['status'] === 'draft') $draft++;
+                    elseif ($p['status'] === 'trash') $trash++;
+                }
+
+                $filtered = array_filter($allPages, function($p) use ($statusFilter, $categoryFilter, $search) {
+                    if ($statusFilter !== 'all' && $p['status'] !== $statusFilter) return false;
+                    if ($categoryFilter !== 'all' && $p['category'] !== $categoryFilter) return false;
+                    if ($search !== '') {
+                        $matchTitle = stripos($p['title'], $search) !== false;
+                        $matchSlug = stripos($p['slug'], $search) !== false;
+                        if (!$matchTitle && !$matchSlug) return false;
+                    }
+                    return true;
+                });
+
+                echo json_encode([
+                    'success' => true,
+                    'total' => count($filtered),
+                    'counts' => [
+                        'all' => count($allPages) - $trash,
+                        'published' => $published,
+                        'draft' => $draft,
+                        'trash' => $trash,
+                    ],
+                    'data' => array_values($filtered)
+                ]);
                 exit;
             }
 
@@ -3060,6 +3133,345 @@ class StandaloneRunner
                 'nav_height' => '80px',
             ]
         ];
+    }
+
+    public static function getAllCmsPagesList(): array
+    {
+        $storage = self::getCmsStorageData();
+        $customPages = $storage['pages'] ?? [];
+        $trash = $storage['trash'] ?? [];
+
+        $defaultPages = [
+            [
+                'id' => 1,
+                'slug' => '/',
+                'title' => 'Home Landing Page',
+                'subtitle' => 'Pain-Free Restorations & Confident Smiles in Birmingham',
+                'category' => 'core',
+                'category_label' => 'Core Page',
+                'template' => 'acocks-green',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 98,
+                'updated_at' => '2026-03-21 14:30',
+            ],
+            [
+                'id' => 2,
+                'slug' => 'treatments',
+                'title' => 'Treatments & Services Catalog',
+                'subtitle' => 'Comprehensive NHS & Private dental treatments directory',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'clinical-catalog',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 97,
+                'updated_at' => '2026-03-21 15:10',
+            ],
+            [
+                'id' => 3,
+                'slug' => 'treatments/general-dentistry',
+                'title' => 'General Dentistry & Routine Check-ups',
+                'subtitle' => 'Comprehensive examinations, digital x-rays & oral cancer screening',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 99,
+                'updated_at' => '2026-03-20 09:45',
+            ],
+            [
+                'id' => 4,
+                'slug' => 'treatments/hygiene-airflow',
+                'title' => 'Dental Hygiene & Airflow Therapy',
+                'subtitle' => 'Ultrasonic scaling, plaque debridement & Airflow stain removal',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Sarah Miller (RDH)',
+                'seo_score' => 96,
+                'updated_at' => '2026-03-20 10:15',
+            ],
+            [
+                'id' => 5,
+                'slug' => 'treatments/root-canal-treatment',
+                'title' => 'Emergency Root Canal & Pain Relief',
+                'subtitle' => 'Endodontic therapy, urgent triage & abscess pain relief',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 98,
+                'updated_at' => '2026-03-20 11:00',
+            ],
+            [
+                'id' => 6,
+                'slug' => 'treatments/dental-implants',
+                'title' => 'Dental Implants & Titanium Fixtures',
+                'subtitle' => 'Single tooth replacements, CBCT planning & permanent implants',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 97,
+                'updated_at' => '2026-03-19 16:30',
+            ],
+            [
+                'id' => 7,
+                'slug' => 'treatments/crowns-and-bridges',
+                'title' => 'Zirconia Crowns & Precision Bridgework',
+                'subtitle' => 'E-Max ceramics, monolithic zirconia & multi-unit bridges',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 96,
+                'updated_at' => '2026-03-19 17:15',
+            ],
+            [
+                'id' => 8,
+                'slug' => 'treatments/all-on-4-dental-implants',
+                'title' => 'All-on-4 & Full Arch Dental Implants',
+                'subtitle' => 'Immediate fixed teeth-in-a-day arch rehabilitation',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 98,
+                'updated_at' => '2026-03-18 14:00',
+            ],
+            [
+                'id' => 9,
+                'slug' => 'treatments/clear-aligners',
+                'title' => 'Clear Aligners & Invisalign® Orthodontics',
+                'subtitle' => 'Discrete 3D digital alignment for crowded or spaced teeth',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 95,
+                'updated_at' => '2026-03-18 15:30',
+            ],
+            [
+                'id' => 10,
+                'slug' => 'treatments/teeth-whitening',
+                'title' => 'Boutique & Enlighten Professional Teeth Whitening',
+                'subtitle' => 'Customized whitening trays & high-strength gentle gels',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Sarah Miller (RDH)',
+                'seo_score' => 96,
+                'updated_at' => '2026-03-17 11:20',
+            ],
+            [
+                'id' => 11,
+                'slug' => 'treatments/porcelain-veneers',
+                'title' => 'Porcelain Veneers & Composite Bonding',
+                'subtitle' => 'Handcrafted E-Max porcelain laminates & cosmetic contouring',
+                'category' => 'treatments',
+                'category_label' => 'Treatments',
+                'template' => 'procedure-detail',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 97,
+                'updated_at' => '2026-03-17 13:40',
+            ],
+            [
+                'id' => 12,
+                'slug' => 'about-us',
+                'title' => 'About Us & Clinical Team',
+                'subtitle' => 'Meet our GDC registered dentists, hygienists & nurses',
+                'category' => 'core',
+                'category_label' => 'Core Page',
+                'template' => 'editorial',
+                'status' => 'published',
+                'author' => 'Practice Manager',
+                'seo_score' => 96,
+                'updated_at' => '2026-03-16 10:00',
+            ],
+            [
+                'id' => 13,
+                'slug' => 'contact',
+                'title' => 'Contact & Practice Locations',
+                'subtitle' => '1078 Warwick Road, Acocks Green, Birmingham B27 6BH',
+                'category' => 'core',
+                'category_label' => 'Core Page',
+                'template' => 'contact-split',
+                'status' => 'published',
+                'author' => 'Reception Team',
+                'seo_score' => 94,
+                'updated_at' => '2026-03-16 11:30',
+            ],
+            [
+                'id' => 14,
+                'slug' => 'resources',
+                'title' => 'Patient Resources & Post-Op Guides',
+                'subtitle' => 'Aftercare instructions, emergency triage & download forms',
+                'category' => 'core',
+                'category_label' => 'Core Page',
+                'template' => 'editorial',
+                'status' => 'published',
+                'author' => 'Clinical Team',
+                'seo_score' => 93,
+                'updated_at' => '2026-03-15 09:15',
+            ],
+            [
+                'id' => 15,
+                'slug' => 'pricing',
+                'title' => 'NHS Fee Bandings & Private Pricing Matrix',
+                'subtitle' => 'Transparent dental costs, Band 1/2/3 breakdown & 0% finance',
+                'category' => 'core',
+                'category_label' => 'Core Page',
+                'template' => 'editorial',
+                'status' => 'published',
+                'author' => 'Practice Manager',
+                'seo_score' => 95,
+                'updated_at' => '2026-03-15 14:00',
+            ],
+            [
+                'id' => 16,
+                'slug' => 'reviews',
+                'title' => 'Verified Patient Reviews & Testimonials',
+                'subtitle' => 'Patient feedback, Google 5-star ratings & NHS Friends/Family scores',
+                'category' => 'core',
+                'category_label' => 'Core Page',
+                'template' => 'editorial',
+                'status' => 'published',
+                'author' => 'Practice Manager',
+                'seo_score' => 95,
+                'updated_at' => '2026-03-14 16:45',
+            ],
+            [
+                'id' => 17,
+                'slug' => 'privacy-policy',
+                'title' => 'Privacy Policy & GDPR Patient Notice',
+                'subtitle' => 'Data protection protocols & Caldicott guardian guidelines',
+                'category' => 'legal',
+                'category_label' => 'Legal & Compliance',
+                'template' => 'policy',
+                'status' => 'published',
+                'author' => 'Compliance Lead',
+                'seo_score' => 91,
+                'updated_at' => '2026-03-10 11:00',
+            ],
+            [
+                'id' => 18,
+                'slug' => 'terms',
+                'title' => 'Practice Terms & Patient Care Agreement',
+                'subtitle' => 'Cancellation policy, deposit requirements & appointment rules',
+                'category' => 'legal',
+                'category_label' => 'Legal & Compliance',
+                'template' => 'policy',
+                'status' => 'published',
+                'author' => 'Compliance Lead',
+                'seo_score' => 90,
+                'updated_at' => '2026-03-10 11:30',
+            ],
+            [
+                'id' => 19,
+                'slug' => 'cookies',
+                'title' => 'Cookie Policy & Consent Management',
+                'subtitle' => 'First-party session cookies & analytics preferences',
+                'category' => 'legal',
+                'category_label' => 'Legal & Compliance',
+                'template' => 'policy',
+                'status' => 'published',
+                'author' => 'Compliance Lead',
+                'seo_score' => 89,
+                'updated_at' => '2026-03-09 14:20',
+            ],
+            [
+                'id' => 20,
+                'slug' => 'safeguarding',
+                'title' => 'NHS Safeguarding Policy & Vulnerable Patient Charter',
+                'subtitle' => 'Protection protocols for pediatric and vulnerable adults',
+                'category' => 'legal',
+                'category_label' => 'Legal & Compliance',
+                'template' => 'policy',
+                'status' => 'published',
+                'author' => 'Clinical Director',
+                'seo_score' => 94,
+                'updated_at' => '2026-03-08 09:30',
+            ],
+            [
+                'id' => 21,
+                'slug' => 'gdc-compliance',
+                'title' => 'GDC Regulatory Standards & Clinical Registration',
+                'subtitle' => 'General Dental Council statutory numbers & professional conduct',
+                'category' => 'legal',
+                'category_label' => 'Legal & Compliance',
+                'template' => 'policy',
+                'status' => 'published',
+                'author' => 'Dr. Richard C. Williams',
+                'seo_score' => 93,
+                'updated_at' => '2026-03-07 10:15',
+            ],
+            [
+                'id' => 22,
+                'slug' => 'complaints',
+                'title' => 'Patient Complaints & Feedback Procedure',
+                'subtitle' => 'Transparent resolution procedure & Parliamentary Ombudsman links',
+                'category' => 'legal',
+                'category_label' => 'Legal & Compliance',
+                'template' => 'policy',
+                'status' => 'published',
+                'author' => 'Practice Manager',
+                'seo_score' => 91,
+                'updated_at' => '2026-03-06 15:00',
+            ],
+            [
+                'id' => 23,
+                'slug' => 'infection-control',
+                'title' => 'Cross-Infection Control & Decontamination Charter',
+                'subtitle' => 'Autoclaving, HTM 01-05 compliance & clinical room sterilization',
+                'category' => 'legal',
+                'category_label' => 'Legal & Compliance',
+                'template' => 'policy',
+                'status' => 'draft',
+                'author' => 'Lead Dental Nurse',
+                'seo_score' => 88,
+                'updated_at' => '2026-03-05 16:30',
+            ],
+            [
+                'id' => 24,
+                'slug' => 'medical-disclaimer',
+                'title' => 'Medical Disclaimer & Clinical Advice Notice',
+                'subtitle' => 'Website information notice regarding professional dental diagnoses',
+                'category' => 'legal',
+                'category_label' => 'Legal & Compliance',
+                'template' => 'policy',
+                'status' => 'draft',
+                'author' => 'Compliance Lead',
+                'seo_score' => 85,
+                'updated_at' => '2026-03-04 12:00',
+            ],
+        ];
+
+        foreach ($defaultPages as &$page) {
+            $key = $page['slug'] === '/' ? 'home' : trim($page['slug'], '/');
+            if (isset($customPages[$key])) {
+                $c = $customPages[$key];
+                if (isset($c['title'])) $page['title'] = $c['title'];
+                if (isset($c['subtitle'])) $page['subtitle'] = $c['subtitle'];
+                if (isset($c['status'])) $page['status'] = $c['status'];
+                if (isset($c['category'])) $page['category'] = $c['category'];
+                if (isset($c['updated_at'])) $page['updated_at'] = $c['updated_at'];
+            }
+            if (isset($trash[$key])) {
+                $page['status'] = 'trash';
+            }
+        }
+
+        return $defaultPages;
     }
 
     public static function getDefaultTreatmentsContent(): array
