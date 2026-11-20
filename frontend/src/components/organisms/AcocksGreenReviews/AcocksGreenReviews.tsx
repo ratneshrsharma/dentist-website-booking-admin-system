@@ -41,7 +41,25 @@ const reviewsData: Review[] = [
   },
 ];
 
-export const AcocksGreenReviews: React.FC = () => {
+export interface ReviewsCmsData {
+  badge?: string;
+  headline?: string;
+  title?: string;
+  subtitle?: string;
+  overall_rating?: string;
+  total_reviews_count?: string;
+}
+
+interface AcocksGreenReviewsProps {
+  data?: ReviewsCmsData;
+}
+
+export const AcocksGreenReviews: React.FC<AcocksGreenReviewsProps> = ({ data }) => {
+  const badgeText = data?.badge || 'Patient Feedback';
+  const headlineText = data?.headline || data?.title || 'Hear From Our Acocks Green Community';
+  const ratingText = data?.overall_rating || '4.9';
+  const countText = data?.total_reviews_count || '284';
+
   return (
     <section id="reviews" className="py-20 md:py-24 bg-surface-container-low relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
@@ -49,10 +67,10 @@ export const AcocksGreenReviews: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
           <div>
             <span className="font-subheading-eyebrow text-subheading-eyebrow uppercase text-primary tracking-wider font-bold block mb-2">
-              Patient Feedback
+              {badgeText}
             </span>
             <h2 className="font-headline-lg text-[28px] sm:text-[34px] lg:text-headline-lg text-on-surface font-bold tracking-tight">
-              Hear From Our Acocks Green Community
+              {headlineText}
             </h2>
           </div>
 
@@ -70,7 +88,7 @@ export const AcocksGreenReviews: React.FC = () => {
               ))}
             </div>
             <span className="font-label-md text-label-md text-on-surface font-bold">
-              4.9 / 5.0 Rating
+              {ratingText} / 5.0 Rating ({countText}+ Reviews)
             </span>
           </div>
         </div>

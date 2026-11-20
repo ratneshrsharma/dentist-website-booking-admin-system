@@ -52,11 +52,17 @@ export const AcocksGreenTemplate: React.FC<AcocksGreenTemplateProps> = ({
         {/* ========================================================
             PHASE 3: ACOCKS GREEN SERVICES GRID & ABOUT OUR SURGERY
             ======================================================== */}
-        <AcocksGreenServices onOpenBooking={onOpenBooking} />
+        <AcocksGreenServices
+          data={content?.services as any}
+          onOpenBooking={onOpenBooking}
+        />
 
         <AcocksGreenAbout
           content={{
-            director: content?.director as any,
+            badge: (content?.about as any)?.badge,
+            headline: (content?.about as any)?.headline,
+            subtitle: (content?.about as any)?.subtitle,
+            director: (content?.director || (content?.about as any)?.director) as any,
             clinical_pillars: content?.clinical_pillars as any,
           }}
           onOpenBooking={onOpenBooking}
@@ -65,23 +71,30 @@ export const AcocksGreenTemplate: React.FC<AcocksGreenTemplateProps> = ({
         {/* ========================================================
             PHASE 4: ACOCKS GREEN CLINICAL TEAM & NURSING STRIP
             ======================================================== */}
-        <AcocksGreenTeam onOpenBooking={onOpenBooking} />
+        <AcocksGreenTeam
+          data={content?.team as any}
+          onOpenBooking={onOpenBooking}
+        />
 
         {/* ========================================================
             PHASE 4: PATIENT REVIEWS & SOCIAL PROOF
             ======================================================== */}
-        <AcocksGreenReviews />
+        <AcocksGreenReviews
+          data={content?.reviews as any}
+        />
 
         {/* ========================================================
             PHASE 4: NHS SEXUAL SAFETY CHARTER & PATIENT PROTECTION
             ======================================================== */}
-        <AcocksGreenSafetyCharter />
+        <AcocksGreenSafetyCharter
+          data={content?.charter as any}
+        />
 
         {/* ========================================================
             PHASE 5: PRACTICE LOCATION, OPENING HOURS & INTERACTIVE MAP
             ======================================================== */}
         <AcocksGreenContact
-          data={content?.consultation_cta as any}
+          data={(content?.contact || content?.consultation_cta) as any}
           onOpenBooking={() => onOpenBooking()}
         />
       </main>

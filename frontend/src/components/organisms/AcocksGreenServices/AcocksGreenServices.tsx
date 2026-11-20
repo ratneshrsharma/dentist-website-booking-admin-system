@@ -4,7 +4,16 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { CLINICAL_9_TREATMENTS, TreatmentItem } from '@/components/shared/treatmentsData';
 
+export interface ServicesCmsData {
+  badge?: string;
+  headline?: string;
+  title?: string;
+  subtitle?: string;
+  items?: TreatmentItem[];
+}
+
 interface AcocksGreenServicesProps {
+  data?: ServicesCmsData;
   onOpenBooking?: (serviceId?: number) => void;
 }
 
@@ -17,9 +26,16 @@ const CATEGORIES = [
 ];
 
 export const AcocksGreenServices: React.FC<AcocksGreenServicesProps> = ({
+  data,
   onOpenBooking,
 }) => {
   const [activeCategory, setActiveCategory] = useState<string>('all');
+
+  const badgeText = data?.badge || 'Our 9 Clinical Procedures & Services';
+  const headlineText = data?.headline || data?.title || 'Evidence-Based Clinical Dentistry in Acocks Green';
+  const subtitleText =
+    data?.subtitle ||
+    'Delivering statutory NHS fee bandings and bespoke private cosmetic & restorative solutions at 1078 Warwick Road, Birmingham B27 6BH.';
 
   const filteredServices: TreatmentItem[] = CLINICAL_9_TREATMENTS.filter((t) => {
     if (activeCategory === 'all') return true;
@@ -37,14 +53,14 @@ export const AcocksGreenServices: React.FC<AcocksGreenServicesProps> = ({
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 md:mb-12 gap-6">
           <div className="max-w-2xl">
             <span className="font-subheading-eyebrow text-subheading-eyebrow uppercase text-primary tracking-wider block mb-2 font-bold">
-              Our 9 Clinical Procedures &amp; Services
+              {badgeText}
             </span>
             <h2 className="font-headline-lg text-[28px] sm:text-[34px] lg:text-headline-lg text-on-surface font-bold tracking-tight">
-              Evidence-Based Clinical Dentistry in Acocks Green
+              {headlineText}
             </h2>
           </div>
           <p className="font-body-md text-body-md text-on-surface-variant max-w-md leading-relaxed">
-            Delivering statutory NHS fee bandings and bespoke private cosmetic &amp; restorative solutions at 1078 Warwick Road, Birmingham B27 6BH.
+            {subtitleText}
           </p>
         </div>
 

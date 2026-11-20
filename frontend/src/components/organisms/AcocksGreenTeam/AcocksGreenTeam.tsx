@@ -3,7 +3,15 @@
 import React, { useState } from 'react';
 import { getAssetPath } from '@/lib/assetPath';
 
+export interface TeamCmsData {
+  badge?: string;
+  headline?: string;
+  title?: string;
+  subtitle?: string;
+}
+
 interface AcocksGreenTeamProps {
+  data?: TeamCmsData;
   onOpenBooking?: (serviceId?: number) => void;
 }
 
@@ -136,21 +144,28 @@ const ClinicianCard: React.FC<{
 };
 
 export const AcocksGreenTeam: React.FC<AcocksGreenTeamProps> = ({
+  data,
   onOpenBooking,
 }) => {
+  const badgeText = data?.badge || 'Our Clinicians';
+  const headlineText = data?.headline || data?.title || 'Dedicated Dental Surgeons & Specialists';
+  const subtitleText =
+    data?.subtitle ||
+    'Our clinicians combine university medical rigour with gentle chairside communication, backed by continuing professional development across Birmingham.';
+
   return (
     <section id="team" className="py-20 md:py-24 bg-surface relative">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Section Header */}
         <div className="text-center max-w-2xl mx-auto mb-14 md:mb-16">
           <span className="font-subheading-eyebrow text-subheading-eyebrow uppercase text-primary tracking-wider font-bold block mb-2">
-            Our Clinicians
+            {badgeText}
           </span>
           <h2 className="font-headline-lg text-[28px] sm:text-[34px] lg:text-headline-lg text-on-surface font-bold tracking-tight">
-            Dedicated Dental Surgeons &amp; Specialists
+            {headlineText}
           </h2>
           <p className="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
-            Our clinicians combine university medical rigour with gentle chairside communication, backed by continuing professional development across Birmingham.
+            {subtitleText}
           </p>
         </div>
 

@@ -1387,6 +1387,19 @@ class StandaloneRunner
             if (isset($payload['pricing_matrix']) && is_array($payload['pricing_matrix'])) $existingPage['pricing_matrix'] = $payload['pricing_matrix'];
             if (isset($payload['pillars']) && is_array($payload['pillars'])) $existingPage['clinical_pillars'] = $payload['pillars'];
             if (isset($payload['consultation_cta']) && is_array($payload['consultation_cta'])) $existingPage['consultation_cta'] = $payload['consultation_cta'];
+            if (isset($payload['hero']) && is_array($payload['hero'])) $existingPage['hero'] = array_merge($existingPage['hero'] ?? [], $payload['hero']);
+            if (isset($payload['about']) && is_array($payload['about'])) $existingPage['about'] = array_merge($existingPage['about'] ?? [], $payload['about']);
+            if (isset($payload['director']) && is_array($payload['director'])) {
+                $existingPage['director'] = $payload['director'];
+                $existingPage['about']['director'] = $payload['director'];
+            }
+            if (isset($payload['team']) && is_array($payload['team'])) $existingPage['team'] = array_merge($existingPage['team'] ?? [], $payload['team']);
+            if (isset($payload['reviews']) && is_array($payload['reviews'])) $existingPage['reviews'] = array_merge($existingPage['reviews'] ?? [], $payload['reviews']);
+            if (isset($payload['charter']) && is_array($payload['charter'])) $existingPage['charter'] = array_merge($existingPage['charter'] ?? [], $payload['charter']);
+            if (isset($payload['contact']) && is_array($payload['contact'])) {
+                $existingPage['contact'] = array_merge($existingPage['contact'] ?? [], $payload['contact']);
+                $existingPage['consultation_cta'] = array_merge($existingPage['consultation_cta'] ?? [], $payload['contact']);
+            }
 
             // Merge SEO fields
             if (isset($payload['seo']) && is_array($payload['seo'])) {
@@ -1414,6 +1427,60 @@ class StandaloneRunner
                     'slug' => $slug,
                     'page' => $existingPage,
                     'common_code' => $storage['common_code'],
+                ],
+            ]);
+            exit;
+        }
+
+        // 13b. Dedicated Section Save Handler (POST /api/v1/admin/cms/sections/save)
+        if ($uri === '/api/v1/admin/cms/sections/save') {
+            $rawInput = file_get_contents('php://input');
+            $payload = json_decode($rawInput, true) ?? $_POST;
+            $slug = trim($payload['slug'] ?? 'home', '/');
+            if ($slug === '') $slug = 'home';
+            $sectionKey = trim($payload['section'] ?? $payload['section_key'] ?? '');
+            $sectionData = $payload['data'] ?? $payload['section_data'] ?? $payload;
+            unset($sectionData['slug'], $sectionData['section'], $sectionData['section_key']);
+
+            if ($sectionKey === '') {
+                echo json_encode(['success' => false, 'message' => 'section_key is required']);
+                exit;
+            }
+
+            $storage = self::getCmsStorageData();
+            if (!isset($storage['pages'][$slug])) {
+                $storage['pages'][$slug] = $slug === 'home' ? self::getDefaultHomeContent() : ['slug' => $slug];
+            }
+
+            if (is_array($sectionData)) {
+                $storage['pages'][$slug][$sectionKey] = array_merge(
+                    $storage['pages'][$slug][$sectionKey] ?? [],
+                    $sectionData
+                );
+            } else {
+                $storage['pages'][$slug][$sectionKey] = $sectionData;
+            }
+
+            // Sync aliases if updating contact or about
+            if ($sectionKey === 'contact') {
+                $storage['pages'][$slug]['consultation_cta'] = array_merge(
+                    $storage['pages'][$slug]['consultation_cta'] ?? [],
+                    $storage['pages'][$slug]['contact']
+                );
+            }
+            if ($sectionKey === 'about' && isset($storage['pages'][$slug]['about']['director'])) {
+                $storage['pages'][$slug]['director'] = $storage['pages'][$slug]['about']['director'];
+            }
+
+            self::saveCmsStorageData($storage);
+
+            echo json_encode([
+                'success' => true,
+                'message' => "Section '{$sectionKey}' on page '{$slug}' updated successfully.",
+                'data' => [
+                    'slug' => $slug,
+                    'section' => $sectionKey,
+                    'content' => $storage['pages'][$slug][$sectionKey],
                 ],
             ]);
             exit;
@@ -5809,6 +5876,227 @@ class StandaloneRunner
                 'hours' => 'Mon - Fri: 8:30am - 5:30pm',
                 'cta_primary' => 'Book Online Now',
                 'cta_secondary' => 'Call Practice Reception'
+            ],
+            'services' => [
+                'badge' => 'Our 9 Clinical Procedures & Services',
+                'headline' => 'Evidence-Based Clinical Dentistry in Acocks Green',
+                'subtitle' => 'Delivering statutory NHS fee bandings and bespoke private cosmetic & restorative solutions at 1078 Warwick Road, Birmingham B27 6BH.',
+                'items' => [
+                    [
+                        'id' => 1,
+                        'title' => 'General Dentistry & Check-ups',
+                        'category' => 'general',
+                        'description' => 'Comprehensive routine dental health checks, digital low-dose radiography, gum health charting, and tailored oral care plans.',
+                        'badge' => 'NHS Band 1 & Private',
+                        'price_starting' => '£26.80',
+                        'slug' => 'general-dentistry'
+                    ],
+                    [
+                        'id' => 2,
+                        'title' => 'Dental Hygiene & Airflow Therapy',
+                        'category' => 'hygiene',
+                        'description' => 'Deep ultrasonic scaling, periodontal biofilm decontamination, and gentle Airflow jet stain removal for radiant oral hygiene.',
+                        'badge' => 'Direct Access Available',
+                        'price_starting' => '£65.00',
+                        'slug' => 'hygiene-airflow'
+                    ],
+                    [
+                        'id' => 3,
+                        'title' => 'Emergency Dental Care',
+                        'category' => 'emergency',
+                        'description' => 'Dedicated daily emergency surgery slots reserved for acute toothache, broken teeth, dental abscesses, and trauma relief.',
+                        'badge' => 'Same-Day Relief',
+                        'price_starting' => '£26.80',
+                        'slug' => 'root-canal-treatment'
+                    ],
+                    [
+                        'id' => 4,
+                        'title' => 'Dental Implants',
+                        'category' => 'implants',
+                        'description' => 'Permanent titanium tooth replacements restoring chewing function and natural smile aesthetics with CBCT 3D guided placement.',
+                        'badge' => 'Gold Standard Replacement',
+                        'price_starting' => '£1,850.00',
+                        'slug' => 'dental-implants'
+                    ],
+                    [
+                        'id' => 5,
+                        'title' => 'Crowns & Bridgework',
+                        'category' => 'restorative',
+                        'description' => 'Custom monolithic zirconia and ceramic restorations engineered to reinforce damaged teeth and seamlessly span missing spaces.',
+                        'badge' => 'NHS & Private Premium',
+                        'price_starting' => '£319.10',
+                        'slug' => 'crowns-and-bridges'
+                    ],
+                    [
+                        'id' => 6,
+                        'title' => 'All-on-4 / Full Arch Implants',
+                        'category' => 'implants',
+                        'description' => 'Fixed immediate full-arch rehabilitation for patients with terminal dentition or unstable loose dentures in a single surgical day.',
+                        'badge' => 'Teeth in a Day',
+                        'price_starting' => '£8,500.00',
+                        'slug' => 'all-on-4-dental-implants'
+                    ],
+                    [
+                        'id' => 7,
+                        'title' => 'Invisalign Clear Aligners',
+                        'category' => 'orthodontics',
+                        'description' => 'Discreet, removable orthodontic aligners gently guiding crowded, spaced, or rotated teeth into harmonic alignment without metal brackets.',
+                        'badge' => 'Free 3D Scan & Preview',
+                        'price_starting' => '£1,950.00',
+                        'slug' => 'clear-aligners'
+                    ],
+                    [
+                        'id' => 8,
+                        'title' => 'Professional Teeth Whitening',
+                        'category' => 'cosmetic',
+                        'description' => 'Enlighten and boutique home whitening systems safely lifting stubborn extrinsic and intrinsic dental staining up to 16 shades whiter.',
+                        'badge' => 'Guaranteed B1 Shade',
+                        'price_starting' => '£350.00',
+                        'slug' => 'teeth-whitening'
+                    ],
+                    [
+                        'id' => 9,
+                        'title' => 'Porcelain Veneers & Bonding',
+                        'category' => 'cosmetic',
+                        'description' => 'Ultra-thin bespoke ceramic veneers and artistic composite bonding designed to correct chipped, uneven, or discoloured anterior teeth.',
+                        'badge' => 'Smile Makeover',
+                        'price_starting' => '£450.00',
+                        'slug' => 'porcelain-veneers'
+                    ]
+                ]
+            ],
+            'about' => [
+                'badge' => 'Clinical Leadership & Care Philosophy',
+                'headline' => 'Personalised Dentistry Rooted in Acocks Green',
+                'subtitle' => 'For over two decades, our practice has served the families of Acocks Green and Solihull with compassionate, clinical excellence.',
+                'director' => [
+                    'name' => 'Dr. Richard C. Williams',
+                    'title' => 'Clinical Director & Lead Implant Surgeon',
+                    'credentials' => 'BDS (Birm), MJDF RCS (Eng), PgCert Implantology',
+                    'gdc_number' => 'GDC No: 178924',
+                    'avatar' => 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=300',
+                    'quote' => 'For over two decades, our practice has served the families of Acocks Green and Solihull with compassionate, clinical excellence.'
+                ],
+                'clinical_pillars' => [
+                    [
+                        'id' => 'digital_precision',
+                        'icon' => 'biotech',
+                        'title' => 'Digital Workflow & 3D Imaging',
+                        'description' => 'Low-dose digital bitewings, high-resolution intraoral scanning, and precision diagnostics reduce chair time and eliminate uncomfortable impression trays.'
+                    ],
+                    [
+                        'id' => 'nhs_private',
+                        'icon' => 'verified',
+                        'title' => 'NHS & Private Parallel Care',
+                        'description' => 'We operate an integrated care model offering both standard NHS dental fee bands and advanced private cosmetic solutions under one registered surgery roof.'
+                    ],
+                    [
+                        'id' => 'nervous_patients',
+                        'icon' => 'spa',
+                        'title' => 'Gentle, Nervous Patient Protocol',
+                        'description' => 'Our clinical team is trained in empathetic, anxiety-reducing dentistry. We move at your pace, explain each step, and offer numbing gels before local anaesthesia.'
+                    ],
+                    [
+                        'id' => 'emergency_access',
+                        'icon' => 'emergency',
+                        'title' => 'Dedicated Emergency Access',
+                        'description' => 'We reserve daily clinical emergency slots for acute toothache, broken crowns, dental abscesses, and urgent pain relief in Acocks Green B27.'
+                    ]
+                ]
+            ],
+            'team' => [
+                'badge' => 'Meet Our Clinicians',
+                'headline' => 'Experienced GDC-Registered Dental Professionals',
+                'subtitle' => 'Our team of dentists, dental hygienists, and dedicated dental nurses are registered with the General Dental Council and committed to ongoing clinical education.',
+                'members' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Dr. Atandrilla Das',
+                        'role' => 'Associate Dentist',
+                        'credentials' => 'BDS Dental Surgeon',
+                        'gdc_number' => 'GDC No: 245189',
+                        'bio' => 'Special interest in comprehensive restorative therapy, minimal-prep restorations, and pediatric patient care.',
+                        'image' => '/images/doctor-das.jpg'
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Dr. Harjeevan Rai',
+                        'role' => 'Associate Dentist',
+                        'credentials' => 'BDS Dental Surgeon',
+                        'gdc_number' => 'GDC No: 265431',
+                        'bio' => 'Focused on preventive oral health, biomechanical restorations, and gentle pain relief treatments.',
+                        'image' => '/images/doctor-rai.jpg'
+                    ],
+                    [
+                        'id' => 3,
+                        'name' => 'Dr. Nadeem Sohail',
+                        'role' => 'Associate Dentist',
+                        'credentials' => 'BDS Dental Surgeon',
+                        'gdc_number' => 'GDC No: 289762',
+                        'bio' => 'Experienced in complex endodontics, emergency extractions, and crown & bridge oral rehabilitation.',
+                        'image' => '/images/doctor-sohail.jpg'
+                    ],
+                    [
+                        'id' => 4,
+                        'name' => 'Claire',
+                        'role' => 'Dental Hygienist',
+                        'credentials' => 'CEB Cert in Dental Hygiene',
+                        'gdc_number' => 'GDC No: 104523',
+                        'bio' => 'Leading our hygiene suite with deep periodontal therapy, patient brushing coaching, and airflow stain polishing.',
+                        'image' => '/images/hygienist-claire.jpg'
+                    ]
+                ]
+            ],
+            'reviews' => [
+                'badge' => 'Patient Feedback',
+                'headline' => 'Hear From Our Acocks Green Community',
+                'subtitle' => 'Over 15,000 patients trust Acocks Green Dental Practice for compassionate NHS care, emergency pain relief, and smile enhancements.',
+                'rating' => '4.9',
+                'total_reviews' => '140+',
+                'items' => [
+                    [
+                        'id' => 1,
+                        'name' => 'Vikram Kline',
+                        'category' => 'Verified Patient',
+                        'initials' => 'VK',
+                        'quote' => '“The best dental care I have ever experienced! Professional, courteous, and friendly staff made me feel like family... would highly recommend to anyone!”',
+                        'rating' => 5
+                    ],
+                    [
+                        'id' => 2,
+                        'name' => 'Emelia Hewitt',
+                        'category' => 'Family Dental Patient',
+                        'initials' => 'EH',
+                        'quote' => '“Always have a great, smooth experience here. The staff and dental nurses are friendly, respectful, caring and courteous of your time. The office is run efficiently.”',
+                        'rating' => 5
+                    ],
+                    [
+                        'id' => 3,
+                        'name' => 'Joe Bloggs',
+                        'category' => 'Restorative Care Patient',
+                        'initials' => 'JB',
+                        'quote' => '“The professionalism and friendliness of the whole team is outstanding. Every visit is like visiting friends. I couldn’t be happier with the results.”',
+                        'rating' => 5
+                    ]
+                ]
+            ],
+            'charter' => [
+                'badge' => 'NHS Safety Standard',
+                'headline' => 'NHS Sexual Safety Charter & Patient Protection',
+                'description' => 'Acocks Green Dental Practice is strictly committed to providing a safe, respectful environment where every patient, visitor, and staff member feels completely protected and valued. We maintain a zero-tolerance policy towards harassment or inappropriate conduct across all practice touchpoints.',
+                'manager_name' => 'Rebecca Solly',
+                'charter_pdf_url' => 'https://www.acocksgreendentalpractice.co.uk/wp-content/uploads/2026/04/SEXUAL-SAFETY-CHARTER.pdf'
+            ],
+            'contact' => [
+                'badge' => 'Practice Location & Hours',
+                'headline' => 'Visiting Acocks Green Dental Practice',
+                'subtitle' => 'Conveniently located in the heart of Acocks Green, Birmingham. Our surgery offers accessible ground-floor treatment suites, gentle patient parking, and direct transport links.',
+                'phone' => '0121 765 2870',
+                'emergency_phone' => '0121 765 2870',
+                'email' => 'reception@acocksgreendentalpractice.co.uk',
+                'address' => '1078 Warwick Road, Acocks Green, Birmingham B27 6BH',
+                'hours' => 'Mon - Thu: 09:00 – 17:30 | Fri: 09:00 – 17:00 | Sat - Sun: Closed (Emergency On-call)',
+                'google_maps_url' => 'https://www.google.com/maps/search/?api=1&query=Acocks+Green+Dental+Practice+Birmingham+B27+6BH'
             ],
             'seo' => self::getDefaultSeoData('home')
         ];

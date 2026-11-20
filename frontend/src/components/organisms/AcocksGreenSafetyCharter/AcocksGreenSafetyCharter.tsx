@@ -2,7 +2,30 @@
 
 import React from 'react';
 
-export const AcocksGreenSafetyCharter: React.FC = () => {
+export interface CharterCmsData {
+  badge?: string;
+  headline?: string;
+  title?: string;
+  description?: string;
+  practice_manager_contact?: string;
+  charter_pdf_url?: string;
+}
+
+interface AcocksGreenSafetyCharterProps {
+  data?: CharterCmsData;
+}
+
+export const AcocksGreenSafetyCharter: React.FC<AcocksGreenSafetyCharterProps> = ({ data }) => {
+  const badgeText = data?.badge || 'NHS Safety Standard';
+  const headlineText = data?.headline || data?.title || 'NHS Sexual Safety Charter & Patient Protection';
+  const descText =
+    data?.description ||
+    'Acocks Green Dental Practice is strictly committed to providing a safe, respectful environment where every patient, visitor, and staff member feels completely protected and valued. We maintain a zero-tolerance policy towards harassment or inappropriate conduct across all practice touchpoints.';
+  const managerContact = data?.practice_manager_contact || 'Rebecca Solly';
+  const pdfUrl =
+    data?.charter_pdf_url ||
+    'https://www.acocksgreendentalpractice.co.uk/wp-content/uploads/2026/04/SEXUAL-SAFETY-CHARTER.pdf';
+
   return (
     <section id="charter" className="py-16 md:py-20 bg-surface relative">
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
@@ -13,16 +36,16 @@ export const AcocksGreenSafetyCharter: React.FC = () => {
               <div className="inline-flex items-center gap-2 bg-secondary-fixed/50 px-3 py-1 rounded-full text-on-secondary-fixed border border-secondary-fixed/30">
                 <span className="material-symbols-outlined text-[18px] text-primary">verified</span>
                 <span className="font-subheading-eyebrow text-[11px] uppercase tracking-wider font-bold text-primary">
-                  NHS Safety Standard
+                  {badgeText}
                 </span>
               </div>
 
               <h2 className="font-headline-md text-[24px] sm:text-[28px] lg:text-headline-md text-on-surface font-bold tracking-tight">
-                NHS Sexual Safety Charter &amp; Patient Protection
+                {headlineText}
               </h2>
 
               <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-                <strong>Acocks Green Dental Practice</strong> is strictly committed to providing a safe, respectful environment where every patient, visitor, and staff member feels completely protected and valued. We maintain a zero-tolerance policy towards harassment or inappropriate conduct across all practice touchpoints.
+                {descText}
               </p>
 
               <div className="bg-surface-container-low p-4 rounded-xl flex items-center gap-3 border border-border-subtle/60">
@@ -31,7 +54,7 @@ export const AcocksGreenSafetyCharter: React.FC = () => {
                 </div>
                 <p className="font-body-sm text-body-sm text-on-surface leading-snug">
                   <strong>How to raise a concern:</strong> You may speak directly to our Practice Manager,{' '}
-                  <strong className="text-primary font-bold">Rebecca Solly</strong>, in private confidence at any time.
+                  <strong className="text-primary font-bold">{managerContact}</strong>, in private confidence at any time.
                 </p>
               </div>
             </div>
@@ -40,7 +63,7 @@ export const AcocksGreenSafetyCharter: React.FC = () => {
             <div className="lg:col-span-4 flex flex-col items-start lg:items-end justify-center space-y-3">
               <a
                 className="inline-flex items-center gap-2 bg-primary-container text-on-primary font-label-md text-label-md px-6 py-3.5 rounded-lg hover:bg-primary transition-all duration-200 shadow-sm hover:shadow-md cursor-pointer font-semibold"
-                href="https://www.acocksgreendentalpractice.co.uk/wp-content/uploads/2026/04/SEXUAL-SAFETY-CHARTER.pdf"
+                href={pdfUrl}
                 target="_blank"
                 rel="noopener noreferrer"
               >

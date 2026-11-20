@@ -11,6 +11,8 @@ const REMOTE_FALLBACK_2 =
 
 interface AcocksGreenAboutProps {
   content?: {
+    badge?: string;
+    headline?: string;
     title?: string;
     subtitle?: string;
     director?: {
@@ -34,6 +36,11 @@ export const AcocksGreenAbout: React.FC<AcocksGreenAboutProps> = ({
   content,
   onOpenBooking,
 }) => {
+  const badgeText = content?.badge || 'About Our Surgery';
+  const headlineText = content?.headline || content?.title || 'We Care For Your Dental Health & Well-being';
+  const subtitleText =
+    content?.subtitle ||
+    'Acocks Green Dental Practice is a family-oriented practice dedicated to providing exceptional dental treatments for patients of all ages across Birmingham B27. Our mission is to promote and maintain optimal dental health, ensuring beautiful and confident smiles that endure for a lifetime.';
   const [photo1Src, setPhoto1Src] = useState(() => getAssetPath('/images/surgery-clinic.jpg'));
   const [photo1Error, setPhoto1Error] = useState(false);
 
@@ -130,15 +137,15 @@ export const AcocksGreenAbout: React.FC<AcocksGreenAboutProps> = ({
           <div className="lg:col-span-6 flex flex-col space-y-6">
             <div>
               <span className="font-subheading-eyebrow text-subheading-eyebrow uppercase text-primary tracking-wider font-bold block mb-2">
-                About Our Surgery
+                {badgeText}
               </span>
               <h2 className="font-headline-lg text-[28px] sm:text-[34px] lg:text-headline-lg text-on-surface font-bold tracking-tight">
-                We Care For Your Dental Health &amp; Well-being
+                {headlineText}
               </h2>
             </div>
 
             <p className="font-body-md text-body-md text-on-surface-variant leading-relaxed">
-              Acocks Green Dental Practice is a family-oriented practice dedicated to providing exceptional dental treatments for patients of all ages across Birmingham B27. Our mission is to promote and maintain optimal dental health, ensuring beautiful and confident smiles that endure for a lifetime.
+              {subtitleText}
             </p>
 
             <div className="space-y-4 pt-1">

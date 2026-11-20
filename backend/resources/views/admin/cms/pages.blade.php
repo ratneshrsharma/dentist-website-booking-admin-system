@@ -288,7 +288,277 @@
 
                 <!-- TAB 2: Page Sections & CTA -->
                 <div class="tab-pane fade" id="tab-sections" role="tabpanel">
-                    <div class="row g-3">
+                    <!-- Home-Specific 7 Sections Accordion Manager -->
+                    <div id="homeSectionsContainer" class="d-none">
+                        <div class="alert alert-primary py-2 px-3 small d-flex align-items-center mb-3">
+                            <i class="bi bi-layers fs-5 me-2 text-primary"></i>
+                            <div>
+                                <strong>Homepage Section Manager:</strong>
+                                Edit all 7 live patient-facing sections. Changes reflect instantly on the homepage upon refresh.
+                            </div>
+                        </div>
+
+                        <div class="accordion" id="accordionHomeSections">
+                            <!-- Section 1: Hero Banner -->
+                            <div class="accordion-item mb-2 border rounded-2 overflow-hidden">
+                                <h2 class="accordion-header" id="headingSecHero">
+                                    <button class="accordion-button py-2 px-3 fw-bold small text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecHero" aria-expanded="true">
+                                        <i class="bi bi-star-fill text-warning me-2"></i> Section 1: Hero Banner & Patient Numbers
+                                    </button>
+                                </h2>
+                                <div id="collapseSecHero" class="accordion-collapse collapse show" data-bs-parent="#accordionHomeSections">
+                                    <div class="accordion-body p-3 bg-white">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Hero Eyebrow</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeHeroEyebrow" placeholder="B27 6BH Birmingham Dental Surgery">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Hero Main Headline</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeHeroHeadline" placeholder="Welcoming NHS & Private Dental Patients in Acocks Green">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Hero Subtitle</label>
+                                                <textarea class="form-control form-control-sm" id="homeHeroSubtitle" rows="2" placeholder="High-quality, gentle family dentistry, routine check-ups..."></textarea>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Emergency Triage Phone</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeHeroPhone" placeholder="+44 121 765 2870">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Primary CTA Label</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeHeroCtaPrimary" placeholder="Book Consultation">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Secondary CTA Label</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeHeroCtaSecondary" placeholder="Call Practice Reception">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Registered Patients Stat</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeHeroStatPatients" placeholder="15,000+">
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm py-1 px-3" onclick="saveSpecificSection('hero')">
+                                                    <i class="bi bi-check2 me-1"></i> Save Hero Section
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Services Overview -->
+                            <div class="accordion-item mb-2 border rounded-2 overflow-hidden">
+                                <h2 class="accordion-header" id="headingSecServices">
+                                    <button class="accordion-button collapsed py-2 px-3 fw-bold small text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecServices">
+                                        <i class="bi bi-grid-3x3-gap-fill text-primary me-2"></i> Section 2: 9 Clinical Procedures & Services
+                                    </button>
+                                </h2>
+                                <div id="collapseSecServices" class="accordion-collapse collapse" data-bs-parent="#accordionHomeSections">
+                                    <div class="accordion-body p-3 bg-white">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Services Section Badge</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeServicesBadge" placeholder="Our 9 Clinical Procedures & Services">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Services Section Headline</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeServicesHeadline" placeholder="Evidence-Based Clinical Dentistry in Acocks Green">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Services Section Subtitle</label>
+                                                <textarea class="form-control form-control-sm" id="homeServicesSubtitle" rows="2" placeholder="Delivering statutory NHS fee bandings and bespoke private solutions..."></textarea>
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm py-1 px-3" onclick="saveSpecificSection('services')">
+                                                    <i class="bi bi-check2 me-1"></i> Save Services Section
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 3: About & Clinical Director -->
+                            <div class="accordion-item mb-2 border rounded-2 overflow-hidden">
+                                <h2 class="accordion-header" id="headingSecAbout">
+                                    <button class="accordion-button collapsed py-2 px-3 fw-bold small text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecAbout">
+                                        <i class="bi bi-person-badge-fill text-success me-2"></i> Section 3: Surgery Overview & Clinical Director
+                                    </button>
+                                </h2>
+                                <div id="collapseSecAbout" class="accordion-collapse collapse" data-bs-parent="#accordionHomeSections">
+                                    <div class="accordion-body p-3 bg-white">
+                                        <div class="row g-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Clinical Director Name</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeDirectorName" placeholder="Dr. Richard C. Williams">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Director Title</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeDirectorTitle" placeholder="Clinical Director & Lead Implant Surgeon">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Credentials</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeDirectorCredentials" placeholder="BDS (Birm), MJDF RCS (Eng), PgCert Implantology">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">GDC Registration Number</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeDirectorGdc" placeholder="GDC No: 178924">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Director Personal Quote / Message</label>
+                                                <textarea class="form-control form-control-sm" id="homeDirectorQuote" rows="2" placeholder="For over two decades, our practice has served the families of Acocks Green..."></textarea>
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm py-1 px-3" onclick="saveSpecificSection('about')">
+                                                    <i class="bi bi-check2 me-1"></i> Save About & Director Section
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 4: Clinical Team -->
+                            <div class="accordion-item mb-2 border rounded-2 overflow-hidden">
+                                <h2 class="accordion-header" id="headingSecTeam">
+                                    <button class="accordion-button collapsed py-2 px-3 fw-bold small text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecTeam">
+                                        <i class="bi bi-people-fill text-info me-2"></i> Section 4: Clinical Team & GDC Registrations
+                                    </button>
+                                </h2>
+                                <div id="collapseSecTeam" class="accordion-collapse collapse" data-bs-parent="#accordionHomeSections">
+                                    <div class="accordion-body p-3 bg-white">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Team Section Badge</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeTeamBadge" placeholder="Meet Our Clinicians">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Team Section Headline</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeTeamHeadline" placeholder="Experienced GDC-Registered Dental Professionals">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Team Section Subtitle</label>
+                                                <textarea class="form-control form-control-sm" id="homeTeamSubtitle" rows="2" placeholder="Our team of dentists, dental hygienists, and dedicated dental nurses..."></textarea>
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm py-1 px-3" onclick="saveSpecificSection('team')">
+                                                    <i class="bi bi-check2 me-1"></i> Save Team Section
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 5: Patient Reviews -->
+                            <div class="accordion-item mb-2 border rounded-2 overflow-hidden">
+                                <h2 class="accordion-header" id="headingSecReviews">
+                                    <button class="accordion-button collapsed py-2 px-3 fw-bold small text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecReviews">
+                                        <i class="bi bi-chat-square-quote-fill text-warning me-2"></i> Section 5: Patient Feedback & Community Reviews
+                                    </button>
+                                </h2>
+                                <div id="collapseSecReviews" class="accordion-collapse collapse" data-bs-parent="#accordionHomeSections">
+                                    <div class="accordion-body p-3 bg-white">
+                                        <div class="row g-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Reviews Section Headline</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeReviewsHeadline" placeholder="Hear From Our Acocks Green Community">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label small fw-semibold">Overall Rating</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeReviewsRating" placeholder="4.9">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label small fw-semibold">Total Reviews Count</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeReviewsTotal" placeholder="140+">
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm py-1 px-3" onclick="saveSpecificSection('reviews')">
+                                                    <i class="bi bi-check2 me-1"></i> Save Reviews Section
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 6: Safety Charter -->
+                            <div class="accordion-item mb-2 border rounded-2 overflow-hidden">
+                                <h2 class="accordion-header" id="headingSecCharter">
+                                    <button class="accordion-button collapsed py-2 px-3 fw-bold small text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecCharter">
+                                        <i class="bi bi-shield-check text-success me-2"></i> Section 6: NHS Sexual Safety Charter
+                                    </button>
+                                </h2>
+                                <div id="collapseSecCharter" class="accordion-collapse collapse" data-bs-parent="#accordionHomeSections">
+                                    <div class="accordion-body p-3 bg-white">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Charter Headline</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeCharterHeadline" placeholder="NHS Sexual Safety Charter & Patient Protection">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Practice Manager Contact</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeCharterManager" placeholder="Rebecca Solly">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Charter PDF Document URL</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeCharterPdfUrl" placeholder="https://www.acocksgreendentalpractice.co.uk/wp-content/uploads/2026/04/SEXUAL-SAFETY-CHARTER.pdf">
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm py-1 px-3" onclick="saveSpecificSection('charter')">
+                                                    <i class="bi bi-check2 me-1"></i> Save Safety Charter Section
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 7: Practice Location & Hours -->
+                            <div class="accordion-item mb-2 border rounded-2 overflow-hidden">
+                                <h2 class="accordion-header" id="headingSecContact">
+                                    <button class="accordion-button collapsed py-2 px-3 fw-bold small text-dark bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecContact">
+                                        <i class="bi bi-geo-alt-fill text-danger me-2"></i> Section 7: Practice Location, Opening Hours & Direct Transit
+                                    </button>
+                                </h2>
+                                <div id="collapseSecContact" class="accordion-collapse collapse" data-bs-parent="#accordionHomeSections">
+                                    <div class="accordion-body p-3 bg-white">
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Location Section Headline</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeContactHeadline" placeholder="Visiting Acocks Green Dental Practice">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Surgery Address</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeContactAddress" placeholder="1078 Warwick Road, Acocks Green, Birmingham B27 6BH">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Surgery Phone</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeContactPhone" placeholder="0121 765 2870">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small fw-semibold">Emergency Triage Line</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeContactEmergencyPhone" placeholder="0121 765 2870">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Opening Hours Summary</label>
+                                                <input type="text" class="form-control form-control-sm" id="homeContactHours" placeholder="Mon - Thu: 09:00 – 17:30 | Fri: 09:00 – 17:00 | Sat - Sun: Closed">
+                                            </div>
+                                            <div class="col-12 text-end mt-2">
+                                                <button type="button" class="btn btn-outline-primary btn-sm py-1 px-3" onclick="saveSpecificSection('contact')">
+                                                    <i class="bi bi-check2 me-1"></i> Save Location & Hours Section
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inner Page Default Section Controls (Visible for non-home pages) -->
+                    <div id="innerPageSectionsContainer" class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-semibold small">Hero Eyebrow Tagline</label>
                             <input type="text" class="form-control" id="editPageEyebrow" placeholder="e.g. Evidence-Based Dental Excellence">
@@ -707,6 +977,83 @@
                 if (wysiwyg) {
                     wysiwyg.innerHTML = d.body_html || `<p>${d.subtitle || 'Welcome to Advanced Dental Clinic patient care portal.'}</p>`;
                 }
+
+                // Populate Homepage 7-Section Accordion if editing Home
+                const homeContainer = document.getElementById('homeSectionsContainer');
+                const innerContainer = document.getElementById('innerPageSectionsContainer');
+                if (cleanSlug === 'home') {
+                    if (homeContainer) homeContainer.classList.remove('d-none');
+                    if (innerContainer) innerContainer.classList.add('d-none');
+
+                    // Section 1: Hero
+                    const hero = d.hero || {};
+                    setVal('homeHeroEyebrow', hero.eyebrow || d.eyebrow || '');
+                    setVal('homeHeroHeadline', hero.title || hero.headline || d.title || '');
+                    setVal('homeHeroSubtitle', hero.subtitle || d.subtitle || '');
+                    setVal('homeHeroPhone', hero.emergency_phone || hero.phone || '');
+                    setVal('homeHeroCtaText', hero.primary_cta_label || 'Book Free Consultation');
+                    setVal('homeHeroCtaLink', hero.primary_cta_link || '/book');
+                    if (Array.isArray(hero.stats)) {
+                        for (let i = 0; i < 4; i++) {
+                            const st = hero.stats[i] || {};
+                            setVal(`homeHeroStat${i}Val`, st.value || '');
+                            setVal(`homeHeroStat${i}Lbl`, st.label || '');
+                            setVal(`homeHeroStat${i}Sub`, st.subtext || '');
+                        }
+                    }
+
+                    // Section 2: Services
+                    const services = d.services || {};
+                    setVal('homeServicesBadge', services.badge || '');
+                    setVal('homeServicesHeadline', services.headline || services.title || '');
+                    setVal('homeServicesSubtitle', services.subtitle || '');
+
+                    // Section 3: About & Director
+                    const about = d.about || {};
+                    const director = d.director || about.director || {};
+                    setVal('homeAboutBadge', about.badge || '');
+                    setVal('homeAboutHeadline', about.headline || about.title || '');
+                    setVal('homeAboutSubtitle', about.subtitle || '');
+                    setVal('homeDirectorName', director.name || '');
+                    setVal('homeDirectorTitle', director.title || '');
+                    setVal('homeDirectorCreds', director.credentials || '');
+                    setVal('homeDirectorGdc', director.gdc_number || '');
+                    setVal('homeDirectorQuote', director.quote || '');
+                    setVal('homeDirectorImage', director.image || '');
+
+                    // Section 4: Team
+                    const team = d.team || {};
+                    setVal('homeTeamBadge', team.badge || '');
+                    setVal('homeTeamHeadline', team.headline || team.title || '');
+                    setVal('homeTeamSubtitle', team.subtitle || '');
+
+                    // Section 5: Reviews
+                    const reviews = d.reviews || {};
+                    setVal('homeReviewsBadge', reviews.badge || '');
+                    setVal('homeReviewsHeadline', reviews.headline || reviews.title || '');
+                    setVal('homeReviewsSubtitle', reviews.subtitle || '');
+                    setVal('homeReviewsRating', reviews.overall_rating || reviews.rating || '4.9');
+                    setVal('homeReviewsCount', reviews.total_reviews_count || reviews.total_reviews || '284');
+
+                    // Section 6: Safety Charter
+                    const charter = d.charter || {};
+                    setVal('homeCharterBadge', charter.badge || '');
+                    setVal('homeCharterHeadline', charter.headline || charter.title || '');
+                    setVal('homeCharterDesc', charter.description || '');
+                    setVal('homeCharterManager', charter.practice_manager_contact || '');
+                    setVal('homeCharterPdfUrl', charter.charter_pdf_url || '');
+
+                    // Section 7: Contact & Hours
+                    const contact = d.contact || {};
+                    setVal('homeContactHeadline', contact.headline || contact.title || '');
+                    setVal('homeContactAddress', contact.surgery_address || contact.address || '');
+                    setVal('homeContactPhone', contact.surgery_phone || contact.phone || '');
+                    setVal('homeContactEmergencyPhone', contact.emergency_triage_line || contact.emergency_phone || '');
+                    setVal('homeContactHours', contact.opening_hours_summary || '');
+                } else {
+                    if (homeContainer) homeContainer.classList.add('d-none');
+                    if (innerContainer) innerContainer.classList.remove('d-none');
+                }
             }
         } catch (err) {
             console.warn('Could not fetch page details:', err);
@@ -756,6 +1103,69 @@
             }
         };
 
+        if (cleanSlug === 'home') {
+            payload.hero = {
+                eyebrow: document.getElementById('homeHeroEyebrow')?.value || '',
+                title: document.getElementById('homeHeroHeadline')?.value || '',
+                headline: document.getElementById('homeHeroHeadline')?.value || '',
+                subtitle: document.getElementById('homeHeroSubtitle')?.value || '',
+                emergency_phone: document.getElementById('homeHeroPhone')?.value || '',
+                primary_cta_label: document.getElementById('homeHeroCtaText')?.value || '',
+                primary_cta_link: document.getElementById('homeHeroCtaLink')?.value || '',
+                stats: [
+                    { value: document.getElementById('homeHeroStat0Val')?.value || '', label: document.getElementById('homeHeroStat0Lbl')?.value || '', subtext: document.getElementById('homeHeroStat0Sub')?.value || '' },
+                    { value: document.getElementById('homeHeroStat1Val')?.value || '', label: document.getElementById('homeHeroStat1Lbl')?.value || '', subtext: document.getElementById('homeHeroStat1Sub')?.value || '' },
+                    { value: document.getElementById('homeHeroStat2Val')?.value || '', label: document.getElementById('homeHeroStat2Lbl')?.value || '', subtext: document.getElementById('homeHeroStat2Sub')?.value || '' },
+                    { value: document.getElementById('homeHeroStat3Val')?.value || '', label: document.getElementById('homeHeroStat3Lbl')?.value || '', subtext: document.getElementById('homeHeroStat3Sub')?.value || '' }
+                ]
+            };
+            payload.services = {
+                badge: document.getElementById('homeServicesBadge')?.value || '',
+                headline: document.getElementById('homeServicesHeadline')?.value || '',
+                subtitle: document.getElementById('homeServicesSubtitle')?.value || ''
+            };
+            payload.director = {
+                name: document.getElementById('homeDirectorName')?.value || '',
+                title: document.getElementById('homeDirectorTitle')?.value || '',
+                credentials: document.getElementById('homeDirectorCreds')?.value || '',
+                gdc_number: document.getElementById('homeDirectorGdc')?.value || '',
+                quote: document.getElementById('homeDirectorQuote')?.value || '',
+                image: document.getElementById('homeDirectorImage')?.value || ''
+            };
+            payload.about = {
+                badge: document.getElementById('homeAboutBadge')?.value || '',
+                headline: document.getElementById('homeAboutHeadline')?.value || '',
+                subtitle: document.getElementById('homeAboutSubtitle')?.value || '',
+                director: payload.director
+            };
+            payload.team = {
+                badge: document.getElementById('homeTeamBadge')?.value || '',
+                headline: document.getElementById('homeTeamHeadline')?.value || '',
+                subtitle: document.getElementById('homeTeamSubtitle')?.value || ''
+            };
+            payload.reviews = {
+                badge: document.getElementById('homeReviewsBadge')?.value || '',
+                headline: document.getElementById('homeReviewsHeadline')?.value || '',
+                subtitle: document.getElementById('homeReviewsSubtitle')?.value || '',
+                overall_rating: document.getElementById('homeReviewsRating')?.value || '4.9',
+                total_reviews_count: document.getElementById('homeReviewsCount')?.value || '284'
+            };
+            payload.charter = {
+                badge: document.getElementById('homeCharterBadge')?.value || '',
+                headline: document.getElementById('homeCharterHeadline')?.value || '',
+                description: document.getElementById('homeCharterDesc')?.value || '',
+                practice_manager_contact: document.getElementById('homeCharterManager')?.value || '',
+                charter_pdf_url: document.getElementById('homeCharterPdfUrl')?.value || ''
+            };
+            payload.contact = {
+                headline: document.getElementById('homeContactHeadline')?.value || '',
+                surgery_address: document.getElementById('homeContactAddress')?.value || '',
+                surgery_phone: document.getElementById('homeContactPhone')?.value || '',
+                emergency_triage_line: document.getElementById('homeContactEmergencyPhone')?.value || '',
+                opening_hours_summary: document.getElementById('homeContactHours')?.value || ''
+            };
+        }
+
         try {
             const res = await fetch('{{ url("/api/v1/admin/cms/pages/save") }}', {
                 method: 'POST',
@@ -781,6 +1191,100 @@
             if (btnSave) btnSave.disabled = false;
             if (spinner) spinner.classList.add('d-none');
             if (icon) icon.classList.remove('d-none');
+        }
+    }
+
+    // Save Specific Section (Granular 1-Click Update for 7 Sections)
+    async function saveSpecificSection(sectionKey) {
+        const cleanSlug = document.getElementById('editPageCleanSlug')?.value || 'home';
+        let sectionData = {};
+
+        if (sectionKey === 'hero') {
+            sectionData = {
+                eyebrow: document.getElementById('homeHeroEyebrow')?.value || '',
+                title: document.getElementById('homeHeroHeadline')?.value || '',
+                headline: document.getElementById('homeHeroHeadline')?.value || '',
+                subtitle: document.getElementById('homeHeroSubtitle')?.value || '',
+                emergency_phone: document.getElementById('homeHeroPhone')?.value || '',
+                primary_cta_label: document.getElementById('homeHeroCtaText')?.value || '',
+                primary_cta_link: document.getElementById('homeHeroCtaLink')?.value || '',
+                stats: [
+                    { value: document.getElementById('homeHeroStat0Val')?.value || '', label: document.getElementById('homeHeroStat0Lbl')?.value || '', subtext: document.getElementById('homeHeroStat0Sub')?.value || '' },
+                    { value: document.getElementById('homeHeroStat1Val')?.value || '', label: document.getElementById('homeHeroStat1Lbl')?.value || '', subtext: document.getElementById('homeHeroStat1Sub')?.value || '' },
+                    { value: document.getElementById('homeHeroStat2Val')?.value || '', label: document.getElementById('homeHeroStat2Lbl')?.value || '', subtext: document.getElementById('homeHeroStat2Sub')?.value || '' },
+                    { value: document.getElementById('homeHeroStat3Val')?.value || '', label: document.getElementById('homeHeroStat3Lbl')?.value || '', subtext: document.getElementById('homeHeroStat3Sub')?.value || '' }
+                ]
+            };
+        } else if (sectionKey === 'services') {
+            sectionData = {
+                badge: document.getElementById('homeServicesBadge')?.value || '',
+                headline: document.getElementById('homeServicesHeadline')?.value || '',
+                subtitle: document.getElementById('homeServicesSubtitle')?.value || ''
+            };
+        } else if (sectionKey === 'about') {
+            sectionData = {
+                badge: document.getElementById('homeAboutBadge')?.value || '',
+                headline: document.getElementById('homeAboutHeadline')?.value || '',
+                subtitle: document.getElementById('homeAboutSubtitle')?.value || '',
+                director: {
+                    name: document.getElementById('homeDirectorName')?.value || '',
+                    title: document.getElementById('homeDirectorTitle')?.value || '',
+                    credentials: document.getElementById('homeDirectorCreds')?.value || '',
+                    gdc_number: document.getElementById('homeDirectorGdc')?.value || '',
+                    quote: document.getElementById('homeDirectorQuote')?.value || '',
+                    image: document.getElementById('homeDirectorImage')?.value || ''
+                }
+            };
+        } else if (sectionKey === 'team') {
+            sectionData = {
+                badge: document.getElementById('homeTeamBadge')?.value || '',
+                headline: document.getElementById('homeTeamHeadline')?.value || '',
+                subtitle: document.getElementById('homeTeamSubtitle')?.value || ''
+            };
+        } else if (sectionKey === 'reviews') {
+            sectionData = {
+                badge: document.getElementById('homeReviewsBadge')?.value || '',
+                headline: document.getElementById('homeReviewsHeadline')?.value || '',
+                subtitle: document.getElementById('homeReviewsSubtitle')?.value || '',
+                overall_rating: document.getElementById('homeReviewsRating')?.value || '4.9',
+                total_reviews_count: document.getElementById('homeReviewsCount')?.value || '284'
+            };
+        } else if (sectionKey === 'charter') {
+            sectionData = {
+                badge: document.getElementById('homeCharterBadge')?.value || '',
+                headline: document.getElementById('homeCharterHeadline')?.value || '',
+                description: document.getElementById('homeCharterDesc')?.value || '',
+                practice_manager_contact: document.getElementById('homeCharterManager')?.value || '',
+                charter_pdf_url: document.getElementById('homeCharterPdfUrl')?.value || ''
+            };
+        } else if (sectionKey === 'contact') {
+            sectionData = {
+                headline: document.getElementById('homeContactHeadline')?.value || '',
+                surgery_address: document.getElementById('homeContactAddress')?.value || '',
+                surgery_phone: document.getElementById('homeContactPhone')?.value || '',
+                emergency_triage_line: document.getElementById('homeContactEmergencyPhone')?.value || '',
+                opening_hours_summary: document.getElementById('homeContactHours')?.value || ''
+            };
+        }
+
+        const payload = {
+            slug: cleanSlug,
+            section: sectionKey,
+            data: sectionData
+        };
+
+        try {
+            const res = await fetch('{{ url("/api/v1/admin/cms/sections/save") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const json = await res.json();
+            if (!json.success) throw new Error(json.message || 'Server error');
+            showCmsAlert(`Section <strong>"${sectionKey.toUpperCase()}"</strong> successfully saved and synced to live frontend!`);
+        } catch (err) {
+            console.error('Section save error:', err);
+            showCmsAlert(`Failed to save section ${sectionKey}: ${err.message}`, 'danger');
         }
     }
 

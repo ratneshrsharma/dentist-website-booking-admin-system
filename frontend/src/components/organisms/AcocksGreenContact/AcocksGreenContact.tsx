@@ -4,9 +4,15 @@ import React from 'react';
 
 export interface ContactCmsData {
   phone?: string;
+  surgery_phone?: string;
+  emergency_phone?: string;
+  emergency_triage_line?: string;
   address?: string;
+  surgery_address?: string;
   hours?: string;
+  opening_hours_summary?: string;
   headline?: string;
+  title?: string;
   description?: string;
 }
 
@@ -16,8 +22,11 @@ interface AcocksGreenContactProps {
 }
 
 export const AcocksGreenContact: React.FC<AcocksGreenContactProps> = ({ data, onOpenBooking }) => {
-  const phone = data?.phone || '0121 765 2870';
+  const phone = data?.surgery_phone || data?.phone || '0121 765 2870';
   const rawPhone = phone.replace(/\s+/g, '');
+  const emergencyPhone = data?.emergency_triage_line || data?.emergency_phone || '0121 765 2870';
+  const headline = data?.headline || data?.title || 'Visiting Acocks Green Dental Practice';
+  const address = data?.surgery_address || data?.address || '1078 Warwick Road, Acocks Green, Birmingham B27 6BH';
   const openingHours = [
     { day: 'Monday', hours: '09:00 – 17:30', status: 'Open' },
     { day: 'Tuesday', hours: '09:00 – 17:30', status: 'Open' },
@@ -37,7 +46,7 @@ export const AcocksGreenContact: React.FC<AcocksGreenContactProps> = ({ data, on
             Practice Location &amp; Hours
           </span>
           <h2 className="font-headline-lg text-[28px] sm:text-[34px] lg:text-headline-lg text-on-surface font-bold tracking-tight">
-            Visiting Acocks Green Dental Practice
+            {headline}
           </h2>
           <p className="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
             Conveniently located in the heart of Acocks Green, Birmingham. Our surgery offers accessible ground-floor treatment suites, gentle patient parking, and direct transport links.
@@ -59,10 +68,7 @@ export const AcocksGreenContact: React.FC<AcocksGreenContactProps> = ({ data, on
                     Surgery Address
                   </h3>
                   <address className="not-italic font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
-                    <strong>Acocks Green Dental Practice</strong><br />
-                    Warwick Road, Acocks Green<br />
-                    Birmingham, West Midlands<br />
-                    <span className="text-primary font-bold">B27 6BH, United Kingdom</span>
+                    <strong>{address}</strong>
                   </address>
                   <div className="mt-4">
                     <a
@@ -116,7 +122,7 @@ export const AcocksGreenContact: React.FC<AcocksGreenContactProps> = ({ data, on
                     Urgent &amp; Out-of-Hours Dental Care
                   </h4>
                   <p className="font-body-sm text-[13px] text-on-surface-variant mt-1 leading-snug">
-                    If you experience acute dental pain, swelling, or trauma outside of our regular opening hours, please dial <strong className="text-primary font-bold">NHS 111</strong> (free from any phone) for immediate clinical triage and advice.
+                    If you experience acute dental pain, swelling, or trauma outside of our regular opening hours, please dial <strong className="text-primary font-bold">NHS 111</strong> or call our triage line <strong className="text-primary font-bold">{emergencyPhone}</strong> for immediate clinical triage and advice.
                   </p>
                 </div>
               </div>
