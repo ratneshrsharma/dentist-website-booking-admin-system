@@ -6,17 +6,55 @@ import { getAssetPath } from '@/lib/assetPath';
 const REMOTE_FALLBACK_URL =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuAc-hxxzCtIWRDIKCxFtim5T-K6eVYMo2HDC72Ixk0JspPXhfYh9bx-hlPbbzWKxJwDBVXZ18x8XTjA8N7ct0sUC7maDUdUSC3xGBEJU0Qbn0BqfJN-yxOj_MPYoIkkEk6ajkiDIeF_Zh5sg-JuD21N9kTqulTFkCNmIvB54qwKha9fn_yvSgXlq56PvBF2fB_zAGz8IfHEGFy0ZFZTckeYRabxogj2qIthy8AXA-aX';
 
+export interface HeroStatItem {
+  label: string;
+  value: string;
+}
+
+export interface HeroData {
+  eyebrow?: string;
+  headline?: string;
+  subtitle?: string;
+  cta_primary?: string;
+  cta_secondary?: string;
+  phone?: string;
+  image_url?: string;
+  stats?: HeroStatItem[];
+}
+
 interface AcocksGreenHeroProps {
+  data?: HeroData;
   onOpenBooking?: () => void;
   onOpenEmergency?: () => void;
 }
 
 export const AcocksGreenHero: React.FC<AcocksGreenHeroProps> = ({
+  data,
   onOpenBooking,
   onOpenEmergency,
 }) => {
-  const [imageSrc, setImageSrc] = useState(() => getAssetPath('/images/hero-patient.jpg'));
+  const [imageSrc, setImageSrc] = useState(() => (data?.image_url ? data.image_url : getAssetPath('/images/hero-patient.jpg')));
   const [imageError, setImageError] = useState(false);
+
+  // Update image if data changes
+  React.useEffect(() => {
+    if (data?.image_url) {
+      setImageSrc(data.image_url);
+    }
+  }, [data?.image_url]);
+
+  const defaultStats: HeroStatItem[] = [
+    { label: 'Happy Patients', value: '5,000+' },
+    { label: 'Dentists & Staff', value: '7+' },
+    { label: 'Years of Trust', value: '20+' },
+  ];
+
+  const activeStats = (data?.stats && data.stats.length > 0) ? data.stats : defaultStats;
+  const eyebrow = data?.eyebrow || 'NHS & Private Patients Welcomed';
+  const headline = data?.headline || 'Make your Dental Experience a Lot Brighter';
+  const subtitle = data?.subtitle || 'Welcome to Acocks Green Dental Practice. Delivering gentle, high-standard dental care for patients of all ages across Birmingham B27. From preventive family appointments to transformative aesthetics, our clinical team puts your comfort first.';
+  const phone = data?.phone || '+44 121 765 2870';
+  const ctaPrimary = data?.cta_primary || 'Book An Appointment';
 
   const handleImageError = () => {
     if (imageSrc !== REMOTE_FALLBACK_URL) {
@@ -46,48 +84,31 @@ export const AcocksGreenHero: React.FC<AcocksGreenHeroProps> = ({
           <div className="lg:col-span-7 flex flex-col space-y-6">
             {/* Clinical Eyebrow */}
             <span className="font-subheading-eyebrow text-subheading-eyebrow uppercase text-primary tracking-wider font-bold block">
-              NHS &amp; Private Patients Welcomed
+              {eyebrow}
             </span>
 
             {/* Display Hero Headline */}
             <h1 className="font-display-hero text-[34px] sm:text-[42px] lg:text-display-hero text-on-surface tracking-tight leading-[1.15]">
-              Make your Dental Experience a{' '}
-              <span className="text-primary underline decoration-primary-fixed decoration-4 underline-offset-8">
-                Lot Brighter
-              </span>
+              {headline}
             </h1>
 
             {/* Value Proposition Clinical Copy */}
             <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
-              Welcome to Acocks Green Dental Practice. Delivering gentle, high-standard dental care for patients of all ages across Birmingham B27. From preventive family appointments to transformative aesthetics, our clinical team puts your comfort first.
+              {subtitle}
             </p>
 
             {/* Key Metrics Stat Strip */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4 pt-2 pb-2">
-              <div className="bg-surface-card p-4 rounded-xl shadow-xs border border-border-subtle/60 hover:shadow-sm transition-shadow">
-                <span className="font-headline-lg text-[26px] sm:text-headline-lg text-primary block leading-none font-bold">
-                  5,000+
-                </span>
-                <span className="font-label-sm text-label-sm text-on-surface-variant mt-1.5 block">
-                  Happy Patients
-                </span>
-              </div>
-              <div className="bg-surface-card p-4 rounded-xl shadow-xs border border-border-subtle/60 hover:shadow-sm transition-shadow">
-                <span className="font-headline-lg text-[26px] sm:text-headline-lg text-primary block leading-none font-bold">
-                  7+
-                </span>
-                <span className="font-label-sm text-label-sm text-on-surface-variant mt-1.5 block">
-                  Dentists &amp; Staff
-                </span>
-              </div>
-              <div className="bg-surface-card p-4 rounded-xl shadow-xs border border-border-subtle/60 hover:shadow-sm transition-shadow">
-                <span className="font-headline-lg text-[26px] sm:text-headline-lg text-primary block leading-none font-bold">
-                  20+
-                </span>
-                <span className="font-label-sm text-label-sm text-on-surface-variant mt-1.5 block">
-                  Years of Trust
-                </span>
-              </div>
+              {activeStats.map((stat, sIdx) => (
+                <div key={sIdx} className="bg-surface-card p-4 rounded-xl shadow-xs border border-border-subtle/60 hover:shadow-sm transition-shadow">
+                  <span className="font-headline-lg text-[24px] sm:text-headline-lg text-primary block leading-none font-bold">
+                    {stat.value}
+                  </span>
+                  <span className="font-label-sm text-label-sm text-on-surface-variant mt-1.5 block">
+                    {stat.label}
+                  </span>
+                </div>
+              ))}
             </div>
 
             {/* Hero CTAs: Slide-out Booking Drawer + Emergency Triage */}
@@ -97,7 +118,7 @@ export const AcocksGreenHero: React.FC<AcocksGreenHeroProps> = ({
                 onClick={onOpenBooking}
                 className="inline-flex items-center gap-2 bg-primary-container text-on-primary font-label-md text-label-md px-6 py-3.5 rounded-lg shadow-md hover:bg-primary hover:shadow-lg transition-all duration-200 cursor-pointer"
               >
-                <span>Book An Appointment</span>
+                <span>{ctaPrimary}</span>
                 <span className="material-symbols-outlined text-[18px]">calendar_month</span>
               </button>
 
@@ -111,9 +132,9 @@ export const AcocksGreenHero: React.FC<AcocksGreenHeroProps> = ({
                   </span>
                   <a
                     className="font-label-md text-label-md text-on-surface hover:text-primary font-semibold transition-colors"
-                    href="tel:+441217652870"
+                    href={`tel:${phone.replace(/\s+/g, '')}`}
                   >
-                    +44 121 765 2870
+                    {phone}
                   </a>
                 </div>
               </div>

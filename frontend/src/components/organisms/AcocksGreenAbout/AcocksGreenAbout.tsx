@@ -10,10 +10,28 @@ const REMOTE_FALLBACK_2 =
   'https://lh3.googleusercontent.com/aida-public/AB6AXuBvQmLjgKxwCeJTDpXlRGFSe4hdL420kvlp07oRPMmIBbguZ6Y69xr_LD7iJ-JviRg0SM8HdkoiRThknfRVgPDSZVcWZ1mxP4wvhQJFUBlv5zeJ4c0-bWwc2KhMcF9Smeu5EELsOvXjoNvIEM1DBja6XOCG9ctbIisGxs4BJ8ytRc_B8hqIAClvVzrsd7Cbp8aube4jnvQwAWJXGjRiQ3D45xDeRNtxh9fcpzZ2xvXX';
 
 interface AcocksGreenAboutProps {
+  content?: {
+    title?: string;
+    subtitle?: string;
+    director?: {
+      name?: string;
+      title?: string;
+      credentials?: string;
+      gdc_number?: string;
+      quote?: string;
+    };
+    clinical_pillars?: Array<{
+      id: string;
+      title: string;
+      description: string;
+      icon: string;
+    }>;
+  };
   onOpenBooking?: () => void;
 }
 
 export const AcocksGreenAbout: React.FC<AcocksGreenAboutProps> = ({
+  content,
   onOpenBooking,
 }) => {
   const [photo1Src, setPhoto1Src] = useState(() => getAssetPath('/images/surgery-clinic.jpg'));
@@ -159,12 +177,21 @@ export const AcocksGreenAbout: React.FC<AcocksGreenAboutProps> = ({
             <div className="p-4 rounded-xl bg-surface-container flex items-center justify-between border border-border-subtle/50 flex-wrap gap-3">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-sm shrink-0">
-                  TM
+                  {content?.director?.name
+                    ? content.director.name
+                        .replace(/^Dr\.\s*/i, '')
+                        .split(' ')
+                        .map((n) => n[0])
+                        .slice(0, 2)
+                        .join('')
+                    : 'TM'}
                 </div>
                 <div>
-                  <p className="font-label-md text-label-md text-on-surface font-bold">Tarlok Marok</p>
+                  <p className="font-label-md text-label-md text-on-surface font-bold">
+                    {content?.director?.name || 'Tarlok Marok'}
+                  </p>
                   <p className="font-body-sm text-body-sm text-on-surface-variant">
-                    Practice Owner &amp; Lead Director
+                    {content?.director?.title || 'Practice Owner & Lead Director'}
                   </p>
                 </div>
               </div>

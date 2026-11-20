@@ -14,6 +14,7 @@ use PDOException;
 class StandaloneRunner
 {
     private static ?PDO $pdo = null;
+    private static bool $pdoAttempted = false;
     private static array $env = [];
 
     public static function run(): void
@@ -147,22 +148,31 @@ class StandaloneRunner
 
     private static function getPdo(): ?PDO
     {
-        if (self::$pdo !== null) {
+        if (self::$pdoAttempted) {
             return self::$pdo;
         }
+        self::$pdoAttempted = true;
+
+        if ((self::$env['DB_CONNECTION'] ?? '') === 'none' || (self::$env['DB_HOST'] ?? '') === 'none' || empty(self::$env['DB_HOST'])) {
+            self::$pdo = null;
+            return null;
+        }
+
         $host = self::$env['DB_HOST'] ?? '127.0.0.1';
         $port = self::$env['DB_PORT'] ?? '3306';
-        $db   = self::$env['DB_DATABASE'] ?? 'u499464314_advanceddental';
-        $user = self::$env['DB_USERNAME'] ?? 'u499464314_dental_user';
+        $db   = self::$env['DB_DATABASE'] ?? 'advanced_dental_clinic';
+        $user = self::$env['DB_USERNAME'] ?? 'root';
         $pass = self::$env['DB_PASSWORD'] ?? '';
 
         try {
             self::$pdo = new PDO("mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4", $user, $pass, [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                PDO::ATTR_TIMEOUT => 1,
             ]);
             return self::$pdo;
         } catch (PDOException $e) {
+            self::$pdo = null;
             return null;
         }
     }

@@ -24,7 +24,7 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
 
   // Dynamic API state
-  const [, setPageData] = useState<CmsPageContent | null>(null);
+  const [pageData, setPageData] = useState<CmsPageContent | null>(null);
   const [, setSeoData] = useState<CmsPageSeo | null>(null);
   const [themeData, setThemeData] = useState<GlobalThemeConfig | null>(null);
   const [codeData, setCodeData] = useState<CodeInjectionData | null>(null);
@@ -91,6 +91,7 @@ export default function HomePage() {
       {/* 3. Main Theme Template: Acocks Green Dental Practice with Smooth Fade Entrance */}
       <div className={`transition-opacity duration-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
         <AcocksGreenTemplate
+          content={pageData}
           onOpenBooking={handleOpenBooking}
           onOpenEmergency={() => handleOpenBooking(1)}
         />

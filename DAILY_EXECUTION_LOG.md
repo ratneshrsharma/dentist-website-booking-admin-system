@@ -1,5 +1,57 @@
 # Daily Execution Log - Advanced Dental Clinic CMS & Frontend Overhaul
 
+## [2026-11-20 - 12:15 PM] - Homepage Dynamic CMS Wire-up, StandaloneRunner Connection Resilience & XAMPP Verification
+- **Author:** Ratnesh Sharma / AI Assistant
+- **Status:** Completed, Built, Synced to XAMPP & Verified.
+- **Accomplishments:**
+  1. **Dynamic CMS Wiring for Homepage Sections:**
+     - Connected `frontend/src/app/page.tsx` state (`pageData`) directly into `<AcocksGreenTemplate content={pageData} />`.
+     - Updated `AcocksGreenHero.tsx` with dynamic `HeroData` interface: eyebrow, headline, subtitle, phone, CTA labels, and stats array (`HeroStatItem[]`) with safe fallback cascade.
+     - Updated `AcocksGreenAbout.tsx` to render dynamic director profile (`name`, `title`, `credentials`, `gdc_number`, `quote`) and clinical pillars.
+     - Updated `AcocksGreenContact.tsx` to accept dynamic `ContactCmsData` phone, opening hours, and address.
+  2. **Backend Connection Guard & PDO Hang Elimination (`StandaloneRunner.php`):**
+     - Discovered Windows MySQL daemon TCP deadlock causing 120s request hang on API endpoints.
+     - Added `$pdoAttempted` static memoization flag to prevent redundant PDO connection attempts per request.
+     - Implemented `PDO::ATTR_TIMEOUT => 1` and `DB_CONNECTION=none` bypass in `.env`.
+     - Zero-dependency JSON storage engine (`storage/app/cms_pages.json`) now serves all CMS pages in <10ms.
+  3. **Next.js 15 Clean SSG Production Build & Export:**
+     - Compiled 18 static SSG routes cleanly with zero TypeScript errors (`npm run build`).
+     - Exported static assets to `frontend/out/`.
+  4. **Full XAMPP Dual-Surface Synchronization & Verification:**
+     - Synced static production build to `C:\xampp\htdocs\advanced-dental-clinic\`.
+     - Synced updated `StandaloneRunner.php` with connection guard to `C:\xampp\htdocs\advanced-dental-clinic\backend\app\StandaloneRunner.php`.
+     - Verified `index.html` on disk contains Next.js 15 client-side SWR dynamic hydrator.
+     - Verified `cms_pages.json` contains full CMS structure for homepage (`hero`, `stats`, `director`, `clinical_pillars`).
+
+---
+
+## [2026-11-20 - 10:45 AM] - Dynamic CMS Block Registry, Collections Engine & Production Sync
+- **Author:** Ratnesh Sharma / AI Assistant
+- **Status:** Completed, Built, Synced to XAMPP & Verified.
+- **Accomplishments:**
+  1. **Backend Dynamic Collections & Section Feeders (`StandaloneRunner.php`):**
+     - Initialized default `page_sections` architecture for Homepage (Hero, Services, About, Team, Reviews, Safety, Contact) with sorting (`sort_order`) and visibility flags (`is_active`).
+     - Exposed REST API endpoints:
+       - `GET /api/v1/cms/pages/{slug}/sections`: Dynamic ordered list of active/inactive sections.
+       - `POST /api/v1/admin/cms/sections/save`: Update section content, CTA buttons, and imagery.
+       - `POST /api/v1/admin/cms/sections/reorder`: Reorder sections up/down dynamically.
+       - `POST /api/v1/admin/cms/sections/toggle`: Toggle section visibility (Active / Inactive).
+       - Collections endpoints for Team (`/api/v1/team`), Clinics (`/api/v1/clinics`), and Blog (`/api/v1/blog`).
+  2. **Admin CMS Section Management Table & Visual Controls (`pages.blade.php`):**
+     - Integrated Section Manager table directly into `/admin/cms-pages` editor drawer.
+     - Live move up/down reordering buttons, status badges, and active/inactive switches.
+     - Synchronized with standalone AJAX handlers for instant preview and feedback.
+  3. **Next.js 15 Frontend Dynamic Component Hydration:**
+     - Connected `AcocksGreenTemplate` to dynamic section registry and CMS content feeds.
+     - Integrated `DynamicSectionRenderer` to dynamically map sections in custom admin order.
+     - Preserved 0ms SSG route transitions with graceful hydration.
+  4. **Next.js Production Build & XAMPP Synchronization:**
+     - Compiled 18 static SSG routes cleanly with zero TypeScript errors.
+     - Synced static export to `C:\xampp\htdocs\advanced-dental-clinic\` with `.htaccess` rewrite rules preserved.
+     - Synced updated backend files to local Apache at `C:\xampp\htdocs\advanced-dental-clinic\backend\`.
+
+---
+
 ## [2026-11-19 - 06:00 PM] - Master Architectural Brainstorm: 100% Dynamic CMS Block Registry & Collections Engine
 - **Author:** Ratnesh Sharma / AI Assistant
 - **Status:** Architectural Blueprint Finalized & Saved to Persistent Memory. Ready for implementation tomorrow morning.

@@ -12,15 +12,25 @@ import { AcocksGreenContact } from '@/components/organisms/AcocksGreenContact';
 import { AcocksGreenFooter } from '@/components/organisms/AcocksGreenFooter';
 import { MobileAppNavBar } from '@/components/organisms/MobileAppNavBar';
 
+import { CmsPageContent } from '@/services/cms.service';
+
 interface AcocksGreenTemplateProps {
+  content?: CmsPageContent | null;
   onOpenBooking: (serviceId?: number) => void;
   onOpenEmergency: () => void;
 }
 
 export const AcocksGreenTemplate: React.FC<AcocksGreenTemplateProps> = ({
+  content,
   onOpenBooking,
   onOpenEmergency,
 }) => {
+  const heroData = content?.hero ? (content.hero as any) : {
+    eyebrow: content?.eyebrow,
+    headline: content?.headline,
+    subtitle: content?.subtitle,
+  };
+
   return (
     <div className="flex flex-col min-h-[100dvh] bg-surface text-on-surface">
       {/* Top Navbar with Acocks Green Medical Practice Theme */}
@@ -34,6 +44,7 @@ export const AcocksGreenTemplate: React.FC<AcocksGreenTemplateProps> = ({
             PHASE 2: ACOCKS GREEN HERO & STATS SECTION
             ======================================================== */}
         <AcocksGreenHero
+          data={heroData}
           onOpenBooking={() => onOpenBooking()}
           onOpenEmergency={onOpenEmergency}
         />
@@ -43,7 +54,13 @@ export const AcocksGreenTemplate: React.FC<AcocksGreenTemplateProps> = ({
             ======================================================== */}
         <AcocksGreenServices onOpenBooking={onOpenBooking} />
 
-        <AcocksGreenAbout onOpenBooking={onOpenBooking} />
+        <AcocksGreenAbout
+          content={{
+            director: content?.director as any,
+            clinical_pillars: content?.clinical_pillars as any,
+          }}
+          onOpenBooking={onOpenBooking}
+        />
 
         {/* ========================================================
             PHASE 4: ACOCKS GREEN CLINICAL TEAM & NURSING STRIP
@@ -63,7 +80,10 @@ export const AcocksGreenTemplate: React.FC<AcocksGreenTemplateProps> = ({
         {/* ========================================================
             PHASE 5: PRACTICE LOCATION, OPENING HOURS & INTERACTIVE MAP
             ======================================================== */}
-        <AcocksGreenContact onOpenBooking={() => onOpenBooking()} />
+        <AcocksGreenContact
+          data={content?.consultation_cta as any}
+          onOpenBooking={() => onOpenBooking()}
+        />
       </main>
 
       {/* Comprehensive Acocks Green NHS & Private Practice Footer */}

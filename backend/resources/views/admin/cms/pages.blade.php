@@ -650,7 +650,10 @@
     // Open Slide-Out Drawer (`offcanvas-end`) for Editing CMS Page
     async function openEditCmsDrawer(slug, encodedTitle) {
         const title = decodeURIComponent(encodedTitle);
-        const cleanSlug = slug.replace(/^\/+/, '');
+        let cleanSlug = slug.replace(/^\/+/, '');
+        if (!cleanSlug || cleanSlug === '') {
+            cleanSlug = 'home';
+        }
 
         const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
         const setTxt = (id, txt) => { const el = document.getElementById(id); if (el) el.innerText = txt; };
@@ -658,9 +661,9 @@
         setVal('editPageCleanSlug', cleanSlug);
         setVal('editPageTitle', title);
         setVal('editPageSlug', cleanSlug);
-        setTxt('activeEditingSlugBadge', '/' + cleanSlug);
-        setTxt('badgeTargetPageSlug', '/' + cleanSlug);
-        setTxt('editModalSubtitle', `Editing page content, sections, and SEO for /${cleanSlug}`);
+        setTxt('activeEditingSlugBadge', cleanSlug === 'home' ? '/' : '/' + cleanSlug);
+        setTxt('badgeTargetPageSlug', cleanSlug === 'home' ? '/' : '/' + cleanSlug);
+        setTxt('editModalSubtitle', `Editing page content, sections, and SEO for ${cleanSlug === 'home' ? '/' : '/' + cleanSlug}`);
 
         // Show loading spinner
         const spinner = document.getElementById('modalDataSpinner');

@@ -2,11 +2,22 @@
 
 import React from 'react';
 
+export interface ContactCmsData {
+  phone?: string;
+  address?: string;
+  hours?: string;
+  headline?: string;
+  description?: string;
+}
+
 interface AcocksGreenContactProps {
+  data?: ContactCmsData;
   onOpenBooking?: () => void;
 }
 
-export const AcocksGreenContact: React.FC<AcocksGreenContactProps> = ({ onOpenBooking }) => {
+export const AcocksGreenContact: React.FC<AcocksGreenContactProps> = ({ data, onOpenBooking }) => {
+  const phone = data?.phone || '0121 765 2870';
+  const rawPhone = phone.replace(/\s+/g, '');
   const openingHours = [
     { day: 'Monday', hours: '09:00 – 17:30', status: 'Open' },
     { day: 'Tuesday', hours: '09:00 – 17:30', status: 'Open' },
@@ -82,13 +93,13 @@ export const AcocksGreenContact: React.FC<AcocksGreenContactProps> = ({ onOpenBo
                     Speak directly with our friendly reception team to book or reschedule:
                   </p>
                   <a
-                    href="tel:01217652870"
+                    href={`tel:${rawPhone}`}
                     className="font-headline-sm text-primary font-bold hover:underline block text-[20px]"
                   >
-                    0121 765 2870
+                    {phone}
                   </a>
                   <span className="font-body-sm text-[12px] text-on-surface-variant block mt-1">
-                    International: +44 121 765 2870
+                    Direct Clinical Line
                   </span>
                 </div>
               </div>
