@@ -26,8 +26,8 @@ class StandaloneRunner
         self::loadEnv();
         $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
 
-        // Strip subfolder prefix if present (e.g. /advanced-dental-clinic)
-        $uri = preg_replace('#^/advanced-dental-clinic#', '', $uri);
+        // Strip subfolder prefix if present (e.g. /dental-saas or /advanced-dental-clinic)
+        $uri = preg_replace('#^/(?:dental-saas|advanced-dental-clinic)#', '', $uri);
         $uri = '/' . ltrim($uri, '/');
 
         // 1. API Endpoints
