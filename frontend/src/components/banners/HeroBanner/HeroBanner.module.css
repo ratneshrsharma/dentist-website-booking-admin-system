@@ -1,0 +1,284 @@
+.heroSection {
+  background-color: #ecf6ef;
+  padding: 4rem 0 6rem;
+  position: relative;
+  overflow: hidden;
+}
+.ambientGlowTop {
+  position: absolute;
+  top: -120px;
+  left: -120px;
+  width: 380px;
+  height: 380px;
+  border-radius: 9999px;
+  background-color: #E8F5E9;
+  filter: blur(60px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+.ambientGlowBottom {
+  position: absolute;
+  top: 35%;
+  right: -90px;
+  width: 480px;
+  height: 480px;
+  border-radius: 9999px;
+  background-color: rgba(198, 236, 205, 0.4);
+  filter: blur(70px);
+  opacity: 0.5;
+  pointer-events: none;
+}
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  position: relative;
+  z-index: 10;
+}
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4rem;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: 7fr 5fr;
+  }
+}
+.contentCol {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.eyebrow {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0d631b;
+}
+.headline {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 46px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #151d1a;
+}
+@media (max-width: 768px) {
+  .headline {
+    font-size: 32px;
+  }
+}
+.headline .highlight {
+  color: #0d631b;
+  text-decoration: underline;
+  text-decoration-color: #a3f69c;
+  text-decoration-thickness: 4px;
+  text-underline-offset: 8px;
+}
+.subtitle {
+  font-size: 17px;
+  line-height: 1.65;
+  color: #40493d;
+  max-width: 620px;
+}
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding-top: 0.5rem;
+}
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.statCard {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+.statCard .statValue {
+  display: block;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0d631b;
+  line-height: 1;
+}
+.statCard .statLabel {
+  display: block;
+  font-size: 13px;
+  color: #40493d;
+  margin-top: 6px;
+}
+.ctaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  padding-top: 0.5rem;
+}
+.primaryCta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #2e7d32;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
+  padding: 0.85rem 1.75rem;
+  font-size: 15px;
+}
+.primaryCta:hover {
+  background-color: #0d631b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.primaryCta:active {
+  transform: scale(0.98);
+}
+.emergencyCard {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.emergencyCard .phoneIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  background-color: #E8F5E9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.emergencyCard .emergencyLabel {
+  font-size: 12px;
+  color: #40493d;
+}
+.emergencyCard .phoneLink {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #151d1a;
+}
+.emergencyCard .phoneLink:hover {
+  color: #0d631b;
+}
+.visualCol {
+  position: relative;
+}
+.imageFrame {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  aspect-ratio: 4 / 5;
+  background-color: #dbe5de;
+}
+.imageFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.imageGradientOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(13, 46, 26, 0.65) 0%, transparent 45%);
+  pointer-events: none;
+}
+.cqcBadge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 8px 14px;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #151d1a;
+}
+.cqcBadge .badgeIcon {
+  color: #0d631b;
+  font-size: 20px;
+}
+.emergencySlotBanner {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 14px 18px;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.emergencySlotBanner .bannerLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.emergencySlotBanner .bannerLeft .emergencySlotIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  background-color: #E8F5E9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+.emergencySlotBanner .bannerLeft .bannerTitle {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #151d1a;
+}
+.emergencySlotBanner .bannerLeft .bannerSubtitle {
+  font-size: 12px;
+  color: #40493d;
+}
+.emergencySlotBanner .slotTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: #a3f69c;
+  color: #002204;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.25rem;
+  text-transform: capitalize;
+  font-size: 11px;
+}

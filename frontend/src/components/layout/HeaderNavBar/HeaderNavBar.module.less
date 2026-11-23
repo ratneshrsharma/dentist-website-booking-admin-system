@@ -1,0 +1,177 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 40;
+  background-color: rgba(242, 252, 245, 0.92);
+  backdrop-filter: blur(16px);
+  box-shadow: @shadow-xs;
+  height: @nav-height;
+  display: flex;
+  align-items: center;
+}
+
+.container {
+  .container();
+  .flex-between();
+  width: 100%;
+}
+
+.brandLink {
+  display: flex;
+  align-items: center;
+  gap: @space-sm;
+  text-decoration: none;
+}
+
+.logoWrapper {
+  width: 48px;
+  height: 48px;
+  position: relative;
+  border-radius: @radius-full;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.brandText {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+
+  .clinicName {
+    font-family: @font-headline;
+    font-size: 18px;
+    font-weight: 700;
+    color: @primary;
+  }
+
+  .tagline {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: @on-surface-variant;
+    margin-top: 2px;
+  }
+}
+
+.navMenu {
+  display: flex;
+  align-items: center;
+  gap: @space-lg;
+
+  @media (max-width: 1024px) {
+    display: none;
+  }
+}
+
+.navItem {
+  position: relative;
+
+  &:hover .dropdownMenu {
+    display: block;
+    animation: fadeIn 0.2s ease-in-out forwards;
+  }
+}
+
+.navLink {
+  font-family: @font-headline;
+  font-size: 14px;
+  font-weight: 600;
+  color: @on-surface-variant;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: @space-xs 0;
+  cursor: pointer;
+
+  &:hover, &.active {
+    color: @primary;
+  }
+}
+
+.dropdownMenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 260px;
+  background-color: @surface-card;
+  border-radius: @radius-xl;
+  box-shadow: @shadow-lg;
+  border: 1px solid @border-subtle;
+  padding: @space-sm;
+  z-index: 100;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: @space-sm;
+  padding: @space-sm @space-md;
+  border-radius: @radius-md;
+  font-size: 13px;
+  font-weight: 500;
+  color: @on-surface-variant;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  .dropdownIcon {
+    font-size: 18px;
+    color: @primary;
+  }
+
+  &:hover {
+    background-color: @surface-container-low;
+    color: @primary;
+  }
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: @space-md;
+}
+
+.bookButton {
+  .btn-primary();
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.mobileMenuToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: @on-surface;
+  cursor: pointer;
+  padding: 8px;
+
+  @media (max-width: 1024px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.mobileDrawer {
+  position: fixed;
+  inset: @nav-height 0 0 0;
+  background-color: @surface;
+  z-index: 1000;
+  padding: @space-lg;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: @space-md;
+}

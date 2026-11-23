@@ -1,0 +1,91 @@
+.topBar {
+  background-color: #0D2E1A;
+  color: #ffffff;
+  padding: 0.25rem 0;
+  font-size: 13px;
+  position: relative;
+  z-index: 50;
+}
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.infoGroup {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+@media (max-width: 768px) {
+  .infoGroup {
+    gap: 1rem;
+  }
+}
+.infoItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #ecf6ef;
+}
+.infoItem .icon {
+  color: #a3f69c;
+  font-size: 16px;
+}
+.infoItem .label {
+  font-weight: 600;
+}
+.infoItem .value {
+  color: #ffffff;
+  font-weight: 600;
+}
+.infoItem .value:hover {
+  color: #a3f69c;
+}
+@media (max-width: 640px) {
+  .infoItem.hiddenMobile {
+    display: none;
+  }
+}
+@media (max-width: 1024px) {
+  .infoItem.hiddenTablet {
+    display: none;
+  }
+}
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.emergencyBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  background-color: #ba1a1a;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+.emergencyBtn:hover {
+  background-color: #961515;
+}

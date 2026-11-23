@@ -1,0 +1,164 @@
+.section {
+  padding: 6rem 0;
+  background-color: #f2fcf5;
+  position: relative;
+}
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.headerRow {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 4rem;
+  gap: 1rem;
+}
+@media (min-width: 768px) {
+  .headerRow {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+.headerLeft {
+  max-width: 650px;
+}
+.eyebrow {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0d631b;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.title {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #151d1a;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+@media (max-width: 768px) {
+  .title {
+    font-size: 26px;
+  }
+}
+.subtitle {
+  font-size: 15px;
+  color: #40493d;
+  line-height: 1.6;
+  max-width: 440px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.serviceCard {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.serviceCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+.serviceCard:hover .iconWrapper {
+  transform: scale(1.06);
+}
+.serviceCard:hover .cardTitle {
+  color: #0d631b;
+}
+.serviceCard:hover .arrowIcon {
+  transform: translateX(4px);
+}
+.iconWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 1rem;
+  background-color: #E8F5E9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  transition: transform 0.25s ease;
+}
+.iconWrapper span {
+  font-size: 30px;
+}
+.tagGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 0.25rem;
+}
+.tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: #ecf6ef;
+  color: #0d631b;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.25rem;
+  text-transform: capitalize;
+}
+.cardTitle {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 19px;
+  font-weight: 700;
+  color: #151d1a;
+  margin-bottom: 0.25rem;
+  transition: color 0.2s ease;
+}
+.cardDescription {
+  font-size: 14px;
+  color: #40493d;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d631b;
+  margin-top: auto;
+  text-decoration: none;
+}
+.cardLink .arrowIcon {
+  font-size: 16px;
+  transition: transform 0.2s ease;
+}

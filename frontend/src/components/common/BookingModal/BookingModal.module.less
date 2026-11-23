@@ -1,0 +1,161 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  .flex-center();
+  padding: @space-md;
+}
+
+.modalCard {
+  background-color: @surface-card;
+  width: 100%;
+  max-width: 540px;
+  border-radius: @radius-2xl;
+  box-shadow: @shadow-xl;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalEnter 0.25s ease-out;
+}
+
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modalHeader {
+  background-color: @appointment-card-bg;
+  color: @on-primary;
+  padding: @space-lg;
+  .flex-between();
+
+  .modalTitle {
+    font-family: @font-headline;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .modalSubtitle {
+    font-size: 12px;
+    color: @surface-container-low;
+    margin-top: 2px;
+  }
+
+  .closeBtn {
+    background: none;
+    border: none;
+    color: @on-primary;
+    cursor: pointer;
+    font-size: 24px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      color: @primary-fixed;
+    }
+  }
+}
+
+.modalBody {
+  padding: @space-xl;
+  display: flex;
+  flex-direction: column;
+  gap: @space-md;
+}
+
+.inputField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  label {
+    font-family: @font-headline;
+    font-size: 12px;
+    font-weight: 700;
+    color: @on-surface;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  input, select {
+    padding: 10px 12px;
+    border-radius: @radius-md;
+    border: 1px solid @border-subtle;
+    background-color: @surface-container-low;
+    color: @on-surface;
+    font-size: 14px;
+    outline: none;
+
+    &:focus {
+      border-color: @primary;
+      box-shadow: 0 0 0 3px rgba(13, 99, 27, 0.12);
+    }
+  }
+}
+
+.submitBtn {
+  .btn-primary();
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  margin-top: @space-sm;
+}
+
+.successCard {
+  text-align: center;
+  padding: @space-xl;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: @space-md;
+
+  .checkIcon {
+    width: 60px;
+    height: 60px;
+    border-radius: @radius-full;
+    background-color: @brand-accent-glow;
+    color: @primary;
+    .flex-center();
+    font-size: 32px;
+  }
+
+  .bookingRef {
+    font-family: @font-headline;
+    font-size: 22px;
+    font-weight: 800;
+    color: @primary;
+    background-color: @surface-container-low;
+    padding: 6px 16px;
+    border-radius: @radius-md;
+    letter-spacing: 0.05em;
+  }
+
+  .whatsappBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #25d366;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: @radius-md;
+    font-weight: 700;
+    text-decoration: none;
+
+    &:hover {
+      background-color: #20ba5a;
+    }
+  }
+}

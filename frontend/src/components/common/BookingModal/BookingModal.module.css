@@ -1,0 +1,170 @@
+.modalBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.modalCard {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 540px;
+  border-radius: 1.5rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: modalEnter 0.25s ease-out;
+}
+@keyframes modalEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+.modalHeader {
+  background-color: #0D2E1A;
+  color: #ffffff;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modalHeader .modalTitle {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+.modalHeader .modalSubtitle {
+  font-size: 12px;
+  color: #ecf6ef;
+  margin-top: 2px;
+}
+.modalHeader .closeBtn {
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 24px;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modalHeader .closeBtn:hover {
+  color: #a3f69c;
+}
+.modalBody {
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.inputField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.inputField label {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #151d1a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.inputField input,
+.inputField select {
+  padding: 10px 12px;
+  border-radius: 0.5rem;
+  border: 1px solid #E5EFE7;
+  background-color: #ecf6ef;
+  color: #151d1a;
+  font-size: 14px;
+  outline: none;
+}
+.inputField input:focus,
+.inputField select:focus {
+  border-color: #0d631b;
+  box-shadow: 0 0 0 3px rgba(13, 99, 27, 0.12);
+}
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #2e7d32;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  margin-top: 0.5rem;
+}
+.submitBtn:hover {
+  background-color: #0d631b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.submitBtn:active {
+  transform: scale(0.98);
+}
+.successCard {
+  text-align: center;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.successCard .checkIcon {
+  width: 60px;
+  height: 60px;
+  border-radius: 9999px;
+  background-color: #E8F5E9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+.successCard .bookingRef {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #0d631b;
+  background-color: #ecf6ef;
+  padding: 6px 16px;
+  border-radius: 0.5rem;
+  letter-spacing: 0.05em;
+}
+.successCard .whatsappBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #25d366;
+  color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 0.5rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.successCard .whatsappBtn:hover {
+  background-color: #20ba5a;
+}

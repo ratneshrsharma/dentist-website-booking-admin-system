@@ -1,0 +1,181 @@
+.section {
+  padding: 6rem 0;
+  background-color: #f2fcf5;
+}
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.headerRow {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 4rem;
+}
+.headerRow .eyebrow {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0d631b;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.headerRow .title {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #151d1a;
+  letter-spacing: -0.01em;
+}
+.headerRow .subtitle {
+  font-size: 15px;
+  color: #40493d;
+  margin-top: 0.25rem;
+  line-height: 1.6;
+}
+.doctorsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+@media (min-width: 640px) {
+  .doctorsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .doctorsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.doctorCard {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.doctorCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+.doctorCard:hover .avatarFrame img {
+  transform: scale(1.05);
+}
+.avatarFrame {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background-color: #dbe5de;
+  overflow: hidden;
+}
+.avatarFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+.roleBadge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  color: #0d631b;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 0.5rem;
+}
+.cardBody {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.cardBody .doctorName {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #151d1a;
+}
+.cardBody .credentials {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0d631b;
+  margin: 2px 0 8px;
+}
+.cardBody .bio {
+  font-size: 13px;
+  color: #40493d;
+  line-height: 1.55;
+}
+.supportTeamStrip {
+  background-color: #ecf6ef;
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  margin-top: 1rem;
+}
+.supportHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+@media (min-width: 768px) {
+  .supportHeader {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+.supportHeader .supportTitle {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #151d1a;
+}
+.supportHeader .supportSubtitle {
+  font-size: 13px;
+  color: #40493d;
+}
+.supportHeader .managerBadge {
+  font-size: 12px;
+  background-color: #ffffff;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  color: #151d1a;
+  white-space: nowrap;
+  border: 1px solid #E5EFE7;
+}
+.nursePillsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.nursePill {
+  background-color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 0.5rem;
+  font-size: 13px;
+  color: #151d1a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+.nursePill .nurseRole {
+  color: #40493d;
+  font-size: 12px;
+}

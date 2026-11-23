@@ -1,0 +1,189 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.section {
+  padding: @space-3xl 0;
+  background-color: @surface;
+}
+
+.container {
+  .container();
+}
+
+.headerRow {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto @space-2xl;
+
+  .eyebrow {
+    font-family: @font-headline;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: @primary;
+    display: block;
+    margin-bottom: @space-xs;
+  }
+
+  .title {
+    font-family: @font-headline;
+    font-size: 34px;
+    font-weight: 700;
+    color: @on-surface;
+    letter-spacing: -0.01em;
+  }
+
+  .subtitle {
+    font-size: 15px;
+    color: @on-surface-variant;
+    margin-top: @space-xs;
+    line-height: 1.6;
+  }
+}
+
+.doctorsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: @space-lg;
+  margin-bottom: @space-xl;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.doctorCard {
+  .card-container();
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    .avatarFrame img {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.avatarFrame {
+  position: relative;
+  width: 100%;
+  height: 250px;
+  background-color: @surface-container-highest;
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+  }
+}
+
+.roleBadge {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  color: @primary;
+  font-family: @font-headline;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: @radius-md;
+}
+
+.cardBody {
+  padding: @space-md;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+
+  .doctorName {
+    font-family: @font-headline;
+    font-size: 18px;
+    font-weight: 700;
+    color: @on-surface;
+  }
+
+  .credentials {
+    font-size: 13px;
+    font-weight: 600;
+    color: @primary;
+    margin: 2px 0 8px;
+  }
+
+  .bio {
+    font-size: 13px;
+    color: @on-surface-variant;
+    line-height: 1.55;
+  }
+}
+
+.supportTeamStrip {
+  background-color: @surface-container-low;
+  padding: @space-lg;
+  border-radius: @radius-2xl;
+  margin-top: @space-md;
+}
+
+.supportHeader {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: @space-sm;
+  margin-bottom: @space-md;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .supportTitle {
+    font-family: @font-headline;
+    font-size: 18px;
+    font-weight: 700;
+    color: @on-surface;
+  }
+
+  .supportSubtitle {
+    font-size: 13px;
+    color: @on-surface-variant;
+  }
+
+  .managerBadge {
+    font-size: 12px;
+    background-color: @surface-card;
+    padding: 6px 14px;
+    border-radius: @radius-full;
+    color: @on-surface;
+    white-space: nowrap;
+    border: 1px solid @border-subtle;
+  }
+}
+
+.nursePillsWrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.nursePill {
+  background-color: @surface-card;
+  padding: 6px 12px;
+  border-radius: @radius-md;
+  font-size: 13px;
+  color: @on-surface;
+  box-shadow: @shadow-xs;
+
+  .nurseRole {
+    color: @on-surface-variant;
+    font-size: 12px;
+  }
+}

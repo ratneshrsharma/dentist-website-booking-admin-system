@@ -1,0 +1,235 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.footer {
+  background-color: @surface-container-low;
+  padding-top: @space-2xl;
+  padding-bottom: @space-lg;
+  box-shadow: 0 -1px 8px rgba(0, 0, 0, 0.03);
+}
+
+.container {
+  .container();
+}
+
+.mainGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: @space-2xl;
+  margin-bottom: @space-2xl;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.brandCol {
+  display: flex;
+  flex-direction: column;
+  gap: @space-md;
+
+  .brandHeader {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    .logoWrapper {
+      width: 40px;
+      height: 40px;
+      position: relative;
+      border-radius: @radius-full;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+
+    .brandTitles {
+      display: flex;
+      flex-direction: column;
+
+      .clinicTitle {
+        font-family: @font-headline;
+        font-size: 18px;
+        font-weight: 700;
+        color: @primary;
+        line-height: 1.1;
+      }
+
+      .tagline {
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: @on-surface-variant;
+        letter-spacing: 0.08em;
+      }
+    }
+  }
+
+  .brandBio {
+    font-size: 13px;
+    color: @on-surface-variant;
+    line-height: 1.6;
+  }
+
+  .addressBlock {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    color: @on-surface-variant;
+    line-height: 1.4;
+
+    .addressLead {
+      font-weight: 700;
+      color: @on-surface;
+    }
+  }
+}
+
+.colHeading {
+  font-family: @font-headline;
+  font-size: 17px;
+  font-weight: 700;
+  color: @on-surface;
+  margin-bottom: @space-md;
+}
+
+.linksList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: @space-sm;
+
+  li a {
+    font-size: 14px;
+    color: @on-surface-variant;
+    text-decoration: none;
+
+    &:hover {
+      color: @primary;
+    }
+  }
+}
+
+.hoursBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: @on-surface-variant;
+  margin-bottom: @space-md;
+
+  .hourRow {
+    display: flex;
+    justify-content: space-between;
+    padding: 2px 0;
+
+    .hourTime {
+      font-weight: 600;
+      color: @on-surface;
+
+      &.highlight {
+        color: @primary;
+      }
+    }
+  }
+}
+
+.emergencyPillBox {
+  background-color: @brand-accent-glow;
+  padding: 12px;
+  border-radius: @radius-lg;
+
+  .triageLabel {
+    font-family: @font-headline;
+    font-size: 12px;
+    font-weight: 700;
+    color: @primary;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    span {
+      font-size: 16px;
+    }
+  }
+
+  .triagePhone {
+    display: block;
+    font-family: @font-headline;
+    font-size: 18px;
+    font-weight: 700;
+    color: @appointment-card-bg;
+    margin-top: 4px;
+  }
+}
+
+.charterNoticeBox {
+  background-color: @surface-card;
+  padding: @space-md;
+  border-radius: @radius-xl;
+  box-shadow: @shadow-xs;
+  margin-bottom: @space-md;
+
+  .cqcHeader {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: @primary;
+    font-family: @font-headline;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 6px;
+
+    span {
+      font-size: 18px;
+    }
+  }
+
+  p {
+    font-size: 12px;
+    color: @on-surface-variant;
+    line-height: 1.5;
+  }
+}
+
+.badgeRow {
+  display: flex;
+  gap: 8px;
+
+  .cqcBadge {
+    .badge-tag(@secondary-container, @on-secondary-container);
+  }
+}
+
+.bottomBar {
+  border-top: 1px solid @border-subtle;
+  padding-top: @space-md;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: @space-sm;
+  font-size: 13px;
+  color: @on-surface-variant;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+  }
+
+  .legalLinks {
+    display: flex;
+    gap: @space-lg;
+
+    a:hover {
+      color: @primary;
+    }
+  }
+}

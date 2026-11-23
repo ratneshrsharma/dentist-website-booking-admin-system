@@ -1,0 +1,221 @@
+.section {
+  padding: 6rem 0;
+  background-color: #ecf6ef;
+}
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.headerRow {
+  text-align: center;
+  max-width: 650px;
+  margin: 0 auto 4rem;
+}
+.headerRow .eyebrow {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0d631b;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.headerRow .title {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #151d1a;
+  letter-spacing: -0.01em;
+}
+.headerRow .subtitle {
+  font-size: 15px;
+  color: #40493d;
+  margin-top: 0.25rem;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: stretch;
+}
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 5fr 7fr;
+  }
+}
+.hoursCard {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.hoursCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+.hoursCard .cardHeading {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #151d1a;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hoursCard .cardHeading span {
+  color: #0d631b;
+}
+.hoursList {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2.5rem;
+}
+.hoursList .hoursRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #E5EFE7;
+  font-size: 14px;
+  color: #40493d;
+}
+.hoursList .hoursRow:last-child {
+  border-bottom: none;
+}
+.hoursList .hoursRow .timeText {
+  font-weight: 600;
+  color: #151d1a;
+}
+.hoursList .hoursRow .timeText.highlight {
+  color: #0d631b;
+}
+.contactDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+  color: #40493d;
+}
+.contactDetails .contactItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.contactDetails .contactItem .itemIcon {
+  font-size: 18px;
+  color: #0d631b;
+  margin-top: 2px;
+}
+.contactDetails .contactItem a {
+  font-weight: 600;
+  color: #151d1a;
+}
+.contactDetails .contactItem a:hover {
+  color: #0d631b;
+}
+.callReceptionBtn {
+  width: 100%;
+  margin-top: 1.5rem;
+  background-color: #0D2E1A;
+  color: #ffffff;
+  border-radius: 0.5rem;
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+.callReceptionBtn:hover {
+  background-color: #0d631b;
+}
+.mapCard {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  min-height: 380px;
+}
+.mapCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+.mapFrame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 360px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  background-color: #e6f0ea;
+}
+.mapFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.mapFloatingCard {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 16px;
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  max-width: 280px;
+}
+.mapFloatingCard .pinHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.mapFloatingCard .pinHeader span {
+  color: #0d631b;
+  font-size: 20px;
+}
+.mapFloatingCard .pinHeader p {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #151d1a;
+}
+.mapFloatingCard .pinAddress {
+  font-size: 12px;
+  color: #40493d;
+  line-height: 1.4;
+}
+.mapFloatingCard .mapLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0d631b;
+  margin-top: 8px;
+}
+.mapFloatingCard .mapLink:hover {
+  text-decoration: underline;
+}

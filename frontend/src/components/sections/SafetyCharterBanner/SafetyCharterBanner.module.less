@@ -1,0 +1,114 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.section {
+  padding: @space-2xl 0;
+  background-color: @surface;
+}
+
+.container {
+  .container();
+}
+
+.charterCard {
+  background-color: @surface-card;
+  padding: @space-xl;
+  border-radius: @radius-2xl;
+  box-shadow: @shadow-sm;
+  border: 1px solid @border-subtle;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: @space-xl;
+  align-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 8fr 4fr;
+  }
+}
+
+.contentCol {
+  display: flex;
+  flex-direction: column;
+  gap: @space-sm;
+}
+
+.badgePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: @secondary-container;
+  color: @on-secondary-container;
+  padding: 4px 12px;
+  border-radius: @radius-sm;
+  font-family: @font-headline;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  width: fit-content;
+
+  span {
+    font-size: 16px;
+  }
+}
+
+.title {
+  font-family: @font-headline;
+  font-size: 24px;
+  font-weight: 700;
+  color: @on-surface;
+}
+
+.description {
+  font-size: 15px;
+  color: @on-surface-variant;
+  line-height: 1.6;
+}
+
+.concernCallout {
+  background-color: @surface-container-low;
+  padding: @space-md;
+  border-radius: @radius-xl;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: @space-xs;
+
+  .calloutIcon {
+    color: @primary;
+    font-size: 24px;
+  }
+
+  p {
+    font-size: 13px;
+    color: @on-surface;
+    margin: 0;
+
+    strong {
+      color: @on-surface;
+    }
+  }
+}
+
+.actionCol {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+
+  @media (min-width: 1024px) {
+    align-items: flex-end;
+  }
+
+  .downloadBtn {
+    .btn-primary();
+    padding: 0.85rem 1.5rem;
+  }
+
+  .frameworkLabel {
+    font-size: 12px;
+    color: @on-surface-variant;
+  }
+}

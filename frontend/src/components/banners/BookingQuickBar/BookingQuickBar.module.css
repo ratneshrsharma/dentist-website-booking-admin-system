@@ -1,0 +1,109 @@
+.quickBarContainer {
+  margin-top: -45px;
+  position: relative;
+  z-index: 30;
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (max-width: 640px) {
+  .quickBarContainer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.card {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  padding: 1.5rem 2.5rem;
+  border: 1px solid #E5EFE7;
+}
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+}
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: flex-end;
+}
+@media (min-width: 768px) {
+  .formGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .formGrid {
+    grid-template-columns: 2fr 1.5fr 1.5fr 1.5fr;
+  }
+}
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.inputGroup label {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #40493d;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.inputGroup label .labelIcon {
+  font-size: 16px;
+  color: #0d631b;
+}
+.inputGroup select,
+.inputGroup input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 0.5rem;
+  border: 1px solid #E5EFE7;
+  background-color: #ecf6ef;
+  color: #151d1a;
+  font-size: 14px;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.inputGroup select:focus,
+.inputGroup input:focus {
+  border-color: #0d631b;
+  box-shadow: 0 0 0 3px rgba(13, 99, 27, 0.12);
+}
+.submitBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #2e7d32;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+  padding: 11px 16px;
+  font-size: 14px;
+}
+.submitBtn:hover {
+  background-color: #0d631b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.submitBtn:active {
+  transform: scale(0.98);
+}

@@ -1,0 +1,140 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.section {
+  padding: @space-3xl 0;
+  background-color: @surface-container-low;
+  position: relative;
+}
+
+.container {
+  .container();
+}
+
+.headerRow {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: @space-2xl;
+  gap: @space-md;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.eyebrow {
+  font-family: @font-headline;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: @primary;
+  display: block;
+  margin-bottom: @space-xs;
+}
+
+.title {
+  font-family: @font-headline;
+  font-size: 34px;
+  font-weight: 700;
+  color: @on-surface;
+  letter-spacing: -0.01em;
+
+  @media (max-width: 768px) {
+    font-size: 26px;
+  }
+}
+
+.ratingSummary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .starsRow {
+    display: flex;
+    color: #f59e0b;
+
+    span {
+      font-size: 22px;
+      font-variation-settings: 'FILL' 1;
+    }
+  }
+
+  .ratingNumber {
+    font-family: @font-headline;
+    font-size: 15px;
+    font-weight: 700;
+    color: @on-surface;
+  }
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: @space-lg;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.reviewCard {
+  .card-container();
+  padding: @space-xl;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.starsMini {
+  display: flex;
+  color: #f59e0b;
+  margin-bottom: @space-md;
+
+  span {
+    font-size: 18px;
+    font-variation-settings: 'FILL' 1;
+  }
+}
+
+.quoteText {
+  font-size: 15px;
+  font-style: italic;
+  color: @on-surface-variant;
+  line-height: 1.65;
+  margin-bottom: @space-lg;
+}
+
+.authorRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid @border-subtle;
+  padding-top: @space-md;
+
+  .authorAvatar {
+    width: 42px;
+    height: 42px;
+    border-radius: @radius-full;
+    background-color: @brand-accent-glow;
+    color: @primary;
+    font-family: @font-headline;
+    font-size: 14px;
+    font-weight: 700;
+    .flex-center();
+  }
+
+  .authorName {
+    font-family: @font-headline;
+    font-size: 14px;
+    font-weight: 700;
+    color: @on-surface;
+  }
+
+  .authorType {
+    font-size: 12px;
+    color: @on-surface-variant;
+  }
+}

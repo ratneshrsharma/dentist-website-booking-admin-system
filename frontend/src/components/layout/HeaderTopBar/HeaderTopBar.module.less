@@ -1,0 +1,75 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.topBar {
+  background-color: @appointment-card-bg;
+  color: @on-primary;
+  padding: @space-xs 0;
+  font-size: 13px;
+  position: relative;
+  z-index: 50;
+}
+
+.container {
+  .container();
+  .flex-between();
+  flex-wrap: wrap;
+  gap: @space-sm;
+}
+
+.infoGroup {
+  display: flex;
+  align-items: center;
+  gap: @space-lg;
+
+  @media (max-width: 768px) {
+    gap: @space-md;
+  }
+}
+
+.infoItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: @surface-container-low;
+
+  .icon {
+    color: @primary-fixed;
+    font-size: 16px;
+  }
+
+  .label {
+    font-weight: 600;
+  }
+
+  .value {
+    color: @on-primary;
+    font-weight: 600;
+
+    &:hover {
+      color: @primary-fixed;
+    }
+  }
+
+  &.hiddenMobile {
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+
+  &.hiddenTablet {
+    @media (max-width: 1024px) {
+      display: none;
+    }
+  }
+}
+
+.actionGroup {
+  display: flex;
+  align-items: center;
+  gap: @space-md;
+}
+
+.emergencyBtn {
+  .btn-danger();
+}

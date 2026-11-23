@@ -1,0 +1,153 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.section {
+  padding: @space-3xl 0;
+  background-color: @surface;
+  position: relative;
+}
+
+.container {
+  .container();
+}
+
+.headerRow {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: @space-2xl;
+  gap: @space-md;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.headerLeft {
+  max-width: 650px;
+}
+
+.eyebrow {
+  font-family: @font-headline;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: @primary;
+  display: block;
+  margin-bottom: @space-xs;
+}
+
+.title {
+  font-family: @font-headline;
+  font-size: 34px;
+  font-weight: 700;
+  color: @on-surface;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+
+  @media (max-width: 768px) {
+    font-size: 26px;
+  }
+}
+
+.subtitle {
+  font-size: 15px;
+  color: @on-surface-variant;
+  line-height: 1.6;
+  max-width: 440px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: @space-lg;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.serviceCard {
+  .card-container();
+  padding: @space-lg;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  &:hover {
+    .iconWrapper {
+      transform: scale(1.06);
+    }
+    .cardTitle {
+      color: @primary;
+    }
+    .arrowIcon {
+      transform: translateX(4px);
+    }
+  }
+}
+
+.iconWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: @radius-xl;
+  background-color: @brand-accent-glow;
+  color: @primary;
+  .flex-center();
+  margin-bottom: @space-md;
+  transition: transform 0.25s ease;
+
+  span {
+    font-size: 30px;
+  }
+}
+
+.tagGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: @space-xs;
+}
+
+.tag {
+  .badge-tag();
+}
+
+.cardTitle {
+  font-family: @font-headline;
+  font-size: 19px;
+  font-weight: 700;
+  color: @on-surface;
+  margin-bottom: @space-xs;
+  transition: color 0.2s ease;
+}
+
+.cardDescription {
+  font-size: 14px;
+  color: @on-surface-variant;
+  line-height: 1.6;
+  margin-bottom: @space-lg;
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: @font-headline;
+  font-size: 14px;
+  font-weight: 600;
+  color: @primary;
+  margin-top: auto;
+  text-decoration: none;
+
+  .arrowIcon {
+    font-size: 16px;
+    transition: transform 0.2s ease;
+  }
+}
