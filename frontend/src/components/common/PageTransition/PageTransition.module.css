@@ -1,0 +1,11 @@
+.transitionContainer {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+  transform: translateY(0);
+}
+.transitionContainer.entering {
+  opacity: 0;
+  transform: translateY(6px);
+}

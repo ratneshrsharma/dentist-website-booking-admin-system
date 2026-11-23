@@ -1,0 +1,105 @@
+// =============================================================================
+// Dental Clinic SaaS Design Mixins
+// =============================================================================
+@import './variables.less';
+
+.container() {
+  max-width: @max-width-container;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: @space-lg;
+  padding-right: @space-lg;
+
+  @media (max-width: 640px) {
+    padding-left: @space-md;
+    padding-right: @space-md;
+  }
+}
+
+.flex-center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.flex-between() {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-container() {
+  background-color: @surface-card;
+  border-radius: @radius-xl;
+  box-shadow: @shadow-sm;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    box-shadow: @shadow-lg;
+    transform: translateY(-2px);
+  }
+}
+
+.btn-primary() {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: @space-sm;
+  background-color: @primary-container;
+  color: @on-primary;
+  font-family: @font-headline;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: @radius-md;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: @shadow-sm;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    background-color: @primary;
+    box-shadow: @shadow-md;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.btn-danger() {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: @space-xs;
+  background-color: @status-error;
+  color: @on-error;
+  font-family: @font-headline;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: @radius-md;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: darken(@status-error, 8%);
+  }
+}
+
+.badge-tag(@bg: @surface-container-low, @color: @primary) {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: @bg;
+  color: @color;
+  font-family: @font-headline;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: @radius-sm;
+  text-transform: capitalize;
+}

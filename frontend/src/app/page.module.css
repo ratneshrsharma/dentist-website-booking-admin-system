@@ -1,0 +1,298 @@
+.main {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #f2fcf5;
+}
+.heroPlaceholder {
+  background-color: #ecf6ef;
+  padding: 4rem 0;
+  position: relative;
+  overflow: hidden;
+}
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: 7fr 5fr;
+  }
+}
+.eyebrow {
+  display: inline-block;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0d631b;
+  margin-bottom: 0.5rem;
+}
+.headline {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: #151d1a;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+@media (max-width: 768px) {
+  .headline {
+    font-size: 30px;
+  }
+}
+.headline .highlight {
+  color: #0d631b;
+  text-decoration: underline;
+  text-decoration-color: #a3f69c;
+  text-underline-offset: 8px;
+}
+.subtitle {
+  font-size: 17px;
+  color: #40493d;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  max-width: 600px;
+}
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+@media (max-width: 640px) {
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+.statCard {
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+.statCard .statValue {
+  display: block;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #0d631b;
+  line-height: 1;
+}
+.statCard .statLabel {
+  display: block;
+  font-size: 13px;
+  color: #40493d;
+  margin-top: 6px;
+}
+.ctaGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+}
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #2e7d32;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
+  padding: 0.85rem 1.5rem;
+  font-size: 15px;
+}
+.btnPrimary:hover {
+  background-color: #0d631b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.btnPrimary:active {
+  transform: scale(0.98);
+}
+.emergencyCard {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.emergencyCard .phoneIcon {
+  width: 42px;
+  height: 42px;
+  border-radius: 9999px;
+  background-color: #E8F5E9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.emergencyCard .label {
+  font-size: 12px;
+  color: #40493d;
+}
+.emergencyCard .phoneNumber {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #151d1a;
+}
+.emergencyCard .phoneNumber:hover {
+  color: #0d631b;
+}
+.heroImageContainer {
+  position: relative;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  aspect-ratio: 4 / 5;
+  background-color: #e6f0ea;
+}
+.heroImageContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.floatingBadge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #151d1a;
+}
+.floatingBadge .badgeIcon {
+  color: #0d631b;
+}
+.section {
+  padding: 6rem 0;
+}
+.section.alternate {
+  background-color: #ecf6ef;
+}
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4rem;
+  text-align: center;
+  align-items: center;
+}
+.sectionHeader .sectionTitle {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #151d1a;
+  letter-spacing: -0.01em;
+}
+.sectionHeader .sectionSubtitle {
+  font-size: 16px;
+  color: #40493d;
+  max-width: 650px;
+  margin-top: 0.25rem;
+}
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.serviceCard {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.serviceCard:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+.serviceCard .iconWrapper {
+  width: 56px;
+  height: 56px;
+  border-radius: 0.75rem;
+  background-color: #E8F5E9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+.serviceCard .iconWrapper span {
+  font-size: 28px;
+}
+.serviceCard .tagGroup {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 0.5rem;
+}
+.serviceCard .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: #ecf6ef;
+  color: #0d631b;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.25rem;
+  text-transform: capitalize;
+}
+.serviceCard .cardTitle {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #151d1a;
+  margin-bottom: 0.25rem;
+}
+.serviceCard .cardDescription {
+  font-size: 14px;
+  color: #40493d;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+.serviceCard .cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #0d631b;
+  margin-top: auto;
+}
+.serviceCard .cardLink:hover {
+  color: #0a4f15;
+}

@@ -1,0 +1,44 @@
+.skeletonCard {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.skeletonBlock {
+  background: linear-gradient(90deg, #ecf6ef 25%, #e6f0ea 50%, #ecf6ef 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.6s infinite ease-in-out;
+  border-radius: 0.5rem;
+}
+.skeletonIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 0.75rem;
+}
+.skeletonTitle {
+  width: 70%;
+  height: 24px;
+}
+.skeletonTextLine {
+  width: 100%;
+  height: 14px;
+}
+.skeletonTextLine.short {
+  width: 60%;
+}
+.skeletonImage {
+  width: 100%;
+  height: 240px;
+  border-radius: 0.75rem;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

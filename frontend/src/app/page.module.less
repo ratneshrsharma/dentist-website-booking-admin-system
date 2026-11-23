@@ -1,0 +1,282 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.main {
+  width: 100%;
+  min-height: 100vh;
+  background-color: @surface;
+}
+
+.heroPlaceholder {
+  background-color: @surface-container-low;
+  padding: @space-2xl 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.container {
+  .container();
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: @space-xl;
+  align-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 7fr 5fr;
+  }
+}
+
+.eyebrow {
+  display: inline-block;
+  font-family: @font-headline;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: @primary;
+  margin-bottom: @space-sm;
+}
+
+.headline {
+  font-family: @font-headline;
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1.15;
+  color: @on-surface;
+  letter-spacing: -0.02em;
+  margin-bottom: @space-md;
+
+  @media (max-width: 768px) {
+    font-size: 30px;
+  }
+
+  .highlight {
+    color: @primary;
+    text-decoration: underline;
+    text-decoration-color: @primary-fixed;
+    text-underline-offset: 8px;
+  }
+}
+
+.subtitle {
+  font-size: 17px;
+  color: @on-surface-variant;
+  line-height: 1.6;
+  margin-bottom: @space-lg;
+  max-width: 600px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: @space-md;
+  margin-bottom: @space-lg;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.statCard {
+  background-color: @surface-card;
+  padding: @space-md;
+  border-radius: @radius-xl;
+  box-shadow: @shadow-sm;
+
+  .statValue {
+    display: block;
+    font-family: @font-headline;
+    font-size: 32px;
+    font-weight: 700;
+    color: @primary;
+    line-height: 1;
+  }
+
+  .statLabel {
+    display: block;
+    font-size: 13px;
+    color: @on-surface-variant;
+    margin-top: 6px;
+  }
+}
+
+.ctaGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: @space-md;
+}
+
+.btnPrimary {
+  .btn-primary();
+  padding: 0.85rem 1.5rem;
+  font-size: 15px;
+}
+
+.emergencyCard {
+  display: flex;
+  align-items: center;
+  gap: @space-sm;
+
+  .phoneIcon {
+    width: 42px;
+    height: 42px;
+    border-radius: @radius-full;
+    background-color: @brand-accent-glow;
+    color: @primary;
+    .flex-center();
+  }
+
+  .label {
+    font-size: 12px;
+    color: @on-surface-variant;
+  }
+
+  .phoneNumber {
+    font-family: @font-headline;
+    font-size: 15px;
+    font-weight: 700;
+    color: @on-surface;
+
+    &:hover {
+      color: @primary;
+    }
+  }
+}
+
+.heroImageContainer {
+  position: relative;
+  border-radius: @radius-2xl;
+  overflow: hidden;
+  box-shadow: @shadow-xl;
+  aspect-ratio: 4 / 5;
+  background-color: @surface-container;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.floatingBadge {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  padding: 8px 16px;
+  border-radius: @radius-xl;
+  box-shadow: @shadow-md;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: @on-surface;
+
+  .badgeIcon {
+    color: @primary;
+  }
+}
+
+.section {
+  padding: @space-3xl 0;
+
+  &.alternate {
+    background-color: @surface-container-low;
+  }
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: @space-2xl;
+  text-align: center;
+  align-items: center;
+
+  .sectionTitle {
+    font-family: @font-headline;
+    font-size: 32px;
+    font-weight: 700;
+    color: @on-surface;
+    letter-spacing: -0.01em;
+  }
+
+  .sectionSubtitle {
+    font-size: 16px;
+    color: @on-surface-variant;
+    max-width: 650px;
+    margin-top: @space-xs;
+  }
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: @space-lg;
+}
+
+.serviceCard {
+  .card-container();
+  padding: @space-xl;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .iconWrapper {
+    width: 56px;
+    height: 56px;
+    border-radius: @radius-lg;
+    background-color: @brand-accent-glow;
+    color: @primary;
+    .flex-center();
+    margin-bottom: @space-md;
+
+    span {
+      font-size: 28px;
+    }
+  }
+
+  .tagGroup {
+    display: flex;
+    gap: 6px;
+    margin-bottom: @space-sm;
+  }
+
+  .tag {
+    .badge-tag();
+  }
+
+  .cardTitle {
+    font-family: @font-headline;
+    font-size: 20px;
+    font-weight: 700;
+    color: @on-surface;
+    margin-bottom: @space-xs;
+  }
+
+  .cardDescription {
+    font-size: 14px;
+    color: @on-surface-variant;
+    line-height: 1.6;
+    margin-bottom: @space-md;
+  }
+
+  .cardLink {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    color: @primary;
+    margin-top: auto;
+
+    &:hover {
+      color: @primary-hover;
+    }
+  }
+}
