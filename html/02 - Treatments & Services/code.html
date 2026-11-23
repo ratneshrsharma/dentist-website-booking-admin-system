@@ -1,0 +1,477 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><meta content="web_standard" name="shell-type"><link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=Work+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config={darkMode:"class",theme:{extend:{colors:{"surface-container-high":"#e1ebe4","surface-variant":"#dbe5de","tertiary-fixed":"#98f994","brand-accent-glow":"#E8F5E9","on-tertiary-fixed":"#002204","surface-container-lowest":"#ffffff","inverse-surface":"#29322e","secondary-fixed":"#c6eccd","on-tertiary-fixed-variant":"#005313","inverse-on-surface":"#e9f3ec","error":"#ba1a1a","primary":"#0d631b","on-secondary-fixed-variant":"#2d4e37","on-background":"#151d1a","surface":"#f2fcf5","tertiary-container":"#1d7f2a","primary-fixed":"#a3f69c","background":"#f2fcf5","surface-container-highest":"#dbe5de","on-primary":"#ffffff","primary-fixed-dim":"#88d982","status-error":"#D32F2F","on-secondary":"#ffffff","on-tertiary-container":"#ceffc5","surface-clinical":"#F6F9F7","secondary-fixed-dim":"#abcfb2","on-error-container":"#93000a","primary-container":"#2e7d32","border-subtle":"#E5EFE7","outline-variant":"#bfcaba","on-surface":"#151d1a","on-primary-fixed":"#002204","secondary":"#45664e","on-secondary-container":"#4a6c53","secondary-container":"#c6eccd","inverse-primary":"#88d982","on-error":"#ffffff","status-warning":"#F59E0B","on-primary-fixed-variant":"#005312","tertiary":"#006419","on-secondary-fixed":"#00210e","surface-container-low":"#ecf6ef","surface-tint":"#1b6d24","error-container":"#ffdad6","on-tertiary":"#ffffff","outline":"#707a6c","surface-container":"#e6f0ea","tertiary-fixed-dim":"#7ddc7a","surface-dim":"#d2dcd6","on-surface-variant":"#40493d","on-primary-container":"#cbffc2","surface-bright":"#f2fcf5","surface-card":"#FFFFFF","appointment-card-bg":"#0D2E1A"},borderRadius:{DEFAULT:"0.25rem",lg:"0.5rem",xl:"0.75rem","2xl":"1rem","3xl":"1.5rem",full:"9999px"},spacing:{gutter:"1.5rem","space-sm":"0.5rem","space-xl":"2.5rem",margin:"2rem","space-md":"1rem","space-lg":"1.5rem","space-xs":"0.25rem"},fontFamily:{"label-sm":["Plus Jakarta Sans","sans-serif"],"display-hero-mobile":["Plus Jakarta Sans","sans-serif"],"headline-lg":["Plus Jakarta Sans","sans-serif"],"headline-md":["Plus Jakarta Sans","sans-serif"],"subheading-eyebrow":["Plus Jakarta Sans","sans-serif"],"label-md":["Plus Jakarta Sans","sans-serif"],"headline-lg-mobile":["Plus Jakarta Sans","sans-serif"],"body-sm":["Work Sans","sans-serif"],"body-md":["Work Sans","sans-serif"],"display-hero":["Plus Jakarta Sans","sans-serif"],"headline-sm":["Plus Jakarta Sans","sans-serif"],"body-lg":["Work Sans","sans-serif"]},fontSize:{"label-sm":["12px",{lineHeight:"16px",fontWeight:"600"}],"display-hero-mobile":["32px",{lineHeight:"40px",letterSpacing:"-0.01em",fontWeight:"800"}],"headline-lg":["36px",{lineHeight:"44px",letterSpacing:"-0.02em",fontWeight:"700"}],"headline-md":["24px",{lineHeight:"32px",fontWeight:"700"}],"subheading-eyebrow":["13px",{lineHeight:"18px",letterSpacing:"0.08em",fontWeight:"700"}],"label-md":["14px",{lineHeight:"20px",fontWeight:"600"}],"headline-lg-mobile":["26px",{lineHeight:"34px",letterSpacing:"-0.01em",fontWeight:"700"}],"body-sm":["13px",{lineHeight:"20px",fontWeight:"400"}],"body-md":["15px",{lineHeight:"24px",fontWeight:"400"}],"display-hero":["44px",{lineHeight:"52px",letterSpacing:"-0.02em",fontWeight:"800"}],"headline-sm":["20px",{lineHeight:"28px",fontWeight:"600"}],"body-lg":["17px",{lineHeight:"26px",fontWeight:"400"}]}}}}</script></head><body class="bg-surface font-body-md text-on-surface antialiased"><header class="fixed top-0 w-full z-50 shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="bg-appointment-card-bg text-on-primary py-space-xs"><div class="max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between font-body-sm text-body-sm"><div class="flex items-center gap-space-lg"><div class="flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[16px]">call</span><span class="font-label-sm text-label-sm text-surface-container-low">Emergency:</span><a class="hover:text-primary-fixed transition-colors font-label-sm text-label-sm text-on-primary" href="tel:+441217652870">+44 121 765 2870</a></div><div class="hidden md:flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[16px]">schedule</span><span class="text-surface-container-low">Mon-Fri: 8:30am - 5:30pm</span></div><div class="hidden lg:flex items-center gap-space-xs"><span class="material-symbols-outlined text-primary-fixed text-[16px]">location_on</span><span class="text-surface-container-low">1078 Warwick Road, Birmingham B27 6BH</span></div></div><div class="flex items-center gap-space-md"><a class="inline-flex items-center gap-space-xs bg-status-error text-on-error font-label-sm text-label-sm px-space-md py-0.5 rounded-lg hover:bg-error transition-colors" data-path="emergency-consultation" href="#"><span class="material-symbols-outlined text-[14px]">e911_emergency</span>Emergency Consultation</a></div></div></div><div class="h-20 bg-surface/90 backdrop-blur-xl border-b border-border-subtle/60"><div class="h-full max-w-7xl mx-auto px-6 lg:px-12 flex items-center justify-between"><div class="flex items-center gap-3 shrink-0"><img alt="Acocks Green Dental Practice Logo" class="h-11 w-11 object-contain rounded-full shadow-sm" src="https://lh3.googleusercontent.com/aida/ALJJyrCkC4DMCnNSjv2Jl0q_PgXe8EkSXXccXs3Q_p8MPzsADTSCILSCOytCAQrFUT3Qa4pk-Hml1gorGOnLVr8zQuUV1PMYo1tYdYvMD3Uo4Tz641fP-v56XYvdzKz8LLRKGaqhTgkW3aeKk_96v3t0snngjWsg48_-FY6yKYZIgm9am8DxGo5pTQh9wVWT9Q4vO-ajSMFlZ7CtOrgXg6E3C9MP9WPtyJkqsrFwohOdJT6a"><div class="flex flex-col justify-center leading-tight"><span class="font-headline-sm text-headline-sm text-primary leading-none font-bold">Acocks Green</span><span class="font-subheading-eyebrow text-[11px] text-on-surface-variant tracking-wider uppercase font-semibold mt-0.5">Dental Practice</span></div></div><div class="flex items-center gap-6"><nav class="hidden xl:flex items-center gap-space-lg" data-active-classes="text-primary font-bold"><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="home" href="#">Home</a><div class="relative group py-2"><a class="font-label-md text-label-md text-primary font-bold hover:text-on-surface transition-colors inline-flex items-center gap-1 cursor-pointer" data-path="treatments-and-services" href="#"><span>Treatments &amp; Services</span><span class="material-symbols-outlined text-[18px] group-hover:rotate-180 transition-transform duration-200">expand_more</span></a><div class="absolute top-full left-0 hidden group-hover:block w-64 pt-2 z-50"><div class="bg-surface-card rounded-xl shadow-lg border border-border-subtle p-2 flex flex-col gap-1"><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" href="#services-grid"><span class="material-symbols-outlined text-[18px] text-primary">dentistry</span>General Dentistry &amp; Check-ups</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" href="#services-grid"><span class="material-symbols-outlined text-[18px] text-primary">clean_hands</span>Dental Hygiene &amp; Airflow Periodontics</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" href="#services-grid"><span class="material-symbols-outlined text-[18px] text-primary">architecture</span>Restorative Dentistry &amp; Crowns</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" href="#services-grid"><span class="material-symbols-outlined text-[18px] text-primary">auto_fix_high</span>Aesthetic Dentistry &amp; Invisalign®</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" href="#services-grid"><span class="material-symbols-outlined text-[18px] text-primary">medical_services</span>Emergency Dental Care &amp; Same-Day Relief</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" href="#services-grid"><span class="material-symbols-outlined text-[18px] text-primary">family_restroom</span>Pediatric &amp; Family Dentistry</a></div></div></div><div class="relative group py-2"><button aria-haspopup="true" class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors inline-flex items-center gap-1 cursor-pointer" type="button"><span>About Us</span><span class="material-symbols-outlined text-[18px] group-hover:rotate-180 transition-transform duration-200">expand_more</span></button><div class="absolute top-full left-0 hidden group-hover:block w-56 pt-2 z-50"><div class="bg-surface-card rounded-xl shadow-lg border border-border-subtle p-2 flex flex-col gap-1"><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" data-path="why-us" href="#"><span class="material-symbols-outlined text-[18px] text-primary">health_and_safety</span>Why Us</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" data-path="our-clinicians" href="#"><span class="material-symbols-outlined text-[18px] text-primary">group</span>Our Team</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" data-path="about-us" href="#"><span class="material-symbols-outlined text-[18px] text-primary">domain</span>Our Clinics</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" data-path="nhs-safety-charter" href="#"><span class="material-symbols-outlined text-[18px] text-primary">verified_user</span>NHS Safety Charter</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-primary hover:bg-surface-container-low px-3 py-2 rounded-lg transition-colors flex items-center gap-2" data-path="patient-reviews" href="#"><span class="material-symbols-outlined text-[18px] text-primary">rate_review</span>Patient Reviews</a></div></div></div><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="blog" href="#">Blog</a><a class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface transition-colors" data-path="contact" href="#">Contact</a></nav><div class="hidden md:flex items-center"><a class="inline-flex items-center gap-2 bg-primary text-on-primary font-label-md text-label-md px-5 py-2.5 rounded-lg shadow-sm hover:bg-primary-container transition-all duration-200" href="#quick-book"><span>Book An Appointment</span><span class="material-symbols-outlined text-[16px]">calendar_month</span></a></div></div></div></div></header><main class="w-full pt-28 bg-surface"><div class="flex flex-col w-full">
+<!-- Section 1: Compact Inner Banner -->
+<section class="w-full bg-surface py-6 lg:py-7 border-b border-border-subtle/50"><div class="max-w-7xl mx-auto px-6 lg:px-12"><div class="grid lg:grid-cols-12 gap-8 items-center"><div class="lg:col-span-7"><nav aria-label="Breadcrumb" class="flex items-center gap-1.5 font-label-sm text-label-sm text-on-surface-variant mb-2.5"><a class="hover:text-primary transition-colors flex items-center gap-1" data-path="home" href="#"><span class="material-symbols-outlined text-[15px]">home</span><span>Home</span></a><span class="material-symbols-outlined text-[13px] text-outline">chevron_right</span><span class="text-primary font-semibold">Treatments &amp; Services</span></nav><span class="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase tracking-widest block mb-1.5 font-bold">OUR CLINICAL SERVICES &amp; PROCEDURES</span><h1 class="font-display-hero text-[32px] sm:text-[38px] lg:text-display-hero text-on-surface mb-2 tracking-tight leading-tight">Comprehensive Dental Care &amp; Specialized Treatments</h1><p class="font-body-md text-body-md text-on-surface-variant leading-relaxed mb-4 max-w-2xl">From essential routine NHS care to advanced cosmetic smile makeovers and restorative procedures in Acocks Green, Birmingham. Delivered with gentle compassion and state-of-the-art diagnostics.</p><div class="flex flex-wrap items-center gap-2" id="service-filter-group" role="tablist"><button class="filter-btn active bg-primary text-on-primary font-label-md text-label-md px-3.5 py-1.5 rounded-lg shadow-sm transition-all duration-150 cursor-pointer" data-filter="all" type="button">All Services</button><button class="filter-btn bg-surface-card border border-border-subtle text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md px-3.5 py-1.5 rounded-lg transition-all duration-150 cursor-pointer" data-filter="general" type="button">General Dentistry</button><button class="filter-btn bg-surface-card border border-border-subtle text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md px-3.5 py-1.5 rounded-lg transition-all duration-150 cursor-pointer" data-filter="hygiene" type="button">Hygiene &amp; Prevention</button><button class="filter-btn bg-surface-card border border-border-subtle text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md px-3.5 py-1.5 rounded-lg transition-all duration-150 cursor-pointer" data-filter="restorative" type="button">Restorative Dentistry</button><button class="filter-btn bg-surface-card border border-border-subtle text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md px-3.5 py-1.5 rounded-lg transition-all duration-150 cursor-pointer" data-filter="aesthetic" type="button">Aesthetic &amp; Cosmetic</button><button class="filter-btn bg-surface-card border border-border-subtle text-on-surface-variant hover:text-on-surface hover:bg-surface-container font-label-md text-label-md px-3.5 py-1.5 rounded-lg transition-all duration-150 cursor-pointer" data-filter="emergency" type="button">Emergency &amp; Surgery</button></div></div><div class="lg:col-span-5"><img alt="Warm professional photo of friendly UK dentist doctor smiling warmly in modern clean dental clinic surgery" class="rounded-2xl shadow-md border border-border-subtle/80 object-cover h-64 lg:h-72 w-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCzsykyKI2PU6E0wW2t2do2Qt2jbZzaqv_u_IJJfWkGvhSuGk34VpR3MY2x4tckcQ7PvE8fx9330s7IMyCF22GzBT7fwxSeNcAOOD7tpfAxTZzm7QZCMGl6HzbuEloTxaCtsTeKlfT5IMQkb87H0BQKnEXK2e9CMWx1fSlXVcpfVg5S-JRnPWoyF_vquS3r9UtLCekgTGZVu6dH9nXrVl1I2ZJ-m95ISoH2D2GD9IF"></div></div></div></section>
+<!-- Section 2: Featured Services Showcase (pure white background, rounded-2xl cards) -->
+<section class="w-full py-14 lg:py-16 border-b border-border-subtle/40 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-6 lg:px-12">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="services-grid">
+<!-- Card 1: General Dentistry -->
+<article class="service-card group bg-surface-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg" data-category="general">
+<div class="relative h-56 w-full overflow-hidden bg-surface-container-high">
+<img alt="General Dentistry &amp; Routine Check-ups" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/ALJJyrAWvlX6GGJXKxH0OXs-h6wQKokoyA0Me0eTpUzfRn5-2Jsnb3AfjK0KjDTdMk8NuRRj-HQqDDqSk_XGz6tOlaa1xr7HDr1TxBQYfHaqAm9urKoShVIhHnJlmLmjEGW71oiaFeY4MMRRD7Ym1Fb0vZ1Zu5f_c6X-LpyDRH-bT15OBGD3M54eWH9HHq43IYvhXiUZSauDCM3UfIII17GUvJIuRrMV7FCRKE7sX0jgPIUz">
+<div class="absolute top-4 left-4 bg-primary text-on-primary font-label-sm text-label-sm px-3 py-1 rounded-md shadow-sm">
+              NHS &amp; Private Available
+            </div>
+</div>
+<div class="p-6 lg:p-7 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">dentistry</span>
+<span class="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase">Core Healthcare</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-3 group-hover:text-primary transition-colors">
+                General Dentistry &amp; Routine Check-ups
+              </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                Thorough digital oral examinations, low-dose digital radiographs, routine cleaning, gentle composite fillings, and preventative treatments designed to maintain lifelong dental health.
+              </p>
+<ul class="flex flex-col gap-2.5 mb-6 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Comprehensive Oral Health Exam</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Preventative Sealants &amp; Fluoride</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>High-durability Tooth-Coloured Fillings</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Digital Diagnostics</span>
+</li>
+</ul>
+</div>
+<a class="inline-flex items-center gap-2 font-label-md text-label-md text-primary font-semibold group-hover:text-tertiary-container transition-colors pt-3 border-t border-border-subtle" href="#quick-book">
+<span>View General Dentistry Details</span>
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Card 2: Dental Hygiene -->
+<article class="service-card group bg-surface-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg" data-category="hygiene">
+<div class="relative h-56 w-full overflow-hidden bg-surface-container-high">
+<img alt="Dental Hygiene &amp; Airflow Periodontics" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/ALJJyrCRHmN93QAgmtjbDZoPPAVV-1q0GEAjonMUJzWdGj0SZorqLGn_E27ZP-RmNwLIQ7fr-cQUka-7PPBynABidNwq4QVBcuaJL-aK9Jcpv2l625JwmD1e_UUYSE19TZFdn8Gt0hxB7gLkEPNCW57wyKyCO35uXSQyue58NWlA0ZtHnlZ-FjG9eEYCfPg9_MBD7wUU6hiW3gu_LMtygqho8Vloy_FGmA_EWk1jGKdiPHdA-A">
+<div class="absolute top-4 left-4 bg-tertiary-container text-on-primary font-label-sm text-label-sm px-3 py-1 rounded-md shadow-sm">
+              Led by Claire (Hygienist)
+            </div>
+</div>
+<div class="p-6 lg:p-7 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">clean_hands</span>
+<span class="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase">Periodontal Health</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-3 group-hover:text-primary transition-colors">
+                Dental Hygiene &amp; Airflow Periodontics
+              </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                Specialist ultrasonic periodontal deep cleaning, gentle stubborn stain removal (tea, coffee, tobacco), airflow polish therapy, and personalized plaque defense coaching.
+              </p>
+<ul class="flex flex-col gap-2.5 mb-6 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Ultrasonic Scaling &amp; Polishing</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Airflow Stain Removal Treatment</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Gingival &amp; Periodontal Assessment</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Personalized Home Care Plans</span>
+</li>
+</ul>
+</div>
+<a class="inline-flex items-center gap-2 font-label-md text-label-md text-primary font-semibold group-hover:text-tertiary-container transition-colors pt-3 border-t border-border-subtle" href="#quick-book">
+<span>Explore Hygiene Services</span>
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Card 3: Restorative Dentistry -->
+<article class="service-card group bg-surface-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg" data-category="restorative">
+<div class="relative h-56 w-full overflow-hidden bg-surface-container-high">
+<img alt="Restorative Dentistry &amp; Dental Crowns" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/ALJJyrA-Ysxc6OrfzFVixSbQCyu8TU6f9CmLtoZidkOXZBq6WpWbx5Qpm-DLPj0b7B6lEOtt9T4XbQHir8yT-i3owtndS_I5V8tEQ9kbXvhpxmCx41Mzpzj7_b63gt2CEnAt8eW-2KFnlSWi4VE5Ratq0-5jztO9_d6-GUzU9W3JRaF57_rZxfgfyXYbsACv7DN1verQiQkp5FzEu5CbLigvC9MvOEB1FjaKdtglhYngP06iEg">
+<div class="absolute top-4 left-4 bg-secondary text-on-secondary font-label-sm text-label-sm px-3 py-1 rounded-md shadow-sm">
+              Function &amp; Biomechanics
+            </div>
+</div>
+<div class="p-6 lg:p-7 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">architecture</span>
+<span class="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase">Structural Repair</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-3 group-hover:text-primary transition-colors">
+                Restorative Dentistry &amp; Dental Crowns
+              </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                Rebuild chewing function, comfort, and structural integrity with precision custom ceramic crowns, bridge work, root canal therapy, and long-lasting prosthetics.
+              </p>
+<ul class="flex flex-col gap-2.5 mb-6 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Custom Porcelain &amp; Zirconia Crowns</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Root Canal Endodontic Therapy</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Fixed Bridgework &amp; Inlays/Onlays</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Tooth Wear &amp; Bite Rehabilitation</span>
+</li>
+</ul>
+</div>
+<a class="inline-flex items-center gap-2 font-label-md text-label-md text-primary font-semibold group-hover:text-tertiary-container transition-colors pt-3 border-t border-border-subtle" href="#quick-book">
+<span>Learn About Restorative Care</span>
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Card 4: Aesthetic & Invisalign -->
+<article class="service-card group bg-surface-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg" data-category="aesthetic">
+<div class="relative h-56 w-full overflow-hidden bg-surface-container-high">
+<img alt="Aesthetic Dentistry &amp; Invisalign® Aligners" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/ALJJyrA4O2usFxF3dZR_BiIOLXKuu6uTjZpkBXgYyEgQ5Ir_w0DIa5YDDzvUVE_8gvOU_iLOnanozn1MATY0kMDMNHaeNCL5wqXUkCxVgob092C1U5Cg_tVpK4tQJqMNuStt4us11-EIVSBsLN-RlrV-cy6oimuGt5fJqsYbOBRlpkC8Zlrq-TtsG5lXgXcL01bv6WhSHHIN0veyac4BItWEyGovJzSS5pYq6leq7fwaYMm1">
+<div class="absolute top-4 left-4 bg-primary-container text-on-primary font-label-sm text-label-sm px-3 py-1 rounded-md shadow-sm">
+              Boutique Smile Design
+            </div>
+</div>
+<div class="p-6 lg:p-7 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">auto_fix_high</span>
+<span class="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase">Cosmetic Artistry</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-3 group-hover:text-primary transition-colors">
+                Aesthetic Dentistry &amp; Invisalign® Aligners
+              </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                Transform and illuminate your smile with professional boutique whitening treatments, bespoke handcrafted veneers, composite bonding, and discreet clear aligners.
+              </p>
+<ul class="flex flex-col gap-2.5 mb-6 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Invisalign® Clear Aligner Therapy</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Boutique Teeth Whitening Systems</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Handcrafted Porcelain Veneers</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Minimally Invasive Composite Bonding</span>
+</li>
+</ul>
+</div>
+<a class="inline-flex items-center gap-2 font-label-md text-label-md text-primary font-semibold group-hover:text-tertiary-container transition-colors pt-3 border-t border-border-subtle" href="#quick-book">
+<span>Discover Aesthetic Options</span>
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Card 5: Emergency Dental Care -->
+<article class="service-card group bg-surface-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg" data-category="emergency">
+<div class="relative h-56 w-full overflow-hidden bg-surface-container-high">
+<img alt="Emergency Dental Care &amp; Urgent Pain Relief" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmIPWvxsAnPobOyaW1bxnP-mkXCGsAWDVAC8nlpp3Zs-dSfxIveaEd0Ul2OQfwDuD89lXw56UVCnUJQUn1_fXy-9nD8edN8zczC2TpyQSBFGbdqAsREsjtSrHWRjLhy-wkS3u0huICqAzmhrVTiyREGEqPwTGDYy0LCXfRBAEzlGrgk8wruon-Vu13bGWvN-GvWe8YZv2tNDIEfzwVdCHi6LkEPK3L8aQ2NXm8YNX1">
+<div class="absolute top-4 left-4 bg-status-error text-on-error font-label-sm text-label-sm px-3 py-1 rounded-md shadow-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">alarm_on</span>
+<span>Same-Day Emergency Slots</span>
+</div>
+</div>
+<div class="p-6 lg:p-7 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-status-error text-[20px]">medical_services</span>
+<span class="font-subheading-eyebrow text-subheading-eyebrow text-status-error uppercase">Urgent Intervention</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-3 group-hover:text-primary transition-colors">
+                Emergency Dental Care &amp; Urgent Pain Relief
+              </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                Rapid triage and immediate pain relief for severe toothache, broken teeth, lost fillings, dental abscesses, or facial trauma. Priority same-day bookings available.
+              </p>
+<ul class="flex flex-col gap-2.5 mb-6 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Immediate Triage on +44 121 765 2870</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Acute Pulpitis &amp; Abscess Treatment</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Temporary &amp; Urgent Restorations</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Gentle Extraction when Required</span>
+</li>
+</ul>
+</div>
+<a class="inline-flex items-center gap-2 font-label-md text-label-md text-status-error font-semibold group-hover:text-error transition-colors pt-3 border-t border-border-subtle" href="tel:+441217652870">
+<span>Emergency Care Guidance</span>
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Card 6: Pediatric & Family Dentistry -->
+<article class="service-card group bg-surface-card rounded-2xl border border-border-subtle shadow-sm overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg" data-category="general">
+<div class="relative h-56 w-full overflow-hidden bg-surface-container-high">
+<img alt="Pediatric &amp; Family Dentistry" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB80vp6rms29zVQ7by24iG1_Se_ZLEjzqsMTd_9h5fuihxApQvXg4XgllgIZLxF04lQ2le4EoaCIffWDddjpswMjdhoMxPFLNHXEH6wfonidDzHiSpHJI_q8q0reS9dA8tN2S3NGLI0mna8DPb2_8Wh1zGHURUf_r7nWws3Dz_gpWfA-KZVhSytl_MEJnnpSn_fzUUILHpfp_wh9zenil2N_13xwIOpOGk89SKDWeNE">
+<div class="absolute top-4 left-4 bg-secondary-container text-on-secondary-container font-label-sm text-label-sm px-3 py-1 rounded-md shadow-sm">
+              Child-Friendly Environment
+            </div>
+</div>
+<div class="p-6 lg:p-7 flex flex-col flex-1 justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-[20px]">family_restroom</span>
+<span class="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase">Family Dentistry</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-3 group-hover:text-primary transition-colors">
+                Pediatric &amp; Family Dentistry
+              </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 leading-relaxed">
+                A welcoming, reassuring environment for young patients. Fostering positive attitudes toward oral care through gentle examinations and preventive advice.
+              </p>
+<ul class="flex flex-col gap-2.5 mb-6 text-on-surface-variant font-body-sm text-body-sm">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Gentle First Dental Visits</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Fissure Sealants &amp; Fluoride Varnish</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Oral Hygiene Education for Kids</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span>Nervous Child Acclimatization</span>
+</li>
+</ul>
+</div>
+<a class="inline-flex items-center gap-2 font-label-md text-label-md text-primary font-semibold group-hover:text-tertiary-container transition-colors pt-3 border-t border-border-subtle" href="#quick-book">
+<span>View Family Care</span>
+<span class="material-symbols-outlined text-[18px] transition-transform duration-200 group-hover:translate-x-1">arrow_forward</span>
+</a>
+</div>
+</article>
+</div>
+</div>
+</section>
+<!-- Section 3: Treatment Pricing & NHS vs Private Comparison Matrix (bg-surface) -->
+<section class="w-full bg-surface py-14 lg:py-16 border-b border-border-subtle/40">
+<div class="max-w-7xl mx-auto px-6 lg:px-12">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+<div class="max-w-2xl">
+<span class="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase tracking-widest block mb-2 font-bold">
+            TRANSPARENT FINANCIAL CLARITY
+          </span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+            Treatment Pricing &amp; Comparison Guide
+          </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2.5">
+            We believe in honest, predictable clinical costs with no hidden fees. Choose between standard NHS tiered bandings or our tailored private aesthetic and restorative pathways.
+          </p>
+</div>
+<div class="mt-6 md:mt-0 flex items-center gap-2 bg-brand-accent-glow px-4 py-2.5 rounded-xl border border-secondary-container">
+<span class="material-symbols-outlined text-primary text-[20px]">percent</span>
+<span class="font-label-sm text-label-sm text-primary font-bold">0% APR Patient Financing Available</span>
+</div>
+</div>
+<!-- Pricing Matrix Split -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- NHS Band Matrix Card -->
+<div class="bg-surface-card rounded-2xl p-8 border border-border-subtle shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-6 mb-6 border-b border-border-subtle">
+<div>
+<span class="font-subheading-eyebrow text-[11px] text-primary uppercase font-bold tracking-wider">Public Health Service</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">NHS Fee Bands</h3>
+</div>
+<span class="bg-surface-container-low text-on-surface font-label-md text-label-md px-3.5 py-1.5 rounded-lg border border-border-subtle font-semibold">Standard UK Rates</span>
+</div>
+<div class="space-y-3.5">
+<div class="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"><div><h4 class="font-headline-sm text-headline-sm text-on-surface">Band 1 Treatment</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Check-up, digital x-rays, basic polish &amp; diagnosis</p></div><div class="text-right"><span class="font-headline-md text-headline-md text-primary font-bold">£26.80</span></div></div>
+<div class="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"><div><h4 class="font-headline-sm text-headline-sm text-on-surface">Band 2 Treatment</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Fillings, root canal therapy &amp; tooth extractions</p></div><div class="text-right"><span class="font-headline-md text-headline-md text-primary font-bold">£73.50</span></div></div>
+<div class="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"><div><h4 class="font-headline-sm text-headline-sm text-on-surface">Band 3 Treatment</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Complex crowns, precision bridges &amp; full/partial dentures</p></div><div class="text-right"><span class="font-headline-md text-headline-md text-primary font-bold">£319.10</span></div></div>
+<div class="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"><div><h4 class="font-headline-sm text-headline-sm text-on-surface">Urgent Care Band</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Immediate emergency relief, triage &amp; temporary dressing</p></div><div class="text-right"><span class="font-headline-md text-headline-md text-status-error font-bold">£26.80</span></div></div>
+</div>
+</div>
+<div class="mt-8 pt-4 border-t border-border-subtle flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">verified_user</span>
+<span>Regulated under standard NHS England primary dental care contracts.</span>
+</div>
+</div>
+<!-- Private Treatment & Aesthetic Matrix Card -->
+<div class="bg-surface-card rounded-2xl p-8 border border-border-subtle shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between pb-6 mb-6 border-b border-border-subtle">
+<div>
+<span class="font-subheading-eyebrow text-[11px] text-primary uppercase font-bold tracking-wider">Premium &amp; Cosmetic</span>
+<h3 class="font-headline-md text-headline-md text-on-surface">Private Dentistry Options</h3>
+</div>
+<span class="bg-primary-container text-on-primary font-label-md text-label-md px-3.5 py-1.5 rounded-lg shadow-sm font-semibold">Custom Materials</span>
+</div>
+<div class="space-y-3.5">
+<div class="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"><div><h4 class="font-headline-sm text-headline-sm text-on-surface">Hygiene Airflow Polish</h4><p class="font-body-sm text-body-sm text-on-surface-variant">30-min intensive ultrasonic scale &amp; air polish stain removal</p></div><div class="text-right"><span class="font-subheading-eyebrow text-on-surface-variant block uppercase text-[10px]">From</span><span class="font-headline-md text-headline-md text-primary font-bold">£65.00</span></div></div>
+<div class="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"><div><h4 class="font-headline-sm text-headline-sm text-on-surface">Boutique Teeth Whitening</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Customized take-home whitening trays with high-strength gel</p></div><div class="text-right"><span class="font-subheading-eyebrow text-on-surface-variant block uppercase text-[10px]">From</span><span class="font-headline-md text-headline-md text-primary font-bold">£299.00</span></div></div>
+<div class="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"><div><h4 class="font-headline-sm text-headline-sm text-on-surface">Composite Bonding</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Micro-layer aesthetic sculpting per tooth with zero drilling</p></div><div class="text-right"><span class="font-subheading-eyebrow text-on-surface-variant block uppercase text-[10px]">Per Tooth</span><span class="font-headline-md text-headline-md text-primary font-bold">£150.00</span></div></div>
+<div class="p-4 rounded-xl bg-surface-clinical border border-border-subtle/80 grid [grid-template-columns:3fr_2fr] gap-5 items-center"><div><h4 class="font-headline-sm text-headline-sm text-on-surface">Invisalign® Clear Consultation</h4><p class="font-body-sm text-body-sm text-on-surface-variant">Full 3D digital scan &amp; computerized treatment smile simulator</p></div><div class="text-right"><span class="font-headline-md text-headline-md text-primary font-bold">Complimentary</span></div></div>
+</div>
+</div>
+<div class="mt-8 pt-4 border-t border-border-subtle flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[18px] text-primary">credit_card</span>
+<span>Split payments across 6 to 12 months with 0% interest via our dental finance partner.</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 4: Why Choose Acocks Green Dental Practice (pure white background) -->
+<section class="w-full py-14 lg:py-16 border-b border-border-subtle/40 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-6 lg:px-12">
+<div class="text-center max-w-2xl mx-auto mb-14">
+<span class="font-subheading-eyebrow text-subheading-eyebrow text-primary uppercase tracking-widest block mb-2 font-bold">
+          CLINICAL EXCELLENCE &amp; REASSURANCE
+        </span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
+          Why Choose Acocks Green Dental Practice?
+        </h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-3">
+          We combine hospital-grade clinical precision with a gentle, patient-first demeanor that puts you entirely at ease.
+        </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Feature 1 -->
+<div class="bg-surface-card p-6 rounded-2xl border border-border-subtle shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-brand-accent-glow text-primary flex items-center justify-center mb-5">
+<span class="material-symbols-outlined text-[26px]">radiology</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Modern Digital Technology</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Ultra-low radiation digital radiography and high-definition intraoral cameras for precise, comfortable diagnoses.
+            </p>
+</div>
+<div class="mt-6 pt-4 border-t border-border-subtle/80 flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>Digital Precision</span>
+</div>
+</div>
+<!-- Feature 2 -->
+<div class="bg-surface-card p-6 rounded-2xl border border-border-subtle shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-brand-accent-glow text-primary flex items-center justify-center mb-5">
+<span class="material-symbols-outlined text-[26px]">favorite</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Welcoming Phobic Patients</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              A gentle, unhurried bedside manner designed specifically to dissolve dental anxiety, panic, and sensory discomfort.
+            </p>
+</div>
+<div class="mt-6 pt-4 border-t border-border-subtle/80 flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>Gentle Pacing</span>
+</div>
+</div>
+<!-- Feature 3 -->
+<div class="bg-surface-card p-6 rounded-2xl border border-border-subtle shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-brand-accent-glow text-primary flex items-center justify-center mb-5">
+<span class="material-symbols-outlined text-[26px]">calendar_clock</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Flexible Appointments</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Early morning slots from 8:30 AM and guaranteed priority emergency triage windows throughout each working day.
+            </p>
+</div>
+<div class="mt-6 pt-4 border-t border-border-subtle/80 flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>Prompt Access</span>
+</div>
+</div>
+<!-- Feature 4 -->
+<div class="bg-surface-card p-6 rounded-2xl border border-border-subtle shadow-sm transition-all duration-300 hover:shadow-md flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-xl bg-brand-accent-glow text-primary flex items-center justify-center mb-5">
+<span class="material-symbols-outlined text-[26px]">verified</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Strict NHS &amp; CQC Safety</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+              Strict compliance with Care Quality Commission infection controls, NHS safety charters, and gold-standard autoclaving.
+            </p>
+</div>
+<div class="mt-6 pt-4 border-t border-border-subtle/80 flex items-center gap-1.5 text-primary font-label-sm text-label-sm font-semibold">
+<span class="material-symbols-outlined text-[16px]">check</span>
+<span>100% CQC Compliant</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section 5: Pre-Appointment Consultation CTA Card (deep green background #0D2E1A, rounded-3xl) -->
+<section class="w-full bg-surface py-14 lg:py-16" id="quick-book">
+<div class="max-w-7xl mx-auto px-6 lg:px-12">
+<div class="relative bg-appointment-card-bg text-on-primary rounded-3xl overflow-hidden shadow-2xl p-8 lg:p-14"><div class="absolute -top-24 -right-24 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl pointer-events-none"></div><div class="relative z-10 grid lg:grid-cols-12 gap-8 items-center"><div class="lg:col-span-7"><span class="font-subheading-eyebrow text-subheading-eyebrow text-primary-fixed uppercase tracking-widest block mb-3 font-bold">NEED CLINICAL ADVICE FIRST?</span><h2 class="font-headline-lg text-[32px] sm:text-headline-lg text-on-primary mb-4 tracking-tight leading-tight">Not Sure Which Treatment is Right for You?</h2><p class="font-body-lg text-body-lg text-surface-container-low mb-8 leading-relaxed">Speak directly with our clinical team or book a consultation at our Warwick Road surgery. We will guide you through all NHS and private options clearly, with zero obligation.</p><div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4"><a class="inline-flex items-center justify-center gap-2 bg-primary-container text-on-primary font-label-md text-label-md px-6 py-3.5 rounded-lg shadow-sm hover:bg-primary transition-all duration-200" href="tel:+441217652870"><span class="material-symbols-outlined text-[18px]">calendar_month</span><span>Book Consultation</span></a><a class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-primary-fixed font-label-md text-label-md px-6 py-3.5 rounded-lg border border-primary-fixed/20 transition-all duration-200" href="tel:+441217652870"><span class="material-symbols-outlined text-[18px]">call</span><span>Call Triage: +44 121 765 2870</span></a></div><div class="mt-8 pt-8 border-t border-white/10 flex flex-wrap items-center gap-6 font-body-sm text-body-sm text-surface-container-highest"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary-fixed">pin_drop</span><span>1078 Warwick Road, Acocks Green, Birmingham B27 6BH</span></div><div class="flex items-center gap-2"><span class="material-symbols-outlined text-[18px] text-primary-fixed">schedule</span><span>Mon-Fri 8:30 AM – 5:30 PM</span></div></div></div><div class="lg:col-span-5"><img alt="Friendly receptionist or female dental nurse wearing medical scrubs on phone and tablet at modern dental clinic reception desk" class="rounded-2xl overflow-hidden shadow-lg border border-white/10 w-full h-64 lg:h-72 object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOTQNJkx83b7VwmVKlFNM8zuZvRtH__mUxQwiHZ8SgGxQMU7ZWrmUlZ1oZSfEqrkA-N_lfiC6Cu09nZaTnwr1MNtjdN_LCrVrjn4Kb5snLRDBXgKvRFtgIC5xiUwbP_WRGtvmE33RNYTYkBbbl-1Plcxh33tK4vvXM45TX65ALHdsxlTq0aUWyVySHfal3hjqoYiiqQkuoUeIhGPId83l_Zfsuyxr1Y1kZ3gcU7NbW"></div></div></div>
+</div>
+</section>
+<!-- Interactive Filter Logic -->
+<script>
+    (function() {
+      const filterButtons = document.querySelectorAll('#service-filter-group .filter-btn');
+      const cards = document.querySelectorAll('#services-grid .service-card');
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-filter');
+
+          filterButtons.forEach(b => {
+            b.classList.remove('active', 'bg-primary', 'text-on-primary', 'shadow-sm');
+            b.classList.add('bg-surface-card', 'border', 'border-border-subtle', 'text-on-surface-variant');
+          });
+
+          btn.classList.add('active', 'bg-primary', 'text-on-primary', 'shadow-sm');
+          btn.classList.remove('bg-surface-card', 'border', 'border-border-subtle', 'text-on-surface-variant');
+
+          cards.forEach(card => {
+            const cardCat = card.getAttribute('data-category');
+            if (filter === 'all' || cardCat === filter) {
+              card.style.display = 'flex';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+    })();
+  </script>
+</div></main><footer class="w-full bg-surface-container-low pt-space-xl pb-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="max-w-7xl mx-auto px-6 lg:px-12"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-space-xl mb-space-xl"><div><div class="flex items-center gap-3 mb-space-md"><img alt="Acocks Green Dental Practice Logo" class="h-10 w-10 object-contain rounded-full shadow-sm" src="https://lh3.googleusercontent.com/aida/ALJJyrCkC4DMCnNSjv2Jl0q_PgXe8EkSXXccXs3Q_p8MPzsADTSCILSCOytCAQrFUT3Qa4pk-Hml1gorGOnLVr8zQuUV1PMYo1tYdYvMD3Uo4Tz641fP-v56XYvdzKz8LLRKGaqhTgkW3aeKk_96v3t0snngjWsg48_-FY6yKYZIgm9am8DxGo5pTQh9wVWT9Q4vO-ajSMFlZ7CtOrgXg6E3C9MP9WPtyJkqsrFwohOdJT6a"><div class="flex flex-col justify-center"><span class="font-headline-sm text-headline-sm text-primary leading-none font-bold">Acocks Green</span><span class="font-subheading-eyebrow text-[11px] text-on-surface-variant tracking-wider uppercase font-semibold mt-0.5">Dental Practice</span></div></div><p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md leading-relaxed">Providing dedicated family dental care, NHS treatment pathways, and advanced cosmetic dentistry to the Birmingham community with patient comfort at our core.</p><div class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant"><span class="font-label-sm text-label-sm text-on-surface">1078 Warwick Road</span><span>Acocks Green, Birmingham</span><span>B27 6BH, United Kingdom</span></div></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Quick Navigation</h4><ul class="flex flex-col gap-space-sm font-body-md text-body-md text-on-surface-variant"><li class="hover:text-primary transition-colors cursor-pointer"><a data-path="treatments-and-services" href="#">Treatments &amp; Services</a></li><li class="hover:text-primary transition-colors cursor-pointer"><a data-path="our-clinicians" href="#">Our Clinicians &amp; Staff</a></li><li class="hover:text-primary transition-colors cursor-pointer"><a data-path="nhs-safety-charter" href="#">NHS Safety Charter</a></li><li class="hover:text-primary transition-colors cursor-pointer"><a data-path="patient-reviews" href="#">Patient Testimonials</a></li><li class="hover:text-primary transition-colors cursor-pointer"><a data-path="emergency-consultation" href="#">Dental Emergencies</a></li></ul></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">Clinical Hours</h4><ul class="flex flex-col gap-space-xs font-body-sm text-body-sm text-on-surface-variant mb-space-md"><li class="flex justify-between py-1"><span>Monday – Thursday:</span><span class="font-label-sm text-label-sm text-on-surface">8:30 AM – 5:30 PM</span></li><li class="flex justify-between py-1"><span>Friday:</span><span class="font-label-sm text-label-sm text-on-surface">8:30 AM – 5:00 PM</span></li><li class="flex justify-between py-1"><span>Saturday &amp; Sunday:</span><span class="font-label-sm text-label-sm text-primary">Emergency On-Call</span></li></ul><div class="bg-brand-accent-glow p-space-sm rounded-lg"><p class="font-label-sm text-label-sm text-primary flex items-center gap-space-xs"><span class="material-symbols-outlined text-[16px]">support_agent</span> 24/7 Dental Emergency Triage</p><a class="font-headline-sm text-headline-sm text-appointment-card-bg font-bold block mt-1" href="tel:+441217652870">+44 121 765 2870</a></div></div><div><h4 class="font-headline-sm text-headline-sm text-on-surface mb-space-md">NHS Charter Notice</h4><div class="bg-surface-card p-space-md rounded-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] mb-space-md"><div class="flex items-center gap-space-xs text-primary mb-space-xs"><span class="material-symbols-outlined text-[18px]">verified</span><span class="font-label-md text-label-md">Quality Care Standards</span></div><p class="font-body-sm text-body-sm text-on-surface-variant leading-snug">We are fully regulated by the Care Quality Commission (CQC) and operate strictly under NHS clinical safety protocols for your family's peace of mind.</p></div><div class="flex gap-space-xs"><span class="inline-flex items-center font-label-sm text-label-sm px-space-sm py-1 rounded bg-secondary-container text-on-secondary-container">CQC Compliant</span><span class="inline-flex items-center font-label-sm text-label-sm px-space-sm py-1 rounded bg-secondary-container text-on-secondary-container">NHS Registered</span></div></div></div><div class="pt-space-md flex flex-col md:flex-row items-center justify-between font-body-sm text-body-sm text-on-surface-variant gap-space-sm"><p>© 2025 Acocks Green Dental Practice. All rights reserved.</p><div class="flex items-center gap-space-lg"><a class="hover:text-primary transition-colors" href="#">Privacy Policy</a><a class="hover:text-primary transition-colors" href="#">Cookie Policy</a><a class="hover:text-primary transition-colors" href="#">Accessibility Statement</a></div></div></div></footer>
+
+
+
+
+<span id="PING_CONTENT_PUSH_NOTIFICATION" style="display: none;"></span>
+
+<span id="PING_CONTENT_PUSH_NOTIFICATION" style="display: none;"></span></body></html>
