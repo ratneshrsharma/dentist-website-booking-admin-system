@@ -3,7 +3,7 @@ import { ApiResponse } from '@/types/api';
 import { CryptoHelper } from '@/utils/crypto';
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000/api/v1';
+  process.env.NEXT_PUBLIC_API_BASE_URL || '/dental-saas/api/v1';
 
 /**
  * Core Axios HTTP Instance with standard headers & interceptors

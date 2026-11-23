@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import styles from './HeaderNavBar.module.css';
 import { useTheme } from '@/context/ThemeContext';
+import { assetUrl } from '@/utils/asset';
 
 export interface HeaderNavBarProps {
   onBookClick?: () => void;
@@ -26,7 +27,7 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
         <Link href="/" className={styles.brandLink}>
           <div className={styles.logoWrapper}>
             <Image
-              src={logo_url || '/images/acocks-green-logo.png'}
+              src={assetUrl(logo_url || '/images/acocks-green-logo.png')}
               alt={`${clinic_name} Logo`}
               width={48}
               height={48}

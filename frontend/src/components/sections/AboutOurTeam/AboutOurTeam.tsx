@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { assetUrl } from '@/utils/asset';
 import styles from './AboutOurTeam.module.css';
 import { HomePageData } from '@/types/cms';
 
@@ -21,14 +22,14 @@ export const AboutOurTeam: React.FC<AboutOurTeamProps> = ({ about }) => {
             <div className={styles.photoGrid}>
               <div className={`${styles.photoCard} ${styles.offsetDown}`}>
                 <Image
-                  src="/images/treatment-room.jpg"
+                  src={assetUrl('/images/treatment-room.jpg')}
                   alt="Modern clean dental operatory"
                   fill
                 />
               </div>
               <div className={`${styles.photoCard} ${styles.offsetUp}`}>
                 <Image
-                  src="/images/surgery-clinic.jpg"
+                  src={assetUrl('/images/surgery-clinic.jpg')}
                   alt="Acocks Green Dental Clinic reception"
                   fill
                 />

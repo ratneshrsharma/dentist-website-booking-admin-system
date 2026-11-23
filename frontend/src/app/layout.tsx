@@ -16,7 +16,7 @@ export const metadata: Metadata = {
     'Invisalign Birmingham',
   ],
   icons: {
-    icon: '/images/acocks-green-logo.png',
+    icon: '/dental-saas/images/acocks-green-logo.png',
   },
 };
 

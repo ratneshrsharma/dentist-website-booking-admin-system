@@ -17,6 +17,27 @@ class StandaloneRunner
     private static bool $pdoAttempted = false;
     private static array $env = [];
 
+    public static function getAppBase(): string
+    {
+        $uri = $_SERVER['REQUEST_URI'] ?? '/';
+        if (preg_match('~^/([^/?#]+)~', $uri, $m)) {
+            if (in_array($m[1], ['dental-saas', 'advanced-dental-clinic'], true)) {
+                return '/' . $m[1];
+            }
+        }
+        return '';
+    }
+
+    public static function url(string $path = ''): string
+    {
+        $base = self::getAppBase();
+        $p = '/' . ltrim($path, '/');
+        if ($p === '/' || $p === '//') {
+            return $base !== '' ? $base . '/' : '/';
+        }
+        return ($base !== '' ? $base : '') . $p;
+    }
+
     public static function run(): void
     {
         if (session_status() === PHP_SESSION_NONE) {
@@ -46,7 +67,7 @@ class StandaloneRunner
         }
 
         if ($uri === '/billing' || $uri === '/billing/') {
-            header('Location: /advanced-dental-clinic/billing/INV-2026-0891');
+            header('Location: ' . self::url('/billing/INV-2026-0891'));
             exit;
         }
 
@@ -57,7 +78,7 @@ class StandaloneRunner
         }
 
         // Default redirect to admin dashboard
-        header('Location: /advanced-dental-clinic/admin/dashboard');
+        header('Location: ' . self::url('/admin/dashboard'));
         exit;
     }
 
@@ -277,7 +298,7 @@ class StandaloneRunner
         }
 
         // Global Theme Tokens (Acocks Green British Healthcare System)
-        if ($uri === '/api/v1/theme/global') {
+        if ($uri === '/api/v1/theme' || $uri === '/api/v1/theme/global') {
             $defaultTheme = self::getDefaultThemeData();
             $storage = self::getCmsStorageData();
             if (isset($storage['theme']) && is_array($storage['theme'])) {
@@ -1158,8 +1179,8 @@ class StandaloneRunner
                     'balance_due' => 0.00,
                     'payment_method' => 'Visa Card (ending in 4242)',
                     'status' => 'paid',
-                    'public_receipt_url' => '/advanced-dental-clinic/billing/INV-2026-0891',
-                    'whatsapp_share_url' => "https://wa.me/" . preg_replace('/[^0-9]/', '', $waNumber) . "?text=" . urlencode("Here is your receipt: https://demo.ratneshsharma.com/advanced-dental-clinic/billing/INV-2026-0891"),
+                    'public_receipt_url' => self::url('/billing/INV-2026-0891'),
+                    'whatsapp_share_url' => "https://wa.me/" . preg_replace('/[^0-9]/', '', $waNumber) . "?text=" . urlencode("Here is your receipt: " . self::url('/billing/INV-2026-0891')),
                 ],
                 [
                     'id' => 892,
@@ -1178,7 +1199,7 @@ class StandaloneRunner
                     'balance_due' => 2400.00,
                     'payment_method' => 'Installment Plan (50% Deposit)',
                     'status' => 'partial',
-                    'public_receipt_url' => '/advanced-dental-clinic/billing/INV-2026-0892',
+                    'public_receipt_url' => self::url('/billing/INV-2026-0892'),
                 ],
                 [
                     'id' => 893,
@@ -1197,7 +1218,7 @@ class StandaloneRunner
                     'balance_due' => 1250.00,
                     'payment_method' => 'Cigna Dental Claim (Pending)',
                     'status' => 'pending_insurance',
-                    'public_receipt_url' => '/advanced-dental-clinic/billing/INV-2026-0893',
+                    'public_receipt_url' => self::url('/billing/INV-2026-0893'),
                 ],
             ];
             echo json_encode([
@@ -1246,7 +1267,7 @@ class StandaloneRunner
             exit;
         }
 
-        if ($uri === '/api/v1/cms/navigation') {
+        if ($uri === '/api/v1/navigation' || $uri === '/api/v1/cms/navigation') {
             if ($pdo) {
                 $stmt = $pdo->query("SELECT id, title, slug, category, overview AS description, hero_image FROM cms_treatments WHERE is_published = 1 ORDER BY sort_order ASC");
                 $treatments = $stmt->fetchAll();
@@ -1534,9 +1555,9 @@ class StandaloneRunner
             exit;
         }
 
-        // 14. Website CMS Pages Content API (Endpoint 1: /api/v1/cms/pages/{slug} & /api/v1/cms-pages/{slug})
-        if (str_starts_with($uri, '/api/v1/cms-pages') || str_starts_with($uri, '/api/v1/cms/pages')) {
-            $slug = trim(preg_replace('#^/api/v1/cms(?:-pages|/pages)/?#', '', $uri), '/');
+        // 14. Website CMS Pages Content API (Endpoint 1: /api/v1/cms/pages/{slug}, /api/v1/cms-pages/{slug}, /api/v1/pages/{slug})
+        if (str_starts_with($uri, '/api/v1/cms-pages') || str_starts_with($uri, '/api/v1/cms/pages') || str_starts_with($uri, '/api/v1/pages')) {
+            $slug = trim(preg_replace('#^/api/v1/(?:cms-pages|cms/pages|pages)/?#', '', $uri), '/');
             if ($slug === '' || $slug === 'index' || $slug === 'list') {
                 $allPages = self::getAllCmsPagesList();
                 $statusFilter = $_GET['status'] ?? 'all';
@@ -1660,7 +1681,7 @@ class StandaloneRunner
             // Check if user requested to cancel 2FA and switch account
             if (!empty($_GET['reset_2fa'])) {
                 unset($_SESSION['pending_2fa_user'], $_SESSION['pending_2fa_otp']);
-                header('Location: /advanced-dental-clinic/admin/login');
+                header('Location: ' . self::url('/admin/login'));
                 exit;
             }
 
@@ -1686,7 +1707,7 @@ class StandaloneRunner
                     if ($enteredOtp !== '' && ($enteredOtp === $expectedOtp || $enteredOtp === '849201')) {
                         $_SESSION['auth_user'] = $_SESSION['pending_2fa_user'];
                         unset($_SESSION['pending_2fa_user'], $_SESSION['pending_2fa_otp']);
-                        header('Location: /advanced-dental-clinic/admin/dashboard');
+                        header('Location: ' . self::url('/admin/dashboard'));
                         exit;
                     }
 
@@ -1747,7 +1768,7 @@ class StandaloneRunner
             }
 
             if (!empty($_SESSION['auth_user'])) {
-                header('Location: /advanced-dental-clinic/admin/dashboard');
+                header('Location: ' . self::url('/admin/dashboard'));
                 exit;
             }
 
@@ -1794,7 +1815,7 @@ class StandaloneRunner
 
         // 4. Authentication Barrier - All other routes require an active session
         if (empty($_SESSION['auth_user'])) {
-            header('Location: /advanced-dental-clinic/admin/login');
+            header('Location: ' . self::url('/admin/login'));
             exit;
         }
 
@@ -1832,7 +1853,7 @@ class StandaloneRunner
                     }
                 }
                 $_SESSION['flash_success'] = 'Theme design tokens and typography successfully updated!';
-                header('Location: /advanced-dental-clinic/admin/theme-customizer');
+                header('Location: ' . self::url('/admin/theme-customizer'));
                 exit;
             }
 
@@ -1866,7 +1887,7 @@ class StandaloneRunner
                     }
                 }
                 $_SESSION['flash_success'] = 'SEO metadata, OpenGraph tags, and custom scripts successfully saved!';
-                header('Location: /advanced-dental-clinic/admin/seo-manager');
+                header('Location: ' . self::url('/admin/seo-manager'));
                 exit;
             }
 
@@ -1894,7 +1915,7 @@ class StandaloneRunner
                     }
                 }
                 $_SESSION['flash_success'] = '301 Permanent Redirect rule successfully deployed!';
-                header('Location: /advanced-dental-clinic/admin/seo-redirects');
+                header('Location: ' . self::url('/admin/seo-redirects'));
                 exit;
             }
         }
@@ -1950,11 +1971,7 @@ class StandaloneRunner
 
         // Replace all {{ url('...') }} or {{ url("...") }} dynamically including query parameters
         $html = preg_replace_callback('/\{\{\s*url\([\'"]([^\'"]*)[\'"]\)\s*\}\}/', function ($m) {
-            $path = '/' . ltrim($m[1], '/');
-            if ($path === '//' || $path === '/') {
-                return '/advanced-dental-clinic/';
-            }
-            return '/advanced-dental-clinic' . $path;
+            return self::url($m[1]);
         }, $html);
 
         $html = preg_replace('/@csrf/', '', $html);
@@ -2474,9 +2491,9 @@ class StandaloneRunner
             '{{ url(\'/admin/logout\') }}',
             '{{ url(\'/\') }}',
         ], [
-            '/advanced-dental-clinic/admin/dashboard',
-            '/advanced-dental-clinic/admin/logout',
-            '/advanced-dental-clinic/',
+            self::url('/admin/dashboard'),
+            self::url('/admin/logout'),
+            self::url('/'),
         ], $html);
 
         $html = preg_replace('/\{\{.*?\}\}/', '', $html);
@@ -2588,50 +2605,9 @@ class StandaloneRunner
             return $sections[$key] ?? $default;
         }, $rendered);
 
-        // Replace Blade helpers and URLs for all 12 modules and auth actions
-        $rendered = str_replace([
-            '{{ url(\'/admin/appointments/calendar\') }}',
-            '{{ url(\'/admin/emr/odontogram\') }}',
-            '{{ url(\'/admin/patients\') }}',
-            '{{ url(\'/admin/clinics\') }}',
-            '{{ url(\'/admin/multi-clinic\') }}',
-            '{{ url(\'/admin/inventory\') }}',
-            '{{ url(\'/admin/billing\') }}',
-            '{{ url(\'/admin/theme-customizer\') }}',
-            '{{ url(\'/admin/seo-manager\') }}',
-            '{{ url(\'/admin/seo-redirects\') }}',
-            '{{ url(\'/admin/cms-pages\') }}',
-            '{{ url(\'/admin/roles\') }}',
-            '{{ url(\'/admin/dashboard\') }}',
-            '{{ url(\'/admin/logout\') }}',
-            '{{ url(\'/admin/login\') }}',
-            '{{ url(\'/\') }}',
-        ], [
-            '/advanced-dental-clinic/admin/appointments/calendar',
-            '/advanced-dental-clinic/admin/emr/odontogram',
-            '/advanced-dental-clinic/admin/patients',
-            '/advanced-dental-clinic/admin/clinics',
-            '/advanced-dental-clinic/admin/clinics',
-            '/advanced-dental-clinic/admin/inventory',
-            '/advanced-dental-clinic/admin/billing',
-            '/advanced-dental-clinic/admin/theme-customizer',
-            '/advanced-dental-clinic/admin/seo-manager',
-            '/advanced-dental-clinic/admin/seo-redirects',
-            '/advanced-dental-clinic/admin/cms-pages',
-            '/advanced-dental-clinic/admin/roles',
-            '/advanced-dental-clinic/admin/dashboard',
-            '/advanced-dental-clinic/admin/logout',
-            '/advanced-dental-clinic/admin/login',
-            '/advanced-dental-clinic/',
-        ], $rendered);
-
         // General URL resolver for any {{ url('...') }} or {{ url("...") }} in Blade templates
         $rendered = preg_replace_callback('/\{\{\s*url\([\'"]([^\'"]*)[\'"]\)\s*\}\}/', function ($m) {
-            $path = '/' . ltrim($m[1], '/');
-            if ($path === '//' || $path === '/') {
-                return '/advanced-dental-clinic/';
-            }
-            return '/advanced-dental-clinic' . $path;
+            return self::url($m[1]);
         }, $rendered);
 
         // Extract push blocks from child view (e.g. @push('styles') ... @endpush)
@@ -2809,11 +2785,7 @@ class StandaloneRunner
 
         // Resolve all {{ url('...') }} or {{ url("...") }} across all sections and stacks
         $rendered = preg_replace_callback('/\{\{\s*url\([\'"]([^\'"]*)[\'"]\)\s*\}\}/', function ($m) {
-            $path = '/' . ltrim($m[1], '/');
-            if ($path === '//' || $path === '/') {
-                return '/advanced-dental-clinic/';
-            }
-            return '/advanced-dental-clinic' . $path;
+            return self::url($m[1]);
         }, $rendered);
 
         $rendered = preg_replace('/\{\{.*?\}\}/', '', $rendered);
@@ -2831,8 +2803,7 @@ class StandaloneRunner
         if (str_contains($rendered, '<?php')) {
             if (!function_exists('url')) {
                 function url(string $path = ''): string {
-                    $p = '/' . ltrim($path, '/');
-                    return $p === '/' ? '/advanced-dental-clinic/' : '/advanced-dental-clinic' . $p;
+                    return \App\StandaloneRunner::url($path);
                 }
             }
             $originalRendered = $rendered;
@@ -3123,7 +3094,7 @@ class StandaloneRunner
         $viewsDir = dirname(__DIR__) . '/resources/views';
         $file = $viewsDir . '/admin/billing/invoice.blade.php';
 
-        $home_url = '/advanced-dental-clinic/';
+        $home_url = self::url('/');
 
         ob_start();
         include $file;

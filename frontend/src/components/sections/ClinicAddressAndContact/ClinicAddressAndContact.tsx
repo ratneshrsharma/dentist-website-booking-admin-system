@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { assetUrl } from '@/utils/asset';
 import styles from './ClinicAddressAndContact.module.css';
 import { HomePageData } from '@/types/cms';
 
@@ -100,7 +101,7 @@ export const ClinicAddressAndContact: React.FC<ClinicAddressAndContactProps> = (
           <div className={styles.mapCard}>
             <div className={styles.mapFrame}>
               <Image
-                src={contactData.map_image || '/images/surgery-clinic.jpg'}
+                src={assetUrl(contactData.map_image || '/images/surgery-clinic.jpg')}
                 alt="Clinic Location Map View"
                 fill
               />

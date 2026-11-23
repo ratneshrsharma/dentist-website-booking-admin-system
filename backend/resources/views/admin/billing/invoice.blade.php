@@ -180,7 +180,7 @@
 
     <!-- Action Toolbar (Hidden during Print) -->
     <div class="action-bar no-print">
-        <a href="<?= htmlspecialchars($home_url ?? '/advanced-dental-clinic/') ?>" class="btn btn-outline-secondary btn-sm shadow-sm">
+        <a href="<?= htmlspecialchars($home_url ?? \App\StandaloneRunner::url('/')) ?>" class="btn btn-outline-secondary btn-sm shadow-sm">
             <i class="bi bi-arrow-left me-1"></i>Back to Patient Website
         </a>
         <div class="d-flex align-items-center gap-2">

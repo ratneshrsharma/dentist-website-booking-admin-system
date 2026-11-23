@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { assetUrl } from '@/utils/asset';
 import styles from './DoctorsGrid.module.css';
 import { ClinicianItem } from '@/types/cms';
 
@@ -35,7 +36,7 @@ export const DoctorsGrid: React.FC<DoctorsGridProps> = ({
             <div key={doctor.id} className={styles.doctorCard}>
               <div className={styles.avatarFrame}>
                 <Image
-                  src={doctor.avatar || '/images/doctor-das.jpg'}
+                  src={assetUrl(doctor.avatar || '/images/doctor-das.jpg')}
                   alt={doctor.name}
                   fill
                 />

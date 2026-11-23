@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Image from 'next/image';
+import { assetUrl } from '@/utils/asset';
 import styles from './HeroBanner.module.css';
 import { HomePageData } from '@/types/cms';
 
@@ -78,7 +79,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ hero, onBookClick }) => 
           <div className={styles.visualCol}>
             <div className={styles.imageFrame}>
               <Image
-                src={hero.hero_image || '/images/hero-patient.jpg'}
+                src={assetUrl(hero.hero_image || '/images/hero-patient.jpg')}
                 alt="Friendly patient consultation"
                 fill
                 priority

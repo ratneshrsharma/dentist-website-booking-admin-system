@@ -1070,7 +1070,7 @@
             balanceElem.className = 'text-danger fs-5 fw-bold';
         }
 
-        document.getElementById('prevModalFullPageLink').setAttribute('href', '/advanced-dental-clinic/billing/' + inv.id);
+        document.getElementById('prevModalFullPageLink').setAttribute('href', '{{ url('/billing') }}/' + inv.id);
 
         // Populate items table
         let itemsHtml = '';

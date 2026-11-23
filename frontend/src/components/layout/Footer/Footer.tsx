@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './Footer.module.css';
 import { useTheme } from '@/context/ThemeContext';
+import { assetUrl } from '@/utils/asset';
 
 export const Footer: React.FC = () => {
   const { theme, navigation } = useTheme();
@@ -21,7 +22,7 @@ export const Footer: React.FC = () => {
             <div className={styles.brandHeader}>
               <div className={styles.logoWrapper}>
                 <Image
-                  src={logo_url || '/images/acocks-green-logo.png'}
+                  src={assetUrl(logo_url || '/images/acocks-green-logo.png')}
                   alt={clinic_name}
                   width={40}
                   height={40}

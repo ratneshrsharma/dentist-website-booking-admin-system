@@ -1,5 +1,6 @@
 import { apiClient } from './client';
 import { ThemeSettings, HomePageData, ServiceItem, ClinicianItem, GlobalNavigation } from '@/types/cms';
+import { assetUrl } from '@/utils/asset';
 
 // Default static fallback from ref/JSONs/home.json & global-theme.json
 const DEFAULT_THEME: ThemeSettings = {
@@ -20,7 +21,7 @@ const DEFAULT_THEME: ThemeSettings = {
   branding: {
     clinic_name: 'Acocks Green',
     tagline: 'Dental Practice',
-    logo_url: '/images/acocks-green-logo.png',
+    logo_url: assetUrl('/images/acocks-green-logo.png'),
     phone: '+44 121 765 2870',
     whatsapp: '+441217652870',
     emergency_phone: '+44 121 765 2870',
@@ -98,7 +99,7 @@ const DEFAULT_HOME_PAGE: HomePageData = {
       { label: 'Dentists & Staff', value: '7+' },
       { label: 'Years of Trust', value: '20+' },
     ],
-    hero_image: '/images/hero-patient.jpg',
+    hero_image: assetUrl('/images/hero-patient.jpg'),
     hero_badges: [
       { title: 'CQC Regulated Standards', subtitle: 'Fully compliant', icon: 'verified' },
       { title: 'Same-Day Emergency Slots', subtitle: 'Fast pain relief', icon: 'e911_emergency' },
@@ -185,7 +186,7 @@ const DEFAULT_HOME_PAGE: HomePageData = {
       name: 'Dr. Atandrilla Das',
       title: 'BDS Associate Dental Surgeon',
       badge: 'Associate Dentist',
-      avatar: '/images/doctor-das.jpg',
+      avatar: assetUrl('/images/doctor-das.jpg'),
       bio: 'Special interest in comprehensive restorative therapy, minimal-prep restorations, and pediatric patient care.',
     },
     {
@@ -193,7 +194,7 @@ const DEFAULT_HOME_PAGE: HomePageData = {
       name: 'Dr. Harjeevan Rai',
       title: 'BDS Dental Surgeon',
       badge: 'Associate Dentist',
-      avatar: '/images/doctor-rai.jpg',
+      avatar: assetUrl('/images/doctor-rai.jpg'),
       bio: 'Focused on preventive oral health, biomechanical restorations, and gentle pain relief treatments.',
     },
     {
@@ -201,7 +202,7 @@ const DEFAULT_HOME_PAGE: HomePageData = {
       name: 'Dr. Nadeem Sohail',
       title: 'BDS Dental Surgeon',
       badge: 'Associate Dentist',
-      avatar: '/images/doctor-sohail.jpg',
+      avatar: assetUrl('/images/doctor-sohail.jpg'),
       bio: 'Experienced in complex endodontics, emergency extractions, and crown & bridge oral rehabilitation.',
     },
     {
@@ -209,7 +210,7 @@ const DEFAULT_HOME_PAGE: HomePageData = {
       name: 'Claire',
       title: 'Dental Hygienist',
       badge: 'Dental Hygienist',
-      avatar: '/images/hygienist-claire.jpg',
+      avatar: assetUrl('/images/hygienist-claire.jpg'),
       bio: 'Leading our hygiene suite with deep periodontal therapy, patient brushing coaching, and airflow stain polishing.',
     },
   ],
@@ -284,7 +285,7 @@ const DEFAULT_HOME_PAGE: HomePageData = {
       { day_range: 'Friday', hours: '8:30 AM – 5:00 PM' },
       { day_range: 'Saturday – Sunday', hours: 'Emergency Triage On-Call' },
     ],
-    map_image: '/images/surgery-clinic.jpg',
+    map_image: assetUrl('/images/surgery-clinic.jpg'),
   },
 };
 

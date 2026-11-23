@@ -5,7 +5,52 @@
 * **Author / Git Identity:** Ratnesh Sharma (@ratneshrsharma) <ratnesh.at.24@gmail.com>
 * **GitHub Repository:** https://github.com/ratneshrsharma/dentist-website-booking-admin-system (Branch: `main`)
 * **Target Environment:** Local testing/QA via XAMPP (Apache, PHP 8.2+, MySQL) -> Live Shared Linux Server + Git version control
-* **Current Status:** Micro-Task 1.2 Completed; Ready for Micro-Task 1.3 (Yoast-Style SEO Suite & Custom Script Injection)
+* **Current Status:** Micro-Task 1.2 QA & Bugfixes Completed (Frontend Blank Page & Admin Redirects Resolved); Database Initialized (`dental_saas_dev`); Ready for Micro-Task 1.3
+
+---
+
+### [2026-11-23 19:35] - QA & Bugfix: Subdirectory BasePath & AdminLTE 4 Dynamic Routing Fixes
+* **Micro-Task:** Task 1.2 QA & Hotfix - Subdirectory Resolution, Asset Prefixes & StandaloneRunner Dynamic Routing
+* **Root Causes Identified & Resolved:**
+  1. **Frontend Blank Screen Fix:**
+     - Next.js static export originally generated script/CSS tags with absolute root `/` paths (`/_next/...`, `/images/...`), causing 404s when hosted under the Apache subdirectory `/dental-saas`.
+     - Added `basePath: process.env.NEXT_PUBLIC_BASE_PATH ?? '/dental-saas'` in `next.config.mjs`.
+     - Built `src/utils/asset.ts` (`assetUrl()`) to safely normalize all static image assets with `basePath`.
+     - Fixed `client.ts` Axios `BASE_URL` fallback from `http://localhost:8000/api/v1` to relative `/dental-saas/api/v1`.
+     - Recompiled LESS and rebuilt static export with zero errors.
+  2. **Admin Redirect & 404 Fix:**
+     - `StandaloneRunner.php` had hardcoded `/advanced-dental-clinic/` redirects and URL replacements.
+     - Added dynamic `getAppBase()` and `url()` methods in `StandaloneRunner.php` using delimiter-safe regex (`~^/([^/?#]+)~`) to automatically detect any subfolder (`/dental-saas` or root) without hardcoded values.
+     - Replaced all header redirects (`/admin/login`, `/admin/dashboard`, `/billing/INV-...`) and Blade `{{ url('...') }}` replacement rules with `self::url(...)`.
+  3. **Database Initialization:**
+     - Created MySQL database `dental_saas_dev` on XAMPP and imported all clinic schemas, theme settings, users, and CMS records.
+     - Verified `api/v1/ping` connects to MySQL successfully.
+* **Testing & QA Verification Passed:**
+  - `GET http://localhost/dental-saas/` -> 200 OK (all `/dental-saas/_next/...` JS/CSS scripts & `/images/...` assets loaded).
+  - `GET http://localhost/dental-saas/admin/login` -> 200 OK (AdminLTE 4 login view rendered, no redirection loop).
+  - `POST http://localhost/dental-saas/admin/login` -> 200 OK for Step 1 credentials, 302 redirect to `/dental-saas/admin/dashboard` on Step 2 OTP (849201).
+  - `GET http://localhost/dental-saas/admin/dashboard` -> 200 OK (51.1 KB complete dashboard view).
+  - All 11 AdminLTE 4 modules (`dashboard`, `theme-customizer`, `seo-manager`, `seo-redirects`, `cms-pages`, `roles`, `billing`, `inventory`, `patients`, `calendar`, `clinics`) -> 200 OK.
+  - All 9 REST API endpoints (`ping`, `theme`, `navigation`, `pages/home`, `services`, `doctors`, `clinics`, `billing/invoices`, `inventory`) -> 200 OK with live data.
+* **Files Created/Modified:**
+  - `backend/app/StandaloneRunner.php`
+  - `backend/resources/views/admin/billing/index.blade.php`
+  - `backend/resources/views/admin/billing/invoice.blade.php`
+  - `frontend/next.config.mjs`
+  - `frontend/.env.local`
+  - `frontend/src/utils/asset.ts` (created)
+  - `frontend/src/api/client.ts`
+  - `frontend/src/api/cms.ts`
+  - `frontend/src/app/layout.tsx`
+  - `frontend/src/components/common/BrandPreloader/BrandPreloader.tsx`
+  - `frontend/src/components/layout/HeaderNavBar/HeaderNavBar.tsx`
+  - `frontend/src/components/layout/Footer/Footer.tsx`
+  - `frontend/src/components/banners/HeroBanner/HeroBanner.tsx`
+  - `frontend/src/components/sections/AboutOurTeam/AboutOurTeam.tsx`
+  - `frontend/src/components/sections/DoctorsGrid/DoctorsGrid.tsx`
+  - `frontend/src/components/sections/ClinicAddressAndContact/ClinicAddressAndContact.tsx`
+  - `DAILY_DIARY.md`
+* **Next Micro-Task to Execute:** Micro-Task 1.3 (Yoast-Style On-Page SEO Suite & Custom Script Injection in AdminLTE 4 and Frontend).
 
 ---
 

@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { assetUrl } from '@/utils/asset';
 import styles from './BrandPreloader.module.css';
 
 interface BrandPreloaderProps {
@@ -45,7 +46,7 @@ export const BrandPreloader: React.FC<BrandPreloaderProps> = ({
       <div className={styles.brandContent}>
         <div className={styles.logoContainer}>
           <Image
-            src={logoUrl}
+            src={assetUrl(logoUrl)}
             alt={clinicName}
             width={70}
             height={70}
