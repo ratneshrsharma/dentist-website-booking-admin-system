@@ -128,11 +128,11 @@ $services = $services ?? [];
                                            style="width: 65px;" min="1">
                                 </td>
                                 <td>
-                                    <span class="p-2 rounded-3 bg-light border text-success d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                    <div class="rounded-3 bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center justify-content-center shadow-xs" style="width: 42px; height: 42px;">
                                         <span class="material-symbols-outlined fs-5">
                                             <?= htmlspecialchars($s['icon'] ?? 'dentistry') ?>
                                         </span>
-                                    </span>
+                                    </div>
                                 </td>
                                 <td>
                                     <?php if (!empty($s['feature_image'])): ?>
@@ -169,11 +169,14 @@ $services = $services ?? [];
                                     <?php endif; ?>
                                 </td>
                                 <td>
+                                    <!-- Status Toggle Button: Bold Green (Active) & Bold Red (Inactive) -->
                                     <form action="<?= App::url('/admin/components/services/' . $s['id'] . '/toggle') ?>" method="POST" class="d-inline">
-                                        <button type="submit" class="badge rounded-pill border-0 <?= ($s['is_active'] ?? true) ? 'bg-success text-white' : 'bg-secondary text-white' ?>" 
-                                                title="Click to toggle status" style="cursor: pointer; padding: 6px 12px;">
-                                            <i class="bi <?= ($s['is_active'] ?? true) ? 'bi-check-circle-fill' : 'bi-pause-circle' ?> me-1"></i>
-                                            <?= ($s['is_active'] ?? true) ? 'Active' : 'Inactive' ?>
+                                        <button type="submit" 
+                                                class="btn btn-sm <?= ($s['is_active'] ?? true) ? 'btn-success text-white' : 'btn-danger text-white' ?> rounded-pill px-3 py-1 shadow-sm d-inline-flex align-items-center gap-1 fw-bold border-0" 
+                                                title="Click to toggle status (Active / Inactive)" 
+                                                style="font-size: 12px; min-width: 95px; justify-content: center;">
+                                            <i class="bi <?= ($s['is_active'] ?? true) ? 'bi-check-circle-fill' : 'bi-x-circle-fill' ?>"></i>
+                                            <span><?= ($s['is_active'] ?? true) ? 'Active' : 'Inactive' ?></span>
                                         </button>
                                     </form>
                                 </td>
@@ -198,6 +201,22 @@ $services = $services ?? [];
                     <?php endif; ?>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination & Responsive Footer Toolbar -->
+        <div class="card-footer bg-white border-top py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <small class="text-muted fw-semibold">
+                    Showing <span class="text-dark fw-bold"><?= count($services) ?></span> of <span class="text-dark fw-bold"><?= count($services) ?></span> registered treatments
+                </small>
+            </div>
+            <nav aria-label="Services table navigation">
+                <ul class="pagination pagination-sm m-0">
+                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                </ul>
+            </nav>
         </div>
     </form>
 </div>

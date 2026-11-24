@@ -157,8 +157,9 @@ class ComponentsController
     {
         Auth::requireAuth();
         ServicesService::toggleStatus($id);
-        App::flash('success', 'Service status updated.');
-        App::redirect('/admin/components/services');
+        App::redirect('/admin/components/services', [
+            'success' => 'Service status updated successfully.'
+        ]);
     }
 
     /**
@@ -168,8 +169,9 @@ class ComponentsController
     {
         Auth::requireAuth();
         ServicesService::deleteService($id);
-        App::flash('success', 'Service permanently deleted.');
-        App::redirect('/admin/components/services');
+        App::redirect('/admin/components/services', [
+            'success' => 'Service permanently deleted.'
+        ]);
     }
 
     /**
@@ -194,10 +196,11 @@ class ComponentsController
                 usort($pairs, fn($a, $b) => $a['order'] <=> $b['order']);
                 $orderedIds = array_column($pairs, 'id');
                 ServicesService::reorderServices($orderedIds);
-                App::flash('success', 'Services custom order saved successfully.');
             }
         }
-        App::redirect('/admin/components/services');
+        App::redirect('/admin/components/services', [
+            'success' => 'Services custom display orders saved successfully.'
+        ]);
     }
 
     /**
@@ -225,8 +228,9 @@ class ComponentsController
         }
 
         CmsService::saveHomePageData($home);
-        App::flash('success', 'Services section intro settings saved.');
-        App::redirect('/admin/components/services');
+        App::redirect('/admin/components/services', [
+            'success' => 'Services section intro settings saved successfully.'
+        ]);
     }
 
     /**
@@ -358,9 +362,16 @@ class ComponentsController
             }
             $testi['is_active'] = isset($_POST['is_active']);
 
+            // Google Reviews Connection Settings
+            $testi['google_place_id'] = trim($_POST['google_place_id'] ?? '');
+            $testi['google_reviews_url'] = trim($_POST['google_reviews_url'] ?? 'https://g.page/review');
+            $testi['google_auto_sync'] = isset($_POST['google_auto_sync']);
+            $testi['google_min_rating'] = (int)($_POST['google_min_rating'] ?? 4);
+
             if (isset($_POST['review_names']) && is_array($_POST['review_names'])) {
                 $items = [];
                 foreach ($_POST['review_names'] as $idx => $rName) {
+                    if (trim($rName) === '') continue;
                     $isActive = isset($_POST['review_active']) && in_array((string)$idx, $_POST['review_active'], true);
                     $items[] = [
                         'id' => $idx + 1,
@@ -370,15 +381,19 @@ class ComponentsController
                         'rating' => (int)($_POST['review_ratings'][$idx] ?? 5),
                         'comment' => trim($_POST['review_comments'][$idx] ?? ''),
                         'is_active' => $isActive,
+                        'order' => (int)($_POST['review_orders'][$idx] ?? ($idx + 1)),
                     ];
                 }
+                // Sort by order
+                usort($items, fn($a, $b) => ($a['order'] ?? 0) <=> ($b['order'] ?? 0));
                 $testi['items'] = $items;
             }
 
             $home['testimonials'] = $testi;
             CmsService::saveHomePageData($home);
-            App::flash('success', 'Testimonials component updated successfully.');
-            App::redirect('/admin/components/testimonials');
+            App::redirect('/admin/components/testimonials', [
+                'success' => 'Patient testimonials and Google Reviews connection saved successfully.'
+            ]);
         }
 
         App::render('admin/components/testimonials', [

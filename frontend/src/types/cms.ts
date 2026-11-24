@@ -105,6 +105,16 @@ export interface PageSection {
   column_layout?: 'action_bar' | 'two_col_split' | 'full_width';
   cta_text?: string;
   cta_link?: string;
+  bg_type?: 'default' | 'solid' | 'gradient' | 'image' | 'image_overlay';
+  bg_color?: string;
+  bg_gradient_start?: string;
+  bg_gradient_end?: string;
+  bg_gradient_angle?: string;
+  bg_image?: string;
+  bg_overlay_color?: string;
+  bg_overlay_opacity?: number;
+  text_contrast?: 'auto' | 'dark' | 'light';
+  padding_y?: 'compact' | 'normal' | 'generous';
   is_active?: boolean;
   order?: number;
 }

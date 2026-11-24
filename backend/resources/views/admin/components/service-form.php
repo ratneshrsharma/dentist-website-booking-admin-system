@@ -127,18 +127,72 @@ $formAction = $isEdit
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold">Icon Symbol (Material Symbols)</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light">
-                                <span class="material-symbols-outlined fs-5" id="iconDisplay">
+                        <label class="form-label fw-semibold d-flex justify-content-between align-items-center">
+                            <span>Icon Symbol (Material Symbols)</span>
+                            <span class="badge bg-light text-success border">Material Symbol</span>
+                        </label>
+                        <div class="input-group mb-2">
+                            <span class="input-group-text bg-success-subtle text-success border-success">
+                                <span class="material-symbols-outlined fs-4" id="iconDisplay">
                                     <?= htmlspecialchars($service['icon'] ?? 'dentistry') ?>
                                 </span>
                             </span>
-                            <input type="text" name="icon" id="iconInput" class="form-control font-monospace" 
+                            <input type="text" name="icon" id="iconInput" class="form-control font-monospace fw-bold" 
                                    value="<?= htmlspecialchars($service['icon'] ?? 'dentistry') ?>" 
-                                   onkeyup="document.getElementById('iconDisplay').textContent = this.value || 'dentistry'">
+                                   placeholder="e.g. dentistry"
+                                   oninput="updateIconDisplay(this.value)">
                         </div>
-                        <small class="text-muted">e.g. <code>dentistry</code>, <code>clean_hands</code>, <code>healing</code>, <code>vital_signs</code>, <code>crown</code>, <code>auto_fix_high</code>, <code>medical_services</code>, <code>e911_emergency</code></small>
+
+                        <!-- Clickable Icon Preset Selector Grid -->
+                        <div class="border rounded-3 p-3 bg-light">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small class="fw-bold text-dark">Click to Choose Clinical Icon:</small>
+                                <small class="text-muted" style="font-size: 11px;">24 Clinical Presets</small>
+                            </div>
+                            <div class="d-flex flex-wrap gap-2" id="iconPickerGrid" style="max-height: 180px; overflow-y: auto;">
+                                <?php 
+                                $popularIcons = [
+                                    ['name' => 'dentistry', 'label' => 'Tooth / Dentistry'],
+                                    ['name' => 'clean_hands', 'label' => 'Hygiene & Clean'],
+                                    ['name' => 'healing', 'label' => 'Fillings & Healing'],
+                                    ['name' => 'vital_signs', 'label' => 'Root Canal'],
+                                    ['name' => 'crown', 'label' => 'Crown & Bridge'],
+                                    ['name' => 'auto_fix_high', 'label' => 'Aligners & Cosmetic'],
+                                    ['name' => 'medical_services', 'label' => 'Surgery / Extraction'],
+                                    ['name' => 'e911_emergency', 'label' => 'Emergency 911'],
+                                    ['name' => 'sentiment_satisfied', 'label' => 'Gentle / Phobic'],
+                                    ['name' => 'health_and_safety', 'label' => 'Health & Safety'],
+                                    ['name' => 'local_hospital', 'label' => 'Surgery Clinic'],
+                                    ['name' => 'medication', 'label' => 'Sedation / Meds'],
+                                    ['name' => 'biotech', 'label' => 'Digital 3D Diagnostics'],
+                                    ['name' => 'masks', 'label' => 'Sterilization'],
+                                    ['name' => 'radiology', 'label' => 'Digital Radiography'],
+                                    ['name' => 'monitor_heart', 'label' => 'Sedation Monitoring'],
+                                    ['name' => 'emergency', 'label' => 'Acute Relief'],
+                                    ['name' => 'star', 'label' => 'Boutique Whitening'],
+                                    ['name' => 'verified', 'label' => 'CQC Regulated'],
+                                    ['name' => 'schedule', 'label' => 'Routine Checkup'],
+                                    ['name' => 'favorite', 'label' => 'Comfort Care'],
+                                    ['name' => 'shield', 'label' => 'Patient Protection'],
+                                    ['name' => 'child_care', 'label' => 'Pediatric Care'],
+                                    ['name' => 'personal_injury', 'label' => 'Dental Trauma'],
+                                ];
+                                $curIcon = $service['icon'] ?? 'dentistry';
+                                foreach ($popularIcons as $ico):
+                                    $isSelected = ($ico['name'] === $curIcon);
+                                ?>
+                                    <button type="button" 
+                                            class="btn btn-sm <?= $isSelected ? 'btn-success text-white' : 'btn-outline-secondary bg-white' ?> d-inline-flex align-items-center gap-1 icon-select-btn" 
+                                            data-icon="<?= $ico['name'] ?>"
+                                            onclick="selectPresetIcon('<?= $ico['name'] ?>')"
+                                            title="<?= $ico['label'] ?>" 
+                                            style="padding: 4px 8px; font-size: 12px; border-radius: 8px;">
+                                        <span class="material-symbols-outlined" style="font-size: 18px;"><?= $ico['name'] ?></span>
+                                        <span><?= $ico['name'] ?></span>
+                                    </button>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -226,5 +280,23 @@ function previewImage(input, previewId) {
         };
         reader.readAsDataURL(input.files[0]);
     }
+}
+
+function updateIconDisplay(val) {
+    const icon = val.trim() || 'dentistry';
+    document.getElementById('iconDisplay').textContent = icon;
+    // Highlight matching button if any
+    document.querySelectorAll('.icon-select-btn').forEach(btn => {
+        if (btn.getAttribute('data-icon') === icon) {
+            btn.className = 'btn btn-sm btn-success text-white d-inline-flex align-items-center gap-1 icon-select-btn';
+        } else {
+            btn.className = 'btn btn-sm btn-outline-secondary bg-white d-inline-flex align-items-center gap-1 icon-select-btn';
+        }
+    });
+}
+
+function selectPresetIcon(iconName) {
+    document.getElementById('iconInput').value = iconName;
+    updateIconDisplay(iconName);
 }
 </script>

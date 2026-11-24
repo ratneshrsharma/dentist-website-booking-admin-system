@@ -308,6 +308,32 @@ class PagesController
                     }
                 }
 
+                // Background & Creative Section Styling
+                $bgType = trim($sec['bg_type'] ?? 'default');
+                $bgColor = trim($sec['bg_color'] ?? '#ffffff');
+                $bgGradStart = trim($sec['bg_gradient_start'] ?? '#094713');
+                $bgGradEnd = trim($sec['bg_gradient_end'] ?? '#15803d');
+                $bgGradAngle = trim($sec['bg_gradient_angle'] ?? '135deg');
+                $bgImg = trim($sec['bg_image'] ?? '');
+                $bgOverlayColor = trim($sec['bg_overlay_color'] ?? '#000000');
+                $bgOverlayOpacity = (float)($sec['bg_overlay_opacity'] ?? 0.6);
+                $textContrast = trim($sec['text_contrast'] ?? 'auto');
+                $paddingY = trim($sec['padding_y'] ?? 'normal');
+
+                if (!empty($_FILES['section_bg_files']['name'][$idx])) {
+                    $singleBg = [
+                        'name' => $_FILES['section_bg_files']['name'][$idx],
+                        'type' => $_FILES['section_bg_files']['type'][$idx],
+                        'tmp_name' => $_FILES['section_bg_files']['tmp_name'][$idx],
+                        'error' => $_FILES['section_bg_files']['error'][$idx],
+                        'size' => $_FILES['section_bg_files']['size'][$idx],
+                    ];
+                    $upBg = Uploader::uploadImage($singleBg, 'bg_' . $secId);
+                    if ($upBg) {
+                        $bgImg = $upBg;
+                    }
+                }
+
                 $parsedSections[] = [
                     'id' => $secId,
                     'type' => $secType,
@@ -324,6 +350,16 @@ class PagesController
                     'column_layout' => $colLayout,
                     'cta_text' => $ctaText,
                     'cta_link' => $ctaLink,
+                    'bg_type' => $bgType,
+                    'bg_color' => $bgColor,
+                    'bg_gradient_start' => $bgGradStart,
+                    'bg_gradient_end' => $bgGradEnd,
+                    'bg_gradient_angle' => $bgGradAngle,
+                    'bg_image' => $bgImg,
+                    'bg_overlay_color' => $bgOverlayColor,
+                    'bg_overlay_opacity' => $bgOverlayOpacity,
+                    'text_contrast' => $textContrast,
+                    'padding_y' => $paddingY,
                     'is_active' => $isActive,
                     'order' => $order,
                 ];

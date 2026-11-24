@@ -64,6 +64,18 @@ class App
     }
 
     /**
+     * Get or set a flash message
+     */
+    public static function flash(string $key, ?string $message = null): ?string
+    {
+        if ($message !== null) {
+            self::setFlash($key, $message);
+            return null;
+        }
+        return self::getFlash($key);
+    }
+
+    /**
      * Get and clear a flash message
      */
     public static function getFlash(string $key): ?string

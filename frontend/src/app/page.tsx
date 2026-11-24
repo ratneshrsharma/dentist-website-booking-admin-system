@@ -23,6 +23,7 @@ import { TestimonialsSlider } from '@/components/sections/TestimonialsSlider/Tes
 import { SafetyCharterBanner } from '@/components/sections/SafetyCharterBanner/SafetyCharterBanner';
 import { ClinicAddressAndContact } from '@/components/sections/ClinicAddressAndContact/ClinicAddressAndContact';
 import { ContentBlockSection } from '@/components/sections/ContentBlockSection/ContentBlockSection';
+import { assetUrl } from '@/utils/asset';
 
 // Interactive Booking Modal
 import { BookingModal } from '@/components/common/BookingModal/BookingModal';
@@ -60,6 +61,55 @@ export default function HomePage() {
     setIsBookingOpen(true);
   };
 
+  // Helper to wrap pre-built component blocks in custom section styling if set
+  const wrapSection = (sec: PageSection, index: number, children: React.ReactNode) => {
+    if (!sec.bg_type || sec.bg_type === 'default') {
+      return <React.Fragment key={sec.id || `sec-${index}`}>{children}</React.Fragment>;
+    }
+    const isEven = index % 2 === 1;
+    const style: React.CSSProperties = { position: 'relative' };
+    if (sec.padding_y === 'compact') {
+      style.paddingTop = '3.5rem';
+      style.paddingBottom = '3.5rem';
+    } else if (sec.padding_y === 'generous') {
+      style.paddingTop = '7.5rem';
+      style.paddingBottom = '7.5rem';
+    }
+    if (sec.bg_type === 'solid') {
+      style.backgroundColor = sec.bg_color || (isEven ? '#f0fdf4' : '#ffffff');
+    } else if (sec.bg_type === 'gradient') {
+      const start = sec.bg_gradient_start || '#094713';
+      const end = sec.bg_gradient_end || '#15803d';
+      const angle = sec.bg_gradient_angle || '135deg';
+      style.background = `linear-gradient(${angle}, ${start} 0%, ${end} 100%)`;
+    } else if (sec.bg_type === 'image' || sec.bg_type === 'image_overlay') {
+      if (sec.bg_image) {
+        style.backgroundImage = `url(${assetUrl(sec.bg_image)})`;
+        style.backgroundSize = 'cover';
+        style.backgroundPosition = 'center';
+      }
+    }
+    return (
+      <div key={sec.id || `sec-${index}`} style={style}>
+        {sec.bg_type === 'image_overlay' && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundColor: sec.bg_overlay_color || '#000000',
+              opacity: (sec.bg_overlay_opacity ?? 70) / 100,
+              zIndex: 0,
+              pointerEvents: 'none',
+            }}
+          />
+        )}
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          {children}
+        </div>
+      </div>
+    );
+  };
+
   // Render individual dynamic section based on its type and layout
   const renderSection = (sec: PageSection, index: number) => {
     if (sec.is_active === false) return null;
@@ -67,9 +117,10 @@ export default function HomePage() {
     switch (sec.type) {
       case 'services_block':
         if (sec.layout === 'sidebar_list') {
-          return (
+          return wrapSection(
+            sec,
+            index,
             <ServicesSidebarList
-              key={sec.id || `sec-${index}`}
               eyebrow={sec.eyebrow || pageData?.services_intro?.eyebrow}
               title={sec.title || pageData?.services_intro?.title}
               subtitle={sec.summary || sec.description || pageData?.services_intro?.subtitle}
@@ -79,9 +130,10 @@ export default function HomePage() {
             />
           );
         }
-        return (
+        return wrapSection(
+          sec,
+          index,
           <ServicesGrid4x3
-            key={sec.id || `sec-${index}`}
             eyebrow={sec.eyebrow || pageData?.services_intro?.eyebrow}
             title={sec.title || pageData?.services_intro?.title}
             subtitle={sec.summary || sec.description || pageData?.services_intro?.subtitle}
@@ -91,9 +143,10 @@ export default function HomePage() {
         );
 
       case 'team_block':
-        return (
+        return wrapSection(
+          sec,
+          index,
           <DoctorsGrid
-            key={sec.id || `sec-${index}`}
             eyebrow={sec.eyebrow}
             title={sec.title}
             subtitle={sec.summary || sec.description}
@@ -104,41 +157,46 @@ export default function HomePage() {
         );
 
       case 'testimonials_block':
-        return pageData?.reviews ? (
-          <TestimonialsSlider
-            key={sec.id || `sec-${index}`}
-            eyebrow={sec.eyebrow}
-            title={sec.title}
-            reviewsData={pageData.reviews}
-          />
-        ) : null;
+        return pageData?.reviews
+          ? wrapSection(
+              sec,
+              index,
+              <TestimonialsSlider
+                eyebrow={sec.eyebrow}
+                title={sec.title}
+                reviewsData={pageData.reviews}
+              />
+            )
+          : null;
 
       case 'contact_block':
-        return pageData?.contact_section ? (
-          <ClinicAddressAndContact
-            key={sec.id || `sec-${index}`}
-            eyebrow={sec.eyebrow}
-            title={sec.title}
-            subtitle={sec.summary || sec.description}
-            contactData={pageData.contact_section}
-          />
-        ) : null;
+        return pageData?.contact_section
+          ? wrapSection(
+              sec,
+              index,
+              <ClinicAddressAndContact
+                eyebrow={sec.eyebrow}
+                title={sec.title}
+                subtitle={sec.summary || sec.description}
+                contactData={pageData.contact_section}
+              />
+            )
+          : null;
 
       case 'charter_block':
         if (pageData?.safety_charter) {
-          return (
-            <SafetyCharterBanner
-              key={sec.id || `sec-${index}`}
-              charter={pageData.safety_charter}
-            />
+          return wrapSection(
+            sec,
+            index,
+            <SafetyCharterBanner charter={pageData.safety_charter} />
           );
         }
-        return <ContentBlockSection key={sec.id || `sec-${index}`} section={sec} />;
+        return <ContentBlockSection key={sec.id || `sec-${index}`} section={sec} index={index} />;
 
       case 'page_snippet':
       case 'custom_content':
       default:
-        return <ContentBlockSection key={sec.id || `sec-${index}`} section={sec} />;
+        return <ContentBlockSection key={sec.id || `sec-${index}`} section={sec} index={index} />;
     }
   };
 

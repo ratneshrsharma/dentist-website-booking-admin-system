@@ -39,41 +39,16 @@ $contact = $home['contact_section'] ?? [];
 </div>
 
 <form action="<?= App::url('/admin/pages/home/edit') ?>" method="POST" enctype="multipart/form-data" id="homeEditorForm">
-    <!-- Section Tabs -->
+    <!-- Section Tabs: Hero Banner & Dynamic Sections Composition Engine -->
     <ul class="nav nav-tabs mb-4 border-bottom-0" id="homeEditorTabs" role="tablist">
         <li class="nav-item">
-            <button class="nav-link active px-3 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#sec-hero" type="button">
+            <button class="nav-link active px-4 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#sec-hero" type="button">
                 <i class="bi bi-image me-1"></i> 1. Hero Banner & CTAs
             </button>
         </li>
         <li class="nav-item">
-            <button class="nav-link px-3 py-2 fw-bold text-success border-success" data-bs-toggle="tab" data-bs-target="#sec-composition" type="button">
+            <button class="nav-link px-4 py-2 fw-bold text-success border-success" data-bs-toggle="tab" data-bs-target="#sec-composition" type="button">
                 <i class="bi bi-layers-fill me-1"></i> 2. Page Sections Composition & Layout (<?= count($sections) ?>)
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link px-3 py-2" data-bs-toggle="tab" data-bs-target="#sec-about" type="button">
-                <i class="bi bi-info-circle me-1"></i> 3. About & Clinic Photos
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link px-3 py-2" data-bs-toggle="tab" data-bs-target="#sec-doctors" type="button">
-                <i class="bi bi-people me-1"></i> 4. Doctors & Avatars
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link px-3 py-2" data-bs-toggle="tab" data-bs-target="#sec-testimonials" type="button">
-                <i class="bi bi-star me-1"></i> 5. Testimonials
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link px-3 py-2" data-bs-toggle="tab" data-bs-target="#sec-charter" type="button">
-                <i class="bi bi-shield-check me-1"></i> 6. Safety Charter
-            </button>
-        </li>
-        <li class="nav-item">
-            <button class="nav-link px-3 py-2" data-bs-toggle="tab" data-bs-target="#sec-contact" type="button">
-                <i class="bi bi-geo-alt me-1"></i> 7. Hours & Map
             </button>
         </li>
     </ul>
@@ -359,6 +334,102 @@ $contact = $home['contact_section'] ?? [];
                                                     <input type="text" name="sections[<?= $idx ?>][cta_link]" class="form-control form-control-sm font-monospace" 
                                                            value="<?= htmlspecialchars($sec['cta_link'] ?? '') ?>" placeholder="e.g. /about-us or https://...">
                                                 </div>
+
+                                                <!-- Creative Background & Section Styling -->
+                                                <div class="col-12 mt-3 pt-3 border-top">
+                                                    <div class="d-flex align-items-center justify-content-between mb-2">
+                                                        <label class="form-label small fw-bold text-dark mb-0">
+                                                            <i class="bi bi-palette2 text-primary me-1"></i> Section Background & Creative Styling
+                                                        </label>
+                                                        <span class="badge bg-light text-secondary border">Design Freedom</span>
+                                                    </div>
+
+                                                    <div class="row g-2 bg-light p-3 rounded-3 border">
+                                                        <!-- Background Type -->
+                                                        <div class="col-md-3">
+                                                            <label class="form-label small fw-semibold">Background Type</label>
+                                                            <select name="sections[<?= $idx ?>][bg_type]" class="form-select form-select-sm fw-semibold" onchange="toggleSectionBgFields(this, '<?= $secId ?>')">
+                                                                <option value="default" <?= ($sec['bg_type'] ?? 'default') === 'default' ? 'selected' : '' ?>>Alternating (Odd/Even Auto)</option>
+                                                                <option value="solid" <?= ($sec['bg_type'] ?? '') === 'solid' ? 'selected' : '' ?>>Solid Custom Color</option>
+                                                                <option value="gradient" <?= ($sec['bg_type'] ?? '') === 'gradient' ? 'selected' : '' ?>>Modern Gradient</option>
+                                                                <option value="image" <?= ($sec['bg_type'] ?? '') === 'image' ? 'selected' : '' ?>>Background Image</option>
+                                                                <option value="image_overlay" <?= ($sec['bg_type'] ?? '') === 'image_overlay' ? 'selected' : '' ?>>Image with Color Overlay</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Solid Color Field -->
+                                                        <div class="col-md-3 sec-bg-field sec-bg-solid-<?= $secId ?>" style="display: <?= ($sec['bg_type'] ?? '') === 'solid' ? 'block' : 'none' ?>;">
+                                                            <label class="form-label small fw-semibold">Solid Color</label>
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="color" class="form-control form-control-color" value="<?= htmlspecialchars($sec['bg_color'] ?? '#f0fdf4') ?>" 
+                                                                       oninput="this.nextElementSibling.value = this.value">
+                                                                <input type="text" name="sections[<?= $idx ?>][bg_color]" class="form-control font-monospace" 
+                                                                       value="<?= htmlspecialchars($sec['bg_color'] ?? '#f0fdf4') ?>" placeholder="#f0fdf4">
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Gradient Fields -->
+                                                        <div class="col-md-5 sec-bg-field sec-bg-gradient-<?= $secId ?>" style="display: <?= ($sec['bg_type'] ?? '') === 'gradient' ? 'block' : 'none' ?>;">
+                                                            <label class="form-label small fw-semibold">Gradient Colors (Start & End)</label>
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="color" class="form-control form-control-color" value="<?= htmlspecialchars($sec['bg_gradient_start'] ?? '#094713') ?>" 
+                                                                       oninput="this.nextElementSibling.value = this.value" title="Start Color">
+                                                                <input type="text" name="sections[<?= $idx ?>][bg_gradient_start]" class="form-control font-monospace" 
+                                                                       value="<?= htmlspecialchars($sec['bg_gradient_start'] ?? '#094713') ?>" placeholder="#094713">
+                                                                <span class="input-group-text">to</span>
+                                                                <input type="color" class="form-control form-control-color" value="<?= htmlspecialchars($sec['bg_gradient_end'] ?? '#15803d') ?>" 
+                                                                       oninput="this.nextElementSibling.value = this.value" title="End Color">
+                                                                <input type="text" name="sections[<?= $idx ?>][bg_gradient_end]" class="form-control font-monospace" 
+                                                                       value="<?= htmlspecialchars($sec['bg_gradient_end'] ?? '#15803d') ?>" placeholder="#15803d">
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Background Image & Overlay Fields -->
+                                                        <div class="col-md-6 sec-bg-field sec-bg-image-<?= $secId ?>" style="display: <?= in_array($sec['bg_type'] ?? '', ['image', 'image_overlay']) ? 'block' : 'none' ?>;">
+                                                            <label class="form-label small fw-semibold">Background Image File / URL</label>
+                                                            <div class="input-group input-group-sm mb-1">
+                                                                <input type="file" name="section_bg_files[<?= $idx ?>]" class="form-control form-control-sm" accept="image/*">
+                                                            </div>
+                                                            <input type="text" name="sections[<?= $idx ?>][bg_image]" class="form-control form-control-sm font-monospace" 
+                                                                   value="<?= htmlspecialchars($sec['bg_image'] ?? '') ?>" placeholder="/images/surgery-clinic.jpg">
+                                                        </div>
+
+                                                        <div class="col-md-3 sec-bg-field sec-bg-overlay-<?= $secId ?>" style="display: <?= ($sec['bg_type'] ?? '') === 'image_overlay' ? 'block' : 'none' ?>;">
+                                                            <label class="form-label small fw-semibold">Overlay Color & Opacity</label>
+                                                            <div class="input-group input-group-sm">
+                                                                <input type="color" class="form-control form-control-color" value="<?= htmlspecialchars($sec['bg_overlay_color'] ?? '#000000') ?>" 
+                                                                       oninput="this.nextElementSibling.value = this.value">
+                                                                <input type="text" name="sections[<?= $idx ?>][bg_overlay_color]" class="form-control font-monospace" 
+                                                                       value="<?= htmlspecialchars($sec['bg_overlay_color'] ?? '#000000') ?>" placeholder="#000000">
+                                                                <select name="sections[<?= $idx ?>][bg_overlay_opacity]" class="form-select form-select-sm" style="max-width: 80px;">
+                                                                    <option value="0.3" <?= ($sec['bg_overlay_opacity'] ?? 0.6) == 0.3 ? 'selected' : '' ?>>30%</option>
+                                                                    <option value="0.5" <?= ($sec['bg_overlay_opacity'] ?? 0.6) == 0.5 ? 'selected' : '' ?>>50%</option>
+                                                                    <option value="0.7" <?= ($sec['bg_overlay_opacity'] ?? 0.6) == 0.7 ? 'selected' : '' ?>>70%</option>
+                                                                    <option value="0.85" <?= ($sec['bg_overlay_opacity'] ?? 0.6) == 0.85 ? 'selected' : '' ?>>85%</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Text Contrast & Spacing -->
+                                                        <div class="col-md-3">
+                                                            <label class="form-label small fw-semibold">Text Contrast Theme</label>
+                                                            <select name="sections[<?= $idx ?>][text_contrast]" class="form-select form-select-sm">
+                                                                <option value="auto" <?= ($sec['text_contrast'] ?? 'auto') === 'auto' ? 'selected' : '' ?>>Auto (Theme Default)</option>
+                                                                <option value="light" <?= ($sec['text_contrast'] ?? '') === 'light' ? 'selected' : '' ?>>Light / White Text (Dark BG)</option>
+                                                                <option value="dark" <?= ($sec['text_contrast'] ?? '') === 'dark' ? 'selected' : '' ?>>Dark Text (Light BG)</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <div class="col-md-3">
+                                                            <label class="form-label small fw-semibold">Section Vertical Spacing</label>
+                                                            <select name="sections[<?= $idx ?>][padding_y]" class="form-select form-select-sm">
+                                                                <option value="normal" <?= ($sec['padding_y'] ?? 'normal') === 'normal' ? 'selected' : '' ?>>Standard (5.5rem)</option>
+                                                                <option value="compact" <?= ($sec['padding_y'] ?? '') === 'compact' ? 'selected' : '' ?>>Compact (3.5rem)</option>
+                                                                <option value="generous" <?= ($sec['padding_y'] ?? '') === 'generous' ? 'selected' : '' ?>>Generous (7.5rem)</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -370,154 +441,7 @@ $contact = $home['contact_section'] ?? [];
             </div>
         </div>
 
-        <!-- ============================================================== -->
-        <!-- 3. ABOUT OUR TEAM -->
-        <!-- ============================================================== -->
-        <div class="tab-pane fade" id="sec-about">
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white py-3 border-bottom">
-                    <h5 class="fw-bold mb-0">About Practice Story & Photos</h5>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row g-3 mb-4 pb-4 border-bottom">
-                        <div class="col-md-4">
-                            <label class="form-label fw-semibold">Section Eyebrow</label>
-                            <input type="text" name="about_eyebrow" class="form-control" value="<?= htmlspecialchars($about['eyebrow'] ?? 'About Acocks Green Practice') ?>">
-                        </div>
-                        <div class="col-md-8">
-                            <label class="form-label fw-semibold">Section Headline Title</label>
-                            <input type="text" name="about_title" class="form-control fw-bold" value="<?= htmlspecialchars($about['title'] ?? 'Dedicated Dental Professionals Serving Birmingham B27') ?>">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Section Subtitle</label>
-                            <textarea name="about_subtitle" class="form-control" rows="2"><?= htmlspecialchars($about['subtitle'] ?? '') ?></textarea>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Experience Years Stat</label>
-                            <input type="text" name="about_experience_years" class="form-control fw-bold" value="<?= htmlspecialchars($about['experience_years'] ?? '20+') ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Patients Served Stat</label>
-                            <input type="text" name="about_patients_served" class="form-control fw-bold" value="<?= htmlspecialchars($about['patients_served'] ?? '5,000+') ?>">
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Story Paragraph 1</label>
-                            <textarea name="about_story_p1" class="form-control" rows="2"><?= htmlspecialchars($about['story_paragraphs'][0] ?? '') ?></textarea>
-                        </div>
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Story Paragraph 2</label>
-                            <textarea name="about_story_p2" class="form-control" rows="2"><?= htmlspecialchars($about['story_paragraphs'][1] ?? '') ?></textarea>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================== -->
-        <!-- 4. DOCTORS & CLINICIANS -->
-        <!-- ============================================================== -->
-        <div class="tab-pane fade" id="sec-doctors">
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Dental Surgeons & Hygiene Clinicians</h5>
-                    <a href="<?= App::url('/admin/components/doctors') ?>" class="btn btn-outline-success btn-sm rounded-pill">
-                        <i class="bi bi-people me-1"></i> Manage in Common Components
-                    </a>
-                </div>
-                <div class="card-body p-4">
-                    <p class="text-muted small">Doctor avatars and bios are synchronized from the Doctors & Avatars Common Component.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================== -->
-        <!-- 5. TESTIMONIALS -->
-        <!-- ============================================================== -->
-        <div class="tab-pane fade" id="sec-testimonials">
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Patient Reviews & Google Rating</h5>
-                    <a href="<?= App::url('/admin/components/testimonials') ?>" class="btn btn-outline-success btn-sm rounded-pill">
-                        <i class="bi bi-star me-1"></i> Manage in Common Components
-                    </a>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Google Review Average (1-5)</label>
-                            <input type="number" step="0.1" name="testimonial_rating" class="form-control" value="<?= htmlspecialchars((string)($testimonials['average_rating'] ?? 4.9)) ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Total Reviews Count</label>
-                            <input type="number" name="testimonial_count" class="form-control" value="<?= htmlspecialchars((string)($testimonials['total_reviews'] ?? 148)) ?>">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================== -->
-        <!-- 6. SAFETY CHARTER -->
-        <!-- ============================================================== -->
-        <div class="tab-pane fade" id="sec-charter">
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">NHS Sexual Safety Charter Signatory</h5>
-                    <a href="<?= App::url('/admin/components/charter') ?>" class="btn btn-outline-success btn-sm rounded-pill">
-                        <i class="bi bi-shield-check me-1"></i> Manage in Common Components
-                    </a>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row g-3">
-                        <div class="col-md-12">
-                            <label class="form-label fw-semibold">Charter Banner Headline Title</label>
-                            <input type="text" name="charter_title" class="form-control" value="<?= htmlspecialchars($charter['title'] ?? 'NHS Sexual Safety Charter Signatory') ?>">
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label fw-semibold">Charter Declaration Statement</label>
-                            <textarea name="charter_description" class="form-control" rows="3"><?= htmlspecialchars($charter['description'] ?? '') ?></textarea>
-                        </div>
-                        <div class="col-md-12">
-                            <label class="form-label fw-semibold">Official NHS Charter Link</label>
-                            <input type="text" name="charter_link" class="form-control font-monospace" value="<?= htmlspecialchars($charter['link_url'] ?? '') ?>">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ============================================================== -->
-        <!-- 7. HOURS & MAP -->
-        <!-- ============================================================== -->
-        <div class="tab-pane fade" id="sec-contact">
-            <div class="card border-0 shadow-sm rounded-4 mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h5 class="fw-bold mb-0">Surgery Hours & Contact Details</h5>
-                    <a href="<?= App::url('/admin/components/contact') ?>" class="btn btn-outline-success btn-sm rounded-pill">
-                        <i class="bi bi-geo-alt me-1"></i> Manage in Common Components
-                    </a>
-                </div>
-                <div class="card-body p-4">
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Section Title</label>
-                            <input type="text" name="contact_title" class="form-control" value="<?= htmlspecialchars($contact['title'] ?? '') ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Practice Email Address</label>
-                            <input type="email" name="contact_email" class="form-control" value="<?= htmlspecialchars($contact['email'] ?? '') ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Surgery Physical Address</label>
-                            <input type="text" name="contact_address" class="form-control" value="<?= htmlspecialchars($contact['address'] ?? '') ?>">
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label fw-semibold">Contact Telephone</label>
-                            <input type="text" name="contact_phone" class="form-control" value="<?= htmlspecialchars($contact['phone'] ?? '') ?>">
-                        </div>
-                    </div>
-                </div>
-            </div>
+        
         </div>
     </div>
 
@@ -1046,6 +970,65 @@ function createAndAppendSectionCard(data) {
                         <label class="form-label small fw-semibold">Action Target Link / URL</label>
                         <input type="text" name="sections[${newIdx}][cta_link]" class="form-control form-control-sm font-monospace" value="${escapeHtml(data.cta_link || '')}">
                     </div>
+
+                    <!-- Creative Background & Styling -->
+                    <div class="col-12 mt-3 pt-3 border-top">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <label class="form-label small fw-bold text-dark mb-0">
+                                <i class="bi bi-palette2 text-primary me-1"></i> Section Background & Creative Styling
+                            </label>
+                            <span class="badge bg-light text-secondary border">Design Freedom</span>
+                        </div>
+                        <div class="row g-2 bg-light p-3 rounded-3 border">
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold">Background Type</label>
+                                <select name="sections[${newIdx}][bg_type]" class="form-select form-select-sm fw-semibold" onchange="toggleSectionBgFields(this, '${data.id}')">
+                                    <option value="default" selected>Alternating (Odd/Even Auto)</option>
+                                    <option value="solid">Solid Custom Color</option>
+                                    <option value="gradient">Modern Gradient</option>
+                                    <option value="image">Background Image</option>
+                                    <option value="image_overlay">Image with Color Overlay</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 sec-bg-field sec-bg-solid-${data.id}" style="display: none;">
+                                <label class="form-label small fw-semibold">Solid Color</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="color" class="form-control form-control-color" value="#f0fdf4" oninput="this.nextElementSibling.value = this.value">
+                                    <input type="text" name="sections[${newIdx}][bg_color]" class="form-control font-monospace" value="#f0fdf4" placeholder="#f0fdf4">
+                                </div>
+                            </div>
+                            <div class="col-md-5 sec-bg-field sec-bg-gradient-${data.id}" style="display: none;">
+                                <label class="form-label small fw-semibold">Gradient Colors (Start & End)</label>
+                                <div class="input-group input-group-sm">
+                                    <input type="color" class="form-control form-control-color" value="#094713" oninput="this.nextElementSibling.value = this.value" title="Start">
+                                    <input type="text" name="sections[${newIdx}][bg_gradient_start]" class="form-control font-monospace" value="#094713">
+                                    <span class="input-group-text">to</span>
+                                    <input type="color" class="form-control form-control-color" value="#15803d" oninput="this.nextElementSibling.value = this.value" title="End">
+                                    <input type="text" name="sections[${newIdx}][bg_gradient_end]" class="form-control font-monospace" value="#15803d">
+                                </div>
+                            </div>
+                            <div class="col-md-6 sec-bg-field sec-bg-image-${data.id}" style="display: none;">
+                                <label class="form-label small fw-semibold">Background Image File / URL</label>
+                                <input type="text" name="sections[${newIdx}][bg_image]" class="form-control form-control-sm font-monospace" placeholder="/images/surgery-clinic.jpg">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold">Text Contrast Theme</label>
+                                <select name="sections[${newIdx}][text_contrast]" class="form-select form-select-sm">
+                                    <option value="auto" selected>Auto (Theme Default)</option>
+                                    <option value="light">Light / White Text (Dark BG)</option>
+                                    <option value="dark">Dark Text (Light BG)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label small fw-semibold">Section Vertical Spacing</label>
+                                <select name="sections[${newIdx}][padding_y]" class="form-select form-select-sm">
+                                    <option value="normal" selected>Standard (5.5rem)</option>
+                                    <option value="compact">Compact (3.5rem)</option>
+                                    <option value="generous">Generous (7.5rem)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1056,6 +1039,20 @@ function createAndAppendSectionCard(data) {
     div.innerHTML = html.trim();
     container.appendChild(div.firstChild);
     recalculateSectionOrders();
+}
+
+function toggleSectionBgFields(select, secId) {
+    const val = select.value;
+    const parent = select.closest('.row');
+    const solidField = parent.querySelector('.sec-bg-solid-' + secId);
+    const gradientField = parent.querySelector('.sec-bg-gradient-' + secId);
+    const imageField = parent.querySelector('.sec-bg-image-' + secId);
+    const overlayField = parent.querySelector('.sec-bg-overlay-' + secId);
+
+    if (solidField) solidField.style.display = (val === 'solid') ? 'block' : 'none';
+    if (gradientField) gradientField.style.display = (val === 'gradient') ? 'block' : 'none';
+    if (imageField) imageField.style.display = (val === 'image' || val === 'image_overlay') ? 'block' : 'none';
+    if (overlayField) overlayField.style.display = (val === 'image_overlay') ? 'block' : 'none';
 }
 
 function escapeHtml(text) {

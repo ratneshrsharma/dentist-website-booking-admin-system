@@ -30,9 +30,9 @@ use App\Core\App;
     </div>
 
     <div class="card-body p-0">
-        <div class="table-responsive">
+        <div class="table-responsive" style="max-height: 600px; overflow-x: auto; overflow-y: auto;">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
+                <thead class="table-light sticky-top" style="z-index: 10;">
                     <tr>
                         <th class="ps-4" style="width: 25%;">Page Title</th>
                         <th style="width: 20%;">Slug / Route</th>
@@ -89,6 +89,22 @@ use App\Core\App;
                     <?php endforeach; ?>
                 </tbody>
             </table>
+        </div>
+
+        <!-- Pagination & Responsive Footer Toolbar -->
+        <div class="card-footer bg-white border-top py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
+            <div class="d-flex align-items-center gap-3">
+                <small class="text-muted fw-semibold">
+                    Showing <span class="text-dark fw-bold"><?= count($pages) ?></span> of <span class="text-dark fw-bold"><?= count($pages) ?></span> managed pages
+                </small>
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination pagination-sm m-0">
+                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                </ul>
+            </nav>
         </div>
     </div>
 </div>
