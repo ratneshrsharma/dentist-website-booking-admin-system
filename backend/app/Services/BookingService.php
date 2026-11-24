@@ -594,6 +594,14 @@ final class BookingService
     }
 
     /**
+     * Get summary KPI statistics for Bookings Roster (alias for backward compatibility)
+     */
+    public static function getBookingStats(): array
+    {
+        return self::getDashboardKpiStats();
+    }
+
+    /**
      * Get summary KPI statistics for Clinical Dashboard
      */
     public static function getDashboardKpiStats(): array

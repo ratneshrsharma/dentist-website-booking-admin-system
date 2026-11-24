@@ -33,31 +33,83 @@ class Auth
         return $_SESSION['auth_user'] ?? null;
     }
 
-    public static function attempt(string $email, string $password): bool
+    public static function validateCredentials(string $email, string $password): ?array
     {
         App::initSession();
         $email = strtolower(trim($email));
 
         if (isset(self::$credentials[$email]) && self::$credentials[$email]['password'] === $password) {
-            $_SESSION['auth_user'] = [
+            return [
                 'email' => $email,
                 'name' => self::$credentials[$email]['name'],
                 'role' => self::$credentials[$email]['role'],
                 'avatar' => self::$credentials[$email]['avatar'],
                 'logged_at' => date('c'),
             ];
+        }
+
+        return null;
+    }
+
+    public static function create2FASession(array $user): string
+    {
+        App::initSession();
+        // Generate random 6-digit code
+        $code = (string)random_int(100000, 999999);
+        $_SESSION['2fa_pending'] = [
+            'user' => $user,
+            'code' => $code,
+            'generated_at' => time(),
+            'expires_at' => time() + 600, // 10 minutes validity
+        ];
+        return $code;
+    }
+
+    public static function getPending2FA(): ?array
+    {
+        App::initSession();
+        if (empty($_SESSION['2fa_pending'])) {
+            return null;
+        }
+
+        if (time() > ($_SESSION['2fa_pending']['expires_at'] ?? 0)) {
+            unset($_SESSION['2fa_pending']);
+            return null;
+        }
+
+        return $_SESSION['2fa_pending'];
+    }
+
+    public static function verify2FACode(string $enteredCode): bool
+    {
+        App::initSession();
+        $pending = self::getPending2FA();
+        if (!$pending) {
+            return false;
+        }
+
+        $cleanEntered = preg_replace('/\s+/', '', trim($enteredCode));
+        if ($cleanEntered === (string)$pending['code']) {
+            $_SESSION['auth_user'] = $pending['user'];
+            unset($_SESSION['2fa_pending']);
             return true;
         }
 
-        // Also allow quick-login bypass if demo button is clicked
-        if (!empty($_POST['demo_login'])) {
-            $_SESSION['auth_user'] = [
-                'email' => 'admin@example.com',
-                'name' => 'Dr. Ratnesh Sharma',
-                'role' => 'Super Administrator',
-                'avatar' => '/images/doctor-das.jpg',
-                'logged_at' => date('c'),
-            ];
+        return false;
+    }
+
+    public static function cancel2FA(): void
+    {
+        App::initSession();
+        unset($_SESSION['2fa_pending']);
+    }
+
+    public static function attempt(string $email, string $password): bool
+    {
+        App::initSession();
+        $user = self::validateCredentials($email, $password);
+        if ($user !== null) {
+            $_SESSION['auth_user'] = $user;
             return true;
         }
 

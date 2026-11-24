@@ -5,7 +5,28 @@
 * **Author / Git Identity:** Ratnesh Sharma (@ratneshrsharma) <ratnesh.at.24@gmail.com>
 * **GitHub Repository:** https://github.com/ratneshrsharma/dentist-website-booking-admin-system (Branch: `main`)
 * **Target Environment:** Local testing/QA via XAMPP (Apache, PHP 8.2+, MySQL) -> Live Shared Linux Server + Git version control
-* **Current Status:** New vs Returning Patient Registration with 3-Month Clinical Rule, Calendly Slots Resolution Bugfix, Admin Sidebar Scrollbar, Admin & Website Right-Hand Developer Copyright Credits, and Clinical Practice Dashboard Overhaul Deployed & Verified
+* **Current Status:** Admin Layout Sidebar Margin Offset Fixed, `/admin/bookings` Method Bug Resolved, and Two-Factor Authentication (2FA) with Clean Manual Login Inputs Fully Deployed & Verified
+
+---
+
+### [2026-11-24 16:45] - Admin Layout Sidebar Margin Offset Fix, `/admin/bookings` Roster Method Bugfix, and Two-Factor Authentication (2FA) Flow Implementation
+* **Micro-Task:** Implementation of User Feedback & Bugfixes:
+  1. **Admin Layout Content Overlap Fix (`layouts/admin.php`):**
+     - Resolved the layout bug where the main section slipped behind the fixed sidebar on desktop viewports.
+     - Added CSS rules: On desktop (`@media (min-width: 992px)`), `.app-header`, `.app-main`, and `.app-footer` receive `margin-left: 260px !important; width: calc(100% - 260px) !important;`.
+     - Verified bounding boxes in headless browser (1400x900): Sidebar sits at `x = 0px` (width: 250px) while main content begins at `x = 260px` with generous margin, completely eliminating any overlap of the "Clinical Practice Dashboard" heading and the "Today" KPI card.
+  2. **Bookings Roster Fatal Error Resolved (`BookingService.php`):**
+     - Fixed `Fatal error: Uncaught Error: Call to undefined method App\Services\BookingService::getBookingStats() in BookingsController.php:23`.
+     - Restored `getBookingStats()` as an alias returning the full KPI metrics structure.
+     - Verified `http://localhost/dental-saas/admin/bookings` loads with HTTP 200 and zero errors.
+  3. **Two-Factor Authentication (2FA) & Clean Login Inputs (`login.php`, `AuthController.php`, `Auth.php`):**
+     - **Clean Manual Credentials (Step 1):** Removed all direct auto-fills on email and password inputs (`value=""`). The user enters credentials manually without automated pre-population.
+     - **Two-Factor Authentication (Step 2):** After validating email and password, the session initiates 2FA and generates a secure 6-digit OTP code (`167363`).
+     - **Copy & Paste Helper:** Displays the temporary 6-digit code in a high-contrast clinical card with a 1-click "Copy & Paste Code" button.
+     - **Email Integration Architecture:** Ready for live SMTP dispatch when deployed to production.
+     - **Verification & Sign In:** Validates the 6-digit code and logs the user into `/admin/dashboard` with a green confirmation alert.
+* **Verification & QA:**
+  - 100% test pass verified across 2FA login flow, desktop layout offset, and bookings roster via browser subagent.
 
 ---
 

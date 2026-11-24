@@ -88,6 +88,11 @@ class Router
                 }
             }
 
+            if ($path === 'login/cancel-2fa') {
+                $auth = new AuthController();
+                $auth->cancel2FA();
+            }
+
             if ($path === 'logout') {
                 $auth = new AuthController();
                 $auth->logout();

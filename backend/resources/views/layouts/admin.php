@@ -38,6 +38,7 @@ $activeNav = $activeNav ?? 'dashboard';
         :root {
             --brand-primary: <?= htmlspecialchars($primaryColor) ?>;
             --font-family-base: '<?= htmlspecialchars($fontFamily) ?>', system-ui, -apple-system, sans-serif;
+            --sidebar-width: 260px;
         }
         body {
             font-family: var(--font-family-base);
@@ -60,6 +61,7 @@ $activeNav = $activeNav ?? 'dashboard';
             vertical-align: middle;
         }
         .app-sidebar {
+            width: var(--sidebar-width) !important;
             background-color: #0f172a !important;
             height: 100vh !important;
             display: flex !important;
@@ -69,6 +71,31 @@ $activeNav = $activeNav ?? 'dashboard';
             bottom: 0;
             left: 0;
             z-index: 1038;
+        }
+        /* Offset header, main content, and footer so they never go behind the fixed sidebar on desktop */
+        @media (min-width: 992px) {
+            .app-header,
+            .app-main,
+            .app-footer {
+                margin-left: var(--sidebar-width) !important;
+                width: calc(100% - var(--sidebar-width)) !important;
+                transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+            }
+        }
+        @media (max-width: 991.98px) {
+            .app-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            body.sidebar-open .app-sidebar {
+                transform: translateX(0);
+            }
+            .app-header,
+            .app-main,
+            .app-footer {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
         }
         .sidebar-brand {
             background-color: #0b1120 !important;
