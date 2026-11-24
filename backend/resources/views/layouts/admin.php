@@ -61,6 +61,14 @@ $activeNav = $activeNav ?? 'dashboard';
         }
         .app-sidebar {
             background-color: #0f172a !important;
+            height: 100vh !important;
+            display: flex !important;
+            flex-direction: column !important;
+            position: fixed !important;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1038;
         }
         .sidebar-brand {
             background-color: #0b1120 !important;
@@ -71,6 +79,28 @@ $activeNav = $activeNav ?? 'dashboard';
             display: flex !important;
             align-items: center !important;
             gap: 12px !important;
+            flex-shrink: 0 !important;
+        }
+        .sidebar-wrapper {
+            flex: 1 1 auto !important;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+            max-height: calc(100vh - 64px) !important;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+        }
+        .sidebar-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+        .sidebar-wrapper::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .sidebar-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 4px;
+        }
+        .sidebar-wrapper::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.45);
         }
         .brand-logo-img {
             width: 40px !important;
@@ -347,9 +377,14 @@ $activeNav = $activeNav ?? 'dashboard';
         </main>
 
         <!-- Footer -->
-        <footer class="app-footer bg-white border-top py-3 text-center text-muted small">
-            <div class="container-fluid">
-                <strong><?= htmlspecialchars($clinicName) ?></strong> White-Label Dental Clinic Platform &copy; <?= date('Y') ?>. Built with Laravel MVC & Next.js Headless Architecture.
+        <footer class="app-footer bg-white border-top py-3 text-muted small">
+            <div class="container-fluid d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+                <div>
+                    <strong><?= htmlspecialchars($clinicName) ?></strong> White-Label Dental Clinic Platform &copy; <?= date('Y') ?>. Built with Laravel MVC & Next.js Headless Architecture.
+                </div>
+                <div class="text-md-end fw-medium">
+                    Design &amp; Developed by <a href="https://github.com/ratneshrsharma" target="_blank" class="text-decoration-none text-success fw-bold">Ratnesh Sharma</a>
+                </div>
             </div>
         </footer>
     </div>

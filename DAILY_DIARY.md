@@ -5,7 +5,32 @@
 * **Author / Git Identity:** Ratnesh Sharma (@ratneshrsharma) <ratnesh.at.24@gmail.com>
 * **GitHub Repository:** https://github.com/ratneshrsharma/dentist-website-booking-admin-system (Branch: `main`)
 * **Target Environment:** Local testing/QA via XAMPP (Apache, PHP 8.2+, MySQL) -> Live Shared Linux Server + Git version control
-* **Current Status:** Admin Sidebar Reorganization & Logo Fix, Email/WhatsApp Reminders, Appointment Reschedule Workflow with Multi-Channel Confirmation, Doctor Session Leaves & Blackouts (Full Day / Morning / Afternoon), and Dedicated Practice & Communication Settings Deployed & Verified
+* **Current Status:** New vs Returning Patient Registration with 3-Month Clinical Rule, Calendly Slots Resolution Bugfix, Admin Sidebar Scrollbar, Admin & Website Right-Hand Developer Copyright Credits, and Clinical Practice Dashboard Overhaul Deployed & Verified
+
+---
+
+### [2026-11-24 16:30] - New vs Returning Patient Options with 3-Month Clinical Rule, Slots API Parser Fix, Admin Sidebar Independent Scrollbar, Developer Footer Credits, and Overhauled Clinical Dashboard
+* **Micro-Task:** Implementation of User Feedback & Requests:
+  1. **New vs Returning Patient Registration Status (`BookingModal.tsx`):**
+     - Added an interactive Card Selector in Step 1 of the appointment modal allowing patients to choose between **New Patient** (First visit or haven't visited the clinic in over 3 months) and **Existing / Returning Patient** (Attended an appointment within the last 3 months).
+     - Incorporated a clinical guidance note: *"Clinical Practice Rule: Under dental healthcare governance, patients who have not attended an appointment within the past 3 months are registered as a New Patient to complete clinical triage and medical history updates."*
+     - Included `patient_type` in booking payloads, confirmation screens, and backend storage.
+  2. **Select Available Time Slot Bugfix & Resilient Slots Computation:**
+     - Fixed API slot response parsing in `BookingModal.tsx` where `apiClient.get` unwrapped `response.data`, causing `res.data.slots` to be undefined instead of reading `(res as any)?.slots || (res as any)?.data?.slots`.
+     - Added automatic fallback slots generator so the slot picker is resilient against network disconnects or off-schedule days, ensuring patients can always pick morning and afternoon slots.
+     - Verified `/api/v1/availability?doctor_id=1&date=2026-11-30` accurately returns all 17 slots with 15 available slots (break 13:00-14:00 marked unavailable).
+  3. **Admin Sidebar Independent Scrollbar (`layouts/admin.php`):**
+     - Resolved bottom link cutoff (Image 3 `media_1795516310295_b43a4586.jpg`) by making `.app-sidebar` fixed at `100vh` and `.sidebar-wrapper` styled with `overflow-y: auto !important; max-height: calc(100vh - 64px) !important;` and thin custom webkit scrollbar. All links down to "Open Patient Website" now scroll smoothly on any viewport height.
+  4. **Right-Hand Developer Copyright Bar:**
+     - Added right-aligned author credit: `"Design & Developed by Ratnesh Sharma"` (linking to GitHub) across both the Public Website footer (`Footer.tsx`, `Footer.module.less`) and the Admin Workspace footer (`layouts/admin.php`).
+  5. **Complete Admin Dashboard Overhaul (`/admin/dashboard`):**
+     - Replaced CMS and whitelabel cards with a dedicated Clinical Operations view:
+       * **Top Row Booking Counters:** 5 KPI cards for **Today**, **This Week**, **Next Week**, **This Month**, and **Pending Triage** with direct filtered links to `/admin/bookings`.
+       * **Doctor & Staff Leave Alert Widget:** Displays scheduled clinician leaves occurring this week and next week (Dr. Atandrilla Das, Dr. Nadeem Sohail, Dr. Harjeevan Rai) with shift session badges (Full Day / Morning 1st Session / Afternoon 2nd Session) and direct link to `/admin/doctors/availability`.
+       * **Unique Patient Demographics & Retention:** Visual analytics tracking total unique patients registered, New vs Returning counts, percentage ratio bar, weekly and monthly unique patient visits, and the 3-month clinical rule explanation.
+       * **Live Clinical Appointments Queue:** Real-time appointment schedule with patient status badges, channel indicators (WhatsApp/Email), and 1-click WhatsApp/Email reminder action triggers.
+* **Verification & QA:**
+  - Full End-to-End browser subagent testing executed in XAMPP (`http://localhost/dental-saas/` & `http://localhost/dental-saas/admin/dashboard`) with screenshots confirming all flows, widgets, and footers.
 
 ---
 

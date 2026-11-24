@@ -209,7 +209,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 1rem;
   font-size: 13px;
   color: #40493d;
 }
@@ -218,9 +218,37 @@
     flex-direction: row;
   }
 }
+.bottomBar .copyrightRight {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+@media (min-width: 768px) {
+  .bottomBar .copyrightRight {
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+}
+.bottomBar .developedBy {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #40493d;
+}
+.bottomBar .developedBy .authorLink {
+  color: #0d631b;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+.bottomBar .developedBy .authorLink:hover {
+  color: #0a4f15;
+  text-decoration: underline;
+}
 .bottomBar .legalLinks {
   display: flex;
-  gap: 1.5rem;
+  gap: 1rem;
 }
 .bottomBar .legalLinks a:hover {
   color: #0d631b;

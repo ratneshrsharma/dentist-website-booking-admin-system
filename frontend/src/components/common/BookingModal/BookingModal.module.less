@@ -279,6 +279,105 @@
   }
 }
 
+/* Patient Type (New vs Returning) Selection */
+.patientTypeGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+
+  .patientTypeCard {
+    border: 1.5px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 12px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #ffffff;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: #0d631b;
+      background: #f0fdf4;
+    }
+
+    &.selected {
+      border-color: #0d631b;
+      background: #f0fdf4;
+      box-shadow: 0 0 0 2px #0d631b;
+
+      .patientTypeRadio {
+        border-color: #0d631b;
+
+        .radioDot {
+          transform: scale(1);
+          background: #0d631b;
+        }
+      }
+    }
+
+    .patientTypeRadio {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 2px;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+
+      .radioDot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: transform 0.2s ease;
+      }
+    }
+
+    .patientTypeText {
+      display: flex;
+      flex-direction: column;
+
+      strong {
+        font-size: 13px;
+        color: #0f172a;
+        margin-bottom: 2px;
+      }
+
+      small {
+        font-size: 11px;
+        color: #64748b;
+        line-height: 1.35;
+      }
+    }
+  }
+}
+
+.clinicalRuleBox {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 11.5px;
+  color: #166534;
+  line-height: 1.45;
+  margin-top: 4px;
+
+  span {
+    flex-shrink: 0;
+  }
+}
+
 /* Notification Preference Radio Buttons */
 .notificationGrid {
   display: grid;

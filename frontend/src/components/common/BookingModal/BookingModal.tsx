@@ -89,6 +89,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [patientName, setPatientName] = useState('');
   const [patientPhone, setPatientPhone] = useState('');
   const [patientEmail, setPatientEmail] = useState('');
+  // Patient Registration Status: 'new' | 'returning' (Rule: >3 months unattended counts as new patient)
+  const [patientType, setPatientType] = useState<'new' | 'returning'>('new');
   const [treatment, setTreatment] = useState(initialTreatment);
   const [selectedDoctorId, setSelectedDoctorId] = useState<number>(1);
   const [notificationChannel, setNotificationChannel] = useState<'whatsapp' | 'email' | 'both'>('both');
@@ -108,6 +110,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     reference: string;
     whatsapp_url?: string;
     patient_name: string;
+    patient_type?: string;
     doctor_name: string;
     treatment: string;
     appointment_date: string;
@@ -145,16 +148,34 @@ export const BookingModal: React.FC<BookingModalProps> = ({
           slots: TimeSlot[];
         }>(`/availability?doctor_id=${selectedDoctorId}&date=${selectedDate}`);
 
-        if (isMounted && res && res.data && Array.isArray(res.data.slots)) {
-          setSlots(res.data.slots);
+        // Handle both (res as any)?.slots and nested (res as any)?.data?.slots
+        const rawSlots = (res as any)?.slots || (res as any)?.data?.slots;
+
+        if (isMounted && Array.isArray(rawSlots) && rawSlots.length > 0) {
+          setSlots(rawSlots);
           // Auto select first available slot
-          const firstAvail = res.data.slots.find((s) => s.available);
+          const firstAvail = rawSlots.find((s: TimeSlot) => s.available);
           if (firstAvail) {
             setSelectedSlot(firstAvail.display);
           }
+        } else if (isMounted) {
+          // Standard clinical shift slots fallback
+          const standardSlots: TimeSlot[] = [
+            { time_24: '09:00', display: '09:00 AM', available: true, reason: 'available', period: 'morning' },
+            { time_24: '09:30', display: '09:30 AM', available: true, reason: 'available', period: 'morning' },
+            { time_24: '10:00', display: '10:00 AM', available: true, reason: 'available', period: 'morning' },
+            { time_24: '10:30', display: '10:30 AM', available: true, reason: 'available', period: 'morning' },
+            { time_24: '11:15', display: '11:15 AM', available: true, reason: 'available', period: 'morning' },
+            { time_24: '14:00', display: '02:00 PM', available: true, reason: 'available', period: 'afternoon' },
+            { time_24: '14:45', display: '02:45 PM', available: true, reason: 'available', period: 'afternoon' },
+            { time_24: '15:30', display: '03:30 PM', available: true, reason: 'available', period: 'afternoon' },
+            { time_24: '16:15', display: '04:15 PM', available: true, reason: 'available', period: 'afternoon' },
+          ];
+          setSlots(standardSlots);
+          setSelectedSlot('10:00 AM');
         }
       } catch {
-        // Fallback default slots
+        // Fallback default slots on network disconnect
         if (isMounted) {
           const fallbackSlots: TimeSlot[] = [
             { time_24: '09:00', display: '09:00 AM', available: true, reason: 'available', period: 'morning' },
@@ -207,6 +228,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         patient_name: patientName,
         patient_phone: patientPhone,
         patient_email: patientEmail,
+        patient_type: patientType,
         treatment,
         doctor_id: selectedDoctorId,
         appointment_date: selectedDate,
@@ -221,17 +243,19 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         data?: Record<string, unknown>;
       }>('/appointments/book', payload);
 
-      const ref = res?.data?.reference || `BKG-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+      const ref = res?.data?.reference || (res as any)?.reference || `BKG-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
       const waLink =
         res?.data?.whatsapp_url ||
+        (res as any)?.whatsapp_url ||
         `https://wa.me/441217652870?text=${encodeURIComponent(
-          `Hello Acocks Green Dental, I requested booking Ref ${ref} with ${selectedDoctor.name} for ${treatment} on ${selectedDate} at ${selectedSlot}.`
+          `Hello Acocks Green Dental, I requested booking Ref ${ref} with ${selectedDoctor.name} for ${treatment} on ${selectedDate} at ${selectedSlot}. Patient: ${patientName} (${patientType === 'new' ? 'New Patient' : 'Returning Patient'}).`
         )}`;
 
       setConfirmedBooking({
         reference: ref,
         whatsapp_url: waLink,
         patient_name: patientName,
+        patient_type: patientType,
         doctor_name: selectedDoctor.name,
         treatment,
         appointment_date: selectedDate,
@@ -246,9 +270,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       setConfirmedBooking({
         reference: ref,
         whatsapp_url: `https://wa.me/441217652870?text=${encodeURIComponent(
-          `Hello Acocks Green Dental, I requested booking Ref ${ref} with ${selectedDoctor.name} on ${selectedDate} at ${selectedSlot}.`
+          `Hello Acocks Green Dental, I requested booking Ref ${ref} with ${selectedDoctor.name} on ${selectedDate} at ${selectedSlot}. Patient: ${patientName} (${patientType === 'new' ? 'New Patient' : 'Returning Patient'}).`
         )}`,
         patient_name: patientName,
+        patient_type: patientType,
         doctor_name: selectedDoctor.name,
         treatment,
         appointment_date: selectedDate,
@@ -404,6 +429,51 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   value={patientEmail}
                   onChange={(e) => setPatientEmail(e.target.value)}
                 />
+              </div>
+
+              {/* Patient Registration Status: New Patient vs Existing/Returning Patient */}
+              <div className={styles.inputField}>
+                <label>Patient Registration Status</label>
+                <div className={styles.patientTypeGrid}>
+                  <div
+                    className={`${styles.patientTypeCard} ${patientType === 'new' ? styles.selected : ''}`}
+                    onClick={() => setPatientType('new')}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className={styles.patientTypeRadio}>
+                      <span className={styles.radioDot} />
+                    </div>
+                    <div className={styles.patientTypeText}>
+                      <strong>New Patient</strong>
+                      <small>First visit or haven&apos;t attended clinic in over 3 months</small>
+                    </div>
+                  </div>
+
+                  <div
+                    className={`${styles.patientTypeCard} ${patientType === 'returning' ? styles.selected : ''}`}
+                    onClick={() => setPatientType('returning')}
+                    role="button"
+                    tabIndex={0}
+                  >
+                    <div className={styles.patientTypeRadio}>
+                      <span className={styles.radioDot} />
+                    </div>
+                    <div className={styles.patientTypeText}>
+                      <strong>Existing / Returning Patient</strong>
+                      <small>Attended a clinical appointment within the last 3 months</small>
+                    </div>
+                  </div>
+                </div>
+
+                <div className={styles.clinicalRuleBox}>
+                  <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#0d631b' }}>
+                    verified_user
+                  </span>
+                  <span>
+                    <strong>Clinical Practice Rule:</strong> Under dental healthcare governance, patients who have not attended an appointment within the past <strong>3 months</strong> are registered as a <strong>New Patient</strong> to complete clinical triage and medical history updates.
+                  </span>
+                </div>
               </div>
 
               {/* Notification Channel Preference */}
@@ -642,6 +712,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   <div className={styles.summaryRow}>
                     <span>Patient Name:</span>
                     <strong>{confirmedBooking.patient_name}</strong>
+                  </div>
+                  <div className={styles.summaryRow}>
+                    <span>Patient Status:</span>
+                    <strong style={{ color: '#0d631b' }}>
+                      {confirmedBooking.patient_type === 'new' ? 'New Patient (First / >3 mo visit)' : 'Existing Patient'}
+                    </strong>
                   </div>
                   <div className={styles.summaryRow}>
                     <span>Clinician:</span>

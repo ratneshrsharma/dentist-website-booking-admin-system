@@ -173,6 +173,7 @@ final class BookingService
                 'patient_name' => 'Eleanor Vance',
                 'patient_phone' => '+44 7700 900142',
                 'patient_email' => 'eleanor.vance@example.co.uk',
+                'patient_type' => 'returning', // 'new', 'returning' (attended within 3 months)
                 'notification_channel' => 'whatsapp', // 'whatsapp', 'email', 'both'
                 'doctor_id' => 1,
                 'doctor_name' => 'Dr. Atandrilla Das',
@@ -189,6 +190,7 @@ final class BookingService
                 'patient_name' => 'Marcus Chen',
                 'patient_phone' => '+44 7700 900581',
                 'patient_email' => 'm.chen@example.com',
+                'patient_type' => 'new',
                 'notification_channel' => 'both',
                 'doctor_id' => 1,
                 'doctor_name' => 'Dr. Atandrilla Das',
@@ -197,7 +199,7 @@ final class BookingService
                 'appointment_time' => '11:30 AM',
                 'duration_minutes' => 45,
                 'status' => 'confirmed',
-                'notes' => 'Tooth #14 composite replacement.',
+                'notes' => 'Tooth #14 composite replacement. New patient intake complete.',
                 'created_at' => date('Y-m-d H:i:s', strtotime('-2 days')),
             ],
             [
@@ -205,6 +207,7 @@ final class BookingService
                 'patient_name' => 'Zara Gallagher',
                 'patient_phone' => '+44 7700 900894',
                 'patient_email' => 'zara.g@example.co.uk',
+                'patient_type' => 'new',
                 'notification_channel' => 'whatsapp',
                 'doctor_id' => 2,
                 'doctor_name' => 'Dr. Harjeevan Rai',
@@ -213,7 +216,7 @@ final class BookingService
                 'appointment_time' => '02:30 PM',
                 'duration_minutes' => 30,
                 'status' => 'pending',
-                'notes' => 'Urgent pain relief request - lower left jaw throbbing.',
+                'notes' => 'Urgent pain relief request - lower left jaw throbbing. New emergency patient.',
                 'created_at' => date('Y-m-d H:i:s', strtotime('-3 hours')),
             ],
             [
@@ -221,6 +224,7 @@ final class BookingService
                 'patient_name' => 'Oliver Davies',
                 'patient_phone' => '+44 7700 900223',
                 'patient_email' => 'oliver.davies@example.com',
+                'patient_type' => 'returning',
                 'notification_channel' => 'email',
                 'doctor_id' => 4,
                 'doctor_name' => 'Claire',
@@ -237,6 +241,7 @@ final class BookingService
                 'patient_name' => 'Sophie Al-Mansoor',
                 'patient_phone' => '+44 7700 900661',
                 'patient_email' => 'sophie.am@example.co.uk',
+                'patient_type' => 'new',
                 'notification_channel' => 'both',
                 'doctor_id' => 1,
                 'doctor_name' => 'Dr. Atandrilla Das',
@@ -245,7 +250,7 @@ final class BookingService
                 'appointment_time' => '03:00 PM',
                 'duration_minutes' => 45,
                 'status' => 'confirmed',
-                'notes' => 'Consultation for 3D iTero digital scan.',
+                'notes' => 'Consultation for 3D iTero digital scan. Haven\'t visited dentist in 6 months.',
                 'created_at' => date('Y-m-d H:i:s', strtotime('-2 days')),
             ],
             [
@@ -253,6 +258,7 @@ final class BookingService
                 'patient_name' => 'James Harrison',
                 'patient_phone' => '+44 7700 900445',
                 'patient_email' => 'jharrison@example.co.uk',
+                'patient_type' => 'returning',
                 'notification_channel' => 'whatsapp',
                 'doctor_id' => 3,
                 'doctor_name' => 'Dr. Nadeem Sohail',
@@ -269,6 +275,7 @@ final class BookingService
                 'patient_name' => 'Aisha Begum',
                 'patient_phone' => '+44 7700 900778',
                 'patient_email' => 'aisha.b@example.com',
+                'patient_type' => 'new',
                 'notification_channel' => 'email',
                 'doctor_id' => 2,
                 'doctor_name' => 'Dr. Harjeevan Rai',
@@ -277,7 +284,7 @@ final class BookingService
                 'appointment_time' => '11:00 AM',
                 'duration_minutes' => 45,
                 'status' => 'pending',
-                'notes' => 'Crown preparation on upper premolar.',
+                'notes' => 'Crown preparation on upper premolar. Initial consultation.',
                 'created_at' => date('Y-m-d H:i:s', strtotime('-1 day')),
             ],
             [
@@ -285,6 +292,7 @@ final class BookingService
                 'patient_name' => 'Callum Wright',
                 'patient_phone' => '+44 7700 900334',
                 'patient_email' => 'cwright@example.co.uk',
+                'patient_type' => 'returning',
                 'notification_channel' => 'both',
                 'doctor_id' => 1,
                 'doctor_name' => 'Dr. Atandrilla Das',
@@ -293,7 +301,7 @@ final class BookingService
                 'appointment_time' => '02:00 PM',
                 'duration_minutes' => 30,
                 'status' => 'confirmed',
-                'notes' => 'Annual family checkup.',
+                'notes' => 'Regular recall family checkup.',
                 'created_at' => date('Y-m-d H:i:s', strtotime('-3 days')),
             ],
             [
@@ -301,6 +309,7 @@ final class BookingService
                 'patient_name' => 'Grace Kelly',
                 'patient_phone' => '+44 7700 900912',
                 'patient_email' => 'grace.k@example.com',
+                'patient_type' => 'returning',
                 'notification_channel' => 'whatsapp',
                 'doctor_id' => 4,
                 'doctor_name' => 'Claire',
@@ -324,6 +333,17 @@ final class BookingService
         if (file_exists($file)) {
             $data = json_decode((string)file_get_contents($file), true);
             if (is_array($data)) {
+                // Ensure every booking has patient_type defined
+                $modified = false;
+                foreach ($data as &$item) {
+                    if (empty($item['patient_type'])) {
+                        $item['patient_type'] = 'new';
+                        $modified = true;
+                    }
+                }
+                if ($modified) {
+                    self::saveAllBookings($data);
+                }
                 return $data;
             }
         }
@@ -574,22 +594,29 @@ final class BookingService
     }
 
     /**
-     * Get summary KPI statistics for Bookings Dashboard
+     * Get summary KPI statistics for Clinical Dashboard
      */
-    public static function getBookingStats(): array
+    public static function getDashboardKpiStats(): array
     {
         $bookings = self::getAllBookingsRaw();
         $today = date('Y-m-d');
-        $endOfWeek = date('Y-m-d', strtotime('+7 days'));
-        $currMonth = substr($today, 0, 7);
+        // Monday through Sunday of current week
+        $thisWeekStart = date('Y-m-d', strtotime('monday this week'));
+        $thisWeekEnd = date('Y-m-d', strtotime('sunday this week'));
+        // Monday through Sunday of next week
+        $nextWeekStart = date('Y-m-d', strtotime('monday next week'));
+        $nextWeekEnd = date('Y-m-d', strtotime('sunday next week'));
+        $thisMonth = date('Y-m');
 
         $stats = [
             'total' => count($bookings),
             'today' => 0,
+            'this_week' => 0,
             'next_week' => 0,
             'this_month' => 0,
-            'pending' => 0,
+            'pending_triage' => 0,
             'confirmed' => 0,
+            'completed' => 0,
         ];
 
         foreach ($bookings as $b) {
@@ -599,21 +626,200 @@ final class BookingService
             if ($date === $today) {
                 $stats['today']++;
             }
-            if ($date >= $today && $date <= $endOfWeek) {
+            if ($date >= $thisWeekStart && $date <= $thisWeekEnd) {
+                $stats['this_week']++;
+            }
+            if ($date >= $nextWeekStart && $date <= $nextWeekEnd) {
                 $stats['next_week']++;
             }
-            if (substr($date, 0, 7) === $currMonth) {
+            if (substr($date, 0, 7) === $thisMonth) {
                 $stats['this_month']++;
             }
             if ($status === 'pending') {
-                $stats['pending']++;
+                $stats['pending_triage']++;
             }
             if ($status === 'confirmed') {
                 $stats['confirmed']++;
             }
+            if ($status === 'completed') {
+                $stats['completed']++;
+            }
         }
 
         return $stats;
+    }
+
+    /**
+     * Get unique patient demographic analytics (New vs Returning)
+     */
+    public static function getPatientStats(): array
+    {
+        $bookings = self::getAllBookingsRaw();
+        $thisWeekStart = date('Y-m-d', strtotime('monday this week'));
+        $thisWeekEnd = date('Y-m-d', strtotime('sunday this week'));
+        $thisMonth = date('Y-m');
+
+        $uniquePatients = [];
+        $thisWeekPatients = [];
+        $thisMonthPatients = [];
+
+        foreach ($bookings as $b) {
+            $key = strtolower(trim($b['patient_phone'] ?: ($b['patient_email'] ?: $b['patient_name'])));
+            if (empty($key)) continue;
+
+            $pType = $b['patient_type'] ?? 'new';
+
+            if (!isset($uniquePatients[$key])) {
+                $uniquePatients[$key] = [
+                    'name' => $b['patient_name'] ?? 'Patient',
+                    'phone' => $b['patient_phone'] ?? '',
+                    'email' => $b['patient_email'] ?? '',
+                    'type' => $pType,
+                    'last_visit' => $b['appointment_date'] ?? '',
+                    'visits_count' => 1,
+                ];
+            } else {
+                $uniquePatients[$key]['visits_count']++;
+                if (($b['appointment_date'] ?? '') > $uniquePatients[$key]['last_visit']) {
+                    $uniquePatients[$key]['last_visit'] = $b['appointment_date'];
+                    $uniquePatients[$key]['type'] = $pType;
+                }
+            }
+
+            $date = $b['appointment_date'] ?? '';
+            if ($date >= $thisWeekStart && $date <= $thisWeekEnd) {
+                $thisWeekPatients[$key] = true;
+            }
+            if (substr($date, 0, 7) === $thisMonth) {
+                $thisMonthPatients[$key] = true;
+            }
+        }
+
+        $totalUnique = count($uniquePatients);
+        $newCount = 0;
+        $returningCount = 0;
+
+        foreach ($uniquePatients as $p) {
+            if ($p['type'] === 'new') {
+                $newCount++;
+            } else {
+                $returningCount++;
+            }
+        }
+
+        $newPercent = $totalUnique > 0 ? (int)round(($newCount / $totalUnique) * 100) : 0;
+        $returningPercent = $totalUnique > 0 ? (100 - $newPercent) : 0;
+
+        return [
+            'total_unique' => $totalUnique,
+            'new_patients' => $newCount,
+            'returning_patients' => $returningCount,
+            'this_week_unique' => count($thisWeekPatients),
+            'this_month_unique' => count($thisMonthPatients),
+            'new_percent' => $newPercent,
+            'returning_percent' => $returningPercent,
+        ];
+    }
+
+    /**
+     * Get upcoming doctor & staff leaves for This Week and Next Week
+     */
+    public static function getUpcomingDoctorLeavesSummary(): array
+    {
+        $doctors = self::getDefaultDoctors();
+        $today = date('Y-m-d');
+        $thisWeekStart = date('Y-m-d', strtotime('monday this week'));
+        $thisWeekEnd = date('Y-m-d', strtotime('sunday this week'));
+        $nextWeekStart = date('Y-m-d', strtotime('monday next week'));
+        $nextWeekEnd = date('Y-m-d', strtotime('sunday next week'));
+
+        $leaves = [];
+        $totalThisWeek = 0;
+        $totalNextWeek = 0;
+
+        foreach ($doctors as $doc) {
+            $docLeaves = self::getDoctorLeaves($doc['id']);
+            foreach ($docLeaves as $leave) {
+                $lDate = $leave['date'] ?? '';
+                if ($lDate < $today) {
+                    continue; // Skip past dates
+                }
+
+                $periodLabel = 'Upcoming';
+                $badgeClass = 'bg-secondary';
+                $isThisWeek = false;
+                $isNextWeek = false;
+
+                if ($lDate === $today) {
+                    $periodLabel = 'Today';
+                    $badgeClass = 'bg-danger text-white';
+                    $totalThisWeek++;
+                    $isThisWeek = true;
+                } elseif ($lDate >= $thisWeekStart && $lDate <= $thisWeekEnd) {
+                    $periodLabel = 'This Week';
+                    $badgeClass = 'bg-warning text-dark';
+                    $totalThisWeek++;
+                    $isThisWeek = true;
+                } elseif ($lDate >= $nextWeekStart && $lDate <= $nextWeekEnd) {
+                    $periodLabel = 'Next Week';
+                    $badgeClass = 'bg-info text-dark';
+                    $totalNextWeek++;
+                    $isNextWeek = true;
+                }
+
+                $sessionLabel = match ($leave['session'] ?? 'full_day') {
+                    '1st_session' => 'Morning Shift (1st Session)',
+                    '2nd_session' => 'Afternoon Shift (2nd Session)',
+                    default => 'Full Day Blackout',
+                };
+
+                $leaves[] = [
+                    'id' => $leave['id'] ?? '',
+                    'doctor_id' => $doc['id'],
+                    'doctor_name' => $doc['name'],
+                    'doctor_badge' => $doc['badge'],
+                    'doctor_avatar' => $doc['avatar'],
+                    'date' => $lDate,
+                    'date_formatted' => date('D, j M Y', strtotime($lDate)),
+                    'session' => $leave['session'] ?? 'full_day',
+                    'session_label' => $sessionLabel,
+                    'reason' => $leave['reason'] ?? 'Clinician Leave',
+                    'period_label' => $periodLabel,
+                    'badge_class' => $badgeClass,
+                    'is_this_week' => $isThisWeek,
+                    'is_next_week' => $isNextWeek,
+                ];
+            }
+        }
+
+        usort($leaves, fn($a, $b) => strcmp($a['date'], $b['date']));
+
+        return [
+            'list' => $leaves,
+            'count_this_week' => $totalThisWeek,
+            'count_next_week' => $totalNextWeek,
+            'total_upcoming' => count($leaves),
+        ];
+    }
+
+    /**
+     * Get upcoming queue appointments for Dashboard table
+     */
+    public static function getUpcomingAppointments(int $limit = 8): array
+    {
+        $bookings = self::getAllBookingsRaw();
+        $today = date('Y-m-d');
+
+        // All bookings from today onwards
+        $upcoming = array_filter($bookings, fn($b) => ($b['appointment_date'] ?? '') >= $today);
+
+        usort($upcoming, function ($a, $b) {
+            $cmp = strcmp($a['appointment_date'], $b['appointment_date']);
+            if ($cmp !== 0) return $cmp;
+            return strcmp($a['appointment_time'], $b['appointment_time']);
+        });
+
+        return array_slice(array_values($upcoming), 0, $limit);
     }
 
     /**
@@ -669,11 +875,16 @@ final class BookingService
             ? $data['notification_channel']
             : 'whatsapp';
 
+        $patientType = in_array($data['patient_type'] ?? '', ['new', 'returning'], true)
+            ? $data['patient_type']
+            : 'new';
+
         $newBooking = [
             'reference' => $ref,
             'patient_name' => trim($data['patient_name'] ?? 'Patient'),
             'patient_phone' => trim($data['patient_phone'] ?? ''),
             'patient_email' => trim($data['patient_email'] ?? ''),
+            'patient_type' => $patientType,
             'notification_channel' => $notification,
             'doctor_id' => $doctor['id'],
             'doctor_name' => $doctor['name'],

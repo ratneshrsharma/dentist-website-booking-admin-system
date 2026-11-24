@@ -114,12 +114,25 @@ export const Footer: React.FC = () => {
         {/* Bottom Legal / Copyright Bar */}
         <div className={styles.bottomBar}>
           <p>© {currentYear} {clinic_name} {tagline}. All rights reserved.</p>
-          <div className={styles.legalLinks}>
-            {navigation.legal_links?.map((link, idx) => (
-              <Link key={idx} href={link.path}>
-                {link.title}
-              </Link>
-            ))}
+          <div className={styles.copyrightRight}>
+            <div className={styles.developedBy}>
+              <span>Design &amp; Developed by </span>
+              <a
+                href="https://github.com/ratneshrsharma"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.authorLink}
+              >
+                Ratnesh Sharma
+              </a>
+            </div>
+            <div className={styles.legalLinks}>
+              {navigation.legal_links?.map((link, idx) => (
+                <Link key={idx} href={link.path}>
+                  {link.title}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       </div>

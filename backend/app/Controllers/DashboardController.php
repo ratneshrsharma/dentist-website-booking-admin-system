@@ -7,7 +7,7 @@ namespace App\Controllers;
 use App\Core\App;
 use App\Core\Auth;
 use App\Services\ThemeService;
-use App\Services\CmsService;
+use App\Services\BookingService;
 
 class DashboardController
 {
@@ -16,14 +16,18 @@ class DashboardController
         Auth::requireAuth();
 
         $theme = ThemeService::getTheme();
-        $pages = CmsService::getPages();
-        $homeData = CmsService::getHomePageData();
+        $kpi = BookingService::getDashboardKpiStats();
+        $patientStats = BookingService::getPatientStats();
+        $leavesSummary = BookingService::getUpcomingDoctorLeavesSummary();
+        $upcomingAppointments = BookingService::getUpcomingAppointments(8);
 
         App::render('admin/dashboard/index', [
             'theme' => $theme,
-            'pages' => $pages,
-            'homeData' => $homeData,
-            'pageTitle' => 'Practice Management Dashboard',
+            'kpi' => $kpi,
+            'patientStats' => $patientStats,
+            'leavesSummary' => $leavesSummary,
+            'upcomingAppointments' => $upcomingAppointments,
+            'pageTitle' => 'Clinical Operations & Practice Dashboard',
             'activeNav' => 'dashboard',
         ]);
     }

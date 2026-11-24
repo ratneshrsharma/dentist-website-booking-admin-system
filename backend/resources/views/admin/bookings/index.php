@@ -259,7 +259,18 @@ if ($rescheduledRef) {
 
                             <!-- Patient Info -->
                             <td>
-                                <div class="fw-bold text-dark"><?= htmlspecialchars($b['patient_name']) ?></div>
+                                <div class="d-flex align-items-center gap-2 mb-1">
+                                    <span class="fw-bold text-dark"><?= htmlspecialchars($b['patient_name']) ?></span>
+                                    <?php if (($b['patient_type'] ?? 'new') === 'new'): ?>
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill py-0 px-2" style="font-size: 10px;">
+                                            <i class="bi bi-person-plus-fill me-1"></i>New
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill py-0 px-2" style="font-size: 10px;">
+                                            <i class="bi bi-arrow-repeat me-1"></i>Return
+                                        </span>
+                                    <?php endif; ?>
+                                </div>
                                 <div class="small text-muted d-flex align-items-center gap-1">
                                     <i class="bi bi-telephone text-success"></i> <?= htmlspecialchars($b['patient_phone']) ?>
                                 </div>
