@@ -42,11 +42,12 @@
     gap: 12px;
 
     .logoWrapper {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       position: relative;
       border-radius: @radius-full;
       overflow: hidden;
+      flex-shrink: 0;
 
       img {
         width: 100%;
@@ -58,13 +59,15 @@
     .brandTitles {
       display: flex;
       flex-direction: column;
+      line-height: 1.2;
 
       .clinicTitle {
         font-family: @font-headline;
-        font-size: 18px;
-        font-weight: 700;
+        font-size: 17px;
+        font-weight: 800;
         color: @primary;
-        line-height: 1.1;
+        line-height: 1.2;
+        letter-spacing: -0.01em;
       }
 
       .tagline {
@@ -73,6 +76,7 @@
         text-transform: uppercase;
         color: @on-surface-variant;
         letter-spacing: 0.08em;
+        margin-top: 2px;
       }
     }
   }
@@ -110,11 +114,14 @@
   display: flex;
   flex-direction: column;
   gap: @space-sm;
+  padding: 0;
+  margin: 0;
 
   li a {
-    font-size: 14px;
+    font-size: 13.5px;
     color: @on-surface-variant;
     text-decoration: none;
+    transition: color 0.15s ease;
 
     &:hover {
       color: @primary;
@@ -147,9 +154,11 @@
 }
 
 .emergencyPillBox {
-  background-color: @brand-accent-glow;
-  padding: 12px;
-  border-radius: @radius-lg;
+  background-color: #f0fdf4;
+  border: 1.5px solid #86efac;
+  padding: 12px 14px;
+  border-radius: @radius-xl;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 
   .triageLabel {
     font-family: @font-headline;
@@ -159,19 +168,29 @@
     display: flex;
     align-items: center;
     gap: 6px;
+    margin-bottom: 4px;
 
-    span {
-      font-size: 16px;
+    .triageIcon {
+      font-size: 18px;
+      color: @primary;
+      display: inline-block;
+      line-height: 1;
     }
   }
 
   .triagePhone {
-    display: block;
+    display: inline-block;
     font-family: @font-headline;
-    font-size: 18px;
-    font-weight: 700;
-    color: @appointment-card-bg;
-    margin-top: 4px;
+    font-size: 16px;
+    font-weight: 800;
+    color: #064e3b;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+
+    &:hover {
+      text-decoration: underline;
+      color: @primary;
+    }
   }
 }
 
@@ -201,59 +220,52 @@
     font-size: 12px;
     color: @on-surface-variant;
     line-height: 1.5;
+    margin: 0;
   }
 }
 
 .badgeRow {
   display: flex;
-  gap: 8px;
+  gap: @space-xs;
+  flex-wrap: wrap;
+}
 
-  .cqcBadge {
-    .badge-tag(@secondary-container, @on-secondary-container);
-  }
+.cqcBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: @radius-sm;
+  background-color: fade(@primary, 10%);
+  color: @primary;
 }
 
 .bottomBar {
+  padding-top: @space-lg;
   border-top: 1px solid @border-subtle;
-  padding-top: @space-md;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: space-between;
-  gap: @space-md;
-  font-size: 13px;
+  align-items: center;
+  font-size: 12px;
   color: @on-surface-variant;
-
-  @media (min-width: 768px) {
-    flex-direction: row;
-  }
+  flex-wrap: wrap;
+  gap: @space-md;
 
   .copyrightRight {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: @space-sm;
-
-    @media (min-width: 768px) {
-      flex-direction: row;
-      align-items: center;
-      gap: @space-lg;
-    }
+    gap: @space-lg;
+    flex-wrap: wrap;
   }
 
   .developedBy {
-    font-size: 12.5px;
     font-weight: 500;
-    color: @on-surface-variant;
 
     .authorLink {
       color: @primary;
       font-weight: 700;
       text-decoration: none;
-      transition: color 0.2s ease;
 
       &:hover {
-        color: @primary-hover;
         text-decoration: underline;
       }
     }
@@ -263,8 +275,13 @@
     display: flex;
     gap: @space-md;
 
-    a:hover {
-      color: @primary;
+    a {
+      color: @on-surface-variant;
+      text-decoration: none;
+
+      &:hover {
+        color: @primary;
+      }
     }
   }
 }

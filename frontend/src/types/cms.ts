@@ -22,6 +22,7 @@ export interface ClinicBranding {
   phone: string;
   whatsapp: string;
   emergency_phone: string;
+  emergency_label?: string;
   address: string;
   cqc_status?: string;
   nhs_registered?: boolean;

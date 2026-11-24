@@ -213,7 +213,7 @@ export default function HomePage() {
       <HeaderTopBar />
 
       {/* 2. Main Sticky Navigation with Booking Action */}
-      <HeaderNavBar onBookClick={() => handleOpenBooking()} />
+      <HeaderNavBar onBookClick={(treatmentName) => handleOpenBooking(treatmentName)} />
 
       <main style={{ flex: 1 }}>
         {/* 3. Hero Banner with Clinical Stats */}

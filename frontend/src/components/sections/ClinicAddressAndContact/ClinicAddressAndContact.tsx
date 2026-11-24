@@ -23,6 +23,7 @@ export const ClinicAddressAndContact: React.FC<ClinicAddressAndContactProps> = (
 
   return (
     <section className={styles.section} id="contact">
+      <span id="clinics" style={{ position: 'relative', top: '-100px', display: 'block', visibility: 'hidden' }} />
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.headerRow}>

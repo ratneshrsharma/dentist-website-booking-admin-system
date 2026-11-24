@@ -143,22 +143,51 @@
 }
 
 .emergencyCard {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: @space-sm;
+  gap: 12px;
+  padding: 10px 18px;
+  background-color: #ffffff;
+  border: 1.5px solid #86efac;
+  border-radius: @radius-xl;
+  text-decoration: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: @primary;
+    box-shadow: 0 4px 12px rgba(9, 71, 19, 0.1);
+    transform: translateY(-1px);
+  }
 
   .phoneIcon {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
     border-radius: @radius-full;
-    background-color: @brand-accent-glow;
+    background-color: #e8f5e9;
     color: @primary;
     .flex-center();
+    flex-shrink: 0;
+
+    span {
+      font-size: 20px;
+    }
+  }
+
+  .phoneInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    line-height: 1.25;
   }
 
   .emergencyLabel {
-    font-size: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     color: @on-surface-variant;
+    margin-bottom: 2px;
   }
 
   .phoneLink {
@@ -166,6 +195,8 @@
     font-size: 15px;
     font-weight: 700;
     color: @on-surface;
+    text-decoration: none;
+    letter-spacing: 0.01em;
 
     &:hover {
       color: @primary;

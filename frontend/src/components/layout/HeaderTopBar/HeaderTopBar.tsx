@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
 import styles from './HeaderTopBar.module.css';
 import { useTheme } from '@/context/ThemeContext';
 
@@ -9,14 +8,12 @@ export interface HeaderTopBarProps {
   phone?: string;
   hours?: string;
   address?: string;
-  emergencyCtaText?: string;
 }
 
 export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
   phone,
   hours = 'Mon-Fri: 8:30am - 5:30pm',
   address,
-  emergencyCtaText = 'Emergency Consultation',
 }) => {
   const { theme } = useTheme();
 
@@ -29,8 +26,8 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
         <div className={styles.infoGroup}>
           <div className={styles.infoItem}>
             <span className={`material-symbols-outlined ${styles.icon}`}>call</span>
-            <span className={styles.label}>Emergency:</span>
-            <a href={`tel:${displayPhone}`} className={styles.value}>
+            <span className={styles.label}>Emergency Line:</span>
+            <a href={`tel:${displayPhone.replace(/\s+/g, '')}`} className={styles.value}>
               {displayPhone}
             </a>
           </div>
@@ -44,13 +41,6 @@ export const HeaderTopBar: React.FC<HeaderTopBarProps> = ({
             <span className={`material-symbols-outlined ${styles.icon}`}>location_on</span>
             <span>{displayAddress}</span>
           </div>
-        </div>
-
-        <div className={styles.actionGroup}>
-          <Link href="/contact#emergency" className={styles.emergencyBtn}>
-            <span className="material-symbols-outlined text-[14px]">e911_emergency</span>
-            <span>{emergencyCtaText}</span>
-          </Link>
         </div>
       </div>
     </aside>

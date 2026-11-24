@@ -7,9 +7,25 @@ import styles from './Footer.module.css';
 import { useTheme } from '@/context/ThemeContext';
 import { assetUrl } from '@/utils/asset';
 
+export const TREATMENTS_QUICK_LINKS = [
+  { title: 'Routine Dental Examinations', path: '/treatments/routine-examinations' },
+  { title: 'Dental Hygiene & Airflow Polish', path: '/treatments/dental-hygiene-airflow' },
+  { title: 'White Tooth Fillings (Composite)', path: '/treatments/composite-white-fillings' },
+  { title: 'Root Canal Therapy (Endodontics)', path: '/treatments/root-canal-therapy' },
+  { title: 'Dental Crowns & Fixed Bridges', path: '/treatments/crowns-and-bridges' },
+  { title: 'Invisalign® Clear Aligners', path: '/treatments/invisalign-clear-aligners' },
+  { title: 'Emergency Tooth Extraction', path: '/treatments/tooth-extractions' },
+  { title: 'Same-Day Emergency Relief', path: '/treatments/emergency-relief' },
+];
+
 export const Footer: React.FC = () => {
   const { theme, navigation } = useTheme();
   const { clinic_name, tagline, logo_url, phone, address } = theme.branding;
+
+  const emergencyPhone =
+    theme?.branding?.emergency_phone ||
+    phone ||
+    '+44 121 765 2870';
 
   const currentYear = new Date().getFullYear();
 
@@ -24,8 +40,8 @@ export const Footer: React.FC = () => {
                 <Image
                   src={assetUrl(logo_url || '/images/acocks-green-logo.png')}
                   alt={clinic_name}
-                  width={40}
-                  height={40}
+                  width={42}
+                  height={42}
                 />
               </div>
               <div className={styles.brandTitles}>
@@ -46,11 +62,11 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/* Column 2: Quick Links (Treatments & Services List) */}
           <div>
             <h4 className={styles.colHeading}>Quick Navigation</h4>
             <ul className={styles.linksList}>
-              {navigation.quick_links?.map((link, idx) => (
+              {TREATMENTS_QUICK_LINKS.map((link, idx) => (
                 <li key={idx}>
                   <Link href={link.path}>{link.title}</Link>
                 </li>
@@ -79,12 +95,17 @@ export const Footer: React.FC = () => {
             </div>
 
             <div className={styles.emergencyPillBox}>
-              <p className={styles.triageLabel}>
-                <span className="material-symbols-outlined">support_agent</span>
+              <div className={styles.triageLabel}>
+                <span className={`material-symbols-outlined ${styles.triageIcon}`}>
+                  support_agent
+                </span>
                 <span>24/7 Dental Emergency Triage</span>
-              </p>
-              <a href={`tel:${phone}`} className={styles.triagePhone}>
-                {phone}
+              </div>
+              <a
+                href={`tel:${emergencyPhone.replace(/\s+/g, '')}`}
+                className={styles.triagePhone}
+              >
+                {emergencyPhone}
               </a>
             </div>
           </div>

@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { assetUrl } from '@/utils/asset';
 import styles from './HeroBanner.module.css';
 import { HomePageData } from '@/types/cms';
+import { useTheme } from '@/context/ThemeContext';
 
 export interface HeroBannerProps {
   hero: HomePageData['hero'];
@@ -12,7 +13,19 @@ export interface HeroBannerProps {
 }
 
 export const HeroBanner: React.FC<HeroBannerProps> = ({ hero, onBookClick }) => {
+  const { theme } = useTheme();
+
   if (!hero) return null;
+
+  const emergencyPhone =
+    theme?.branding?.emergency_phone ||
+    theme?.branding?.phone ||
+    hero.phone ||
+    '+44 121 765 2870';
+  const emergencyLabel =
+    hero.emergency_label ||
+    theme?.branding?.emergency_label ||
+    'Emergency Triage Line';
 
   return (
     <section className={styles.heroSection}>
@@ -61,20 +74,23 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ hero, onBookClick }) => 
                 </span>
               </button>
 
-              {hero.phone && (
-                <div className={styles.emergencyCard}>
+              {emergencyPhone && (
+                <a
+                  href={`tel:${emergencyPhone.replace(/\s+/g, '')}`}
+                  className={styles.emergencyCard}
+                >
                   <div className={styles.phoneIcon}>
                     <span className="material-symbols-outlined">call</span>
                   </div>
-                  <div>
+                  <div className={styles.phoneInfo}>
                     <span className={styles.emergencyLabel}>
-                      {hero.emergency_label || 'Emergency Triage Line'}
+                      {emergencyLabel}
                     </span>
-                    <a href={`tel:${hero.phone}`} className={styles.phoneLink}>
-                      {hero.phone}
-                    </a>
+                    <span className={styles.phoneLink}>
+                      {emergencyPhone}
+                    </span>
                   </div>
-                </div>
+                </a>
               )}
             </div>
           </div>

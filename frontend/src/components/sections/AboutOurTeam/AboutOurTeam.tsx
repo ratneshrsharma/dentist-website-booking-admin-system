@@ -15,6 +15,7 @@ export const AboutOurTeam: React.FC<AboutOurTeamProps> = ({ about }) => {
 
   return (
     <section className={styles.section} id="about">
+      <span id="why-us" style={{ position: 'relative', top: '-100px', display: 'block', visibility: 'hidden' }} />
       <div className={styles.container}>
         <div className={styles.grid}>
           {/* Left Dual Photo Frames */}

@@ -10,7 +10,7 @@
   }
 }
 .container {
-  max-width: 1280px;
+  max-width: 1400px;
   margin-left: auto;
   margin-right: auto;
   padding-left: 1.5rem;
@@ -49,11 +49,12 @@
   gap: 12px;
 }
 .brandCol .brandHeader .logoWrapper {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   position: relative;
   border-radius: 9999px;
   overflow: hidden;
+  flex-shrink: 0;
 }
 .brandCol .brandHeader .logoWrapper img {
   width: 100%;
@@ -63,13 +64,15 @@
 .brandCol .brandHeader .brandTitles {
   display: flex;
   flex-direction: column;
+  line-height: 1.2;
 }
 .brandCol .brandHeader .brandTitles .clinicTitle {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 17px;
+  font-weight: 800;
   color: #0d631b;
-  line-height: 1.1;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
 }
 .brandCol .brandHeader .brandTitles .tagline {
   font-size: 11px;
@@ -77,6 +80,7 @@
   text-transform: uppercase;
   color: #40493d;
   letter-spacing: 0.08em;
+  margin-top: 2px;
 }
 .brandCol .brandBio {
   font-size: 13px;
@@ -106,11 +110,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  padding: 0;
+  margin: 0;
 }
 .linksList li a {
-  font-size: 14px;
+  font-size: 13.5px;
   color: #40493d;
   text-decoration: none;
+  transition: color 0.15s ease;
 }
 .linksList li a:hover {
   color: #0d631b;
@@ -136,9 +143,11 @@
   color: #0d631b;
 }
 .emergencyPillBox {
-  background-color: #E8F5E9;
-  padding: 12px;
-  border-radius: 0.75rem;
+  background-color: #f0fdf4;
+  border: 1.5px solid #86efac;
+  padding: 12px 14px;
+  border-radius: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 .emergencyPillBox .triageLabel {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
@@ -148,17 +157,26 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  margin-bottom: 4px;
 }
-.emergencyPillBox .triageLabel span {
-  font-size: 16px;
+.emergencyPillBox .triageLabel .triageIcon {
+  font-size: 18px;
+  color: #0d631b;
+  display: inline-block;
+  line-height: 1;
 }
 .emergencyPillBox .triagePhone {
-  display: block;
+  display: inline-block;
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #0D2E1A;
-  margin-top: 4px;
+  font-size: 16px;
+  font-weight: 800;
+  color: #064e3b;
+  text-decoration: none;
+  letter-spacing: 0.01em;
+}
+.emergencyPillBox .triagePhone:hover {
+  text-decoration: underline;
+  color: #0d631b;
 }
 .charterNoticeBox {
   background-color: #ffffff;
@@ -184,71 +202,56 @@
   font-size: 12px;
   color: #40493d;
   line-height: 1.5;
+  margin: 0;
 }
 .badgeRow {
   display: flex;
-  gap: 8px;
-}
-.badgeRow .cqcBadge {
-  display: inline-flex;
-  align-items: center;
   gap: 0.25rem;
-  background-color: #c6eccd;
-  color: #4a6c53;
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  font-size: 12px;
+  flex-wrap: wrap;
+}
+.cqcBadge {
+  font-size: 11px;
   font-weight: 600;
-  padding: 0.2rem 0.6rem;
+  padding: 3px 8px;
   border-radius: 0.25rem;
-  text-transform: capitalize;
+  background-color: rgba(13, 99, 27, 0.1);
+  color: #0d631b;
 }
 .bottomBar {
+  padding-top: 1.5rem;
   border-top: 1px solid #E5EFE7;
-  padding-top: 1rem;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  font-size: 13px;
+  align-items: center;
+  font-size: 12px;
   color: #40493d;
-}
-@media (min-width: 768px) {
-  .bottomBar {
-    flex-direction: row;
-  }
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 .bottomBar .copyrightRight {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
-}
-@media (min-width: 768px) {
-  .bottomBar .copyrightRight {
-    flex-direction: row;
-    align-items: center;
-    gap: 1.5rem;
-  }
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }
 .bottomBar .developedBy {
-  font-size: 12.5px;
   font-weight: 500;
-  color: #40493d;
 }
 .bottomBar .developedBy .authorLink {
   color: #0d631b;
   font-weight: 700;
   text-decoration: none;
-  transition: color 0.2s ease;
 }
 .bottomBar .developedBy .authorLink:hover {
-  color: #0a4f15;
   text-decoration: underline;
 }
 .bottomBar .legalLinks {
   display: flex;
   gap: 1rem;
+}
+.bottomBar .legalLinks a {
+  color: #40493d;
+  text-decoration: none;
 }
 .bottomBar .legalLinks a:hover {
   color: #0d631b;
