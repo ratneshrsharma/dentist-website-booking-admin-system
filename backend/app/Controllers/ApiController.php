@@ -8,6 +8,7 @@ use App\Core\App;
 use App\Services\ThemeService;
 use App\Services\CmsService;
 use App\Services\ServicesService;
+use App\Services\BookingService;
 
 class ApiController
 {
@@ -85,35 +86,71 @@ class ApiController
         ]);
     }
 
+    public function doctors(): void
+    {
+        $doctors = BookingService::getDefaultDoctors();
+        App::json([
+            'success' => true,
+            'total' => count($doctors),
+            'data' => $doctors,
+        ]);
+    }
+
+    public function availability(): void
+    {
+        $doctorId = isset($_GET['doctor_id']) && $_GET['doctor_id'] !== '' ? (int)$_GET['doctor_id'] : 1;
+        $date = trim($_GET['date'] ?? date('Y-m-d'));
+
+        $slots = BookingService::getAvailableSlots($doctorId, $date);
+        $doctor = BookingService::getDoctorById($doctorId);
+        $schedule = BookingService::getDoctorSchedule($doctorId);
+
+        App::json([
+            'success' => true,
+            'doctor' => $doctor,
+            'date' => $date,
+            'slot_duration' => $schedule['slot_duration'] ?? 30,
+            'total_slots' => count($slots),
+            'available_count' => count(array_filter($slots, fn($s) => !empty($s['available']))),
+            'slots' => $slots,
+        ]);
+    }
+
     public function bookAppointment(): void
     {
         $raw = file_get_contents('php://input');
         $payload = json_decode($raw, true) ?? $_POST;
 
-        $patientName = trim($payload['patient_name'] ?? 'Patient');
-        $patientPhone = trim($payload['patient_phone'] ?? '');
-        $treatment = trim($payload['treatment'] ?? 'Routine Dental Examination');
-        $prefDate = trim($payload['preferred_date'] ?? date('Y-m-d'));
+        if (empty($payload['patient_name']) || empty($payload['patient_phone'])) {
+            // Check if demo/offline request
+            $payload['patient_name'] = $payload['patient_name'] ?? 'Patient Guest';
+            $payload['patient_phone'] = $payload['patient_phone'] ?? '+44 7700 900000';
+        }
 
-        $reference = 'BKG-' . date('Y') . '-' . rand(1000, 9999);
+        // Map alternate field names if passed
+        if (isset($payload['phone']) && !isset($payload['patient_phone'])) {
+            $payload['patient_phone'] = $payload['phone'];
+        }
+        if (isset($payload['email']) && !isset($payload['patient_email'])) {
+            $payload['patient_email'] = $payload['email'];
+        }
+        if (isset($payload['date']) && !isset($payload['appointment_date'])) {
+            $payload['appointment_date'] = $payload['date'];
+        }
+        if (isset($payload['time_slot']) && !isset($payload['appointment_time'])) {
+            $payload['appointment_time'] = $payload['time_slot'];
+        }
 
-        // WhatsApp Triage link
-        $theme = ThemeService::getTheme();
-        $wa = preg_replace('/\D/', '', $theme['branding']['whatsapp'] ?? '441217652870');
-        $msg = urlencode("Hello Acocks Green Dental Practice,\nI submitted booking request ref {$reference} for {$treatment} on {$prefDate}.\nName: {$patientName}");
-        $whatsappUrl = "https://wa.me/{$wa}?text={$msg}";
+        $booking = BookingService::createBooking($payload);
 
         App::json([
             'success' => true,
-            'message' => 'Your appointment request has been recorded. Our triage nurse will confirm shortly.',
-            'reference' => $reference,
-            'whatsapp_url' => $whatsappUrl,
-            'data' => [
-                'patient_name' => $patientName,
-                'patient_phone' => $patientPhone,
-                'treatment' => $treatment,
-                'preferred_date' => $prefDate,
-            ],
+            'message' => 'Your appointment request has been confirmed. A notification has been dispatched via your chosen channel.',
+            'reference' => $booking['reference'],
+            'booking_reference' => $booking['reference'],
+            'whatsapp_url' => $booking['whatsapp_url'],
+            'whatsapp_link' => $booking['whatsapp_url'],
+            'data' => $booking,
         ]);
     }
 }

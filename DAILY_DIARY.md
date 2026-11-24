@@ -5,7 +5,43 @@
 * **Author / Git Identity:** Ratnesh Sharma (@ratneshrsharma) <ratnesh.at.24@gmail.com>
 * **GitHub Repository:** https://github.com/ratneshrsharma/dentist-website-booking-admin-system (Branch: `main`)
 * **Target Environment:** Local testing/QA via XAMPP (Apache, PHP 8.2+, MySQL) -> Live Shared Linux Server + Git version control
-* **Current Status:** Material Symbols Visual Icon Palette & Rendering, Status Pill Toggles, Fatal Error Resolution, Responsive Tables with Pagination, Testimonials & Google Reviews Integration, Homepage Editor Tab Consolidation, and Creative Dynamic Section Backgrounds Deployed & Verified
+* **Current Status:** Responsive Mobile Sticky Bottom Navigation, Calendly-Style Fixed Height Appointment Booking Flow (Clinician Selection, Real-Time Date & Slots, WhatsApp/Email Notifications), Master Admin Bookings Dashboard, and Dedicated Doctor Working Hours & Availability Roster Deployed & Verified
+
+---
+
+### [2026-11-24 13:15] - Sticky Mobile Nav, Calendly-Style Booking Engine with WhatsApp/Email Channels, Admin Bookings Dashboard & Doctor Availability
+* **Micro-Task:** Implementation of User Request:
+  1. Responsive Mobile Bottom Navigation Bar: Kept sticky/fixed at the bottom of the viewport at all times with safe-area insets and anti-overlap padding on the page footer.
+  2. Request Clinical Appointment: Redesigned as a fixed-device-height Calendly-style booking drawer (`min(92vh, 760px)` on desktop, `100dvh` on mobile) featuring:
+     - Step 1: Clinical Details, Treatment Selector, Clinician selection cards with avatars and specialities (Dr. Das, Dr. Rai, Dr. Sohail, Claire), Patient contact info, and Notification Channel radio options (💬 WhatsApp, 📧 Email, 🔔 Both).
+     - Step 2: Calendly-style horizontal date strip (next 14 days) + dynamic Morning & Afternoon available time slots calculated from the doctor's roster minus existing bookings.
+     - Step 3: Instant booking confirmation with reference code and direct pre-filled WhatsApp confirmation button.
+  3. Master Admin Bookings Dashboard (`/admin/bookings`):
+     - Period filter tabs: **All Bookings**, **Today's Bookings**, **Next 7 Days**, **Monthly Roster**.
+     - KPI Summary cards: Today's Bookings, Next 7 Days, This Month, Pending Triage.
+     - Clinician dropdown filter, status filter (Confirmed, Pending, Completed, Cancelled), and search bar.
+     - Bookings data table displaying Reference, Patient Details, Notification Channel badges (WhatsApp / Email / Both), Assigned Doctor, Treatment, Slot, Status, and Manage actions (Confirm, Complete, Cancel, Delete, WhatsApp Chat).
+  4. Dedicated Doctor Working Hours & Availability Manager (`/admin/doctors/availability`):
+     - Doctor selector pills to switch between clinicians easily.
+     - Clinician profile summary card.
+     - Weekly recurring schedule table (Monday to Sunday) with working toggles, shift start/end times, lunch break start/end times, and slot duration selector (15m, 30m, 45m, 60m).
+     - Doctor's own upcoming appointment queue with direct patient WhatsApp messaging.
+* **Tasks Completed:**
+  - **1. Backend Engine & Storage:**
+    * Created `backend/app/Services/BookingService.php` with JSON persistence (`bookings.json` and `doctor_schedules.json`).
+    * Built dynamic Calendly slot availability calculator `getAvailableSlots(doctorId, date)` accounting for working days, shift hours, lunch breaks, and existing appointments.
+    * Created `backend/app/Controllers/BookingsController.php` with master dashboard, status transitions, and doctor availability editor.
+    * Registered REST APIs in `ApiController.php` and `Router.php`: `GET /api/v1/doctors`, `GET /api/v1/availability`, and `POST /api/v1/appointments/book`.
+  - **2. Frontend Calendly-Style Booking Component:**
+    * Overhauled `BookingModal.tsx` and `BookingModal.module.less -> css` with fixed device height, 3-step progress flow, doctor cards, notification options, date strip, and time slot pill selectors.
+    * Added WhatsApp link generation with prefilled confirmation message.
+  - **3. Responsive Mobile Sticky Navigation:**
+    * Updated `MobileAppNavBar.module.css` with `position: fixed !important; bottom: 0 !important; width: 100% !important; z-index: 99999 !important;`.
+    * Added `@media (max-width: 1024px)` bottom padding to `Footer.module.less` so the footer links are never covered.
+  - **4. Admin Views:**
+    * Created `resources/views/admin/bookings/index.php` (Master Bookings Dashboard).
+    * Created `resources/views/admin/bookings/availability.php` (Doctor Schedule & Roster Editor).
+    * Added sidebar navigation links in `resources/views/layouts/admin.php`.
 
 ---
 

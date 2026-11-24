@@ -212,6 +212,23 @@ $activeNav = $activeNav ?? 'dashboard';
                             </a>
                         </li>
 
+                        <!-- Clinical Bookings & Appointments -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Clinical Appointments</li>
+
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/bookings') ?>" class="nav-link <?= $activeNav === 'bookings' ? 'active' : '' ?>">
+                                <i class="bi bi-calendar2-check-fill text-success"></i>
+                                <p>Patient Bookings</p>
+                                <span class="badge text-bg-success ms-auto">Roster</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/doctors/availability') ?>" class="nav-link <?= $activeNav === 'doctor-availability' ? 'active' : '' ?>">
+                                <i class="bi bi-clock-history text-info"></i>
+                                <p>Doctor Availability</p>
+                            </a>
+                        </li>
+
                         <!-- Common Components (Parent Section) -->
                         <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Common Components</li>
 

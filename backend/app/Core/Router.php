@@ -9,6 +9,7 @@ use App\Controllers\DashboardController;
 use App\Controllers\ThemeController;
 use App\Controllers\PagesController;
 use App\Controllers\ComponentsController;
+use App\Controllers\BookingsController;
 use App\Controllers\ApiController;
 
 /**
@@ -56,6 +57,12 @@ class Router
             }
             if (preg_match('~^/api/v1/services/([A-Za-z0-9_-]+)$~', $uri, $m)) {
                 $apiCtrl->serviceDetail($m[1]);
+            }
+            if ($uri === '/api/v1/doctors' || $uri === '/api/doctors') {
+                $apiCtrl->doctors();
+            }
+            if (str_starts_with($uri, '/api/v1/availability') || str_starts_with($uri, '/api/availability')) {
+                $apiCtrl->availability();
             }
             if (($uri === '/api/v1/appointments/book' || $uri === '/api/v1/appointments') && $method === 'POST') {
                 $apiCtrl->bookAppointment();
@@ -114,6 +121,30 @@ class Router
                     $pages->updateHome();
                 } else {
                     $pages->editHome();
+                }
+            }
+
+            // Clinical Bookings Master Dashboard
+            if ($path === 'bookings' || $path === 'appointments') {
+                $bCtrl = new BookingsController();
+                $bCtrl->index();
+            }
+            if (preg_match('~^bookings/([A-Za-z0-9_-]+)/status$~', $path, $bm) && $method === 'POST') {
+                $bCtrl = new BookingsController();
+                $bCtrl->updateStatus($bm[1]);
+            }
+            if (preg_match('~^bookings/([A-Za-z0-9_-]+)/delete$~', $path, $bm) && $method === 'POST') {
+                $bCtrl = new BookingsController();
+                $bCtrl->deleteBooking($bm[1]);
+            }
+
+            // Dedicated Doctor Availability & Timings
+            if ($path === 'doctors/availability' || $path === 'bookings/availability') {
+                $bCtrl = new BookingsController();
+                if ($method === 'POST') {
+                    $bCtrl->saveAvailability();
+                } else {
+                    $bCtrl->availability();
                 }
             }
 
