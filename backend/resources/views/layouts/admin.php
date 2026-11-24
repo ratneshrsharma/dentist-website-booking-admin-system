@@ -65,15 +65,48 @@ $activeNav = $activeNav ?? 'dashboard';
         .sidebar-brand {
             background-color: #0b1120 !important;
             border-bottom: 1px solid rgba(255,255,255,0.08);
-            padding: 1rem;
+            padding: 14px 16px !important;
+            height: auto !important;
+            min-height: 64px;
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
         }
         .brand-logo-img {
-            width: 36px;
-            height: 36px;
+            width: 40px !important;
+            height: 40px !important;
+            min-width: 40px !important;
             object-fit: contain;
-            border-radius: 8px;
+            border-radius: 10px;
             background: #ffffff;
-            padding: 2px;
+            padding: 4px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+        .brand-title-wrap {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            line-height: 1.15;
+            max-width: 175px;
+        }
+        .brand-name-text {
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 13px;
+            letter-spacing: -0.01em;
+            line-height: 1.2;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .brand-tagline-text {
+            color: #94a3b8;
+            font-size: 11px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         .sidebar-menu .nav-link {
             color: #94a3b8;
@@ -175,20 +208,19 @@ $activeNav = $activeNav ?? 'dashboard';
 
         <!-- Main Sidebar -->
         <aside class="app-sidebar shadow" data-bs-theme="dark">
-            <div class="sidebar-brand d-flex align-items-center gap-2">
+            <div class="sidebar-brand">
                 <img src="<?= htmlspecialchars($clinicLogo) ?>" alt="Logo" class="brand-logo-img">
-                <div class="d-flex flex-column lh-1">
-                    <span class="text-white fw-bold fs-6"><?= htmlspecialchars($clinicName) ?></span>
-                    <small class="text-muted" style="font-size: 11px;"><?= htmlspecialchars($clinicTagline) ?></small>
+                <div class="brand-title-wrap">
+                    <span class="brand-name-text" title="<?= htmlspecialchars($clinicName) ?>"><?= htmlspecialchars($clinicName) ?></span>
+                    <small class="brand-tagline-text"><?= htmlspecialchars($clinicTagline) ?></small>
                 </div>
             </div>
 
-            <div class="sidebar-wrapper py-3">
+            <div class="sidebar-wrapper py-2">
                 <nav>
                     <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
-                        <li class="nav-header text-uppercase text-secondary px-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Administration</li>
-                        
-                        <!-- Dashboard -->
+                        <!-- 1. DASHBOARD OVERVIEW -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Main Overview</li>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/dashboard') ?>" class="nav-link <?= $activeNav === 'dashboard' ? 'active' : '' ?>">
                                 <i class="bi bi-speedometer2"></i>
@@ -196,25 +228,8 @@ $activeNav = $activeNav ?? 'dashboard';
                             </a>
                         </li>
 
-                        <!-- Global Theme & Whitelabeling -->
-                        <li class="nav-item">
-                            <a href="<?= App::url('/admin/theme') ?>" class="nav-link <?= $activeNav === 'theme' ? 'active' : '' ?>">
-                                <i class="bi bi-palette"></i>
-                                <p>Global Theme & Logo</p>
-                            </a>
-                        </li>
-
-                        <!-- Website CMS Pages -->
-                        <li class="nav-item">
-                            <a href="<?= App::url('/admin/pages') ?>" class="nav-link <?= $activeNav === 'pages' ? 'active' : '' ?>">
-                                <i class="bi bi-layout-text-window-reverse"></i>
-                                <p>CMS Page List</p>
-                            </a>
-                        </li>
-
-                        <!-- Clinical Bookings & Appointments -->
-                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Clinical Appointments</li>
-
+                        <!-- 2. CLINICAL APPOINTMENTS -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Clinical Appointments</li>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/bookings') ?>" class="nav-link <?= $activeNav === 'bookings' ? 'active' : '' ?>">
                                 <i class="bi bi-calendar2-check-fill text-success"></i>
@@ -225,13 +240,21 @@ $activeNav = $activeNav ?? 'dashboard';
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/doctors/availability') ?>" class="nav-link <?= $activeNav === 'doctor-availability' ? 'active' : '' ?>">
                                 <i class="bi bi-clock-history text-info"></i>
-                                <p>Doctor Availability</p>
+                                <p>Doctor Availability & Leave</p>
                             </a>
                         </li>
 
-                        <!-- Common Components (Parent Section) -->
-                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Common Components</li>
+                        <!-- 3. WEBSITE CMS -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Website CMS</li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/pages') ?>" class="nav-link <?= $activeNav === 'pages' ? 'active' : '' ?>">
+                                <i class="bi bi-layout-text-window-reverse text-warning"></i>
+                                <p>CMS Page List</p>
+                            </a>
+                        </li>
 
+                        <!-- Common Components Nested -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-2 mb-1" style="font-size: 9.5px; letter-spacing: 0.06em; opacity: 0.85;">— Common Components</li>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/components/services') ?>" class="nav-link <?= $activeNav === 'comp-services' ? 'active' : '' ?>">
                                 <i class="bi bi-grid-3x3-gap"></i>
@@ -269,11 +292,27 @@ $activeNav = $activeNav ?? 'dashboard';
                             </a>
                         </li>
 
-                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Front-End Patient Portal</li>
+                        <!-- Global Theme & Whitelabeling -->
+                        <li class="nav-item mt-2">
+                            <a href="<?= App::url('/admin/theme') ?>" class="nav-link <?= $activeNav === 'theme' ? 'active' : '' ?>">
+                                <i class="bi bi-palette" style="color: #c084fc;"></i>
+                                <p>Global Theme & Fonts</p>
+                            </a>
+                        </li>
 
+                        <!-- Practice & Communication Settings -->
                         <li class="nav-item">
-                            <a href="<?= App::url('/') ?>" target="_blank" class="nav-link text-info">
-                                <i class="bi bi-globe"></i>
+                            <a href="<?= App::url('/admin/settings') ?>" class="nav-link <?= $activeNav === 'settings' ? 'active' : '' ?>">
+                                <i class="bi bi-gear-wide-connected text-primary"></i>
+                                <p>Practice & Contact Settings</p>
+                            </a>
+                        </li>
+
+                        <!-- 4. LIVE PATIENT WEBSITE -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Live Portal</li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/') ?>" target="_blank" class="nav-link text-success">
+                                <i class="bi bi-globe2"></i>
                                 <p>Open Patient Website</p>
                             </a>
                         </li>

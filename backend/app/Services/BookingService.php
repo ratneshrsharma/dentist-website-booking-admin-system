@@ -96,14 +96,30 @@ final class BookingService
                 'slot_duration' => 30, // in minutes
                 'max_chairs' => 1,
                 'weekly' => $days,
-                'exceptions' => [],
+                'exceptions' => [
+                    [
+                        'id' => 'lev_101',
+                        'date' => date('Y-m-d', strtotime('+4 days')),
+                        'session' => '1st_session', // 'full_day', '1st_session', '2nd_session'
+                        'reason' => 'NHS Clinical Governance Morning Seminar',
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ],
+                ],
             ],
             2 => [
                 'doctor_id' => 2,
                 'slot_duration' => 30,
                 'max_chairs' => 1,
                 'weekly' => $days,
-                'exceptions' => [],
+                'exceptions' => [
+                    [
+                        'id' => 'lev_201',
+                        'date' => date('Y-m-d', strtotime('+8 days')),
+                        'session' => 'full_day',
+                        'reason' => 'Approved Annual Leave Day',
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ],
+                ],
             ],
             3 => [
                 'doctor_id' => 3,
@@ -118,7 +134,15 @@ final class BookingService
                     6 => ['day' => 'Saturday', 'working' => true, 'start' => '09:00', 'end' => '14:00', 'break_start' => '', 'break_end' => ''],
                     0 => ['day' => 'Sunday', 'working' => false, 'start' => '', 'end' => '', 'break_start' => '', 'break_end' => ''],
                 ],
-                'exceptions' => [],
+                'exceptions' => [
+                    [
+                        'id' => 'lev_301',
+                        'date' => date('Y-m-d', strtotime('+6 days')),
+                        'session' => '2nd_session',
+                        'reason' => 'Afternoon Surgical Training Workshop',
+                        'created_at' => date('Y-m-d H:i:s'),
+                    ],
+                ],
             ],
             4 => [
                 'doctor_id' => 4,
@@ -365,6 +389,115 @@ final class BookingService
     }
 
     /**
+     * Get leaves/exceptions for a specific doctor
+     */
+    public static function getDoctorLeaves(int $doctorId): array
+    {
+        $schedule = self::getDoctorSchedule($doctorId);
+        return $schedule['exceptions'] ?? [];
+    }
+
+    /**
+     * Add a date leave/blackout for a doctor (full day, 1st session, 2nd session)
+     */
+    public static function addDoctorLeave(int $doctorId, string $date, string $session, string $reason): array
+    {
+        $all = self::getDoctorSchedules();
+        if (!isset($all[$doctorId])) {
+            $all[$doctorId] = self::getDoctorSchedule($doctorId);
+        }
+
+        $leaveId = 'lev_' . time() . '_' . rand(100, 999);
+        $newLeave = [
+            'id' => $leaveId,
+            'date' => $date,
+            'session' => in_array($session, ['full_day', '1st_session', '2nd_session'], true) ? $session : 'full_day',
+            'reason' => trim($reason) !== '' ? trim($reason) : 'Doctor Leave / Unavailable',
+            'created_at' => date('Y-m-d H:i:s'),
+        ];
+
+        if (!isset($all[$doctorId]['exceptions']) || !is_array($all[$doctorId]['exceptions'])) {
+            $all[$doctorId]['exceptions'] = [];
+        }
+
+        // Check if date already exists; replace if so
+        $filtered = array_filter($all[$doctorId]['exceptions'], fn($l) => ($l['date'] ?? '') !== $date);
+        $filtered[] = $newLeave;
+        usort($filtered, fn($a, $b) => strcmp($a['date'], $b['date']));
+        $all[$doctorId]['exceptions'] = array_values($filtered);
+
+        self::saveDoctorSchedules($all);
+        return $newLeave;
+    }
+
+    /**
+     * Delete a doctor leave/exception by ID
+     */
+    public static function deleteDoctorLeave(int $doctorId, string $leaveId): bool
+    {
+        $all = self::getDoctorSchedules();
+        if (!isset($all[$doctorId])) {
+            $all[$doctorId] = self::getDoctorSchedule($doctorId);
+        }
+
+        if (empty($all[$doctorId]['exceptions'])) {
+            return false;
+        }
+
+        $initial = count($all[$doctorId]['exceptions']);
+        $all[$doctorId]['exceptions'] = array_values(array_filter(
+            $all[$doctorId]['exceptions'],
+            fn($l) => ($l['id'] ?? '') !== $leaveId
+        ));
+
+        if (count($all[$doctorId]['exceptions']) < $initial) {
+            self::saveDoctorSchedules($all);
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Reschedule an appointment to a new date, time, and optionally new clinician
+     */
+    public static function rescheduleBooking(
+        string $reference,
+        string $newDate,
+        string $newTime,
+        ?int $newDoctorId = null,
+        string $notes = ''
+    ): ?array {
+        $bookings = self::getAllBookingsRaw();
+        $target = null;
+
+        foreach ($bookings as &$b) {
+            if ($b['reference'] === $reference) {
+                $b['appointment_date'] = $newDate;
+                $b['appointment_time'] = $newTime;
+                if ($newDoctorId !== null && $newDoctorId > 0) {
+                    $newDoc = self::getDoctorById($newDoctorId);
+                    if ($newDoc) {
+                        $b['doctor_id'] = $newDoc['id'];
+                        $b['doctor_name'] = $newDoc['name'];
+                    }
+                }
+                $b['status'] = 'confirmed';
+                if (!empty($notes)) {
+                    $b['notes'] = trim(($b['notes'] ?? '') . " [Rescheduled: {$notes}]");
+                }
+                $b['rescheduled_at'] = date('Y-m-d H:i:s');
+                $target = $b;
+                break;
+            }
+        }
+
+        if ($target) {
+            self::saveAllBookings($bookings);
+        }
+        return $target;
+    }
+
+    /**
      * Get doctor profile by ID
      */
     public static function getDoctorById(int $doctorId): ?array
@@ -595,6 +728,23 @@ final class BookingService
             $slotMinutes = 30;
         }
 
+        // Check leaves/exceptions for this doctor on this date
+        $leaves = self::getDoctorLeaves($doctorId);
+        $leaveOnDate = null;
+        foreach ($leaves as $l) {
+            if (($l['date'] ?? '') === $date) {
+                $leaveOnDate = $l;
+                break;
+            }
+        }
+
+        if ($leaveOnDate) {
+            $session = $leaveOnDate['session'] ?? 'full_day';
+            if ($session === 'full_day') {
+                return []; // Doctor on full day leave: zero available slots!
+            }
+        }
+
         // Existing bookings for this doctor on this date
         $allBookings = self::getAllBookingsRaw();
         $bookedTimes = [];
@@ -639,13 +789,36 @@ final class BookingService
 
             $isBooked = in_array($slotTime24, $bookedTimes, true);
 
-            $available = !$isInBreak && !$isPast && !$isBooked;
+            // Check if slot falls in a partial leave session
+            $isOnLeave = false;
+            if ($leaveOnDate) {
+                $hour = (int)date('H', $current);
+                $session = $leaveOnDate['session'] ?? 'full_day';
+                if ($session === '1st_session' && $hour < 13) {
+                    $isOnLeave = true; // Morning session leave (9:00 - 13:00)
+                } elseif ($session === '2nd_session' && $hour >= 13) {
+                    $isOnLeave = true; // Afternoon session leave (13:00 - 17:30)
+                }
+            }
+
+            $available = !$isInBreak && !$isPast && !$isBooked && !$isOnLeave;
+
+            $reason = 'available';
+            if ($isBooked) {
+                $reason = 'booked';
+            } elseif ($isOnLeave) {
+                $reason = 'doctor_leave';
+            } elseif ($isInBreak) {
+                $reason = 'break';
+            } elseif ($isPast) {
+                $reason = 'past';
+            }
 
             $slots[] = [
                 'time_24' => $slotTime24,
                 'display' => $slotDisplay,
                 'available' => $available,
-                'reason' => $isBooked ? 'booked' : ($isInBreak ? 'break' : ($isPast ? 'past' : 'available')),
+                'reason' => $reason,
                 'period' => (int)date('H', $current) < 12 ? 'morning' : 'afternoon',
             ];
 

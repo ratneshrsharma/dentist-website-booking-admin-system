@@ -10,6 +10,7 @@ use App\Controllers\ThemeController;
 use App\Controllers\PagesController;
 use App\Controllers\ComponentsController;
 use App\Controllers\BookingsController;
+use App\Controllers\SettingsController;
 use App\Controllers\ApiController;
 
 /**
@@ -133,18 +134,44 @@ class Router
                 $bCtrl = new BookingsController();
                 $bCtrl->updateStatus($bm[1]);
             }
+            if (preg_match('~^bookings/([A-Za-z0-9_-]+)/reschedule$~', $path, $bm) && $method === 'POST') {
+                $bCtrl = new BookingsController();
+                $bCtrl->reschedule($bm[1]);
+            }
+            if (preg_match('~^bookings/([A-Za-z0-9_-]+)/remind$~', $path, $bm) && $method === 'POST') {
+                $bCtrl = new BookingsController();
+                $bCtrl->sendReminder($bm[1]);
+            }
             if (preg_match('~^bookings/([A-Za-z0-9_-]+)/delete$~', $path, $bm) && $method === 'POST') {
                 $bCtrl = new BookingsController();
                 $bCtrl->deleteBooking($bm[1]);
             }
 
-            // Dedicated Doctor Availability & Timings
+            // Dedicated Doctor Availability, Timings & Leave
             if ($path === 'doctors/availability' || $path === 'bookings/availability') {
                 $bCtrl = new BookingsController();
                 if ($method === 'POST') {
                     $bCtrl->saveAvailability();
                 } else {
                     $bCtrl->availability();
+                }
+            }
+            if ($path === 'doctors/leave/add' && $method === 'POST') {
+                $bCtrl = new BookingsController();
+                $bCtrl->addLeave();
+            }
+            if (preg_match('~^doctors/leave/([A-Za-z0-9_-]+)/delete$~', $path, $lm) && $method === 'POST') {
+                $bCtrl = new BookingsController();
+                $bCtrl->deleteLeave($lm[1]);
+            }
+
+            // Practice & Communication Settings (Form email, WhatsApp number, practice details)
+            if ($path === 'settings' || $path === 'practice-settings') {
+                $sCtrl = new SettingsController();
+                if ($method === 'POST') {
+                    $sCtrl->update();
+                } else {
+                    $sCtrl->index();
                 }
             }
 

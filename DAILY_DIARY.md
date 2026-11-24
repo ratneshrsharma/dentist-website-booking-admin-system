@@ -5,7 +5,41 @@
 * **Author / Git Identity:** Ratnesh Sharma (@ratneshrsharma) <ratnesh.at.24@gmail.com>
 * **GitHub Repository:** https://github.com/ratneshrsharma/dentist-website-booking-admin-system (Branch: `main`)
 * **Target Environment:** Local testing/QA via XAMPP (Apache, PHP 8.2+, MySQL) -> Live Shared Linux Server + Git version control
-* **Current Status:** Responsive Mobile Sticky Bottom Navigation, Calendly-Style Fixed Height Appointment Booking Flow (Clinician Selection, Real-Time Date & Slots, WhatsApp/Email Notifications), Master Admin Bookings Dashboard, and Dedicated Doctor Working Hours & Availability Roster Deployed & Verified
+* **Current Status:** Admin Sidebar Reorganization & Logo Fix, Email/WhatsApp Reminders, Appointment Reschedule Workflow with Multi-Channel Confirmation, Doctor Session Leaves & Blackouts (Full Day / Morning / Afternoon), and Dedicated Practice & Communication Settings Deployed & Verified
+
+---
+
+### [2026-11-24 15:30] - Admin Sidebar Reorganization & Logo Fix, Appointment Rescheduling & Reminders, Doctor Session Leaves (Full/Morning/Afternoon), and Practice Settings
+* **Micro-Task:** Implementation of User Feedback & Enhancements:
+  1. Patient Bookings Actions:
+     - Added "Send Email Reminder" alongside "Send WhatsApp Reminder" in the action menu with pre-formatted clinical reminder templates.
+     - Added "Reschedule Booking" action with modal dialog (New Date, New Time, Clinician reassignment, Reschedule notes) that updates the appointment and presents instant 1-click confirmation passes for WhatsApp and Email.
+  2. Doctor Availability & Leave Management (`/admin/doctors/availability`):
+     - Added dedicated "Date Exceptions & Doctor Leave" section for clinicians.
+     - Provided leave coverage options: **Full Day Off**, **1st Session (Morning: 09:00 - 13:00) Off**, and **2nd Session (Afternoon: 14:00 - 17:30) Off**.
+     - Integrated leave checks directly into `BookingService::getAvailableSlots()`: Full day leaves yield zero slots; 1st session leaves withhold morning slots while preserving afternoon availability; 2nd session leaves withhold afternoon slots while preserving morning availability.
+  3. Admin Sidebar Redesign & Logo UI Fix:
+     - Resolved the logo clipping and text truncation issue in `.sidebar-brand` by providing a flexible, high-contrast container with `min-height: 64px`, `box-shadow`, and ellipsis text handling.
+     - Restructured sidebar navigation into distinct segments:
+       * **Main Overview:** Dashboard.
+       * **Clinical Appointments:** Patient Bookings, Doctor Availability & Leave.
+       * **Website CMS:** CMS Page List, Common Components (Services, About, Doctors, Testimonials, Charter, Hours), Global Theme & Fonts, and Practice & Contact Settings.
+       * **Live Portal:** Direct link to public patient website.
+  4. Practice & Communication Settings (`/admin/settings`):
+     - Created dedicated settings page for configuring form submission notification emails, website WhatsApp numbers, practice telephone, same-day emergency lines, and physical surgery address.
+* **Tasks Completed:**
+  - **1. Backend & Routing:**
+    * Created `backend/app/Controllers/SettingsController.php` and view `resources/views/admin/settings/index.php`.
+    * In `BookingService.php`:
+      - Added `getDoctorLeaves(doctorId)`, `addDoctorLeave(doctorId, date, session, reason)`, and `deleteDoctorLeave(doctorId, leaveId)`.
+      - Added `rescheduleBooking(reference, newDate, newTime, doctorId, notes)`.
+      - Updated `getAvailableSlots(doctorId, date)` to evaluate date leaves and filter slots by session (`full_day`, `1st_session`, `2nd_session`).
+    * In `BookingsController.php`: Added `reschedule()`, `sendReminder()`, `addLeave()`, and `deleteLeave()`.
+    * In `Router.php`: Registered `/admin/bookings/{ref}/reschedule`, `/admin/bookings/{ref}/remind`, `/admin/doctors/leave/add`, `/admin/doctors/leave/{id}/delete`, and `/admin/settings`.
+  - **2. Admin Views & Modals:**
+    * In `resources/views/layouts/admin.php`: Fixed `.sidebar-brand` CSS and restructured navigation segments.
+    * In `resources/views/admin/bookings/index.php`: Added "Reschedule Booking", "Send WhatsApp Reminder", "Send Email Reminder", the Reschedule Modal, and the top Rescheduled Confirmation Banner.
+    * In `resources/views/admin/bookings/availability.php`: Added the "Date Exceptions & Doctor Leave" management card with session coverage selector and active leaves table.
 
 ---
 

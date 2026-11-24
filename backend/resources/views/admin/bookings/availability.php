@@ -193,6 +193,131 @@ $maxChairs = (int)($schedule['max_chairs'] ?? 1);
     </div>
 </div>
 
+<!-- ============================================================== -->
+<!-- DOCTOR LEAVE & DATE EXCEPTIONS (Full Day / 1st / 2nd Session)   -->
+<!-- ============================================================== -->
+<div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+    <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+            <h6 class="fw-bold mb-0 text-dark">
+                <i class="bi bi-calendar-x text-danger me-2"></i> Date Exceptions & Doctor Leave for <?= htmlspecialchars($selectedDoctor['name']) ?>
+            </h6>
+            <small class="text-muted">
+                Configure specific dates when this clinician is on leave: Full Day, 1st Session (Morning), or 2nd Session (Afternoon). Live patient booking slots are automatically adjusted.
+            </small>
+        </div>
+        <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-2 rounded-pill">
+            <i class="bi bi-shield-slash me-1"></i> <?= count($leaves ?? []) ?> Active Leave Date(s)
+        </span>
+    </div>
+
+    <div class="card-body p-4">
+        <div class="row g-4">
+            <!-- Add Leave Date Form -->
+            <div class="col-lg-5 border-end-lg">
+                <h6 class="fw-bold text-dark mb-3">
+                    <i class="bi bi-plus-circle-fill text-danger me-1"></i> Record New Leave / Absence
+                </h6>
+                <form action="<?= App::url('/admin/doctors/leave/add') ?>" method="POST" class="d-flex flex-column gap-3">
+                    <input type="hidden" name="doctor_id" value="<?= $docId ?>">
+
+                    <div>
+                        <label class="form-label small fw-bold text-secondary">Select Leave Date <span class="text-danger">*</span></label>
+                        <input type="date" name="leave_date" class="form-control" required min="<?= date('Y-m-d') ?>" value="<?= date('Y-m-d', strtotime('+3 days')) ?>">
+                    </div>
+
+                    <div>
+                        <label class="form-label small fw-bold text-secondary">Leave Session Coverage <span class="text-danger">*</span></label>
+                        <select name="leave_session" class="form-select" required>
+                            <option value="full_day">🚫 Full Day (All Day Unavailable)</option>
+                            <option value="1st_session">🌅 1st Session Only (Morning: 09:00 – 13:00 Unavailable)</option>
+                            <option value="2nd_session">🌇 2nd Session Only (Afternoon: 14:00 – 17:30 Unavailable)</option>
+                        </select>
+                        <small class="text-muted" style="font-size: 11px;">
+                            For partial sessions, patient booking will offer only the remaining session's slots.
+                        </small>
+                    </div>
+
+                    <div>
+                        <label class="form-label small fw-bold text-secondary">Leave Reason / Description</label>
+                        <input type="text" name="leave_reason" class="form-control" placeholder="e.g. Approved Annual Leave, NHS Seminar, Sickness">
+                    </div>
+
+                    <div>
+                        <button type="submit" class="btn btn-danger rounded-pill px-4 shadow-sm w-100">
+                            <i class="bi bi-calendar-plus me-1"></i> Add Leave & Update Availability
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Existing Leaves Table -->
+            <div class="col-lg-7">
+                <h6 class="fw-bold text-dark mb-3">
+                    <i class="bi bi-calendar2-range text-secondary me-1"></i> Scheduled Leaves & Blackout Dates
+                </h6>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light small text-secondary">
+                            <tr>
+                                <th>Date</th>
+                                <th>Session Coverage</th>
+                                <th>Reason / Note</th>
+                                <th class="text-end pe-3">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if (empty($leaves)): ?>
+                                <tr>
+                                    <td colspan="4" class="text-center py-4 text-muted small">
+                                        <i class="bi bi-calendar-check text-success fs-3 d-block mb-1"></i>
+                                        No upcoming leaves or blackout dates recorded for <?= htmlspecialchars($selectedDoctor['name']) ?>.
+                                    </td>
+                                </tr>
+                            <?php else: ?>
+                                <?php foreach ($leaves as $l): ?>
+                                    <tr>
+                                        <td>
+                                            <div class="fw-bold text-dark small">
+                                                <i class="bi bi-calendar-event text-danger me-1"></i>
+                                                <?= htmlspecialchars(date('D, d M Y', strtotime($l['date']))) ?>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <?php 
+                                                $sess = $l['session'] ?? 'full_day';
+                                                if ($sess === '1st_session') {
+                                                    echo '<span class="badge bg-warning text-dark rounded-pill px-2 py-1"><i class="bi bi-sun me-1"></i> 1st Session (Morning)</span>';
+                                                } elseif ($sess === '2nd_session') {
+                                                    echo '<span class="badge bg-info text-white rounded-pill px-2 py-1"><i class="bi bi-sunset me-1"></i> 2nd Session (Afternoon)</span>';
+                                                } else {
+                                                    echo '<span class="badge bg-danger text-white rounded-pill px-2 py-1"><i class="bi bi-slash-circle me-1"></i> Full Day Off</span>';
+                                                }
+                                            ?>
+                                        </td>
+                                        <td>
+                                            <span class="small text-secondary"><?= htmlspecialchars($l['reason'] ?? 'Doctor Leave') ?></span>
+                                        </td>
+                                        <td class="text-end pe-3">
+                                            <form action="<?= App::url('/admin/doctors/leave/' . urlencode($l['id']) . '/delete') ?>" method="POST" onsubmit="return confirm('Remove this leave exception?');">
+                                                <input type="hidden" name="doctor_id" value="<?= $docId ?>">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle p-1" style="width: 28px; height: 28px;" title="Remove Leave">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Clinician's Own Bookings Schedule Card -->
 <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
     <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">

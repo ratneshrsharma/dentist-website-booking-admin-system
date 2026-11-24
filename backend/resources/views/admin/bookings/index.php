@@ -5,6 +5,17 @@ declare(strict_types=1);
 use App\Core\App;
 
 $pageTitle = 'Patient Bookings & Clinical Appointments';
+
+$rescheduledRef = $_GET['rescheduled'] ?? '';
+$rescheduledBooking = null;
+if ($rescheduledRef) {
+    foreach ($bookings as $bk) {
+        if ($bk['reference'] === $rescheduledRef) {
+            $rescheduledBooking = $bk;
+            break;
+        }
+    }
+}
 ?>
 
 <div class="row align-items-center mb-4">
@@ -13,18 +24,50 @@ $pageTitle = 'Patient Bookings & Clinical Appointments';
             <i class="bi bi-calendar2-check-fill text-success me-2"></i> Patient Bookings & Clinical Schedule
         </h3>
         <p class="text-muted small mb-0">
-            Monitor and manage clinical appointment bookings, triage patient requests, and verify notification delivery across WhatsApp and Email.
+            Monitor and manage clinical appointment bookings, triage patient requests, reschedule slots, and dispatch instant reminders across WhatsApp and Email.
         </p>
     </div>
     <div class="col-md-5 text-md-end mt-3 mt-md-0 d-flex gap-2 justify-content-md-end">
         <a href="<?= App::url('/admin/doctors/availability') ?>" class="btn btn-outline-success rounded-pill shadow-sm">
-            <i class="bi bi-clock-history me-1"></i> Doctor Working Hours & Availability
+            <i class="bi bi-clock-history me-1"></i> Doctor Working Hours & Leave
         </a>
         <a href="<?= App::url('/') ?>#quick-book" target="_blank" class="btn btn-success rounded-pill shadow-sm">
             <i class="bi bi-plus-circle me-1"></i> New Patient Booking
         </a>
     </div>
 </div>
+
+<!-- Rescheduled Confirmation Banner with 1-Click Update Actions -->
+<?php if ($rescheduledBooking): ?>
+    <div class="alert alert-success border-0 shadow-sm rounded-4 p-4 mb-4" role="alert">
+        <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div>
+                <h5 class="fw-bold mb-1 text-success d-flex align-items-center gap-2">
+                    <i class="bi bi-check-circle-fill fs-4"></i> Booking Successfully Rescheduled!
+                </h5>
+                <p class="mb-0 text-dark small">
+                    Reference: <strong class="font-monospace text-success"><?= htmlspecialchars($rescheduledBooking['reference']) ?></strong> • 
+                    Patient: <strong><?= htmlspecialchars($rescheduledBooking['patient_name']) ?></strong> • 
+                    New Date: <strong><?= htmlspecialchars(date('D, d M Y', strtotime($rescheduledBooking['appointment_date']))) ?> at <?= htmlspecialchars($rescheduledBooking['appointment_time']) ?></strong> with <strong><?= htmlspecialchars($rescheduledBooking['doctor_name']) ?></strong>
+                </p>
+                <small class="text-muted">Click below to send instant confirmation passes to the patient via their preferred channel:</small>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <?php 
+                    $rWaMsg = urlencode("Hello {$rescheduledBooking['patient_name']},\nYour appointment at Acocks Green Dental Practice has been rescheduled to " . date('D, d M Y', strtotime($rescheduledBooking['appointment_date'])) . " at {$rescheduledBooking['appointment_time']} with {$rescheduledBooking['doctor_name']} (Ref: {$rescheduledBooking['reference']}).\nLocation: 1078 Warwick Road, B27 6BH.\nPlease reply YES to confirm this new slot suits you.");
+                    $rSubj = rawurlencode("Rescheduled Appointment Confirmation: Acocks Green Dental [Ref: {$rescheduledBooking['reference']}]");
+                    $rBody = rawurlencode("Dear {$rescheduledBooking['patient_name']},\n\nYour clinical appointment at Acocks Green Dental Practice has been rescheduled.\n\nNew Appointment Details:\n- Reference: {$rescheduledBooking['reference']}\n- Clinician: {$rescheduledBooking['doctor_name']}\n- Treatment: {$rescheduledBooking['treatment']}\n- Date: " . date('l, d F Y', strtotime($rescheduledBooking['appointment_date'])) . "\n- Time: {$rescheduledBooking['appointment_time']}\n- Clinic Address: 1078 Warwick Road, Acocks Green, Birmingham B27 6BH\n\nPlease confirm this time is convenient for you by replying to this email or calling us on 0121 765 2870.\n\nWarm regards,\nAcocks Green Dental Care Team");
+                ?>
+                <a href="https://wa.me/<?= preg_replace('/\D/', '', $rescheduledBooking['patient_phone']) ?>?text=<?= $rWaMsg ?>" target="_blank" class="btn btn-success rounded-pill px-3 shadow-sm btn-sm d-flex align-items-center gap-1">
+                    <i class="bi bi-whatsapp"></i> Send WhatsApp Confirmation
+                </a>
+                <a href="mailto:<?= htmlspecialchars($rescheduledBooking['patient_email'] ?? '') ?>?subject=<?= $rSubj ?>&body=<?= $rBody ?>" class="btn btn-primary rounded-pill px-3 shadow-sm btn-sm d-flex align-items-center gap-1">
+                    <i class="bi bi-envelope-at"></i> Send Email Confirmation
+                </a>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
 
 <!-- KPI Summary Cards -->
 <div class="row g-3 mb-4">
@@ -114,7 +157,7 @@ $pageTitle = 'Patient Bookings & Clinical Appointments';
         </ul>
     </div>
 
-    <!-- Filter Bar (Doctor Filter, Status Filter, Search) -->
+    <!-- Filter Bar -->
     <div class="card-body bg-light border-bottom p-3">
         <form action="<?= App::url('/admin/bookings') ?>" method="GET" class="row g-2 align-items-center">
             <input type="hidden" name="period" value="<?= htmlspecialchars($currentPeriod) ?>">
@@ -184,7 +227,7 @@ $pageTitle = 'Patient Bookings & Clinical Appointments';
                     <th>Treatment / Service</th>
                     <th>Slot Schedule</th>
                     <th>Status</th>
-                    <th class="text-end pe-4" style="width: 150px;">Actions</th>
+                    <th class="text-end pe-4" style="width: 160px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -198,6 +241,13 @@ $pageTitle = 'Patient Bookings & Clinical Appointments';
                     </tr>
                 <?php else: ?>
                     <?php foreach ($bookings as $b): ?>
+                        <?php 
+                            $safeRef = preg_replace('/[^A-Za-z0-9_-]/', '_', $b['reference']);
+                            $waCleanPhone = preg_replace('/\D/', '', $b['patient_phone']);
+                            $remindWaText = urlencode("Appointment Reminder from Acocks Green Dental Practice:\nDear {$b['patient_name']},\nYour appointment for {$b['treatment']} with {$b['doctor_name']} is scheduled on " . date('D, d M Y', strtotime($b['appointment_date'])) . " at {$b['appointment_time']} (Ref: {$b['reference']}).\nLocation: 1078 Warwick Road, B27 6BH.\nPlease reply YES to confirm your attendance.");
+                            $remindMailSubj = rawurlencode("Appointment Reminder: {$b['treatment']} at Acocks Green Dental [Ref: {$b['reference']}]");
+                            $remindMailBody = rawurlencode("Dear {$b['patient_name']},\n\nThis is a friendly reminder of your upcoming clinical appointment at Acocks Green Dental Practice.\n\nAppointment Details:\n- Reference: {$b['reference']}\n- Clinician: {$b['doctor_name']}\n- Treatment: {$b['treatment']}\n- Scheduled Date: " . date('l, d F Y', strtotime($b['appointment_date'])) . "\n- Scheduled Time: {$b['appointment_time']}\n- Clinic Address: 1078 Warwick Road, Acocks Green, Birmingham B27 6BH\n\nPlease arrive 5 minutes prior to your allocated slot. If you need to make any changes, contact reception on 0121 765 2870.\n\nWarm regards,\nAcocks Green Dental Care Team");
+                        ?>
                         <tr>
                             <!-- Reference -->
                             <td class="ps-4">
@@ -299,6 +349,12 @@ $pageTitle = 'Patient Bookings & Clinical Appointments';
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
                                         <li>
+                                            <button type="button" class="dropdown-item text-primary small fw-semibold" data-bs-toggle="modal" data-bs-target="#rescheduleModal_<?= $safeRef ?>">
+                                                <i class="bi bi-calendar2-range me-2 text-primary"></i> Reschedule Booking
+                                            </button>
+                                        </li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li>
                                             <form action="<?= App::url('/admin/bookings/' . urlencode($b['reference']) . '/status') ?>" method="POST">
                                                 <input type="hidden" name="status" value="confirmed">
                                                 <button type="submit" class="dropdown-item text-success small">
@@ -326,11 +382,20 @@ $pageTitle = 'Patient Bookings & Clinical Appointments';
                                         <?php if (!empty($b['patient_phone'])): ?>
                                             <li>
                                                 <a class="dropdown-item text-success small" target="_blank" 
-                                                   href="https://wa.me/<?= preg_replace('/\D/', '', $b['patient_phone']) ?>?text=<?= urlencode("Hello {$b['patient_name']}, regarding your appointment ref {$b['reference']} at Acocks Green Dental Practice...") ?>">
-                                                    <i class="bi bi-whatsapp me-2"></i> Message on WhatsApp
+                                                   href="https://wa.me/<?= $waCleanPhone ?>?text=<?= $remindWaText ?>">
+                                                    <i class="bi bi-whatsapp me-2"></i> Send WhatsApp Reminder
                                                 </a>
                                             </li>
                                         <?php endif; ?>
+                                        <?php if (!empty($b['patient_email'])): ?>
+                                            <li>
+                                                <a class="dropdown-item text-primary small" 
+                                                   href="mailto:<?= htmlspecialchars($b['patient_email']) ?>?subject=<?= $remindMailSubj ?>&body=<?= $remindMailBody ?>">
+                                                    <i class="bi bi-envelope-at me-2"></i> Send Email Reminder
+                                                </a>
+                                            </li>
+                                        <?php endif; ?>
+                                        <li><hr class="dropdown-divider"></li>
                                         <li>
                                             <form action="<?= App::url('/admin/bookings/' . urlencode($b['reference']) . '/delete') ?>" method="POST" onsubmit="return confirm('Permanently delete this booking record?');">
                                                 <button type="submit" class="dropdown-item text-danger small">
@@ -360,3 +425,71 @@ $pageTitle = 'Patient Bookings & Clinical Appointments';
         </div>
     </div>
 </div>
+
+<!-- Reschedule Modals for Bookings -->
+<?php if (!empty($bookings)): ?>
+    <?php foreach ($bookings as $b): ?>
+        <?php $safeRef = preg_replace('/[^A-Za-z0-9_-]/', '_', $b['reference']); ?>
+        <div class="modal fade" id="rescheduleModal_<?= $safeRef ?>" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                    <form action="<?= App::url('/admin/bookings/' . urlencode($b['reference']) . '/reschedule') ?>" method="POST">
+                        <div class="modal-header bg-light py-3 border-bottom">
+                            <h6 class="modal-title fw-bold text-dark mb-0">
+                                <i class="bi bi-calendar2-range text-primary me-2"></i> Reschedule Appointment [<?= htmlspecialchars($b['reference']) ?>]
+                            </h6>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body p-4">
+                            <!-- Current Info Box -->
+                            <div class="bg-light p-3 rounded-3 mb-3 small">
+                                <div class="mb-1">Patient: <strong class="text-dark"><?= htmlspecialchars($b['patient_name']) ?></strong> (<?= htmlspecialchars($b['patient_phone']) ?>)</div>
+                                <div class="mb-1">Current Slot: <span class="badge bg-secondary-subtle text-secondary"><?= htmlspecialchars($b['appointment_date']) ?> at <?= htmlspecialchars($b['appointment_time']) ?></span></div>
+                                <div>Treatment: <strong class="text-dark"><?= htmlspecialchars($b['treatment']) ?></strong></div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-secondary">New Appointment Date <span class="text-danger">*</span></label>
+                                <input type="date" name="appointment_date" class="form-control" required min="<?= date('Y-m-d') ?>" value="<?= htmlspecialchars($b['appointment_date']) ?>">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-secondary">New Time Slot <span class="text-danger">*</span></label>
+                                <select name="appointment_time" class="form-select" required>
+                                    <?php 
+                                        $commonSlots = ['09:00 AM', '09:30 AM', '10:00 AM', '10:30 AM', '11:15 AM', '11:45 AM', '02:00 PM', '02:45 PM', '03:30 PM', '04:15 PM', '05:00 PM'];
+                                        foreach ($commonSlots as $cs):
+                                    ?>
+                                        <option value="<?= $cs ?>" <?= $b['appointment_time'] === $cs ? 'selected' : '' ?>><?= $cs ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label small fw-bold text-secondary">Assigned Clinician</label>
+                                <select name="doctor_id" class="form-select">
+                                    <?php foreach ($doctors as $d): ?>
+                                        <option value="<?= $d['id'] ?>" <?= ((int)$b['doctor_id'] === (int)$d['id']) ? 'selected' : '' ?>>
+                                            <?= htmlspecialchars($d['name']) ?> (<?= htmlspecialchars($d['badge'] ?? 'Dentist') ?>)
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="mb-2">
+                                <label class="form-label small fw-bold text-secondary">Reschedule Reason / Clinical Note</label>
+                                <input type="text" name="notes" class="form-control" placeholder="e.g. Patient requested morning slot change">
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-light border-top py-2 px-4">
+                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-sm btn-primary rounded-pill px-4">
+                                <i class="bi bi-check2-circle me-1"></i> Save & Prepare Confirmation
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    <?php endforeach; ?>
+<?php endif; ?>

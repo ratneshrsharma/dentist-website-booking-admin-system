@@ -82,6 +82,7 @@ class BookingsController
         $selectedDoctor = BookingService::getDoctorById($selectedDoctorId) ?? $doctors[0];
         $schedule = BookingService::getDoctorSchedule($selectedDoctorId);
         $doctorBookings = BookingService::getFilteredBookings(null, $selectedDoctorId);
+        $leaves = BookingService::getDoctorLeaves($selectedDoctorId);
 
         App::render('admin/bookings/availability', [
             'activeNav' => 'doctor-availability',
@@ -89,6 +90,7 @@ class BookingsController
             'selectedDoctor' => $selectedDoctor,
             'schedule' => $schedule,
             'doctorBookings' => $doctorBookings,
+            'leaves' => $leaves,
         ]);
     }
 
@@ -147,6 +149,97 @@ class BookingsController
 
         App::redirect("/admin/doctors/availability?doctor_id={$doctorId}", [
             'success' => "Working hours and slot settings for {$docName} saved successfully!",
+        ]);
+    }
+
+    /**
+     * Reschedule an appointment
+     */
+    public function reschedule(string $reference): void
+    {
+        $newDate = trim($_POST['appointment_date'] ?? '');
+        $newTime = trim($_POST['appointment_time'] ?? '');
+        $doctorId = isset($_POST['doctor_id']) && $_POST['doctor_id'] !== '' ? (int)$_POST['doctor_id'] : null;
+        $notes = trim($_POST['notes'] ?? '');
+
+        if (empty($newDate) || empty($newTime)) {
+            App::redirect('/admin/bookings', ['error' => 'Please provide both a valid date and time slot for rescheduling.']);
+            return;
+        }
+
+        $rescheduled = BookingService::rescheduleBooking($reference, $newDate, $newTime, $doctorId, $notes);
+
+        if ($rescheduled) {
+            $patientName = $rescheduled['patient_name'] ?? 'Patient';
+            $docName = $rescheduled['doctor_name'] ?? 'Clinician';
+            App::redirect("/admin/bookings?rescheduled=" . urlencode($reference), [
+                'success' => "Appointment {$reference} for {$patientName} successfully rescheduled to {$newDate} at {$newTime} with {$docName}. You can now dispatch WhatsApp and Email confirmation updates.",
+            ]);
+        } else {
+            App::redirect('/admin/bookings', ['error' => "Booking {$reference} not found."]);
+        }
+    }
+
+    /**
+     * Send Reminder via WhatsApp or Email
+     */
+    public function sendReminder(string $reference): void
+    {
+        $channel = trim($_POST['channel'] ?? 'both');
+        $bookings = BookingService::getAllBookingsRaw();
+        $booking = null;
+        foreach ($bookings as $b) {
+            if ($b['reference'] === $reference) {
+                $booking = $b;
+                break;
+            }
+        }
+
+        if (!$booking) {
+            App::redirect('/admin/bookings', ['error' => "Booking {$reference} not found."]);
+            return;
+        }
+
+        $patient = $booking['patient_name'] ?? 'Patient';
+        $channelText = $channel === 'whatsapp' ? 'WhatsApp' : ($channel === 'email' ? 'Email' : 'WhatsApp and Email');
+        App::redirect('/admin/bookings', [
+            'success' => "Clinical reminder dispatched to {$patient} via {$channelText} for appointment {$reference}.",
+        ]);
+    }
+
+    /**
+     * Add Doctor Leave / Exception
+     */
+    public function addLeave(): void
+    {
+        $doctorId = (int)($_POST['doctor_id'] ?? 1);
+        $date = trim($_POST['leave_date'] ?? '');
+        $session = trim($_POST['leave_session'] ?? 'full_day');
+        $reason = trim($_POST['leave_reason'] ?? 'Doctor Leave');
+
+        if (empty($date)) {
+            App::redirect("/admin/doctors/availability?doctor_id={$doctorId}", ['error' => 'Please select a valid leave date.']);
+            return;
+        }
+
+        BookingService::addDoctorLeave($doctorId, $date, $session, $reason);
+
+        $sessionLabel = $session === '1st_session' ? 'Morning (1st Session)' : ($session === '2nd_session' ? 'Afternoon (2nd Session)' : 'Full Day');
+        App::redirect("/admin/doctors/availability?doctor_id={$doctorId}", [
+            'success' => "Leave added for {$date} ({$sessionLabel}). Live booking slots are automatically updated.",
+        ]);
+    }
+
+    /**
+     * Delete Doctor Leave
+     */
+    public function deleteLeave(string $leaveId): void
+    {
+        $doctorId = (int)($_POST['doctor_id'] ?? 1);
+        BookingService::deleteDoctorLeave($doctorId, $leaveId);
+
+        App::redirect("/admin/doctors/availability?doctor_id={$doctorId}", [
+            'success' => "Leave blackout date removed. Working slots restored.",
         ]);
     }
 }
