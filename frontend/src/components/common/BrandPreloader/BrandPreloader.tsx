@@ -20,6 +20,7 @@ export const BrandPreloader: React.FC<BrandPreloaderProps> = ({
 }) => {
   const [mounted, setMounted] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [unmounted, setUnmounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -29,12 +30,13 @@ export const BrandPreloader: React.FC<BrandPreloaderProps> = ({
     if (isReady && mounted) {
       const timer = setTimeout(() => {
         setHidden(true);
-      }, 400); // graceful 400ms display so transitions are silky smooth
+        setTimeout(() => setUnmounted(true), 500);
+      }, 300);
       return () => clearTimeout(timer);
     }
   }, [isReady, mounted]);
 
-  if (!mounted) return null;
+  if (!mounted || unmounted) return null;
 
   return (
     <div

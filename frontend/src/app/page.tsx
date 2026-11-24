@@ -2,12 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { HomePageData } from '@/types/cms';
-import { CmsService } from '@/api/cms';
+import { CmsService, DEFAULT_HOME_PAGE } from '@/api/cms';
 
 // Atomic & Reusable Layout Components
 import { HeaderTopBar } from '@/components/layout/HeaderTopBar/HeaderTopBar';
 import { HeaderNavBar } from '@/components/layout/HeaderNavBar/HeaderNavBar';
 import { Footer } from '@/components/layout/Footer/Footer';
+import { MobileAppNavBar } from '@/components/layout/MobileAppNavBar/MobileAppNavBar';
 
 // Banners & Selectors
 import { HeroBanner } from '@/components/banners/HeroBanner/HeroBanner';
@@ -25,8 +26,8 @@ import { ClinicAddressAndContact } from '@/components/sections/ClinicAddressAndC
 import { BookingModal } from '@/components/common/BookingModal/BookingModal';
 
 export default function HomePage() {
-  const [pageData, setPageData] = useState<HomePageData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [pageData, setPageData] = useState<HomePageData>(DEFAULT_HOME_PAGE);
+  const [loading, setLoading] = useState(false);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [bookingPref, setBookingPref] = useState<{ treatment: string; date: string }>({
     treatment: 'Routine Dental Examination',
@@ -121,7 +122,10 @@ export default function HomePage() {
       {/* 11. Practice Global Footer */}
       <Footer />
 
-      {/* 12. Interactive Booking Drawer Modal */}
+      {/* 12. Native Mobile & iPad App Fixed Bottom Navigation */}
+      <MobileAppNavBar onBookClick={() => handleOpenBooking()} />
+
+      {/* 13. Interactive Booking Drawer Modal */}
       <BookingModal
         isOpen={isBookingOpen}
         onClose={() => setIsBookingOpen(false)}

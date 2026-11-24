@@ -39,6 +39,7 @@ export interface ThemeSettings {
 export interface StatItem {
   label: string;
   value: string;
+  is_active?: boolean;
 }
 
 export interface ClinicalPillar {
@@ -94,16 +95,20 @@ export interface HomePageData {
   headline: string;
   subtitle: string;
   hero: {
-    eyebrow: string;
-    headline: string;
+    eyebrow?: string;
+    headline?: string;
+    title?: string;
     headline_highlight?: string;
-    subtitle: string;
-    cta_primary: string;
-    cta_secondary: string;
-    phone: string;
+    highlight_word?: string;
+    subtitle?: string;
+    cta_primary?: string;
+    cta_primary_link?: string;
+    cta_secondary?: string;
+    cta_secondary_link?: string;
+    phone?: string;
     emergency_label?: string;
-    stats: StatItem[];
-    hero_image: string;
+    stats?: StatItem[];
+    hero_image?: string;
     hero_badges?: Array<{ title: string; subtitle: string; icon: string }>;
   };
   services_intro: {

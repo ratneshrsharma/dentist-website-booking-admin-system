@@ -8,6 +8,7 @@ use App\Controllers\AuthController;
 use App\Controllers\DashboardController;
 use App\Controllers\ThemeController;
 use App\Controllers\PagesController;
+use App\Controllers\ComponentsController;
 use App\Controllers\ApiController;
 
 /**
@@ -20,8 +21,8 @@ class Router
         $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
         $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 
-        // Strip subfolder prefix if present (e.g. /dental-saas or /advanced-dental-clinic)
-        $uri = preg_replace('~^/(?:dental-saas|advanced-dental-clinic)~', '', $uri);
+        // Strip subfolder prefix if present (e.g. /dental-saas)
+        $uri = preg_replace('~^/dental-saas~', '', $uri);
         $uri = '/' . ltrim($uri, '/');
 
         // Handle OPTIONS preflight for APIs
@@ -100,13 +101,38 @@ class Router
                 $pages->index();
             }
 
-            // Homepage Content & Assets Editor
+            // Homepage Content & Assets Editor (Accessible from Page List)
             if ($path === 'pages/home/edit' || $path === 'pages/home' || $path === 'cms/pages/home') {
                 $pages = new PagesController();
                 if ($method === 'POST') {
                     $pages->updateHome();
                 } else {
                     $pages->editHome();
+                }
+            }
+
+            // Common Components Child Routes
+            if (str_starts_with($path, 'components/')) {
+                $comp = new ComponentsController();
+                $sub = substr($path, strlen('components/'));
+
+                if ($sub === 'services') {
+                    $comp->services();
+                }
+                if ($sub === 'about') {
+                    $comp->about();
+                }
+                if ($sub === 'doctors') {
+                    $comp->doctors();
+                }
+                if ($sub === 'testimonials') {
+                    $comp->testimonials();
+                }
+                if ($sub === 'charter') {
+                    $comp->charter();
+                }
+                if ($sub === 'contact') {
+                    $comp->contact();
                 }
             }
 

@@ -54,14 +54,30 @@ class PagesController
         if (isset($_POST['hero_eyebrow'])) {
             $home['hero']['eyebrow'] = trim($_POST['hero_eyebrow']);
         }
-        if (isset($_POST['hero_title'])) {
-            $home['hero']['title'] = trim($_POST['hero_title']);
+        if (isset($_POST['hero_title']) || isset($_POST['hero_headline'])) {
+            $hTitle = trim($_POST['hero_title'] ?? $_POST['hero_headline'] ?? '');
+            $home['hero']['title'] = $hTitle;
+            $home['hero']['headline'] = $hTitle;
         }
-        if (isset($_POST['hero_highlight_word'])) {
-            $home['hero']['highlight_word'] = trim($_POST['hero_highlight_word']);
+        if (isset($_POST['hero_highlight_word']) || isset($_POST['hero_headline_highlight'])) {
+            $hHigh = trim($_POST['hero_highlight_word'] ?? $_POST['hero_headline_highlight'] ?? '');
+            $home['hero']['highlight_word'] = $hHigh;
+            $home['hero']['headline_highlight'] = $hHigh;
         }
         if (isset($_POST['hero_subtitle'])) {
             $home['hero']['subtitle'] = trim($_POST['hero_subtitle']);
+        }
+        if (isset($_POST['hero_cta_primary'])) {
+            $home['hero']['cta_primary'] = trim($_POST['hero_cta_primary']);
+        }
+        if (isset($_POST['hero_cta_primary_link'])) {
+            $home['hero']['cta_primary_link'] = trim($_POST['hero_cta_primary_link']);
+        }
+        if (isset($_POST['hero_cta_secondary'])) {
+            $home['hero']['cta_secondary'] = trim($_POST['hero_cta_secondary']);
+        }
+        if (isset($_POST['hero_cta_secondary_link'])) {
+            $home['hero']['cta_secondary_link'] = trim($_POST['hero_cta_secondary_link']);
         }
         if (isset($_POST['hero_phone'])) {
             $home['hero']['phone'] = trim($_POST['hero_phone']);
@@ -70,13 +86,18 @@ class PagesController
             $home['hero']['emergency_label'] = trim($_POST['hero_emergency_label']);
         }
 
-        // Hero Stats
+        // Hero Stats with is_active toggles
         if (isset($_POST['stat_labels']) && is_array($_POST['stat_labels'])) {
             $stats = [];
             foreach ($_POST['stat_labels'] as $idx => $label) {
                 $val = $_POST['stat_values'][$idx] ?? '';
+                $isActive = isset($_POST['stat_active']) && in_array((string)$idx, $_POST['stat_active'], true);
                 if (trim($label) !== '' || trim($val) !== '') {
-                    $stats[] = ['label' => trim($label), 'value' => trim($val)];
+                    $stats[] = [
+                        'label' => trim($label),
+                        'value' => trim($val),
+                        'is_active' => $isActive,
+                    ];
                 }
             }
             if (!empty($stats)) {

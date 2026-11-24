@@ -195,11 +195,43 @@ $activeNav = $activeNav ?? 'dashboard';
                             </a>
                         </li>
 
-                        <!-- Edit Homepage Direct Action -->
+                        <!-- Common Components (Parent Section) -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Common Components</li>
+
                         <li class="nav-item">
-                            <a href="<?= App::url('/admin/pages/home/edit') ?>" class="nav-link <?= $activeNav === 'home-editor' ? 'active' : '' ?>">
-                                <i class="bi bi-pencil-square"></i>
-                                <p>Edit Homepage Content</p>
+                            <a href="<?= App::url('/admin/components/services') ?>" class="nav-link <?= $activeNav === 'comp-services' ? 'active' : '' ?>">
+                                <i class="bi bi-grid-3x3-gap"></i>
+                                <p>Services Grid</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/components/about') ?>" class="nav-link <?= $activeNav === 'comp-about' ? 'active' : '' ?>">
+                                <i class="bi bi-info-circle"></i>
+                                <p>About & Clinic Photos</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/components/doctors') ?>" class="nav-link <?= $activeNav === 'comp-doctors' ? 'active' : '' ?>">
+                                <i class="bi bi-people"></i>
+                                <p>Doctors & Avatars</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/components/testimonials') ?>" class="nav-link <?= $activeNav === 'comp-testimonials' ? 'active' : '' ?>">
+                                <i class="bi bi-star"></i>
+                                <p>Patient Testimonials</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/components/charter') ?>" class="nav-link <?= $activeNav === 'comp-charter' ? 'active' : '' ?>">
+                                <i class="bi bi-shield-check"></i>
+                                <p>Safety Charter</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/components/contact') ?>" class="nav-link <?= $activeNav === 'comp-contact' ? 'active' : '' ?>">
+                                <i class="bi bi-geo-alt"></i>
+                                <p>Hours & Map</p>
                             </a>
                         </li>
 

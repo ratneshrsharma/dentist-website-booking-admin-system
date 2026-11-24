@@ -3,7 +3,7 @@ import { ThemeSettings, HomePageData, ServiceItem, ClinicianItem, GlobalNavigati
 import { assetUrl } from '@/utils/asset';
 
 // Default static fallback from ref/JSONs/home.json & global-theme.json
-const DEFAULT_THEME: ThemeSettings = {
+export const DEFAULT_THEME: ThemeSettings = {
   theme_name: 'acocks-green',
   display_name: 'Acocks Green Dental Practice',
   colors: {
@@ -31,7 +31,7 @@ const DEFAULT_THEME: ThemeSettings = {
   },
 };
 
-const DEFAULT_NAVIGATION: GlobalNavigation = {
+export const DEFAULT_NAVIGATION: GlobalNavigation = {
   header_menu: [
     { title: 'Home', path: '/' },
     {
@@ -77,7 +77,7 @@ const DEFAULT_NAVIGATION: GlobalNavigation = {
   ],
 };
 
-const DEFAULT_HOME_PAGE: HomePageData = {
+export const DEFAULT_HOME_PAGE: HomePageData = {
   slug: 'home',
   title: 'Home',
   eyebrow: 'NHS & Private Patients Welcomed',
@@ -88,16 +88,20 @@ const DEFAULT_HOME_PAGE: HomePageData = {
     eyebrow: 'NHS & Private Patients Welcomed',
     headline: 'Make your Dental Experience a',
     headline_highlight: 'Lot Brighter',
+    title: 'Make your Dental Experience a',
+    highlight_word: 'Lot Brighter',
     subtitle:
       'Welcome to Acocks Green Dental Practice. Delivering gentle, high-standard dental care for patients of all ages across Birmingham B27. From preventive family appointments to transformative aesthetics, our clinical team puts your comfort first.',
     cta_primary: 'Book An Appointment',
+    cta_primary_link: '#quick-book',
     cta_secondary: 'Emergency Consultation',
+    cta_secondary_link: '/contact/#emergency',
     phone: '+44 121 765 2870',
     emergency_label: 'Emergency Triage Line',
     stats: [
-      { label: 'Happy Patients', value: '5,000+' },
-      { label: 'Dentists & Staff', value: '7+' },
-      { label: 'Years of Trust', value: '20+' },
+      { label: 'Happy Patients', value: '5,000+', is_active: true },
+      { label: 'Dentists & Staff', value: '7+', is_active: true },
+      { label: 'Years of Trust', value: '20+', is_active: true },
     ],
     hero_image: assetUrl('/images/hero-patient.jpg'),
     hero_badges: [

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ThemeSettings, GlobalNavigation } from '@/types/cms';
-import { CmsService } from '@/api/cms';
+import { CmsService, DEFAULT_THEME, DEFAULT_NAVIGATION } from '@/api/cms';
 
 interface ThemeContextType {
   theme: ThemeSettings;
@@ -14,9 +14,9 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<ThemeSettings | null>(null);
-  const [navigation, setNavigation] = useState<GlobalNavigation | null>(null);
-  const [isReady, setIsReady] = useState(false);
+  const [theme, setTheme] = useState<ThemeSettings>(DEFAULT_THEME);
+  const [navigation, setNavigation] = useState<GlobalNavigation>(DEFAULT_NAVIGATION);
+  const [isReady, setIsReady] = useState(true);
 
   const loadData = async () => {
     try {
@@ -60,10 +60,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     }
   }, [theme?.custom_head_scripts]);
-
-  if (!theme || !navigation) {
-    return null;
-  }
 
   return (
     <ThemeContext.Provider

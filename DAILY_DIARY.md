@@ -5,7 +5,65 @@
 * **Author / Git Identity:** Ratnesh Sharma (@ratneshrsharma) <ratnesh.at.24@gmail.com>
 * **GitHub Repository:** https://github.com/ratneshrsharma/dentist-website-booking-admin-system (Branch: `main`)
 * **Target Environment:** Local testing/QA via XAMPP (Apache, PHP 8.2+, MySQL) -> Live Shared Linux Server + Git version control
-* **Current Status:** Fresh From-Scratch CMS Backend Rebuilt; Page List, Homepage Editor & Whitelabeling Studio Complete and Verified
+* **Current Status:** Micro-Task 1.2 Full Line-by-Line QA & Audit Completed; Common Components Architecture, Mobile App View & Visual Asset Management Fully Deployed
+
+---
+
+### [2026-11-24 11:15] - Line-by-Line QA Audit, Common Components Architecture & Native Mobile App Fixed Bar
+* **Micro-Task:** Full Resolution of User QA Feedback - Banner Title & Highlight, Primary CTA Buttons, Stats Active/Inactive Toggles, Dedicated "Common Components" Parent Module in AdminLTE, and Native Mobile App Fixed Bottom Navigation.
+* **Tasks Completed:**
+  - **Banner Title & Button Text Synchronization:**
+    * In `HeroBanner.tsx`: Resolved title mapping so it supports both `headline`/`title` ("Make your Dental Experience a") and `headline_highlight`/`highlight_word` ("Lot Brighter").
+    * Primary CTA Button text populated dynamically with fallback to "Book An Appointment" and calendar icon.
+    * Added full editing controls in CMS (`hero_title`, `hero_highlight_word`, `hero_cta_primary`, `hero_cta_primary_link`, `hero_cta_secondary`, `hero_cta_secondary_link`).
+  - **Hero Practice Statistics Active / Inactive Toggles:**
+    * Updated `StatItem` schema in `types/cms.ts` and `CmsService.php` to include `is_active?: boolean`.
+    * Implemented individual checkbox toggles in CMS Homepage Editor.
+    * Frontend `HeroBanner.tsx` filters `hero.stats.filter(s => s.is_active !== false)`.
+  - **Zero Blank Screen Optimization:**
+    * In `ThemeContext.tsx` and `page.tsx`: Initialized state directly with verified clinical fallback schemas (`DEFAULT_THEME`, `DEFAULT_NAVIGATION`, `DEFAULT_HOME_PAGE`).
+    * Removed blocking `return null;` during initial hydrate so the webpage renders instantaneously without blank screens.
+    * Enhanced `BrandPreloader` with unmount timer to smoothly dismiss.
+  - **Native Mobile App View (< 1024px Viewports):**
+    * Built `MobileAppNavBar.tsx` and `MobileAppNavBar.module.css` fixed at the bottom with safe area insets:
+      1. Home (`home`)
+      2. Services (`dentistry`)
+      3. Book Appointment (Elevated glowing emerald circular action button opening the booking modal)
+      4. Blog (`article`)
+      5. WhatsApp (Direct deep-link to clinic WhatsApp triage)
+  - **Common Components Architecture in AdminLTE 4:**
+    * Removed direct "Edit Homepage Content" sidebar link (homepage now edited strictly from CMS Page List).
+    * Created parent menu section **"Common Components"** with 6 dedicated child pages:
+      1. **Services Grid** (`/admin/components/services`)
+      2. **About & Clinic Photos** (`/admin/components/about`)
+      3. **Doctors & Avatars** (`/admin/components/doctors`)
+      4. **Patient Testimonials** (`/admin/components/testimonials`)
+      5. **Safety Charter** (`/admin/components/charter`)
+      6. **Hours & Map** (`/admin/components/contact`)
+    * Implemented `ComponentsController.php` supporting full editing of `component_id`, `custom_class`, `slug`, `title`, `summary`, `content`, `icon`, `feature_image` (with file upload & preview), and `is_active` toggles.
+* **Files Created/Modified:**
+  - `code/frontend/src/types/cms.ts`
+  - `code/frontend/src/api/cms.ts`
+  - `code/frontend/src/context/ThemeContext.tsx`
+  - `code/frontend/src/app/page.tsx`
+  - `code/frontend/src/components/banners/HeroBanner/HeroBanner.tsx`
+  - `code/frontend/src/components/common/BrandPreloader/BrandPreloader.tsx`
+  - `code/frontend/src/components/layout/MobileAppNavBar/MobileAppNavBar.tsx`
+  - `code/frontend/src/components/layout/MobileAppNavBar/MobileAppNavBar.module.css`
+  - `code/backend/app/Core/Router.php`
+  - `code/backend/app/Core/App.php`
+  - `code/backend/app/Controllers/PagesController.php`
+  - `code/backend/app/Controllers/ComponentsController.php`
+  - `code/backend/app/Services/CmsService.php`
+  - `code/backend/resources/views/layouts/admin.php`
+  - `code/backend/resources/views/admin/pages/home-editor.php`
+  - `code/backend/resources/views/admin/components/services.php`
+  - `code/backend/resources/views/admin/components/about.php`
+  - `code/backend/resources/views/admin/components/doctors.php`
+  - `code/backend/resources/views/admin/components/testimonials.php`
+  - `code/backend/resources/views/admin/components/charter.php`
+  - `code/backend/resources/views/admin/components/contact.php`
+* **Next Micro-Task:** Micro-Task 1.3: Yoast-Style On-Page SEO Suite & Safe Custom Tracking Script Injection in AdminLTE 4.
 
 ---
 

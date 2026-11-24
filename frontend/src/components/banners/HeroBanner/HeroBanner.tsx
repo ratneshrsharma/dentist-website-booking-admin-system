@@ -23,24 +23,28 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ hero, onBookClick }) => 
         <div className={styles.heroGrid}>
           {/* Left Text Column */}
           <div className={styles.contentCol}>
-            <span className={styles.eyebrow}>{hero.eyebrow}</span>
+            <span className={styles.eyebrow}>
+              {hero.eyebrow || 'NHS & Private Patients Welcomed'}
+            </span>
             <h1 className={styles.headline}>
-              {hero.headline}{' '}
-              {hero.headline_highlight && (
-                <span className={styles.highlight}>{hero.headline_highlight}</span>
-              )}
+              {hero.headline || hero.title || 'Make your Dental Experience a'}{' '}
+              <span className={styles.highlight}>
+                {hero.headline_highlight || hero.highlight_word || 'Lot Brighter'}
+              </span>
             </h1>
             <p className={styles.subtitle}>{hero.subtitle}</p>
 
             {/* Statistics Row */}
             {hero.stats && hero.stats.length > 0 && (
               <div className={styles.statsGrid}>
-                {hero.stats.map((stat, idx) => (
-                  <div key={idx} className={styles.statCard}>
-                    <span className={styles.statValue}>{stat.value}</span>
-                    <span className={styles.statLabel}>{stat.label}</span>
-                  </div>
-                ))}
+                {hero.stats
+                  .filter((s) => s.is_active !== false)
+                  .map((stat, idx) => (
+                    <div key={idx} className={styles.statCard}>
+                      <span className={styles.statValue}>{stat.value}</span>
+                      <span className={styles.statLabel}>{stat.label}</span>
+                    </div>
+                  ))}
               </div>
             )}
 
@@ -51,7 +55,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ hero, onBookClick }) => 
                 className={styles.primaryCta}
                 onClick={onBookClick}
               >
-                <span>{hero.cta_primary}</span>
+                <span>{hero.cta_primary || 'Book An Appointment'}</span>
                 <span className="material-symbols-outlined text-[18px]">
                   calendar_month
                 </span>

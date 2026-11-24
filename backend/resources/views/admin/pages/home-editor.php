@@ -109,20 +109,36 @@ $contact = $home['contact_section'] ?? [];
                     <div class="row g-3 mb-4 pb-4 border-bottom">
                         <div class="col-md-4">
                             <label class="form-label fw-semibold">Eyebrow Tagline</label>
-                            <input type="text" name="hero_eyebrow" class="form-control" value="<?= htmlspecialchars($hero['eyebrow'] ?? '') ?>" placeholder="BIRMINGHAM B27 DENTAL PRACTICE">
+                            <input type="text" name="hero_eyebrow" class="form-control" value="<?= htmlspecialchars($hero['eyebrow'] ?? 'NHS & Private Patients Welcomed') ?>" placeholder="NHS & Private Patients Welcomed">
                         </div>
                         <div class="col-md-5">
                             <label class="form-label fw-semibold">Main Headline Title</label>
-                            <input type="text" name="hero_title" class="form-control" value="<?= htmlspecialchars($hero['title'] ?? '') ?>" placeholder="Gentle Family Dentistry in Acocks Green">
+                            <input type="text" name="hero_title" class="form-control" value="<?= htmlspecialchars($hero['title'] ?? $hero['headline'] ?? 'Make your Dental Experience a') ?>" placeholder="Make your Dental Experience a">
                         </div>
                         <div class="col-md-3">
                             <label class="form-label fw-semibold">Highlighted Brand Word</label>
-                            <input type="text" name="hero_highlight_word" class="form-control" value="<?= htmlspecialchars($hero['highlight_word'] ?? '') ?>" placeholder="Acocks Green">
+                            <input type="text" name="hero_highlight_word" class="form-control" value="<?= htmlspecialchars($hero['highlight_word'] ?? $hero['headline_highlight'] ?? 'Lot Brighter') ?>" placeholder="Lot Brighter">
                             <small class="text-muted">Underlined with brand primary color.</small>
                         </div>
                         <div class="col-12">
                             <label class="form-label fw-semibold">Hero Subtitle Paragraph</label>
-                            <textarea name="hero_subtitle" class="form-control" rows="2"><?= htmlspecialchars($hero['subtitle'] ?? '') ?></textarea>
+                            <textarea name="hero_subtitle" class="form-control" rows="2"><?= htmlspecialchars($hero['subtitle'] ?? 'Welcome to Acocks Green Dental Practice. Delivering gentle, high-standard dental care for patients of all ages across Birmingham B27. From preventive family appointments to transformative aesthetics, our clinical team puts your comfort first.') ?></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Primary CTA Button Text</label>
+                            <input type="text" name="hero_cta_primary" class="form-control" value="<?= htmlspecialchars($hero['cta_primary'] ?? 'Book An Appointment') ?>" placeholder="Book An Appointment">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Primary CTA Link / Action Target</label>
+                            <input type="text" name="hero_cta_primary_link" class="form-control" value="<?= htmlspecialchars($hero['cta_primary_link'] ?? '#quick-book') ?>" placeholder="#quick-book">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Secondary CTA Button Text</label>
+                            <input type="text" name="hero_cta_secondary" class="form-control" value="<?= htmlspecialchars($hero['cta_secondary'] ?? 'Emergency Consultation') ?>" placeholder="Emergency Consultation">
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label fw-semibold">Secondary CTA Link</label>
+                            <input type="text" name="hero_cta_secondary_link" class="form-control" value="<?= htmlspecialchars($hero['cta_secondary_link'] ?? '/contact/#emergency') ?>" placeholder="/contact/#emergency">
                         </div>
                         <div class="col-md-6">
                             <label class="form-label fw-semibold">Hero Emergency Contact Phone</label>
@@ -135,14 +151,23 @@ $contact = $home['contact_section'] ?? [];
                     </div>
 
                     <!-- Hero 3 Key Statistics -->
-                    <h6 class="fw-bold text-secondary mb-3">Hero Practice Statistics</h6>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold text-secondary mb-0">Hero Practice Statistics (Toggle Active / Inactive)</h6>
+                    </div>
                     <div class="row g-3">
                         <?php foreach ($hero['stats'] as $idx => $st): ?>
                             <div class="col-md-4">
                                 <div class="p-3 bg-light rounded-3 border">
-                                    <label class="form-label small fw-bold">Stat #<?= $idx + 1 ?> Value</label>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="small fw-bold text-dark">Statistic #<?= $idx + 1 ?></span>
+                                        <div class="form-check form-switch m-0">
+                                            <input class="form-check-input" type="checkbox" name="stat_active[]" value="<?= $idx ?>" id="statActive<?= $idx ?>" <?= ($st['is_active'] ?? true) ? 'checked' : '' ?>>
+                                            <label class="form-check-label small fw-semibold" for="statActive<?= $idx ?>">Active</label>
+                                        </div>
+                                    </div>
+                                    <label class="form-label small fw-bold">Value</label>
                                     <input type="text" name="stat_values[]" class="form-control mb-2 fw-bold" value="<?= htmlspecialchars($st['value'] ?? '') ?>" placeholder="5,000+">
-                                    <label class="form-label small fw-bold">Stat #<?= $idx + 1 ?> Label</label>
+                                    <label class="form-label small fw-bold">Label</label>
                                     <input type="text" name="stat_labels[]" class="form-control" value="<?= htmlspecialchars($st['label'] ?? '') ?>" placeholder="Happy Patients">
                                 </div>
                             </div>

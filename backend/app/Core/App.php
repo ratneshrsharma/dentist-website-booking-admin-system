@@ -16,7 +16,7 @@ class App
     {
         $uri = $_SERVER['REQUEST_URI'] ?? '/';
         if (preg_match('~^/([^/?#]+)~', $uri, $m)) {
-            if (in_array($m[1], ['dental-saas', 'advanced-dental-clinic'], true)) {
+            if ($m[1] === 'dental-saas') {
                 return '/' . $m[1];
             }
         }
