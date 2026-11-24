@@ -1,0 +1,859 @@
+.main {
+  min-height: calc(100vh - 120px);
+  background-color: #f2fcf5;
+  padding-bottom: 2rem;
+}
+.container {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+/* =========================================================================
+   1. HERO BANNER
+   ========================================================================= */
+.heroSection {
+  background-color: #f2fcf5;
+  padding-top: 1.5rem;
+  padding-bottom: 3.5rem;
+  border-bottom: 1px solid rgba(13, 99, 27, 0.08);
+}
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #40493d;
+  margin-bottom: 1.5rem;
+}
+.breadcrumb a {
+  color: #40493d;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+.breadcrumb a:hover {
+  color: #0d631b;
+}
+.breadcrumb .current {
+  color: #151d1a;
+  font-weight: 600;
+}
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .heroGrid {
+    grid-template-columns: 7fr 5fr;
+    gap: 3.5rem;
+  }
+}
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+.eyebrow {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #0d631b;
+}
+.headline {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #151d1a;
+  letter-spacing: -0.02em;
+}
+@media (min-width: 768px) {
+  .headline {
+    font-size: 40px;
+  }
+}
+.subtitle {
+  font-family: 'Work Sans', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #40493d;
+}
+.trustBadgesRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+  padding-top: 0.5rem;
+}
+@media (min-width: 640px) {
+  .trustBadgesRow {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.badgeCard {
+  background-color: #ffffff;
+  padding: 10px 12px;
+  border-radius: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.badgeCard span:first-child {
+  font-size: 18px;
+  color: #0d631b;
+  flex-shrink: 0;
+}
+.badgeCard span:last-child {
+  font-size: 12px;
+  font-weight: 600;
+  color: #151d1a;
+  white-space: nowrap;
+}
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-top: 0.5rem;
+}
+.primaryCta {
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #2e7d32;
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-weight: 600;
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease-in-out;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 14px;
+}
+.primaryCta:hover {
+  background-color: #0d631b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+.primaryCta:active {
+  transform: scale(0.98);
+}
+.secondaryCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1.5rem;
+  background-color: #ffffff;
+  color: #0d631b;
+  border: 1.5px solid #86efac;
+  border-radius: 1rem;
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.secondaryCta:hover {
+  background-color: #f0fdf4;
+  border-color: #0d631b;
+}
+.heroImageFrame {
+  position: relative;
+  background-color: #ffffff;
+  padding: 8px;
+  border-radius: 1.5rem;
+  box-shadow: 0 16px 40px -10px rgba(9, 71, 19, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid #dcfce7;
+  overflow: hidden;
+}
+.heroImageFrame .imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+@media (min-width: 1024px) {
+  .heroImageFrame .imageWrapper {
+    height: 320px;
+  }
+}
+.heroImageFrame .imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.heroImageFrame .captionBox {
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.heroImageFrame .captionBox .captionIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 9999px;
+  background-color: #e8f5e9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.heroImageFrame .captionBox .captionIcon span {
+  font-size: 18px;
+}
+.heroImageFrame .captionBox span.captionText {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #151d1a;
+}
+/* =========================================================================
+   2. WHY US SECTION (#why-us)
+   ========================================================================= */
+.whyUsSection {
+  background-color: #ecf6ef;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+.sectionHeader {
+  max-width: 720px;
+  margin-bottom: 3rem;
+}
+.sectionHeader h2 {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #151d1a;
+  line-height: 1.25;
+  margin: 0.5rem 0 1rem 0;
+  letter-spacing: -0.01em;
+}
+@media (min-width: 768px) {
+  .sectionHeader h2 {
+    font-size: 34px;
+  }
+}
+.sectionHeader p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #40493d;
+  margin: 0;
+}
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+@media (min-width: 640px) {
+  .pillarsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .pillarsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.pillarCard {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.pillarCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(9, 71, 19, 0.08);
+}
+.pillarCard .pillarIcon {
+  width: 48px;
+  height: 48px;
+  border-radius: 0.75rem;
+  background-color: #e8f5e9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.pillarCard .pillarIcon span {
+  font-size: 26px;
+}
+.pillarCard h3 {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #151d1a;
+  margin: 0 0 0.5rem 0;
+}
+.pillarCard p {
+  font-size: 13.5px;
+  color: #40493d;
+  line-height: 1.55;
+  margin: 0;
+}
+.pillarCard .pillarBadge {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #0d631b;
+  font-size: 12px;
+  font-weight: 600;
+}
+.pillarCard .pillarBadge span:first-child {
+  font-size: 16px;
+}
+.statsBanner {
+  background-color: #ffffff;
+  border-radius: 1.5rem;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+}
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  text-align: center;
+}
+@media (min-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.statItem .statNumber {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 38px;
+  font-weight: 800;
+  color: #0d631b;
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+.statItem .statLabel {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #151d1a;
+  margin-bottom: 0.2rem;
+}
+.statItem .statDesc {
+  font-size: 12px;
+  color: #40493d;
+}
+/* =========================================================================
+   3. OUR TEAM SECTION (#our-team)
+   ========================================================================= */
+.teamSection {
+  background-color: #f2fcf5;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+.teamGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 640px) {
+  .teamGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 1024px) {
+  .teamGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.teamCard {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.teamCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(9, 71, 19, 0.08);
+}
+.teamCard .avatarFrame {
+  position: relative;
+  height: 240px;
+  background-color: #f1f5f9;
+}
+.teamCard .avatarFrame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.teamCard .avatarFrame .gdcPill {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0d631b;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+.teamCard .teamInfo {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.teamCard .teamInfo h3 {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #151d1a;
+  margin: 0;
+}
+.teamCard .teamInfo .credentials {
+  font-size: 12px;
+  color: #0d631b;
+  font-weight: 600;
+  margin-top: 2px;
+}
+.teamCard .teamInfo .roleTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: #40493d;
+  margin-top: 2px;
+}
+.teamCard .teamInfo .specialismsBox {
+  background-color: #ecf6ef;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 11.5px;
+  margin-top: 8px;
+}
+.teamCard .teamInfo .specialismsBox strong {
+  display: block;
+  color: #151d1a;
+  margin-bottom: 2px;
+}
+.teamCard .teamInfo .specialismsBox span {
+  color: #40493d;
+}
+.teamCard .teamInfo blockquote {
+  font-size: 12px;
+  font-style: italic;
+  color: #64748b;
+  border-left: 2px solid #0d631b;
+  padding-left: 8px;
+  margin: 0;
+  line-height: 1.45;
+}
+/* =========================================================================
+   4. OUR CLINICS SECTION (#our-clinics)
+   ========================================================================= */
+.clinicsSection {
+  background-color: #ecf6ef;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+.clinicsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+@media (min-width: 1024px) {
+  .clinicsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3.5rem;
+  }
+}
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.featureCard {
+  background-color: #ffffff;
+  padding: 14px 16px;
+  border-radius: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+.featureCard .featureIcon {
+  width: 38px;
+  height: 38px;
+  border-radius: 0.5rem;
+  background-color: #e8f5e9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.featureCard .featureIcon span {
+  font-size: 20px;
+}
+.featureCard h4 {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: #151d1a;
+  margin: 0 0 2px 0;
+}
+.featureCard p {
+  font-size: 13px;
+  color: #40493d;
+  line-height: 1.45;
+  margin: 0;
+}
+.surgeryPhotoCard {
+  background-color: #ffffff;
+  padding: 8px;
+  border-radius: 1.5rem;
+  box-shadow: 0 16px 40px -10px rgba(9, 71, 19, 0.12);
+  border: 1px solid #dcfce7;
+  overflow: hidden;
+}
+.surgeryPhotoCard .surgeryImageWrapper {
+  position: relative;
+  width: 100%;
+  height: 360px;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+@media (min-width: 1024px) {
+  .surgeryPhotoCard .surgeryImageWrapper {
+    height: 420px;
+  }
+}
+.surgeryPhotoCard .surgeryImageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.surgeryPhotoCard .surgeryFooter {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.surgeryPhotoCard .surgeryFooter h4 {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #151d1a;
+  margin: 0;
+}
+.surgeryPhotoCard .surgeryFooter p {
+  font-size: 12px;
+  color: #40493d;
+  margin: 2px 0 0 0;
+}
+.surgeryPhotoCard .surgeryFooter .activePill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background-color: #ecfdf5;
+  color: #047857;
+  font-size: 11px;
+  font-weight: 700;
+}
+.surgeryPhotoCard .surgeryFooter .activePill .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background-color: #10b981;
+}
+/* =========================================================================
+   5. NHS SAFETY CHARTER SECTION (#nhs-charter)
+   ========================================================================= */
+.charterSection {
+  background-color: #f2fcf5;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+.charterCardsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+@media (min-width: 768px) {
+  .charterCardsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.charterCard {
+  background-color: #ffffff;
+  padding: 1.75rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.charterCard .charterIcon {
+  width: 52px;
+  height: 52px;
+  border-radius: 0.75rem;
+  background-color: #e8f5e9;
+  color: #0d631b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+.charterCard .charterIcon span {
+  font-size: 28px;
+}
+.charterCard h3 {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #151d1a;
+  margin: 0 0 0.5rem 0;
+}
+.charterCard p {
+  font-size: 13.5px;
+  color: #40493d;
+  line-height: 1.6;
+  margin: 0;
+}
+.charterCard .charterFooter {
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #0d631b;
+}
+.outOfHoursBox {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1.5px solid #fed7aa;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+@media (min-width: 768px) {
+  .outOfHoursBox {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+.outOfHoursBox .outOfHoursContent {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.outOfHoursBox .outOfHoursContent .emergencyIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.75rem;
+  background-color: #fef2f2;
+  color: #dc2626;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.outOfHoursBox .outOfHoursContent .emergencyIcon span {
+  font-size: 24px;
+}
+.outOfHoursBox .outOfHoursContent h4 {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: #151d1a;
+  margin: 0;
+}
+.outOfHoursBox .outOfHoursContent p {
+  font-size: 13px;
+  color: #40493d;
+  margin: 2px 0 0 0;
+}
+.outOfHoursBox .outOfHoursActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+/* =========================================================================
+   6. PATIENT REVIEWS SECTION (#patient-reviews)
+   ========================================================================= */
+.reviewsSection {
+  background-color: #ecf6ef;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+.reviewsHeaderRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+}
+@media (min-width: 768px) {
+  .reviewsHeaderRow {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+.ratingSummaryBadge {
+  background-color: #ffffff;
+  padding: 12px 18px;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.ratingSummaryBadge .starsBox {
+  text-align: right;
+}
+.ratingSummaryBadge .starsBox .stars {
+  display: flex;
+  gap: 2px;
+  color: #f59e0b;
+}
+.ratingSummaryBadge .starsBox .stars span {
+  font-size: 18px;
+}
+.ratingSummaryBadge .starsBox p {
+  font-size: 11px;
+  color: #40493d;
+  margin: 2px 0 0 0;
+}
+.ratingSummaryBadge .scoreCol {
+  border-left: 1px solid #e2e8f0;
+  padding-left: 14px;
+}
+.ratingSummaryBadge .scoreCol .scoreNumber {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #0d631b;
+  line-height: 1;
+}
+.ratingSummaryBadge .scoreCol .scoreText {
+  font-size: 11px;
+  font-weight: 600;
+  color: #151d1a;
+  margin-top: 2px;
+}
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+@media (min-width: 768px) {
+  .reviewsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.reviewCard {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.reviewCard .reviewStarsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+.reviewCard .reviewStarsRow .stars {
+  display: flex;
+  gap: 2px;
+  color: #f59e0b;
+}
+.reviewCard .reviewStarsRow .stars span {
+  font-size: 16px;
+}
+.reviewCard .reviewStarsRow .verifiedPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background-color: #ecfdf5;
+  color: #047857;
+  font-size: 11px;
+  font-weight: 600;
+}
+.reviewCard .reviewStarsRow .verifiedPill span {
+  font-size: 13px;
+}
+.reviewCard .reviewBody {
+  font-size: 13.5px;
+  font-style: italic;
+  color: #151d1a;
+  line-height: 1.6;
+  margin: 0 0 1.25rem 0;
+}
+.reviewCard .authorInfo {
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+}
+.reviewCard .authorInfo .authorName {
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #151d1a;
+}
+.reviewCard .authorInfo .authorRole {
+  font-size: 11.5px;
+  color: #40493d;
+}

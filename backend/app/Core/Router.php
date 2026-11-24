@@ -50,6 +50,9 @@ class Router
             if ($uri === '/api/v1/pages/home' || $uri === '/api/v1/cms/pages/home' || $uri === '/api/v1/cms-pages/home') {
                 $apiCtrl->homePage();
             }
+            if ($uri === '/api/v1/pages/about' || $uri === '/api/v1/pages/about-us' || $uri === '/api/v1/cms/pages/about-us') {
+                $apiCtrl->aboutPage();
+            }
             if ($uri === '/api/v1/navigation' || $uri === '/api/v1/cms/navigation') {
                 $apiCtrl->navigation();
             }
@@ -127,6 +130,16 @@ class Router
                     $pages->updateHome();
                 } else {
                     $pages->editHome();
+                }
+            }
+
+            // About Page Content & Assets Editor
+            if ($path === 'pages/about-us/edit' || $path === 'pages/about/edit') {
+                $pages = new PagesController();
+                if ($method === 'POST') {
+                    $pages->updateAbout();
+                } else {
+                    $pages->editAbout();
                 }
             }
 

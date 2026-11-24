@@ -535,3 +535,53 @@
 - Recompiled all Less stylesheets and completed production export via `npm run build` in `code/frontend`.
 - Deployed compiled static assets (`_next`, `index.html`, `404.html`, etc.) directly to `C:\xampp\htdocs\dental-saas\`.
 - Validated via automated browser QA subagent with screenshots confirming responsive styling, dropdown interactions, and footer population.
+
+
+---
+
+## 2026-11-24: Treatments Mega Menu Polish, Dedicated About Us Page & CMS Integration
+
+### 1. Scope & Objective
+- Streamline the Treatments & Services mega menu to a centered, compact 2-column layout displaying only icons and treatment titles.
+- Resolve the bottom emergency triage line wrapping and align the "Book Practice Visit" button.
+- Build a dedicated `/about-us` page based on `ref/HTML Pages/06 - About/code.html` and `ref/JSONs/about-us.json`.
+- Implement backend CMS REST API (`/api/v1/pages/about-us`) and the AdminLTE 4 About Page Editor (`/admin/pages/about-us/edit`).
+
+### 2. Key Accomplishments
+1. **Treatments & Services Mega Dropdown Polish**:
+   - Centered menu under navbar item with a clean 590px compact width.
+   - Removed cluttered descriptions, category badges, pricing, and small buttons; retained only the clean Material Symbol icon and treatment title in a 2-column grid.
+   - Refactored the bottom emergency footer into a clean single-line flex row (`Emergency dental triage: +44 121 765 2870` + `Book Practice Visit` button) with zero text wrapping.
+2. **About Dropdown Anchor Links**:
+   - Updated submenu targets to link directly to the new dedicated page sections:
+     - `Why Us` (`/about-us#why-us`)
+     - `Our Team` (`/about-us#our-team`)
+     - `Our Clinics` (`/about-us#our-clinics`)
+     - `NHS Safety Charter` (`/about-us#nhs-charter`)
+     - `Patient Reviews` (`/about-us#patient-reviews`)
+   - Updated parent nav item to link directly to `/about-us`.
+3. **Dedicated About Page (`/about-us`)**:
+   - Created Next.js client-rendered page at `frontend/src/app/about-us/page.tsx` and `about.module.less`.
+   - Rendered all 5 core clinical sections:
+     - Hero with breadcrumb (`Home > About Us`), clinical heritage copy, 4 trust badges, and team image.
+     - Section 1: Why Us (`#why-us`) with 4 trust pillars and 4-item stats grid.
+     - Section 2: Our Team (`#our-team`) with GDC numbers, qualifications, and specialisms.
+     - Section 3: Our Clinics (`#our-clinics`) with 5 amenity cards and active surgery suite photo.
+     - Section 4: NHS Safety Charter (`#nhs-charter`) with 3 regulatory cards and out-of-hours box.
+     - Section 5: Patient Reviews (`#patient-reviews`) with 4.9 rating summary and patient feedback.
+4. **Backend CMS API & Admin Editor**:
+   - Added `CmsService::getAboutPageData()` and `saveAboutPageData()` storing to `storage/app/cms_about.json`.
+   - Exposed `GET /api/v1/pages/about-us` REST API endpoint.
+   - Added `editAbout()` and `updateAbout()` in `PagesController.php`.
+   - Created `resources/views/admin/pages/about-editor.php` featuring 5 management tabs:
+     1. Hero & Team Image
+     2. Why Us & Ethos Pillars
+     3. Our Clinics & Amenities
+     4. NHS Safety Charter
+     5. SEO & Metadata
+   - Marked About page as editable in the CMS Pages list with direct link to the editor.
+
+### 3. Verification & Deployment
+- Recompiled Less and built static frontend via `npm run build` exporting `/`, `/_not-found`, and `/about-us`.
+- Deployed frontend to `C:\xampp\htdocs\dental-saas\` and backend to `C:\xampp\htdocs\dental-saas\backend\`.
+- Completed comprehensive verification via browser QA subagent with screenshots confirming menu centering, single-line footer, `/about-us` rendering, and admin CMS editing capability.

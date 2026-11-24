@@ -51,6 +51,21 @@ class ApiController
         ]);
     }
 
+    public function aboutPage(): void
+    {
+        $about = CmsService::getAboutPageData();
+        $home = CmsService::getHomePageData();
+        // Enrich with clinicians, support team, and reviews from CMS
+        $about['clinicians'] = $home['clinicians'] ?? [];
+        $about['support_team'] = $home['support_team'] ?? [];
+        $about['reviews'] = $home['reviews'] ?? [];
+
+        App::json([
+            'success' => true,
+            'data' => $about,
+        ]);
+    }
+
     public function navigation(): void
     {
         $theme = ThemeService::getTheme();

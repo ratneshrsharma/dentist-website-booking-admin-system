@@ -130,6 +130,12 @@ export interface PatientReview {
   verified?: boolean;
 }
 
+export interface ReviewsData {
+  average_rating: string;
+  total_rating_text: string;
+  items: PatientReview[];
+}
+
 export interface OperatingHours {
   day_range: string;
   hours: string;
@@ -220,4 +226,73 @@ export interface GlobalNavigation {
   quick_links: Array<{ title: string; path: string }>;
   services_links: Array<{ title: string; path: string }>;
   legal_links: Array<{ title: string; path: string }>;
+}
+
+export interface AboutPillar {
+  icon: string;
+  title: string;
+  desc: string;
+  badge: string;
+}
+
+export interface AboutClinicFeature {
+  icon: string;
+  title: string;
+  desc: string;
+}
+
+export interface AboutCharterCard {
+  icon: string;
+  title: string;
+  desc: string;
+  footer_label?: string;
+}
+
+export interface AboutPageData {
+  slug: string;
+  title: string;
+  hero: {
+    eyebrow: string;
+    headline: string;
+    subtitle: string;
+    image: string;
+    image_caption?: string;
+    trust_badges?: string[];
+  };
+  why_us: {
+    eyebrow: string;
+    headline: string;
+    subtitle: string;
+    pillars: AboutPillar[];
+    stats: Array<{ value: string; label: string; desc?: string }>;
+  };
+  clinics: {
+    eyebrow: string;
+    headline: string;
+    subtitle: string;
+    features: AboutClinicFeature[];
+    surgery_image: string;
+    surgery_title: string;
+    surgery_desc: string;
+  };
+  safety_charter: {
+    eyebrow: string;
+    headline: string;
+    subtitle: string;
+    cards: AboutCharterCard[];
+    emergency_box: {
+      title: string;
+      subtitle: string;
+      phone: string;
+      nhs111?: string;
+    };
+  };
+  clinicians?: ClinicianItem[];
+  support_team?: ClinicianItem[];
+  reviews?: ReviewsData;
+  seo?: {
+    meta_title: string;
+    meta_description: string;
+    keywords?: string;
+  };
 }

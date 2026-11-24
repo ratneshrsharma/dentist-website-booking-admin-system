@@ -20,6 +20,8 @@ class CmsService
     {
         $homeData = self::getHomePageData();
         $updatedAt = $homeData['_updated_at'] ?? '2026-11-24 10:00:00';
+        $aboutData = self::getAboutPageData();
+        $aboutUpdatedAt = $aboutData['_updated_at'] ?? '2026-11-24 12:00:00';
 
         return [
             [
@@ -38,9 +40,9 @@ class CmsService
                 'slug' => 'about-us',
                 'route' => '/about-us',
                 'status' => 'published',
-                'sections_count' => 4,
-                'updated_at' => '2026-11-20 14:30:00',
-                'is_editable' => false,
+                'sections_count' => 5,
+                'updated_at' => $aboutUpdatedAt,
+                'is_editable' => true,
             ],
             [
                 'id' => 3,
@@ -458,5 +460,164 @@ class CmsService
         }
 
         return file_put_contents($file, json_encode($merged, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) !== false;
+    }
+
+    private static function getAboutStorageFile(): string
+    {
+        return dirname(__DIR__, 2) . '/storage/app/cms_about.json';
+    }
+
+    public static function getAboutPageData(): array
+    {
+        $file = self::getAboutStorageFile();
+        if (file_exists($file)) {
+            $content = file_get_contents($file);
+            $decoded = json_decode($content, true);
+            if (is_array($decoded)) {
+                return $decoded;
+            }
+        }
+
+        return self::getDefaultAboutPageData();
+    }
+
+    public static function saveAboutPageData(array $data): bool
+    {
+        $current = self::getAboutPageData();
+        $data['_updated_at'] = date('Y-m-d H:i:s');
+        $merged = array_replace_recursive($current, $data);
+
+        $file = self::getAboutStorageFile();
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+
+        return file_put_contents($file, json_encode($merged, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) !== false;
+    }
+
+    public static function getDefaultAboutPageData(): array
+    {
+        return [
+            '_updated_at' => date('Y-m-d H:i:s'),
+            'slug' => 'about-us',
+            'title' => 'Dedicated to Gentle, High-Quality Family & Cosmetic Dentistry in Acocks Green',
+            'hero' => [
+                'eyebrow' => 'Caring for Birmingham Smiles Since 1998',
+                'headline' => 'Dedicated to Gentle, High-Quality Family & Cosmetic Dentistry in Acocks Green',
+                'subtitle' => 'With over 25 years of clinical heritage at 1078 Warwick Road, Acocks Green Dental Practice unites compassionate NHS primary dental health with advanced, minimally invasive private and cosmetic care. We believe modern dental visits should feel calm, transparent, and completely unhurried.',
+                'image' => '/images/acocks-green-team.jpg',
+                'image_caption' => 'Principal Clinicians & Care Team — Warwick Road',
+                'trust_badges' => ['NHS & Private', 'CQC Regulated', 'BDA Member', 'Award-Winning'],
+            ],
+            'why_us' => [
+                'eyebrow' => 'Practice Ethos & Clinical Standards',
+                'headline' => 'Why Birmingham Patients Choose Acocks Green Dental',
+                'subtitle' => 'We understand that many patients feel anxious or delay treatments due to fear of discomfort or unexpected bills. Our clinicians take time to listen, provide transparent NHS and private guidance, and deliver gentle treatment in a calm, modern setting.',
+                'pillars' => [
+                    [
+                        'icon' => 'spa',
+                        'title' => 'Unhurried & Gentle Care',
+                        'desc' => 'Extra appointment time dedicated to anxious patients, gentle numbing techniques, and comprehensive clinical explanations prior to any procedure.',
+                        'badge' => 'Dental Phobia Certified',
+                    ],
+                    [
+                        'icon' => 'biotech',
+                        'title' => 'Modern Clinical Tech',
+                        'desc' => 'Low-dose digital 3D radiography, iTero® intraoral digital optical scanners, and painless ultrasonic scaling for fast, accurate treatment planning.',
+                        'badge' => 'Zero Goop Digital Scans',
+                    ],
+                    [
+                        'icon' => 'receipt_long',
+                        'title' => 'Transparent Pathways',
+                        'desc' => 'Clear upfront cost breakdowns with zero hidden fees, standard NHS bandings, and interest-free 0% APR financing options on qualifying treatments.',
+                        'badge' => '0% Finance Options',
+                    ],
+                    [
+                        'icon' => 'school',
+                        'title' => 'GDC-Registered Team',
+                        'desc' => 'Continual postgraduate development, master\'s level restorative clinicians, and dedicated oral hygiene specialists ensuring hospital-grade care.',
+                        'badge' => 'GDC Regulated Clinicians',
+                    ],
+                ],
+                'stats' => [
+                    ['value' => '25+', 'label' => 'Years Serving Acocks Green', 'desc' => 'Continuous community dental trust'],
+                    ['value' => '15,000+', 'label' => 'Smiles Treated', 'desc' => 'Families, children, and adults'],
+                    ['value' => '4.9/5', 'label' => 'Average Patient Rating', 'desc' => 'Across Google and NHS Choices'],
+                    ['value' => '100%', 'label' => 'CQC Compliance', 'desc' => 'Audited safety & sterilization'],
+                ],
+            ],
+            'clinics' => [
+                'eyebrow' => 'Modern Surgery & Accessible Amenities',
+                'headline' => 'State-of-the-Art Surgeries on Warwick Road',
+                'subtitle' => 'Designed for comfort, sterility, and seamless clinical efficiency. Located conveniently at 1078 Warwick Road, Birmingham with on-site parking and step-free disabled access.',
+                'features' => [
+                    [
+                        'icon' => 'radiology',
+                        'title' => 'Digital X-Ray & Intraoral 3D Imaging Suite',
+                        'desc' => 'Instant, ultra-low radiation diagnostic imaging displayed chairside on HD screens for transparent patient consultation.',
+                    ],
+                    [
+                        'icon' => 'sanitizer',
+                        'title' => 'Dedicated Sterilisation & Decontamination Suite',
+                        'desc' => 'Fully segregated HTM 01-05 compliant cleanroom utilizing vacuum autoclaves, tracking barcoding, and daily biological spore testing.',
+                    ],
+                    [
+                        'icon' => 'accessible',
+                        'title' => 'Step-Free Ground Floor Surgeries',
+                        'desc' => 'Wheelchair, mobility scooter, and pushchair accessible throughout the clinic, including broad corridors and accessible facilities.',
+                    ],
+                    [
+                        'icon' => 'chair',
+                        'title' => 'Comfort-First Patient Lounge',
+                        'desc' => 'Calming, acoustically treated waiting environment with fresh chilled water, tea/coffee, and high-speed Wi-Fi.',
+                    ],
+                    [
+                        'icon' => 'directions_bus',
+                        'title' => 'Free Patient Parking & Transport Links',
+                        'desc' => 'Dedicated on-site parking at the rear, directly opposite Warwick Road bus stops and 5 minutes from Acocks Green Railway Station.',
+                    ],
+                ],
+                'surgery_image' => '/images/surgery-clinic.jpg',
+                'surgery_title' => 'Modern Surgery 1',
+                'surgery_desc' => 'Equipped with A-dec 500 ergonomic chair and digital radiographic suite',
+            ],
+            'safety_charter' => [
+                'eyebrow' => 'Regulatory Rigor & Patient Safeguards',
+                'headline' => 'Our NHS Safety Charter & CQC Quality Standards',
+                'subtitle' => 'We are deeply committed to delivering safe, dignified, and clinically audited dental care under NHS primary care contracts and private healthcare regulations.',
+                'cards' => [
+                    [
+                        'icon' => 'verified',
+                        'title' => 'CQC Regulated & Inspected',
+                        'desc' => 'Acocks Green Dental Practice is fully registered with the Care Quality Commission and rated compliant in all essential standards of safety, clinical effectiveness, caring, responsiveness, and leadership.',
+                        'footer_label' => 'Inspection Status: 100% Compliant',
+                    ],
+                    [
+                        'icon' => 'clean_hands',
+                        'title' => 'Cross-Infection Control (HTM 01-05)',
+                        'desc' => 'Gold standard autoclave sterilization, continuous single-use disposables, and daily biological spore testing ensure ultimate reassurance and complete protection for your family.',
+                        'footer_label' => 'HTM 01-05 Gold Protocol',
+                    ],
+                    [
+                        'icon' => 'lock',
+                        'title' => 'Confidentiality & GDPR Compliance',
+                        'desc' => 'Full compliance with NHS Caldicott Guardian principles, General Dental Council guidelines, and modern 256-bit encrypted digital radiograph and health records archives.',
+                        'footer_label' => 'Encrypted Health Storage',
+                    ],
+                ],
+                'emergency_box' => [
+                    'title' => 'Emergency & Out-of-Hours Dental Support',
+                    'subtitle' => 'Experiencing severe dental pain, bleeding, or facial trauma outside regular practice hours?',
+                    'phone' => '+44 121 765 2870',
+                    'nhs111' => '111',
+                ],
+            ],
+            'seo' => [
+                'meta_title' => 'About Our Practice & Clinical Team | Acocks Green Dental Practice',
+                'meta_description' => 'Discover our patient-first clinical philosophy, hospital-grade sterilization protocols, and multi-specialty dental expertise in Birmingham B27.',
+                'keywords' => 'dental clinic about us, dental philosophy, sterile dental facility, multi-specialty dentistry, Acocks Green dentist',
+            ],
+        ];
     }
 }

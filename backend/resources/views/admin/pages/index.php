@@ -76,7 +76,7 @@ use App\Core\App;
                             </td>
                             <td class="text-end pe-4">
                                 <?php if ($p['is_editable']): ?>
-                                    <a href="<?= App::url('/admin/pages/home/edit') ?>" class="btn btn-brand btn-sm rounded-pill px-3 shadow-sm">
+                                    <a href="<?= App::url($p['slug'] === 'about-us' ? '/admin/pages/about-us/edit' : '/admin/pages/home/edit') ?>" class="btn btn-brand btn-sm rounded-pill px-3 shadow-sm">
                                         <i class="bi bi-pencil-square me-1"></i> Edit Content
                                     </a>
                                 <?php else: ?>

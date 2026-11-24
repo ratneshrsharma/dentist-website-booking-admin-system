@@ -375,4 +375,91 @@ class PagesController
             'success' => 'Homepage content and visual assets saved successfully! Changes are immediately live on the website.',
         ]);
     }
+
+    public function editAbout(): void
+    {
+        Auth::requireAuth();
+
+        $aboutData = CmsService::getAboutPageData();
+        $theme = ThemeService::getTheme();
+
+        App::render('admin/pages/about-editor', [
+            'about' => $aboutData,
+            'theme' => $theme,
+            'pageTitle' => 'About Page Content & Practice Standards Editor',
+            'activeNav' => 'pages',
+        ]);
+    }
+
+    public function updateAbout(): void
+    {
+        Auth::requireAuth();
+
+        $about = CmsService::getAboutPageData();
+
+        // 1. Hero Banner
+        if (isset($_POST['hero_eyebrow'])) $about['hero']['eyebrow'] = trim($_POST['hero_eyebrow']);
+        if (isset($_POST['hero_headline'])) $about['hero']['headline'] = trim($_POST['hero_headline']);
+        if (isset($_POST['hero_subtitle'])) $about['hero']['subtitle'] = trim($_POST['hero_subtitle']);
+        if (isset($_POST['hero_image_caption'])) $about['hero']['image_caption'] = trim($_POST['hero_image_caption']);
+
+        if (!empty($_FILES['hero_image_file']['name'])) {
+            $up = Uploader::uploadImage($_FILES['hero_image_file'], 'about_team');
+            if ($up) $about['hero']['image'] = $up;
+        } elseif (!empty($_POST['hero_image_manual'])) {
+            $about['hero']['image'] = trim($_POST['hero_image_manual']);
+        }
+
+        // 2. Why Us & Ethos
+        if (isset($_POST['why_us_eyebrow'])) $about['why_us']['eyebrow'] = trim($_POST['why_us_eyebrow']);
+        if (isset($_POST['why_us_headline'])) $about['why_us']['headline'] = trim($_POST['why_us_headline']);
+        if (isset($_POST['why_us_subtitle'])) $about['why_us']['subtitle'] = trim($_POST['why_us_subtitle']);
+
+        // Stats (4 items)
+        if (isset($_POST['stats']) && is_array($_POST['stats'])) {
+            $newStats = [];
+            foreach ($_POST['stats'] as $st) {
+                if (!empty($st['value']) && !empty($st['label'])) {
+                    $newStats[] = [
+                        'value' => trim($st['value']),
+                        'label' => trim($st['label']),
+                        'desc' => trim($st['desc'] ?? ''),
+                    ];
+                }
+            }
+            if (!empty($newStats)) {
+                $about['why_us']['stats'] = $newStats;
+            }
+        }
+
+        // 3. Our Clinics & Surgeries
+        if (isset($_POST['clinics_eyebrow'])) $about['clinics']['eyebrow'] = trim($_POST['clinics_eyebrow']);
+        if (isset($_POST['clinics_headline'])) $about['clinics']['headline'] = trim($_POST['clinics_headline']);
+        if (isset($_POST['clinics_subtitle'])) $about['clinics']['subtitle'] = trim($_POST['clinics_subtitle']);
+        if (isset($_POST['clinics_surgery_title'])) $about['clinics']['surgery_title'] = trim($_POST['clinics_surgery_title']);
+        if (isset($_POST['clinics_surgery_desc'])) $about['clinics']['surgery_desc'] = trim($_POST['clinics_surgery_desc']);
+
+        if (!empty($_FILES['clinics_image_file']['name'])) {
+            $upC = Uploader::uploadImage($_FILES['clinics_image_file'], 'about_surgery');
+            if ($upC) $about['clinics']['surgery_image'] = $upC;
+        } elseif (!empty($_POST['clinics_image_manual'])) {
+            $about['clinics']['surgery_image'] = trim($_POST['clinics_image_manual']);
+        }
+
+        // 4. NHS Safety Charter
+        if (isset($_POST['charter_eyebrow'])) $about['safety_charter']['eyebrow'] = trim($_POST['charter_eyebrow']);
+        if (isset($_POST['charter_headline'])) $about['safety_charter']['headline'] = trim($_POST['charter_headline']);
+        if (isset($_POST['charter_subtitle'])) $about['safety_charter']['subtitle'] = trim($_POST['charter_subtitle']);
+
+        // 5. SEO Metadata
+        if (isset($_POST['meta_title'])) $about['seo']['meta_title'] = trim($_POST['meta_title']);
+        if (isset($_POST['meta_description'])) $about['seo']['meta_description'] = trim($_POST['meta_description']);
+        if (isset($_POST['keywords'])) $about['seo']['keywords'] = trim($_POST['keywords']);
+
+        CmsService::saveAboutPageData($about);
+
+        App::redirect('/admin/pages/about-us/edit', [
+            'success' => 'About page content and practice standards saved successfully! Changes are immediately live on the website.',
+        ]);
+    }
 }

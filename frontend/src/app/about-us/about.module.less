@@ -1,0 +1,930 @@
+@import '@/styles/variables.less';
+@import '@/styles/mixins.less';
+
+.main {
+  min-height: calc(100vh - 120px);
+  background-color: @surface;
+  padding-bottom: 2rem;
+}
+
+.container {
+  .container();
+}
+
+/* =========================================================================
+   1. HERO BANNER
+   ========================================================================= */
+.heroSection {
+  background-color: @surface;
+  padding-top: 1.5rem;
+  padding-bottom: 3.5rem;
+  border-bottom: 1px solid fade(@primary, 8%);
+}
+
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: @on-surface-variant;
+  margin-bottom: 1.5rem;
+
+  a {
+    color: @on-surface-variant;
+    text-decoration: none;
+    transition: color 0.15s;
+
+    &:hover {
+      color: @primary;
+    }
+  }
+
+  .current {
+    color: @on-surface;
+    font-weight: 600;
+  }
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: 7fr 5fr;
+    gap: 3.5rem;
+  }
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.eyebrow {
+  font-family: @font-headline;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: @primary;
+}
+
+.headline {
+  font-family: @font-headline;
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1.2;
+  color: @on-surface;
+  letter-spacing: -0.02em;
+
+  @media (min-width: 768px) {
+    font-size: 40px;
+  }
+}
+
+.subtitle {
+  font-family: @font-body;
+  font-size: 16px;
+  line-height: 1.6;
+  color: @on-surface-variant;
+}
+
+.trustBadgesRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  width: 100%;
+  padding-top: 0.5rem;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.badgeCard {
+  background-color: #ffffff;
+  padding: 10px 12px;
+  border-radius: @radius-xl;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  span:first-child {
+    font-size: 18px;
+    color: @primary;
+    flex-shrink: 0;
+  }
+
+  span:last-child {
+    font-size: 12px;
+    font-weight: 600;
+    color: @on-surface;
+    white-space: nowrap;
+  }
+}
+
+.heroActions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  padding-top: 0.5rem;
+}
+
+.primaryCta {
+  .btn-primary();
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1.5rem;
+  font-size: 14px;
+}
+
+.secondaryCta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.75rem 1.5rem;
+  background-color: #ffffff;
+  color: @primary;
+  border: 1.5px solid #86efac;
+  border-radius: @radius-xl;
+  font-family: @font-headline;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #f0fdf4;
+    border-color: @primary;
+  }
+}
+
+.heroImageFrame {
+  position: relative;
+  background-color: #ffffff;
+  padding: 8px;
+  border-radius: @radius-2xl;
+  box-shadow: 0 16px 40px -10px rgba(9, 71, 19, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid #dcfce7;
+  overflow: hidden;
+
+  .imageWrapper {
+    position: relative;
+    width: 100%;
+    height: 260px;
+    border-radius: @radius-xl;
+    overflow: hidden;
+
+    @media (min-width: 1024px) {
+      height: 320px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .captionBox {
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    .captionIcon {
+      width: 32px;
+      height: 32px;
+      border-radius: @radius-full;
+      background-color: #e8f5e9;
+      color: @primary;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      span {
+        font-size: 18px;
+      }
+    }
+
+    span.captionText {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: @on-surface;
+    }
+  }
+}
+
+/* =========================================================================
+   2. WHY US SECTION (#why-us)
+   ========================================================================= */
+.whyUsSection {
+  background-color: @surface-container-low;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+
+.sectionHeader {
+  max-width: 720px;
+  margin-bottom: 3rem;
+
+  h2 {
+    font-family: @font-headline;
+    font-size: 28px;
+    font-weight: 800;
+    color: @on-surface;
+    line-height: 1.25;
+    margin: 0.5rem 0 1rem 0;
+    letter-spacing: -0.01em;
+
+    @media (min-width: 768px) {
+      font-size: 34px;
+    }
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: @on-surface-variant;
+    margin: 0;
+  }
+}
+
+.pillarsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.pillarCard {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: @radius-xl;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(9, 71, 19, 0.08);
+  }
+
+  .pillarIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: @radius-lg;
+    background-color: #e8f5e9;
+    color: @primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+
+    span {
+      font-size: 26px;
+    }
+  }
+
+  h3 {
+    font-family: @font-headline;
+    font-size: 18px;
+    font-weight: 700;
+    color: @on-surface;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 13.5px;
+    color: @on-surface-variant;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .pillarBadge {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: @primary;
+    font-size: 12px;
+    font-weight: 600;
+
+    span:first-child {
+      font-size: 16px;
+    }
+  }
+}
+
+.statsBanner {
+  background-color: #ffffff;
+  border-radius: @radius-2xl;
+  padding: 2rem 2.5rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  text-align: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.statItem {
+  .statNumber {
+    font-family: @font-headline;
+    font-size: 38px;
+    font-weight: 800;
+    color: @primary;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+  }
+
+  .statLabel {
+    font-family: @font-headline;
+    font-size: 14px;
+    font-weight: 700;
+    color: @on-surface;
+    margin-bottom: 0.2rem;
+  }
+
+  .statDesc {
+    font-size: 12px;
+    color: @on-surface-variant;
+  }
+}
+
+/* =========================================================================
+   3. OUR TEAM SECTION (#our-team)
+   ========================================================================= */
+.teamSection {
+  background-color: @surface;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.teamCard {
+  background-color: #ffffff;
+  border-radius: @radius-xl;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(9, 71, 19, 0.08);
+  }
+
+  .avatarFrame {
+    position: relative;
+    height: 240px;
+    background-color: #f1f5f9;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .gdcPill {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(4px);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: @primary;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  .teamInfo {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+
+    h3 {
+      font-family: @font-headline;
+      font-size: 17px;
+      font-weight: 700;
+      color: @on-surface;
+      margin: 0;
+    }
+
+    .credentials {
+      font-size: 12px;
+      color: @primary;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .roleTitle {
+      font-size: 13px;
+      font-weight: 600;
+      color: @on-surface-variant;
+      margin-top: 2px;
+    }
+
+    .specialismsBox {
+      background-color: @surface-container-low;
+      padding: 8px 10px;
+      border-radius: 8px;
+      font-size: 11.5px;
+      margin-top: 8px;
+
+      strong {
+        display: block;
+        color: @on-surface;
+        margin-bottom: 2px;
+      }
+
+      span {
+        color: @on-surface-variant;
+      }
+    }
+
+    blockquote {
+      font-size: 12px;
+      font-style: italic;
+      color: #64748b;
+      border-left: 2px solid @primary;
+      padding-left: 8px;
+      margin: 0;
+      line-height: 1.45;
+    }
+  }
+}
+
+/* =========================================================================
+   4. OUR CLINICS SECTION (#our-clinics)
+   ========================================================================= */
+.clinicsSection {
+  background-color: @surface-container-low;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+
+.clinicsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.5rem;
+  align-items: center;
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3.5rem;
+  }
+}
+
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.featureCard {
+  background-color: #ffffff;
+  padding: 14px 16px;
+  border-radius: @radius-xl;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+
+  .featureIcon {
+    width: 38px;
+    height: 38px;
+    border-radius: @radius-md;
+    background-color: #e8f5e9;
+    color: @primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+
+    span {
+      font-size: 20px;
+    }
+  }
+
+  h4 {
+    font-family: @font-headline;
+    font-size: 15px;
+    font-weight: 700;
+    color: @on-surface;
+    margin: 0 0 2px 0;
+  }
+
+  p {
+    font-size: 13px;
+    color: @on-surface-variant;
+    line-height: 1.45;
+    margin: 0;
+  }
+}
+
+.surgeryPhotoCard {
+  background-color: #ffffff;
+  padding: 8px;
+  border-radius: @radius-2xl;
+  box-shadow: 0 16px 40px -10px rgba(9, 71, 19, 0.12);
+  border: 1px solid #dcfce7;
+  overflow: hidden;
+
+  .surgeryImageWrapper {
+    position: relative;
+    width: 100%;
+    height: 360px;
+    border-radius: @radius-xl;
+    overflow: hidden;
+
+    @media (min-width: 1024px) {
+      height: 420px;
+    }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .surgeryFooter {
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    h4 {
+      font-family: @font-headline;
+      font-size: 16px;
+      font-weight: 700;
+      color: @on-surface;
+      margin: 0;
+    }
+
+    p {
+      font-size: 12px;
+      color: @on-surface-variant;
+      margin: 2px 0 0 0;
+    }
+
+    .activePill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      background-color: #ecfdf5;
+      color: #047857;
+      font-size: 11px;
+      font-weight: 700;
+
+      .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 9999px;
+        background-color: #10b981;
+      }
+    }
+  }
+}
+
+/* =========================================================================
+   5. NHS SAFETY CHARTER SECTION (#nhs-charter)
+   ========================================================================= */
+.charterSection {
+  background-color: @surface;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+
+.charterCardsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.charterCard {
+  background-color: #ffffff;
+  padding: 1.75rem;
+  border-radius: @radius-xl;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .charterIcon {
+    width: 52px;
+    height: 52px;
+    border-radius: @radius-lg;
+    background-color: #e8f5e9;
+    color: @primary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+
+    span {
+      font-size: 28px;
+    }
+  }
+
+  h3 {
+    font-family: @font-headline;
+    font-size: 18px;
+    font-weight: 700;
+    color: @on-surface;
+    margin: 0 0 0.5rem 0;
+  }
+
+  p {
+    font-size: 13.5px;
+    color: @on-surface-variant;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .charterFooter {
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 700;
+    color: @primary;
+  }
+}
+
+.outOfHoursBox {
+  background-color: #ffffff;
+  border-radius: @radius-xl;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  border: 1.5px solid #fed7aa;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  align-items: flex-start;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .outOfHoursContent {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    .emergencyIcon {
+      width: 44px;
+      height: 44px;
+      border-radius: @radius-lg;
+      background-color: #fef2f2;
+      color: #dc2626;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+
+      span {
+        font-size: 24px;
+      }
+    }
+
+    h4 {
+      font-family: @font-headline;
+      font-size: 16px;
+      font-weight: 700;
+      color: @on-surface;
+      margin: 0;
+    }
+
+    p {
+      font-size: 13px;
+      color: @on-surface-variant;
+      margin: 2px 0 0 0;
+    }
+  }
+
+  .outOfHoursActions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+}
+
+/* =========================================================================
+   6. PATIENT REVIEWS SECTION (#patient-reviews)
+   ========================================================================= */
+.reviewsSection {
+  background-color: @surface-container-low;
+  padding: 4.5rem 0;
+  scroll-margin-top: 100px;
+}
+
+.reviewsHeaderRow {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2.5rem;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+}
+
+.ratingSummaryBadge {
+  background-color: #ffffff;
+  padding: 12px 18px;
+  border-radius: @radius-xl;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .starsBox {
+    text-align: right;
+
+    .stars {
+      display: flex;
+      gap: 2px;
+      color: #f59e0b;
+
+      span {
+        font-size: 18px;
+      }
+    }
+
+    p {
+      font-size: 11px;
+      color: @on-surface-variant;
+      margin: 2px 0 0 0;
+    }
+  }
+
+  .scoreCol {
+    border-left: 1px solid #e2e8f0;
+    padding-left: 14px;
+
+    .scoreNumber {
+      font-family: @font-headline;
+      font-size: 28px;
+      font-weight: 800;
+      color: @primary;
+      line-height: 1;
+    }
+
+    .scoreText {
+      font-size: 11px;
+      font-weight: 600;
+      color: @on-surface;
+      margin-top: 2px;
+    }
+  }
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.reviewCard {
+  background-color: #ffffff;
+  padding: 1.5rem;
+  border-radius: @radius-xl;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .reviewStarsRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+
+    .stars {
+      display: flex;
+      gap: 2px;
+      color: #f59e0b;
+
+      span {
+        font-size: 16px;
+      }
+    }
+
+    .verifiedPill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      background-color: #ecfdf5;
+      color: #047857;
+      font-size: 11px;
+      font-weight: 600;
+
+      span {
+        font-size: 13px;
+      }
+    }
+  }
+
+  .reviewBody {
+    font-size: 13.5px;
+    font-style: italic;
+    color: @on-surface;
+    line-height: 1.6;
+    margin: 0 0 1.25rem 0;
+  }
+
+  .authorInfo {
+    padding-top: 0.75rem;
+    border-top: 1px solid #f1f5f9;
+
+    .authorName {
+      font-family: @font-headline;
+      font-size: 13.5px;
+      font-weight: 700;
+      color: @on-surface;
+    }
+
+    .authorRole {
+      font-size: 11.5px;
+      color: @on-surface-variant;
+    }
+  }
+}

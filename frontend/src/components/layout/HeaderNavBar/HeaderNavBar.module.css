@@ -108,91 +108,49 @@
   color: #0d631b;
 }
 /* =========================================================================
-   Mega Menu Panel (Treatments & Services)
+   Mega Menu Panel (Treatments & Services) - Compact & Centered
    ========================================================================= */
 .megaMenu {
   display: none;
   position: absolute;
   top: 100%;
   left: 50%;
-  transform: translateX(-35%);
-  width: 880px;
-  max-width: calc(100vw - 40px);
+  transform: translateX(-50%);
+  width: 590px;
+  max-width: calc(100vw - 32px);
   background-color: #ffffff;
   border-radius: 1rem;
-  box-shadow: 0 20px 48px -10px rgba(9, 71, 19, 0.14), 0 4px 16px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 16px 40px -10px rgba(9, 71, 19, 0.14), 0 4px 16px rgba(0, 0, 0, 0.05);
   border: 1px solid #dcfce7;
-  padding: 24px;
+  padding: 16px;
   z-index: 100;
-}
-.megaHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f1f5f9;
-  margin-bottom: 16px;
-}
-.megaHeader .megaHeaderTitle {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.megaHeader .megaHeaderTitle span {
-  font-size: 28px;
-}
-.megaHeader .megaHeaderTitle h4 {
-  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  font-size: 16px;
-  font-weight: 700;
-  color: #0f172a;
-  margin: 0;
-}
-.megaHeader .megaHeaderTitle p {
-  font-size: 12px;
-  color: #64748b;
-  margin: 2px 0 0 0;
-}
-.megaHeader .viewAllServicesLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 600;
-  color: #0d631b;
-  text-decoration: none;
-  padding: 6px 12px;
-  border-radius: 0.5rem;
-  background-color: #f0fdf4;
-  transition: all 0.2s;
-}
-.megaHeader .viewAllServicesLink:hover {
-  background-color: #dcfce7;
-  color: #052e0a;
 }
 .megaGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 8px;
 }
 .megaCard {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 9px 12px;
   border-radius: 0.75rem;
-  border: 1px solid #f1f5f9;
+  border: 1px solid transparent;
   background-color: #ffffff;
-  transition: all 0.2s ease;
+  text-decoration: none;
+  transition: all 0.15s ease;
 }
 .megaCard:hover {
-  background-color: #f8fafc;
+  background-color: #f0fdf4;
   border-color: #bbf7d0;
-  box-shadow: 0 4px 12px rgba(9, 71, 19, 0.05);
+}
+.megaCard:hover .cardTitle {
+  color: #0d631b;
 }
 .megaCard .cardIconBox {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   border-radius: 9999px;
   background-color: #e8f5e9;
   color: #0d631b;
@@ -202,105 +160,46 @@
   flex-shrink: 0;
 }
 .megaCard .cardIconBox span {
-  font-size: 20px;
-}
-.megaCard .cardContent {
-  flex: 1;
-  min-width: 0;
-}
-.megaCard .cardTitleRow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 2px;
+  font-size: 18px;
 }
 .megaCard .cardTitle {
   font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
   font-size: 13.5px;
-  font-weight: 700;
-  color: #1e293b;
-  text-decoration: none;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.megaCard .cardTitle:hover {
-  color: #0d631b;
-}
-.megaCard .cardBadge {
-  font-size: 10px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 2px 7px;
-  border-radius: 9999px;
-  background-color: #dcfce7;
-  color: #166534;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.megaCard .cardDesc {
-  font-size: 11.5px;
-  color: #64748b;
-  line-height: 1.35;
-  margin: 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.megaCard .cardFooter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-top: 6px;
-}
-.megaCard .cardPrice {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: #0d631b;
-}
-.megaCard .quickBookPill {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 2px 8px;
-  font-size: 11px;
   font-weight: 600;
-  color: #047857;
-  background-color: #ecfdf5;
-  border: 1px solid #a7f3d0;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.megaCard .quickBookPill:hover {
-  background-color: #0d631b;
-  border-color: #0d631b;
-  color: #ffffff;
+  color: #1e293b;
+  line-height: 1.3;
+  transition: color 0.15s;
 }
 .megaFooter {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-top: 16px;
-  padding-top: 14px;
+  margin-top: 12px;
+  padding-top: 12px;
   border-top: 1px solid #f1f5f9;
+  gap: 12px;
 }
 .megaFooter .emergencyNote {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 12px;
+  gap: 6px;
+  font-size: 11.5px;
   color: #334155;
+  white-space: nowrap;
 }
-.megaFooter .emergencyNote span {
-  font-size: 18px;
+.megaFooter .emergencyNote .emergencyIcon {
+  font-size: 17px;
+  color: #15803d;
+  flex-shrink: 0;
 }
-.megaFooter .emergencyNote strong {
+.megaFooter .emergencyNote .phoneLink {
   color: #0d631b;
   font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.megaFooter .emergencyNote .phoneLink:hover {
+  text-decoration: underline;
 }
 .megaFooter .megaBookCta {
   display: inline-flex;
@@ -308,12 +207,14 @@
   gap: 6px;
   background-color: #0d631b;
   color: #ffffff;
-  font-size: 12.5px;
+  font-size: 12px;
   font-weight: 600;
-  padding: 8px 16px;
+  padding: 6px 14px;
   border-radius: 9999px;
   border: none;
   cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
   transition: background-color 0.2s ease;
 }
 .megaFooter .megaBookCta:hover {

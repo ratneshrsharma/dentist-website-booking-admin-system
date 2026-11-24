@@ -98,31 +98,31 @@ export interface AboutMenuItem {
 export const ABOUT_SUBMENU: AboutMenuItem[] = [
   {
     title: 'Why Us',
-    path: '/#about',
+    path: '/about-us#why-us',
     icon: 'verified',
     desc: 'Our patient-first clinical philosophy, gentle care & CQC standards',
   },
   {
     title: 'Our Team',
-    path: '/#team',
+    path: '/about-us#our-team',
     icon: 'groups',
     desc: 'Meet our experienced dentists, dental hygienists & support staff',
   },
   {
     title: 'Our Clinics',
-    path: '/#contact',
+    path: '/about-us#our-clinics',
     icon: 'location_on',
     desc: 'Acocks Green surgery location, opening hours & accessibility',
   },
   {
     title: 'NHS Safety Charter',
-    path: '/#charter',
+    path: '/about-us#nhs-charter',
     icon: 'shield_with_heart',
     desc: 'NHS Sexual Safety Charter signatory with zero-tolerance protocols',
   },
   {
     title: 'Patient Reviews',
-    path: '/#reviews',
+    path: '/about-us#patient-reviews',
     icon: 'star',
     desc: 'Over 5,000 satisfied patients & verified Google 5-star reviews',
   },
@@ -209,81 +209,32 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
               style={{ display: megaHovered ? 'block' : undefined }}
               role="menu"
             >
-              <div className={styles.megaHeader}>
-                <div className={styles.megaHeaderTitle}>
-                  <span className="material-symbols-outlined text-[#094713]">
-                    medical_services
-                  </span>
-                  <div>
-                    <h4>Clinical Treatments & Services</h4>
-                    <p>
-                      Comprehensive NHS & Private dental solutions for your family in Birmingham B27
-                    </p>
-                  </div>
-                </div>
-                <Link
-                  href="/#services"
-                  onClick={(e) => handleSmoothAnchor(e, '/#services')}
-                  className={styles.viewAllServicesLink}
-                >
-                  <span>Explore Grid View</span>
-                  <span className="material-symbols-outlined text-[16px]">
-                    arrow_forward
-                  </span>
-                </Link>
-              </div>
-
               <div className={styles.megaGrid}>
                 {CLINICAL_TREATMENTS.map((treatment, idx) => (
-                  <div key={idx} className={styles.megaCard}>
+                  <Link
+                    key={idx}
+                    href={treatment.path}
+                    className={styles.megaCard}
+                  >
                     <div className={styles.cardIconBox}>
                       <span className="material-symbols-outlined">
                         {treatment.icon}
                       </span>
                     </div>
-                    <div className={styles.cardContent}>
-                      <div className={styles.cardTitleRow}>
-                        <Link
-                          href={treatment.path}
-                          className={styles.cardTitle}
-                        >
-                          {treatment.title}
-                        </Link>
-                        <span className={styles.cardBadge}>
-                          {treatment.badge}
-                        </span>
-                      </div>
-                      <p className={styles.cardDesc}>{treatment.desc}</p>
-                      <div className={styles.cardFooter}>
-                        <span className={styles.cardPrice}>
-                          {treatment.price}
-                        </span>
-                        {onBookClick && (
-                          <button
-                            type="button"
-                            className={styles.quickBookPill}
-                            onClick={() => onBookClick(treatment.title)}
-                          >
-                            <span>Book</span>
-                            <span className="material-symbols-outlined text-[14px]">
-                              calendar_today
-                            </span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                    <span className={styles.cardTitle}>
+                      {treatment.title}
+                    </span>
+                  </Link>
                 ))}
               </div>
 
               <div className={styles.megaFooter}>
                 <div className={styles.emergencyNote}>
-                  <span className="material-symbols-outlined text-[#15803d]">
-                    e911_emergency
+                  <span className={`material-symbols-outlined ${styles.emergencyIcon}`}>
+                    support_agent
                   </span>
                   <span>
-                    Emergency dental pain? Same-day triage slots guaranteed. Call{' '}
-                    <strong>+44 121 765 2870</strong>
+                    Emergency dental triage: <a href="tel:+441217652870" className={styles.phoneLink}>+44 121 765 2870</a>
                   </span>
                 </div>
                 <button
@@ -316,16 +267,15 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
             onMouseEnter={() => setAboutHovered(true)}
             onMouseLeave={() => setAboutHovered(false)}
           >
-            <a
-              href="/#about"
-              onClick={(e) => handleSmoothAnchor(e, '/#about')}
+            <Link
+              href="/about-us"
               className={`${styles.navLink} ${pathname.startsWith('/about') ? styles.active : ''}`}
             >
               <span>About</span>
               <span className="material-symbols-outlined text-[18px]">
                 expand_more
               </span>
-            </a>
+            </Link>
 
             <div
               className={styles.dropdownMenu}
@@ -333,10 +283,9 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
               role="menu"
             >
               {ABOUT_SUBMENU.map((item, idx) => (
-                <a
+                <Link
                   key={idx}
                   href={item.path}
-                  onClick={(e) => handleSmoothAnchor(e, item.path)}
                   className={styles.aboutDropdownItem}
                   role="menuitem"
                 >
@@ -349,7 +298,7 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
                     <span className={styles.aboutItemTitle}>{item.title}</span>
                     <span className={styles.aboutItemDesc}>{item.desc}</span>
                   </div>
-                </a>
+                </Link>
               ))}
             </div>
           </div>
