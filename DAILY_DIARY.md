@@ -9,7 +9,26 @@
 
 ---
 
-### [2026-11-24 16:55] - Admin Sidebar Collapse Toggle Layout Fix (Zero Gap on Collapse)
+### [2026-11-24 18:18] - Request Clinical Appointment Right Slide-Over Drawer (70% PC, 100% Mobile) & Clinical Practice Rule Notice Text Wrap
+* **Micro-Task:** User Feedback Implementation for Clinical Booking Pop-up:
+  1. **Right-Side Slide-Over Drawer Navigation (`BookingModal.module.less`, `BookingModal.tsx`):**
+     - Converted the Request Clinical Appointment dialog from a centered floating card into an interactive right slide-over drawer:
+       * **Desktop (`min-width: 1025px`):** Spans exactly 70% width (`width: 70%; max-width: 70vw; height: 100vh;`) with rounded top/bottom left corners (`border-radius: 20px 0 0 20px`), smooth `drawerSlideInRight` cubic-bezier entrance animation, and a -15px deep shadow overlay. Left 30% acts as a backdrop dismiss area.
+       * **Responsive / Tablet / Mobile (`max-width: 1024px`):** Expands to 100% full-screen width (`width: 100%; max-width: 100vw; height: 100vh; border-radius: 0;`).
+       * **Backdrop Click Dismiss:** Added backdrop dismissal when clicking outside the 70% drawer card.
+  2. **Clinical Practice Rule Notice Text Wrap Fix (`BookingModal.module.less`, `BookingModal.tsx`):**
+     - Resolved the horizontal cut-off / truncation issue (`... months ar`) shown in user screenshot `media_1795522861274_bcfcb019.jpg`.
+     - Separated the notice icon (`.ruleIcon`) and notice text (`.ruleText` with `flex: 1 1 auto; min-width: 0; white-space: normal; word-break: normal; line-height: 1.5;`).
+     - Wrapped the clinical governance statement cleanly across 2-3 lines with verified readability, subtle green clinical background (`#f0fdf4`), green border (`#bbf7d0`), and verified checkmark icon.
+* **Verification & QA:**
+  - Verified in live browser subagent on `http://localhost/dental-saas/`:
+    * Desktop (1280px): Drawer width verified at 896px (70.0% of screen). Notice wraps cleanly into 3 lines.
+    * Responsive (768px): Drawer width verified at 768px (100.0% of screen). Notice wraps cleanly into 4 lines.
+    * Visual screenshots captured: `drawer_desktop_70pct.png` & `drawer_responsive_100pct.png`.
+
+---
+
+
 * **Micro-Task:** Implementation of User Feedback & UI Polish:
   1. **Sidebar Collapse Zero-Gap Responsiveness (`layouts/admin.php`):**
      - Resolved the layout gap issue when toggling the sidebar via the top navbar hamburger button (`[data-lte-toggle="sidebar"]`).

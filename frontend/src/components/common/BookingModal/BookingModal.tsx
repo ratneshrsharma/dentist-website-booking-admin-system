@@ -299,7 +299,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const afternoonSlots = slots.filter((s) => s.period === 'afternoon');
 
   return (
-    <div className={styles.modalBackdrop} role="dialog" aria-modal="true">
+    <div
+      className={styles.modalBackdrop}
+      role="dialog"
+      aria-modal="true"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) {
+          handleResetAndClose();
+        }
+      }}
+    >
       <div className={styles.modalCard}>
         {/* Fixed Top Header */}
         <div className={styles.modalHeader}>
@@ -467,12 +476,12 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                 </div>
 
                 <div className={styles.clinicalRuleBox}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#0d631b' }}>
+                  <span className={`material-symbols-outlined ${styles.ruleIcon}`}>
                     verified_user
                   </span>
-                  <span>
+                  <div className={styles.ruleText}>
                     <strong>Clinical Practice Rule:</strong> Under dental healthcare governance, patients who have not attended an appointment within the past <strong>3 months</strong> are registered as a <strong>New Patient</strong> to complete clinical triage and medical history updates.
-                  </span>
+                  </div>
                 </div>
               </div>
 
