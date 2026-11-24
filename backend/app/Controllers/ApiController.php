@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Core\App;
 use App\Services\ThemeService;
 use App\Services\CmsService;
+use App\Services\ServicesService;
 
 class ApiController
 {
@@ -58,6 +59,29 @@ class ApiController
                 'header_menu' => $theme['header_menu'] ?? [],
                 'footer_data' => $theme['footer_data'] ?? [],
             ],
+        ]);
+    }
+
+    public function services(): void
+    {
+        $services = ServicesService::getAllServices(true);
+        App::json([
+            'success' => true,
+            'total' => count($services),
+            'data' => $services,
+        ]);
+    }
+
+    public function serviceDetail(string $slug): void
+    {
+        $service = ServicesService::getServiceBySlug($slug);
+        if (!$service) {
+            App::json(['success' => false, 'message' => 'Service not found'], 404);
+        }
+
+        App::json([
+            'success' => true,
+            'data' => $service,
         ]);
     }
 

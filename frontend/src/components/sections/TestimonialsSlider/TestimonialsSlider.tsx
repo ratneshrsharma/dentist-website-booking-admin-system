@@ -5,10 +5,14 @@ import styles from './TestimonialsSlider.module.css';
 import { HomePageData } from '@/types/cms';
 
 export interface TestimonialsSliderProps {
+  eyebrow?: string;
+  title?: string;
   reviewsData?: HomePageData['reviews'];
 }
 
 export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
+  eyebrow = 'Patient Feedback',
+  title = 'Hear From Our Acocks Green Community',
   reviewsData,
 }) => {
   if (!reviewsData) return null;
@@ -21,8 +25,8 @@ export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
         {/* Header */}
         <div className={styles.headerRow}>
           <div>
-            <span className={styles.eyebrow}>Patient Feedback</span>
-            <h2 className={styles.title}>Hear From Our Acocks Green Community</h2>
+            <span className={styles.eyebrow}>{eyebrow}</span>
+            <h2 className={styles.title}>{title}</h2>
           </div>
 
           <div className={styles.ratingSummary}>

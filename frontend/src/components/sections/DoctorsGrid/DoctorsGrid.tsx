@@ -7,12 +7,18 @@ import styles from './DoctorsGrid.module.css';
 import { ClinicianItem } from '@/types/cms';
 
 export interface DoctorsGridProps {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
   clinicians?: ClinicianItem[];
   supportTeam?: Array<{ name: string; role: string }>;
   practiceManager?: { name: string; title: string };
 }
 
 export const DoctorsGrid: React.FC<DoctorsGridProps> = ({
+  eyebrow = 'Our Clinicians',
+  title = 'Dedicated Dental Surgeons & Specialists',
+  subtitle = 'Our clinicians combine university medical rigour with gentle chairside communication, backed by continuing professional development.',
   clinicians = [],
   supportTeam = [],
   practiceManager,
@@ -22,12 +28,9 @@ export const DoctorsGrid: React.FC<DoctorsGridProps> = ({
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.headerRow}>
-          <span className={styles.eyebrow}>Our Clinicians</span>
-          <h2 className={styles.title}>Dedicated Dental Surgeons & Specialists</h2>
-          <p className={styles.subtitle}>
-            Our clinicians combine university medical rigour with gentle chairside
-            communication, backed by continuing professional development.
-          </p>
+          <span className={styles.eyebrow}>{eyebrow}</span>
+          <h2 className={styles.title}>{title}</h2>
+          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
         </div>
 
         {/* 4 Clinician Cards */}

@@ -7,10 +7,16 @@ import styles from './ClinicAddressAndContact.module.css';
 import { HomePageData } from '@/types/cms';
 
 export interface ClinicAddressAndContactProps {
+  eyebrow?: string;
+  title?: string;
+  subtitle?: string;
   contactData?: HomePageData['contact_section'];
 }
 
 export const ClinicAddressAndContact: React.FC<ClinicAddressAndContactProps> = ({
+  eyebrow,
+  title,
+  subtitle,
   contactData,
 }) => {
   if (!contactData) return null;
@@ -20,9 +26,9 @@ export const ClinicAddressAndContact: React.FC<ClinicAddressAndContactProps> = (
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.headerRow}>
-          <span className={styles.eyebrow}>{contactData.eyebrow}</span>
-          <h2 className={styles.title}>{contactData.title}</h2>
-          <p className={styles.subtitle}>{contactData.subtitle}</p>
+          <span className={styles.eyebrow}>{eyebrow || contactData.eyebrow || 'Visit Our Surgery'}</span>
+          <h2 className={styles.title}>{title || contactData.title}</h2>
+          <p className={styles.subtitle}>{subtitle || contactData.subtitle}</p>
         </div>
 
         <div className={styles.grid}>

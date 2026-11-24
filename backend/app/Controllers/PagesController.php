@@ -271,6 +271,68 @@ class PagesController
             $home['contact_section']['map_image'] = trim($_POST['map_image_manual']);
         }
 
+        // ----------------------------------------------------
+        // 8. DYNAMIC PAGE SECTIONS COMPOSITION
+        // ----------------------------------------------------
+        if (isset($_POST['sections']) && is_array($_POST['sections'])) {
+            $parsedSections = [];
+            foreach ($_POST['sections'] as $idx => $sec) {
+                $secId = trim($sec['id'] ?? ('sec_' . ($idx + 1)));
+                $secType = trim($sec['type'] ?? 'custom_content');
+                $secCat = trim($sec['category'] ?? 'custom_content');
+                $secName = trim($sec['name'] ?? $sec['title'] ?? 'Section');
+                $eyebrow = trim($sec['eyebrow'] ?? '');
+                $title = trim($sec['title'] ?? '');
+                $summary = trim($sec['summary'] ?? '');
+                $desc = trim($sec['description'] ?? '');
+                $layout = trim($sec['layout'] ?? 'thumbnail');
+                $imgPos = trim($sec['image_position'] ?? 'right');
+                $colLayout = trim($sec['column_layout'] ?? 'two_col_split');
+                $ctaText = trim($sec['cta_text'] ?? '');
+                $ctaLink = trim($sec['cta_link'] ?? '');
+                $isActive = isset($sec['is_active']) && ($sec['is_active'] === '1' || $sec['is_active'] === 'on' || $sec['is_active'] === true);
+                $order = (int)($sec['order'] ?? ($idx + 1));
+                $featureImg = trim($sec['feature_image'] ?? '');
+
+                if (!empty($_FILES['section_image_files']['name'][$idx])) {
+                    $singleFile = [
+                        'name' => $_FILES['section_image_files']['name'][$idx],
+                        'type' => $_FILES['section_image_files']['type'][$idx],
+                        'tmp_name' => $_FILES['section_image_files']['tmp_name'][$idx],
+                        'error' => $_FILES['section_image_files']['error'][$idx],
+                        'size' => $_FILES['section_image_files']['size'][$idx],
+                    ];
+                    $up = Uploader::uploadImage($singleFile, 'sec_' . $secId);
+                    if ($up) {
+                        $featureImg = $up;
+                    }
+                }
+
+                $parsedSections[] = [
+                    'id' => $secId,
+                    'type' => $secType,
+                    'category' => $secCat,
+                    'name' => $secName,
+                    'page_slug' => trim($sec['page_slug'] ?? ''),
+                    'eyebrow' => $eyebrow,
+                    'title' => $title,
+                    'summary' => $summary,
+                    'description' => $desc,
+                    'layout' => $layout,
+                    'feature_image' => $featureImg,
+                    'image_position' => $imgPos,
+                    'column_layout' => $colLayout,
+                    'cta_text' => $ctaText,
+                    'cta_link' => $ctaLink,
+                    'is_active' => $isActive,
+                    'order' => $order,
+                ];
+            }
+
+            usort($parsedSections, fn($a, $b) => $a['order'] <=> $b['order']);
+            $home['sections'] = $parsedSections;
+        }
+
         CmsService::saveHomePageData($home);
 
         App::redirect('/admin/pages/home/edit', [

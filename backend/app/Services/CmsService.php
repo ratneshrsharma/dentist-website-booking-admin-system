@@ -280,26 +280,176 @@ class CmsService
                 ],
                 'map_image' => App::url('/images/surgery-clinic.jpg'),
             ],
+            'sections' => [
+                [
+                    'id' => 'sec_services',
+                    'type' => 'services_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Services Section',
+                    'eyebrow' => 'Our Practice Services',
+                    'title' => 'Discover Quality Dental Care in Acocks Green',
+                    'summary' => 'Personalized clinical dental solutions delivered in modern surgeries with low radiation digital radiography and compassionate pacing.',
+                    'description' => '',
+                    'layout' => 'thumbnail', // 'thumbnail' or 'sidebar_list'
+                    'image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'full_width',
+                    'cta_text' => 'View All Treatments',
+                    'cta_link' => '/treatments',
+                    'is_active' => true,
+                    'order' => 1,
+                ],
+                [
+                    'id' => 'sec_about',
+                    'type' => 'page_snippet',
+                    'category' => 'page_snippet',
+                    'name' => 'About Our Surgery',
+                    'page_slug' => 'about-us',
+                    'eyebrow' => 'About Acocks Green Practice',
+                    'title' => 'Dedicated Dental Professionals Serving Birmingham B27',
+                    'summary' => 'Our clinic was established with a clear mission: provide accessible, respectful, and clinically excellent dentistry.',
+                    'description' => 'At Acocks Green Dental Practice, we believe that visiting the dentist should be a calm, reassuring experience. Our clinic has been trusted by families across South Birmingham for over two decades. From routine checkups to advanced cosmetic aligners, our clinicians pace treatments to your comfort.',
+                    'feature_image' => App::url('/images/surgery-clinic.jpg'),
+                    'image_position' => 'left', // 'left' or 'right'
+                    'column_layout' => 'two_col_split',
+                    'cta_text' => 'Discover Our Surgery Story',
+                    'cta_link' => '/about-us',
+                    'is_active' => true,
+                    'order' => 2,
+                ],
+                [
+                    'id' => 'sec_team',
+                    'type' => 'team_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Doctors & Dental Surgeons',
+                    'eyebrow' => 'Clinical Team',
+                    'title' => 'Dedicated Clinicians & Dental Surgeons',
+                    'summary' => 'Compassionate care delivered by fully registered dental professionals with decades of combined clinical expertise.',
+                    'description' => '',
+                    'layout' => 'thumbnail',
+                    'image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'full_width',
+                    'cta_text' => 'Meet Full Surgery Team',
+                    'cta_link' => '/about-us#team',
+                    'is_active' => true,
+                    'order' => 3,
+                ],
+                [
+                    'id' => 'sec_testimonials',
+                    'type' => 'testimonials_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Patient Testimonials Slider',
+                    'eyebrow' => 'Patient Feedback',
+                    'title' => 'What Our Patients Say About Us',
+                    'summary' => 'Real stories from patients treated at our Acocks Green Birmingham surgery.',
+                    'description' => '',
+                    'layout' => 'thumbnail',
+                    'image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'full_width',
+                    'cta_text' => 'Leave a Google Review',
+                    'cta_link' => 'https://g.page/review',
+                    'is_active' => true,
+                    'order' => 4,
+                ],
+                [
+                    'id' => 'sec_charter',
+                    'type' => 'custom_content',
+                    'category' => 'custom_content',
+                    'name' => 'NHS Sexual Safety Charter',
+                    'eyebrow' => 'Official NHS Charter',
+                    'title' => 'NHS Sexual Safety Charter Signatory',
+                    'summary' => 'Acocks Green Dental Practice is an official signatory of the NHS Sexual Safety Charter, championing zero tolerance for harassment and fostering a safe, respectful clinical environment.',
+                    'description' => 'We are dedicated to safeguarding all staff, patients, and visitors within our clinical facilities.',
+                    'feature_image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'action_bar', // 'action_bar', 'two_col_split', 'full_width'
+                    'cta_text' => 'Read Our Safety Standards',
+                    'cta_link' => 'https://www.england.nhs.uk/publication/sexual-safety-in-healthcare-charter/',
+                    'is_active' => true,
+                    'order' => 5,
+                ],
+                [
+                    'id' => 'sec_contact',
+                    'type' => 'contact_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Hours & Surgery Location Map',
+                    'eyebrow' => 'Practice Location',
+                    'title' => 'Visit Our Modern Surgery in Birmingham B27',
+                    'summary' => 'Find surgery opening hours, parking information, and telephone reception.',
+                    'description' => '',
+                    'layout' => 'thumbnail',
+                    'image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'full_width',
+                    'cta_text' => 'Call Reception',
+                    'cta_link' => 'tel:+441217652870',
+                    'is_active' => true,
+                    'order' => 6,
+                ],
+            ],
         ];
     }
 
     public static function getHomePageData(): array
     {
         $file = self::getHomeStorageFile();
+        $data = [];
         if (file_exists($file)) {
-            $data = json_decode((string)file_get_contents($file), true);
-            if (is_array($data) && !empty($data)) {
-                return array_replace_recursive(self::getDefaultHomePageData(), $data);
+            $parsed = json_decode((string)file_get_contents($file), true);
+            if (is_array($parsed) && !empty($parsed)) {
+                $data = $parsed;
             }
         }
-        return self::getDefaultHomePageData();
+
+        $defaults = self::getDefaultHomePageData();
+        $merged = array_replace_recursive($defaults, $data);
+
+        // If custom sections were explicitly saved, respect their exact array order
+        if (!empty($data['sections']) && is_array($data['sections'])) {
+            $merged['sections'] = $data['sections'];
+        }
+
+        // Dynamically sync featured_services from ServicesService if available
+        if (class_exists(ServicesService::class)) {
+            $services = ServicesService::getAllServices(true);
+            if (!empty($services)) {
+                $featured = [];
+                foreach ($services as $s) {
+                    $featured[] = [
+                        'id' => $s['id'],
+                        'slug' => $s['slug'],
+                        'title' => $s['title'],
+                        'category' => $s['category'],
+                        'badge' => $s['badge'],
+                        'description' => $s['summary'],
+                        'icon' => $s['icon'],
+                        'feature_image' => $s['feature_image'],
+                        'starting_price' => $s['starting_price'],
+                        'duration' => $s['duration'],
+                        'is_active' => true,
+                    ];
+                }
+                $merged['featured_services'] = $featured;
+            }
+        }
+
+        return $merged;
     }
 
     public static function saveHomePageData(array $data): bool
     {
         $current = self::getHomePageData();
         $data['_updated_at'] = date('Y-m-d H:i:s');
+
+        // Preserve sections replacement if explicitly given
+        $explicitSections = $data['sections'] ?? null;
         $merged = array_replace_recursive($current, $data);
+
+        if ($explicitSections !== null && is_array($explicitSections)) {
+            $merged['sections'] = $explicitSections;
+        }
 
         $file = self::getHomeStorageFile();
         $dir = dirname($file);

@@ -65,12 +65,48 @@ export interface ServiceItem {
   slug: string;
   title: string;
   category: string;
+  badge?: string;
   badge_tags?: string[];
+  summary?: string;
   description: string;
+  content?: string;
   icon: string;
+  feature_image?: string;
   starting_price?: string;
   duration?: string;
   cdt_code?: string;
+  display_order?: number;
+  is_active?: boolean;
+}
+
+export type SectionType =
+  | 'services_block'
+  | 'team_block'
+  | 'testimonials_block'
+  | 'charter_block'
+  | 'contact_block'
+  | 'page_snippet'
+  | 'custom_content'
+  | 'blog_block';
+
+export interface PageSection {
+  id: string;
+  type: SectionType;
+  category: 'prebuilt' | 'page_snippet' | 'custom_content';
+  name?: string;
+  page_slug?: string;
+  eyebrow?: string;
+  title: string;
+  summary?: string;
+  description?: string;
+  layout?: 'thumbnail' | 'sidebar_list';
+  feature_image?: string;
+  image_position?: 'left' | 'right';
+  column_layout?: 'action_bar' | 'two_col_split' | 'full_width';
+  cta_text?: string;
+  cta_link?: string;
+  is_active?: boolean;
+  order?: number;
 }
 
 export interface PatientReview {
@@ -153,6 +189,7 @@ export interface HomePageData {
     map_url?: string;
     map_image?: string;
   };
+  sections?: PageSection[];
 }
 
 export interface NavigationMenuItem {

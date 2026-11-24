@@ -5,133 +5,235 @@ declare(strict_types=1);
 use App\Core\App;
 
 $intro = $home['services_intro'] ?? [];
-$services = $home['featured_services'] ?? [];
+$services = $services ?? [];
 ?>
 
 <div class="row mb-4 align-items-center">
-    <div class="col-md-8">
+    <div class="col-md-7">
         <div class="d-flex align-items-center gap-2 mb-1">
             <span class="badge bg-success-subtle text-success fw-bold">Common Component</span>
             <span class="text-muted small">/</span>
-            <span class="text-dark small fw-semibold">Services Grid</span>
+            <span class="text-dark small fw-semibold">Services Catalog & Inner Pages</span>
         </div>
         <h2 class="fw-bold text-dark mb-0">
-            <i class="bi bi-grid-3x3-gap text-success me-2"></i> Services Grid Component
+            <i class="bi bi-grid-3x3-gap text-success me-2"></i> Clinical Services Management
         </h2>
-        <p class="text-muted small mb-0">Configure section identifier, custom CSS class, title, summary, and treatment cards with icons & featured photos.</p>
+        <p class="text-muted small mb-0">
+            Manage treatment inner pages with full CRUD (Add, Edit, View, Delete), reorder display priority, and toggle active/inactive status.
+        </p>
     </div>
-    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+    <div class="col-md-5 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
         <a href="<?= App::url('/#services') ?>" target="_blank" class="btn btn-outline-secondary rounded-pill shadow-sm">
-            <i class="bi bi-box-arrow-up-right me-1"></i> View Live on Site
+            <i class="bi bi-box-arrow-up-right me-1"></i> Preview on Site
+        </a>
+        <a href="<?= App::url('/admin/components/services/create') ?>" class="btn btn-brand rounded-pill shadow">
+            <i class="bi bi-plus-circle me-1"></i> Add New Service
         </a>
     </div>
 </div>
 
-<form action="<?= App::url('/admin/components/services') ?>" method="POST" enctype="multipart/form-data">
-    <!-- Component Meta Card -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold mb-0">Component Settings & Layout Attributes</h5>
-            <div class="form-check form-switch m-0">
-                <input class="form-check-input" type="checkbox" name="is_active" id="compActive" <?= ($intro['is_active'] ?? true) ? 'checked' : '' ?>>
-                <label class="form-check-label fw-bold small" for="compActive">Section Active on Frontend</label>
-            </div>
-        </div>
-        <div class="card-body p-4">
-            <div class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label fw-semibold">Component Page ID / Anchor</label>
-                    <input type="text" name="component_id" class="form-control" value="<?= htmlspecialchars($intro['component_id'] ?? 'services') ?>" placeholder="services">
-                    <small class="text-muted">HTML anchor ID (e.g. #services)</small>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-semibold">Custom CSS Class</label>
-                    <input type="text" name="custom_class" class="form-control" value="<?= htmlspecialchars($intro['custom_class'] ?? 'services-grid-wrapper') ?>" placeholder="services-grid-wrapper">
-                    <small class="text-muted">Custom modular LESS / CSS hook</small>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-semibold">Eyebrow Badge</label>
-                    <input type="text" name="eyebrow" class="form-control" value="<?= htmlspecialchars($intro['eyebrow'] ?? 'Our Practice Services') ?>" placeholder="Our Practice Services">
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Section Headline Title</label>
-                    <input type="text" name="title" class="form-control fw-bold" value="<?= htmlspecialchars($intro['title'] ?? 'Discover Quality Dental Care in Acocks Green') ?>" required>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label fw-semibold">Summary / Subtitle Content</label>
-                    <textarea name="subtitle" class="form-control" rows="2"><?= htmlspecialchars($intro['subtitle'] ?? 'Personalized clinical dental solutions delivered in modern surgeries with low radiation digital radiography and compassionate pacing.') ?></textarea>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Treatment Cards List -->
-    <div class="card border-0 shadow-sm rounded-4 mb-4">
-        <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-            <h5 class="fw-bold mb-0">Managed Clinical Services (<?= count($services) ?> Total)</h5>
-        </div>
-        <div class="card-body p-4">
-            <div class="row g-4">
-                <?php foreach ($services as $idx => $s): ?>
-                    <div class="col-md-6">
-                        <div class="card border rounded-4 shadow-none bg-light p-3 h-100">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="badge bg-success-subtle text-success fw-bold">Service #<?= $idx + 1 ?></span>
-                                <div class="form-check form-switch m-0">
-                                    <input class="form-check-input" type="checkbox" name="service_active[]" value="<?= $idx ?>" id="srvActive<?= $idx ?>" <?= ($s['is_active'] ?? true) ? 'checked' : '' ?>>
-                                    <label class="form-check-label small fw-semibold" for="srvActive<?= $idx ?>">Active</label>
-                                </div>
-                            </div>
-                            
-                            <div class="row g-2 mb-2">
-                                <div class="col-md-6">
-                                    <label class="form-label small fw-bold">Service Title</label>
-                                    <input type="text" name="service_titles[]" class="form-control form-control-sm fw-bold" value="<?= htmlspecialchars($s['title'] ?? '') ?>" required>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label small fw-bold">Slug URL</label>
-                                    <input type="text" name="service_slugs[]" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($s['slug'] ?? '') ?>">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label small fw-bold">Category</label>
-                                    <input type="text" name="service_categories[]" class="form-control form-control-sm" value="<?= htmlspecialchars($s['category'] ?? 'General Dentistry') ?>">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label small fw-bold">Badge Tag</label>
-                                    <input type="text" name="service_badges[]" class="form-control form-control-sm" value="<?= htmlspecialchars($s['badge'] ?? '') ?>" placeholder="Preventive">
-                                </div>
-                                <div class="col-md-4">
-                                    <label class="form-label small fw-bold">Icon Symbol</label>
-                                    <input type="text" name="service_icons[]" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($s['icon'] ?? 'dentistry') ?>" placeholder="dentistry">
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label small fw-bold">Summary Description</label>
-                                    <textarea name="service_descs[]" class="form-control form-control-sm" rows="2"><?= htmlspecialchars($s['description'] ?? '') ?></textarea>
-                                </div>
-                                <div class="col-12">
-                                    <label class="form-label small fw-bold">Feature Image File</label>
-                                    <input type="file" name="service_image_files[<?= $idx ?>]" class="form-control form-control-sm" accept="image/*">
-                                    <input type="hidden" name="service_images[<?= $idx ?>]" value="<?= htmlspecialchars($s['feature_image'] ?? '') ?>">
-                                    <?php if (!empty($s['feature_image'])): ?>
-                                        <div class="mt-2 d-flex align-items-center gap-2">
-                                            <img src="<?= htmlspecialchars($s['feature_image']) ?>" alt="Feature" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px;">
-                                            <small class="text-muted text-truncate"><?= htmlspecialchars($s['feature_image']) ?></small>
-                                        </div>
-                                    <?php endif; ?>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-
-    <!-- Action Bar -->
-    <div class="sticky-bottom bg-white p-3 rounded-4 shadow-lg border d-flex justify-content-between align-items-center mb-4">
-        <span class="text-muted small">All changes are immediately reflected on the live website and REST API.</span>
-        <button type="submit" class="btn btn-brand px-4 py-2 rounded-pill shadow">
-            <i class="bi bi-check2-circle me-1"></i> Save Services Grid Component
+<!-- 1. Section Header & Anchor Configuration Card -->
+<div class="card border-0 shadow-sm rounded-4 mb-4">
+    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0">Homepage Services Section Intro & Anchor</h5>
+        <button class="btn btn-sm btn-outline-secondary rounded-pill" type="button" data-bs-toggle="collapse" data-bs-target="#introSettingsCollapse">
+            <i class="bi bi-gear me-1"></i> Edit Section Intro
         </button>
     </div>
-</form>
+    <div class="collapse show" id="introSettingsCollapse">
+        <form action="<?= App::url('/admin/components/services/intro') ?>" method="POST">
+            <div class="card-body p-4 border-bottom">
+                <div class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">Section Anchor ID</label>
+                        <input type="text" name="component_id" class="form-control form-control-sm font-monospace" 
+                               value="<?= htmlspecialchars($intro['component_id'] ?? 'services') ?>" placeholder="services">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label small fw-semibold">Custom CSS Class</label>
+                        <input type="text" name="custom_class" class="form-control form-control-sm font-monospace" 
+                               value="<?= htmlspecialchars($intro['custom_class'] ?? 'services-grid-wrapper') ?>" placeholder="services-grid-wrapper">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Eyebrow Tagline</label>
+                        <input type="text" name="eyebrow" class="form-control form-control-sm" 
+                               value="<?= htmlspecialchars($intro['eyebrow'] ?? 'Our Practice Services') ?>" placeholder="Our Practice Services">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Section Headline Title</label>
+                        <input type="text" name="title" class="form-control form-control-sm fw-bold" 
+                               value="<?= htmlspecialchars($intro['title'] ?? 'Discover Quality Dental Care in Acocks Green') ?>">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-semibold">Section Subtitle Summary</label>
+                        <input type="text" name="subtitle" class="form-control form-control-sm" 
+                               value="<?= htmlspecialchars($intro['subtitle'] ?? 'Personalized clinical dental solutions delivered in modern surgeries with low radiation digital radiography and compassionate pacing.') ?>">
+                    </div>
+                </div>
+                <div class="text-end mt-3">
+                    <button type="submit" class="btn btn-outline-success btn-sm rounded-pill px-3">
+                        <i class="bi bi-check2 me-1"></i> Save Intro Settings
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 2. Services Data Table Card with Reordering & CRUD -->
+<div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
+    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="fw-bold mb-0">Managed Clinical Services List</h5>
+            <small class="text-muted">Total: <?= count($services) ?> Treatments Registered</small>
+        </div>
+        <div>
+            <button type="submit" form="reorderForm" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm">
+                <i class="bi bi-arrow-down-up me-1"></i> Save Custom Orders
+            </button>
+        </div>
+    </div>
+
+    <form action="<?= App::url('/admin/components/services/reorder') ?>" method="POST" id="reorderForm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4" style="width: 80px;">Order</th>
+                        <th style="width: 60px;">Icon</th>
+                        <th style="width: 80px;">Photo</th>
+                        <th style="width: 25%;">Service Title & Category</th>
+                        <th style="width: 15%;">Badge Tag</th>
+                        <th style="width: 15%;">Starting Price</th>
+                        <th style="width: 10%;">Status</th>
+                        <th class="text-end pe-4" style="width: 15%;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($services)): ?>
+                        <tr>
+                            <td colspan="8" class="text-center py-5 text-muted">
+                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
+                                No clinical services found. Click "Add New Service" above to create one.
+                            </td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($services as $s): ?>
+                            <tr>
+                                <td class="ps-4">
+                                    <input type="hidden" name="service_ids[]" value="<?= $s['id'] ?>">
+                                    <input type="number" name="display_orders[]" 
+                                           class="form-control form-control-sm text-center fw-bold" 
+                                           value="<?= htmlspecialchars((string)($s['display_order'] ?? 1)) ?>" 
+                                           style="width: 65px;" min="1">
+                                </td>
+                                <td>
+                                    <span class="p-2 rounded-3 bg-light border text-success d-inline-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
+                                        <span class="material-symbols-outlined fs-5">
+                                            <?= htmlspecialchars($s['icon'] ?? 'dentistry') ?>
+                                        </span>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php if (!empty($s['feature_image'])): ?>
+                                        <img src="<?= htmlspecialchars($s['feature_image']) ?>" alt="Thumbnail" 
+                                             class="rounded-3 shadow-sm border" style="width: 50px; height: 40px; object-fit: cover;">
+                                    <?php else: ?>
+                                        <div class="rounded-3 bg-light border text-muted d-flex align-items-center justify-content-center small" style="width: 50px; height: 40px;">
+                                            <i class="bi bi-image"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="fw-bold text-dark d-block"><?= htmlspecialchars($s['title']) ?></span>
+                                    <div class="d-flex align-items-center gap-2 mt-1">
+                                        <span class="badge bg-secondary-subtle text-secondary" style="font-size: 11px;">
+                                            <?= htmlspecialchars($s['category'] ?? 'General') ?>
+                                        </span>
+                                        <code class="text-muted small">/treatments/<?= htmlspecialchars($s['slug']) ?></code>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php if (!empty($s['badge'])): ?>
+                                        <span class="badge bg-success-subtle text-success fw-semibold">
+                                            <?= htmlspecialchars($s['badge']) ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-muted small">—</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <span class="small fw-semibold text-dark"><?= htmlspecialchars($s['starting_price'] ?? 'Free Consult') ?></span>
+                                    <?php if (!empty($s['duration'])): ?>
+                                        <small class="d-block text-muted"><?= htmlspecialchars($s['duration']) ?></small>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <form action="<?= App::url('/admin/components/services/' . $s['id'] . '/toggle') ?>" method="POST" class="d-inline">
+                                        <button type="submit" class="badge rounded-pill border-0 <?= ($s['is_active'] ?? true) ? 'bg-success text-white' : 'bg-secondary text-white' ?>" 
+                                                title="Click to toggle status" style="cursor: pointer; padding: 6px 12px;">
+                                            <i class="bi <?= ($s['is_active'] ?? true) ? 'bi-check-circle-fill' : 'bi-pause-circle' ?> me-1"></i>
+                                            <?= ($s['is_active'] ?? true) ? 'Active' : 'Inactive' ?>
+                                        </button>
+                                    </form>
+                                </td>
+                                <td class="text-end pe-4">
+                                    <div class="btn-group">
+                                        <a href="<?= App::url('/admin/components/services/' . $s['id'] . '/view') ?>" 
+                                           class="btn btn-outline-secondary btn-sm" title="View Details">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="<?= App::url('/admin/components/services/' . $s['id'] . '/edit') ?>" 
+                                           class="btn btn-outline-primary btn-sm" title="Edit Service">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                        <button type="button" class="btn btn-outline-danger btn-sm" title="Delete Service" 
+                                                onclick="confirmDelete(<?= $s['id'] ?>, '<?= htmlspecialchars(addslashes($s['title'])) ?>')">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteServiceModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow rounded-4">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-bold text-danger">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i> Confirm Delete Service
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <p class="mb-1">Are you sure you want to permanently delete this service?</p>
+                <p class="fw-bold text-dark fs-5 mb-0" id="deleteServiceName"></p>
+                <small class="text-muted d-block mt-2">This will remove the treatment from all homepage cards, sidebar listings, and inner page routes.</small>
+            </div>
+            <div class="modal-footer border-top bg-light">
+                <button type="button" class="btn btn-secondary rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                <form id="deleteServiceForm" method="POST" action="">
+                    <button type="submit" class="btn btn-danger rounded-pill px-4">
+                        <i class="bi bi-trash me-1"></i> Delete Permanently
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function confirmDelete(id, title) {
+    document.getElementById('deleteServiceName').textContent = title;
+    document.getElementById('deleteServiceForm').action = '<?= App::url('/admin/components/services/') ?>' + id + '/delete';
+    const modal = new bootstrap.Modal(document.getElementById('deleteServiceModal'));
+    modal.show();
+}
+</script>

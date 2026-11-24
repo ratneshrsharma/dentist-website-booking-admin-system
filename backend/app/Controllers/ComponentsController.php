@@ -9,6 +9,7 @@ use App\Core\Auth;
 use App\Core\Uploader;
 use App\Services\CmsService;
 use App\Services\ThemeService;
+use App\Services\ServicesService;
 
 /**
  * Controller for Managing Common Atomic UI Components
@@ -17,77 +18,215 @@ use App\Services\ThemeService;
 class ComponentsController
 {
     /**
-     * 1. Services Grid Component
+     * 1. Services Master Table & Inner Pages CRUD
      */
     public function services(): void
     {
         Auth::requireAuth();
         $home = CmsService::getHomePageData();
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            if (isset($_POST['component_id'])) {
-                $home['services_intro']['component_id'] = trim($_POST['component_id']);
-            }
-            if (isset($_POST['custom_class'])) {
-                $home['services_intro']['custom_class'] = trim($_POST['custom_class']);
-            }
-            if (isset($_POST['eyebrow'])) {
-                $home['services_intro']['eyebrow'] = trim($_POST['eyebrow']);
-            }
-            if (isset($_POST['title'])) {
-                $home['services_intro']['title'] = trim($_POST['title']);
-            }
-            if (isset($_POST['subtitle'])) {
-                $home['services_intro']['subtitle'] = trim($_POST['subtitle']);
-            }
-            $home['services_intro']['is_active'] = isset($_POST['is_active']);
-
-            if (isset($_POST['service_titles']) && is_array($_POST['service_titles'])) {
-                $services = [];
-                foreach ($_POST['service_titles'] as $idx => $title) {
-                    $featureImg = $_POST['service_images'][$idx] ?? '';
-                    if (!empty($_FILES['service_image_files']['name'][$idx])) {
-                        $fileItem = [
-                            'name' => $_FILES['service_image_files']['name'][$idx],
-                            'type' => $_FILES['service_image_files']['type'][$idx],
-                            'tmp_name' => $_FILES['service_image_files']['tmp_name'][$idx],
-                            'error' => $_FILES['service_image_files']['error'][$idx],
-                            'size' => $_FILES['service_image_files']['size'][$idx],
-                        ];
-                        $upUrl = Uploader::uploadImage($fileItem, 'services');
-                        if ($upUrl) {
-                            $featureImg = $upUrl;
-                        }
-                    }
-
-                    $isActive = isset($_POST['service_active']) && in_array((string)$idx, $_POST['service_active'], true);
-
-                    $services[] = [
-                        'id' => (int)($_POST['service_ids'][$idx] ?? ($idx + 1)),
-                        'slug' => trim($_POST['service_slugs'][$idx] ?? ('service-' . ($idx + 1))),
-                        'title' => trim($title),
-                        'category' => trim($_POST['service_categories'][$idx] ?? 'General Dentistry'),
-                        'badge' => trim($_POST['service_badges'][$idx] ?? ''),
-                        'description' => trim($_POST['service_descs'][$idx] ?? ''),
-                        'icon' => trim($_POST['service_icons'][$idx] ?? 'dentistry'),
-                        'feature_image' => $featureImg,
-                        'is_active' => $isActive,
-                    ];
-                }
-                $home['featured_services'] = $services;
-            }
-
-            CmsService::saveHomePageData($home);
-            App::flash('success', 'Services Grid component updated successfully.');
-            App::redirect('/admin/components/services');
-        }
+        $services = ServicesService::getAllServices();
 
         App::render('admin/components/services', [
             'home' => $home,
+            'services' => $services,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'Common Component — Services Grid',
+            'pageTitle' => 'Common Component — Clinical Services Catalog',
             'activeNav' => 'comp-services',
         ]);
+    }
+
+    /**
+     * Create New Service Form & Handler
+     */
+    public function createService(): void
+    {
+        Auth::requireAuth();
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $featureImg = trim($_POST['feature_image'] ?? '');
+            if (!empty($_FILES['feature_image_file']['name'])) {
+                $upUrl = Uploader::uploadImage($_FILES['feature_image_file'], 'service');
+                if ($upUrl) {
+                    $featureImg = $upUrl;
+                }
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'slug' => trim($_POST['slug'] ?? ''),
+                'category' => trim($_POST['category'] ?? 'General Dentistry'),
+                'badge' => trim($_POST['badge'] ?? ''),
+                'summary' => trim($_POST['summary'] ?? ''),
+                'content' => trim($_POST['content'] ?? ''),
+                'icon' => trim($_POST['icon'] ?? 'dentistry'),
+                'feature_image' => $featureImg,
+                'starting_price' => trim($_POST['starting_price'] ?? ''),
+                'duration' => trim($_POST['duration'] ?? ''),
+                'cdt_code' => trim($_POST['cdt_code'] ?? ''),
+                'display_order' => (int)($_POST['display_order'] ?? 1),
+                'is_active' => isset($_POST['is_active']),
+            ];
+
+            ServicesService::createService($data);
+            App::flash('success', 'New clinical service created successfully.');
+            App::redirect('/admin/components/services');
+        }
+
+        App::render('admin/components/service-form', [
+            'service' => null,
+            'theme' => ThemeService::getTheme(),
+            'pageTitle' => 'Add New Clinical Service',
+            'activeNav' => 'comp-services',
+        ]);
+    }
+
+    /**
+     * Edit Existing Service Form & Handler
+     */
+    public function editService(int $id): void
+    {
+        Auth::requireAuth();
+        $service = ServicesService::getServiceById($id);
+        if (!$service) {
+            App::flash('error', 'Service not found.');
+            App::redirect('/admin/components/services');
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $featureImg = trim($_POST['feature_image'] ?? ($service['feature_image'] ?? ''));
+            if (!empty($_FILES['feature_image_file']['name'])) {
+                $upUrl = Uploader::uploadImage($_FILES['feature_image_file'], 'service');
+                if ($upUrl) {
+                    $featureImg = $upUrl;
+                }
+            }
+
+            $data = [
+                'title' => trim($_POST['title'] ?? ''),
+                'slug' => trim($_POST['slug'] ?? ''),
+                'category' => trim($_POST['category'] ?? 'General Dentistry'),
+                'badge' => trim($_POST['badge'] ?? ''),
+                'summary' => trim($_POST['summary'] ?? ''),
+                'content' => trim($_POST['content'] ?? ''),
+                'icon' => trim($_POST['icon'] ?? 'dentistry'),
+                'feature_image' => $featureImg,
+                'starting_price' => trim($_POST['starting_price'] ?? ''),
+                'duration' => trim($_POST['duration'] ?? ''),
+                'cdt_code' => trim($_POST['cdt_code'] ?? ''),
+                'display_order' => (int)($_POST['display_order'] ?? 1),
+                'is_active' => isset($_POST['is_active']),
+            ];
+
+            ServicesService::updateService($id, $data);
+            App::flash('success', 'Service "' . $data['title'] . '" updated successfully.');
+            App::redirect('/admin/components/services');
+        }
+
+        App::render('admin/components/service-form', [
+            'service' => $service,
+            'theme' => ThemeService::getTheme(),
+            'pageTitle' => 'Edit Service — ' . ($service['title'] ?? ''),
+            'activeNav' => 'comp-services',
+        ]);
+    }
+
+    /**
+     * View Service Details
+     */
+    public function viewService(int $id): void
+    {
+        Auth::requireAuth();
+        $service = ServicesService::getServiceById($id);
+        if (!$service) {
+            App::flash('error', 'Service not found.');
+            App::redirect('/admin/components/services');
+        }
+
+        App::render('admin/components/service-view', [
+            'service' => $service,
+            'theme' => ThemeService::getTheme(),
+            'pageTitle' => 'View Service — ' . ($service['title'] ?? ''),
+            'activeNav' => 'comp-services',
+        ]);
+    }
+
+    /**
+     * Toggle Active/Inactive Status
+     */
+    public function toggleService(int $id): void
+    {
+        Auth::requireAuth();
+        ServicesService::toggleStatus($id);
+        App::flash('success', 'Service status updated.');
+        App::redirect('/admin/components/services');
+    }
+
+    /**
+     * Delete Service
+     */
+    public function deleteService(int $id): void
+    {
+        Auth::requireAuth();
+        ServicesService::deleteService($id);
+        App::flash('success', 'Service permanently deleted.');
+        App::redirect('/admin/components/services');
+    }
+
+    /**
+     * Reorder Services from Table Inputs
+     */
+    public function reorderServices(): void
+    {
+        Auth::requireAuth();
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $ids = $_POST['service_ids'] ?? [];
+            $orders = $_POST['display_orders'] ?? [];
+
+            if (is_array($ids) && is_array($orders)) {
+                // Pair and sort by numerical order
+                $pairs = [];
+                foreach ($ids as $idx => $id) {
+                    $pairs[] = [
+                        'id' => (int)$id,
+                        'order' => (int)($orders[$idx] ?? 1),
+                    ];
+                }
+                usort($pairs, fn($a, $b) => $a['order'] <=> $b['order']);
+                $orderedIds = array_column($pairs, 'id');
+                ServicesService::reorderServices($orderedIds);
+                App::flash('success', 'Services custom order saved successfully.');
+            }
+        }
+        App::redirect('/admin/components/services');
+    }
+
+    /**
+     * Save Section Intro Settings
+     */
+    public function saveServiceIntro(): void
+    {
+        Auth::requireAuth();
+        $home = CmsService::getHomePageData();
+
+        if (isset($_POST['component_id'])) {
+            $home['services_intro']['component_id'] = trim($_POST['component_id']);
+        }
+        if (isset($_POST['custom_class'])) {
+            $home['services_intro']['custom_class'] = trim($_POST['custom_class']);
+        }
+        if (isset($_POST['eyebrow'])) {
+            $home['services_intro']['eyebrow'] = trim($_POST['eyebrow']);
+        }
+        if (isset($_POST['title'])) {
+            $home['services_intro']['title'] = trim($_POST['title']);
+        }
+        if (isset($_POST['subtitle'])) {
+            $home['services_intro']['subtitle'] = trim($_POST['subtitle']);
+        }
+
+        CmsService::saveHomePageData($home);
+        App::flash('success', 'Services section intro settings saved.');
+        App::redirect('/admin/components/services');
     }
 
     /**

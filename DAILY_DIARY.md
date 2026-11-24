@@ -5,7 +5,47 @@
 * **Author / Git Identity:** Ratnesh Sharma (@ratneshrsharma) <ratnesh.at.24@gmail.com>
 * **GitHub Repository:** https://github.com/ratneshrsharma/dentist-website-booking-admin-system (Branch: `main`)
 * **Target Environment:** Local testing/QA via XAMPP (Apache, PHP 8.2+, MySQL) -> Live Shared Linux Server + Git version control
-* **Current Status:** Micro-Task 1.2 Full Line-by-Line QA & Audit Completed; Common Components Architecture, Mobile App View & Visual Asset Management Fully Deployed
+* **Current Status:** Services Inner Pages CRUD, Dual Presentation Layouts (Thumbnail Cards & Sidebar List), and Dynamic Page Sections Composition Engine Fully Deployed & Verified
+
+---
+
+### [2026-11-24 12:00] - Services Inner Pages CRUD, Dynamic Page Sections Composition Engine & Dual Layout Presentation
+* **Micro-Task:** Implementation of User Request:
+  1. Full Services Inner Pages Architecture with complete CRUD in AdminLTE 4 Common Components (`/admin/components/services`).
+  2. Dual Presentation Modes for Services: 4x3 Thumbnail Grid vs Vertical Sidebar List.
+  3. Dynamic Homepage Sections Composition Engine (`/admin/pages/home/edit`) supporting Add, Reorder (▲ Up / ▼ Down), Active toggles, and 3-way modal selection (Pre-built, Page Snippet with Image Left/Right, and Custom Content Block / Action Bar).
+  4. Dynamic Frontend Section Renderer in Next.js (`page.tsx`) mapping sections in real-time from the CMS API.
+* **Tasks Completed:**
+  - **1. Services Management with Full Inner Page CRUD:**
+    * Created `backend/app/Services/ServicesService.php` with JSON persistence (`backend/storage/app/services.json`).
+    * Implemented full fields per clinical treatment: `id`, `slug`, `title`, `category`, `badge`, `summary`, `content` (full clinical narrative for inner page), `icon`, `feature_image` (with file upload & preview), `starting_price`, `duration`, `cdt_code`, `display_order`, `is_active`.
+    * Built master data table (`service.php`), Create/Edit forms (`service-form.php`), and Inner Page preview view (`service-view.php`).
+    * Added REST APIs: `GET /api/v1/services` and `GET /api/v1/services/{slug}`.
+  - **2. Dual Layout Presentation for Services:**
+    * Built `ServicesSidebarList.tsx` and compiled `ServicesSidebarList.module.less -> css`:
+      - Interactive vertical service navigation on the left with icons, categories, active highlights, and arrow chevrons.
+      - Rich detailed card on the right displaying treatment title, category badge, CDT code, starting price, duration, summary, clinical content, "Book This Treatment" button (triggering appointment drawer with prefilled treatment name), and link to full treatment guide.
+    * Retained `ServicesGrid4x3.tsx` for standard card grid.
+  - **3. Dynamic Page Sections Composition & Layout Engine:**
+    * In CMS Homepage Editor (`/admin/pages/home/edit`), built **Tab 2: Page Sections Composition & Layout Engine**:
+      - Numerical reordering with visual ▲ Up and ▼ Down buttons.
+      - Active/Inactive switch per section.
+      - Expandable configuration accordion for Eyebrow, Title, Summary, Description, Layout Style, Feature Image Upload + Position (Left vs Right), Column Layout (Action Bar, 2 Columns Split, Full Width), and Action CTA buttons.
+      - Section removal button.
+      - Modal: **"Add New Section to Homepage"** with 3 distinct tabs:
+        1. **Pre-built Component:** Services list (with choice: Thumbnail Grid or Vertical Sidebar List), Team list, Testimonials, Safety Charter, Hours & Map, Blog list.
+        2. **Other Page Snippet:** About, Contact, Treatments (with Eyebrow, Title, Summary, Description, Feature Image with Left or Right positioning).
+        3. **Custom Content Block / Action Bar:** Eyebrow, Title, Summary, Description, Image Left/Right, Column layout (Action Bar Banner, 2 Columns Split, Full Width), CTA button text and destination URL.
+  - **4. Frontend Dynamic Section Rendering:**
+    * Built `ContentBlockSection.tsx` and `ContentBlockSection.module.less -> css` supporting:
+      - `action_bar`: Glowing emerald callout banner (matching the NHS Sexual Safety Charter Signatory) with verified badge, title, summary, description, and action button.
+      - `two_col_split`: 50/50 split layout adhering strictly to `image_position === 'left'` or `'right'`.
+      - `full_width`: Expansive centered content block.
+    * Updated `page.tsx` to dynamically iterate through `activeSections` sorted by `order`.
+  - **5. QA & Verification:**
+    * Fixed dangling render method in `ComponentsController.php`.
+    * Deployed build to `C:\xampp\htdocs\dental-saas\`.
+    * Tested in headless Chrome and browser curl: Admin Login (`/admin/login`), Services CRUD (`/admin/components/services`), Service Create (`/create`), Service View (`/1/view`), Home Editor (`/pages/home/edit`), and Public Website (`http://localhost/dental-saas/`). Zero errors!
 
 ---
 

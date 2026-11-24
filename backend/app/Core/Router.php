@@ -51,6 +51,12 @@ class Router
             if ($uri === '/api/v1/navigation' || $uri === '/api/v1/cms/navigation') {
                 $apiCtrl->navigation();
             }
+            if ($uri === '/api/v1/services' || $uri === '/api/services') {
+                $apiCtrl->services();
+            }
+            if (preg_match('~^/api/v1/services/([A-Za-z0-9_-]+)$~', $uri, $m)) {
+                $apiCtrl->serviceDetail($m[1]);
+            }
             if (($uri === '/api/v1/appointments/book' || $uri === '/api/v1/appointments') && $method === 'POST') {
                 $apiCtrl->bookAppointment();
             }
@@ -116,9 +122,32 @@ class Router
                 $comp = new ComponentsController();
                 $sub = substr($path, strlen('components/'));
 
+                // Services CRUD & Inner Pages
                 if ($sub === 'services') {
                     $comp->services();
                 }
+                if ($sub === 'services/create') {
+                    $comp->createService();
+                }
+                if ($sub === 'services/intro') {
+                    $comp->saveServiceIntro();
+                }
+                if ($sub === 'services/reorder') {
+                    $comp->reorderServices();
+                }
+                if (preg_match('~^services/(\d+)/edit$~', $sub, $sm)) {
+                    $comp->editService((int)$sm[1]);
+                }
+                if (preg_match('~^services/(\d+)/view$~', $sub, $sm)) {
+                    $comp->viewService((int)$sm[1]);
+                }
+                if (preg_match('~^services/(\d+)/toggle$~', $sub, $sm)) {
+                    $comp->toggleService((int)$sm[1]);
+                }
+                if (preg_match('~^services/(\d+)/delete$~', $sub, $sm)) {
+                    $comp->deleteService((int)$sm[1]);
+                }
+
                 if ($sub === 'about') {
                     $comp->about();
                 }
