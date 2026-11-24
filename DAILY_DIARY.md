@@ -5,7 +5,24 @@
 * **Author / Git Identity:** Ratnesh Sharma (@ratneshrsharma) <ratnesh.at.24@gmail.com>
 * **GitHub Repository:** https://github.com/ratneshrsharma/dentist-website-booking-admin-system (Branch: `main`)
 * **Target Environment:** Local testing/QA via XAMPP (Apache, PHP 8.2+, MySQL) -> Live Shared Linux Server + Git version control
-* **Current Status:** Admin Layout Sidebar Margin Offset Fixed, `/admin/bookings` Method Bug Resolved, and Two-Factor Authentication (2FA) with Clean Manual Login Inputs Fully Deployed & Verified
+* **Current Status:** Admin Sidebar Collapse Full-Width Layout Resolved, Responsive Navbar Offset Verified, and 100% End-to-End QA Complete
+
+---
+
+### [2026-11-24 16:55] - Admin Sidebar Collapse Toggle Layout Fix (Zero Gap on Collapse)
+* **Micro-Task:** Implementation of User Feedback & UI Polish:
+  1. **Sidebar Collapse Zero-Gap Responsiveness (`layouts/admin.php`):**
+     - Resolved the layout gap issue when toggling the sidebar via the top navbar hamburger button (`[data-lte-toggle="sidebar"]`).
+     - Previously, `.app-header`, `.app-main`, and `.app-footer` retained `margin-left: 260px !important;` unconditionally, leaving an empty 260px white column on the left edge when collapsed.
+     - Added CSS rules:
+       * When expanded (`body:not(.sidebar-collapse)` on desktop `>= 992px`): `.app-sidebar` is at `transform: translateX(0)`, and `.app-header`, `.app-main`, `.app-footer` are offset with `margin-left: 260px !important; width: calc(100% - 260px) !important;`.
+       * When collapsed (`body.sidebar-collapse` on desktop `>= 992px`): `.app-sidebar` slides offscreen to `transform: translateX(-100%) !important;`, while `.app-header`, `.app-main`, and `.app-footer` animate smoothly to `margin-left: 0 !important; width: 100% !important;`.
+  2. **Verification & QA:**
+     - Verified in browser subagent on `http://localhost/dental-saas/admin/components/services`:
+       * Initial expanded state: `.app-header` and `.app-main` positioned at `x: 260px` with zero overlap.
+       * Collapsed state: `.app-header` and `.app-main` expand flush to `x: 0px` (full width: 1265px) with zero white gap on the left.
+       * Re-expanded state: Slides back smoothly to `x: 260px`.
+     - Visual evidence saved in `step_12_shot_2_2_desktop_collapsed.png`.
 
 ---
 

@@ -71,24 +71,45 @@ $activeNav = $activeNav ?? 'dashboard';
             bottom: 0;
             left: 0;
             z-index: 1038;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        /* Offset header, main content, and footer so they never go behind the fixed sidebar on desktop */
+        .app-header,
+        .app-main,
+        .app-footer {
+            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Desktop: Expanded Sidebar (default) */
         @media (min-width: 992px) {
-            .app-header,
-            .app-main,
-            .app-footer {
+            body:not(.sidebar-collapse) .app-sidebar {
+                transform: translateX(0) !important;
+            }
+            body:not(.sidebar-collapse) .app-header,
+            body:not(.sidebar-collapse) .app-main,
+            body:not(.sidebar-collapse) .app-footer {
                 margin-left: var(--sidebar-width) !important;
                 width: calc(100% - var(--sidebar-width)) !important;
-                transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+            }
+
+            /* Desktop: Collapsed Sidebar (no gap, 100% full width) */
+            body.sidebar-collapse .app-sidebar {
+                transform: translateX(-100%) !important;
+            }
+            body.sidebar-collapse .app-header,
+            body.sidebar-collapse .app-main,
+            body.sidebar-collapse .app-footer {
+                margin-left: 0 !important;
+                width: 100% !important;
             }
         }
+
+        /* Mobile / Tablet (< 992px) */
         @media (max-width: 991.98px) {
             .app-sidebar {
-                transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
+                transform: translateX(-100%) !important;
             }
             body.sidebar-open .app-sidebar {
-                transform: translateX(0);
+                transform: translateX(0) !important;
             }
             .app-header,
             .app-main,
