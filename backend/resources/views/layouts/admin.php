@@ -1,0 +1,257 @@
+<?php
+
+declare(strict_types=1);
+
+use App\Core\App;
+use App\Core\Auth;
+use App\Services\ThemeService;
+
+$theme = ThemeService::getTheme();
+$clinicName = $theme['branding']['clinic_name'] ?? 'Dental SaaS';
+$clinicTagline = $theme['branding']['tagline'] ?? 'Practice Management';
+$clinicLogo = $theme['branding']['logo_url'] ?? App::url('/images/acocks-green-logo.png');
+$primaryColor = $theme['colors']['primary'] ?? '#0d631b';
+$fontFamily = $theme['typography']['font_family'] ?? 'Plus Jakarta Sans';
+$activeNav = $activeNav ?? 'dashboard';
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?= htmlspecialchars($pageTitle ?? 'Admin Portal') ?> — <?= htmlspecialchars($clinicName) ?></title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5.3 & Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    
+    <!-- AdminLTE 4 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/css/adminlte.min.css">
+
+    <style>
+        :root {
+            --brand-primary: <?= htmlspecialchars($primaryColor) ?>;
+            --font-family-base: '<?= htmlspecialchars($fontFamily) ?>', system-ui, -apple-system, sans-serif;
+        }
+        body {
+            font-family: var(--font-family-base);
+            background-color: #f8fafc;
+        }
+        .app-sidebar {
+            background-color: #0f172a !important;
+        }
+        .sidebar-brand {
+            background-color: #0b1120 !important;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            padding: 1rem;
+        }
+        .brand-logo-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            border-radius: 8px;
+            background: #ffffff;
+            padding: 2px;
+        }
+        .sidebar-menu .nav-link {
+            color: #94a3b8;
+            font-weight: 500;
+            border-radius: 8px;
+            margin: 2px 8px;
+            padding: 0.6rem 0.9rem;
+            transition: all 0.2s ease;
+        }
+        .sidebar-menu .nav-link:hover,
+        .sidebar-menu .nav-link.active {
+            color: #ffffff !important;
+            background-color: var(--brand-primary) !important;
+        }
+        .sidebar-menu .nav-link i {
+            margin-right: 0.65rem;
+            font-size: 1.1rem;
+        }
+        .badge-brand {
+            background-color: var(--brand-primary);
+            color: #ffffff;
+        }
+        .btn-brand {
+            background-color: var(--brand-primary);
+            border-color: var(--brand-primary);
+            color: #ffffff;
+            font-weight: 600;
+        }
+        .btn-brand:hover {
+            filter: brightness(0.9);
+            color: #ffffff;
+        }
+        .preview-img-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid #e2e8f0;
+            background: #ffffff;
+        }
+        .card-editor-header {
+            background-color: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 700;
+        }
+        .nav-tabs .nav-link {
+            font-weight: 600;
+            color: #64748b;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--brand-primary);
+            border-bottom: 3px solid var(--brand-primary);
+        }
+    </style>
+</head>
+<body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
+    <div class="app-wrapper">
+        <!-- Top Navbar -->
+        <nav class="app-header navbar navbar-expand bg-white border-bottom shadow-sm">
+            <div class="container-fluid">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" data-lte-toggle="sidebar" href="#" role="button">
+                            <i class="bi bi-list fs-5"></i>
+                        </a>
+                    </li>
+                    <li class="nav-item d-none d-md-block">
+                        <span class="nav-link text-muted fw-medium">
+                            <i class="bi bi-shield-check text-success me-1"></i> White-Label Dental Clinic CMS
+                        </span>
+                    </li>
+                </ul>
+
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item me-3">
+                        <a href="<?= App::url('/') ?>" target="_blank" class="btn btn-outline-success btn-sm rounded-pill px-3 shadow-sm">
+                            <i class="bi bi-box-arrow-up-right me-1"></i> View Live Website
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle fs-5 text-secondary"></i>
+                            <span class="d-none d-md-inline fw-semibold"><?= htmlspecialchars($authUser['name'] ?? 'Admin') ?></span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                            <li><h6 class="dropdown-header"><?= htmlspecialchars($authUser['email'] ?? 'admin@example.com') ?></h6></li>
+                            <li><span class="dropdown-item-text text-muted small"><i class="bi bi-award me-1"></i> <?= htmlspecialchars($authUser['role'] ?? 'Super Administrator') ?></span></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger fw-semibold" href="<?= App::url('/admin/logout') ?>">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Sign Out
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Sidebar -->
+        <aside class="app-sidebar shadow" data-bs-theme="dark">
+            <div class="sidebar-brand d-flex align-items-center gap-2">
+                <img src="<?= htmlspecialchars($clinicLogo) ?>" alt="Logo" class="brand-logo-img">
+                <div class="d-flex flex-column lh-1">
+                    <span class="text-white fw-bold fs-6"><?= htmlspecialchars($clinicName) ?></span>
+                    <small class="text-muted" style="font-size: 11px;"><?= htmlspecialchars($clinicTagline) ?></small>
+                </div>
+            </div>
+
+            <div class="sidebar-wrapper py-3">
+                <nav>
+                    <ul class="nav sidebar-menu flex-column" data-lte-toggle="treeview" role="menu">
+                        <li class="nav-header text-uppercase text-secondary px-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Administration</li>
+                        
+                        <!-- Dashboard -->
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/dashboard') ?>" class="nav-link <?= $activeNav === 'dashboard' ? 'active' : '' ?>">
+                                <i class="bi bi-speedometer2"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+
+                        <!-- Global Theme & Whitelabeling -->
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/theme') ?>" class="nav-link <?= $activeNav === 'theme' ? 'active' : '' ?>">
+                                <i class="bi bi-palette"></i>
+                                <p>Global Theme & Logo</p>
+                            </a>
+                        </li>
+
+                        <!-- Website CMS Pages -->
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/pages') ?>" class="nav-link <?= $activeNav === 'pages' ? 'active' : '' ?>">
+                                <i class="bi bi-layout-text-window-reverse"></i>
+                                <p>CMS Page List</p>
+                            </a>
+                        </li>
+
+                        <!-- Edit Homepage Direct Action -->
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/pages/home/edit') ?>" class="nav-link <?= $activeNav === 'home-editor' ? 'active' : '' ?>">
+                                <i class="bi bi-pencil-square"></i>
+                                <p>Edit Homepage Content</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 11px; letter-spacing: 0.05em;">Front-End Patient Portal</li>
+
+                        <li class="nav-item">
+                            <a href="<?= App::url('/') ?>" target="_blank" class="nav-link text-info">
+                                <i class="bi bi-globe"></i>
+                                <p>Open Patient Website</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Main Content Wrapper -->
+        <main class="app-main p-4">
+            <div class="container-fluid">
+                <!-- Alerts / Flash Messages -->
+                <?php if (!empty($flashSuccess)): ?>
+                    <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 d-flex align-items-center" role="alert">
+                        <i class="bi bi-check-circle-fill fs-5 me-2"></i>
+                        <div><?= htmlspecialchars($flashSuccess) ?></div>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($flashError)): ?>
+                    <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 d-flex align-items-center" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill fs-5 me-2"></i>
+                        <div><?= htmlspecialchars($flashError) ?></div>
+                        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Injected View Content -->
+                <?= $content ?? '' ?>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer bg-white border-top py-3 text-center text-muted small">
+            <div class="container-fluid">
+                <strong><?= htmlspecialchars($clinicName) ?></strong> White-Label Dental Clinic Platform &copy; <?= date('Y') ?>. Built with Laravel MVC & Next.js Headless Architecture.
+            </div>
+        </footer>
+    </div>
+
+    <!-- Bootstrap 5.3 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE 4 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+</body>
+</html>

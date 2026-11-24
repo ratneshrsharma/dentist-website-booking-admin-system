@@ -22,8 +22,9 @@ DirectoryIndex index.html index.php
     # 4. Route Billing Invoices (/billing/*) & AdminLTE Blade Admin requests (/admin/*) to Laravel Public Index
     RewriteRule ^(billing|admin)(/.*)?$ backend/public/index.php [L,QSA]
 
-    # 5. Route Storage Symlink (/storage/*) to Laravel Public Storage
+    # 5. Route Storage & Uploads
     RewriteRule ^storage/(.*)$ backend/public/storage/$1 [L]
+    RewriteRule ^uploads/(.*)$ backend/public/uploads/$1 [L]
 
     # 6. Serve Static Files directly if they exist on disk (_next, images, css, js)
     RewriteCond %{REQUEST_FILENAME} -f

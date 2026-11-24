@@ -1,23 +1,26 @@
 <?php
 
-define('LARAVEL_START', microtime(true));
+declare(strict_types=1);
 
-// Determine if the application is in maintenance mode...
-if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
-    require $maintenance;
-}
+define('APP_START', microtime(true));
 
-// 1. If Composer vendor autoload exists, boot standard Laravel 11
-if (file_exists(__DIR__.'/../vendor/autoload.php')) {
-    require __DIR__.'/../vendor/autoload.php';
+// Standard PSR-4 Style Autoloader for App namespace
+spl_autoload_register(function ($class) {
+    $prefix = 'App\\';
+    $baseDir = dirname(__DIR__) . '/app/';
 
-    // Bootstrap Laravel and handle the request...
-    (require_once __DIR__.'/../bootstrap/app.php')
-        ->handleRequest(\Illuminate\Http\Request::capture());
-    exit;
-}
+    $len = strlen($prefix);
+    if (strncmp($prefix, $class, $len) !== 0) {
+        return;
+    }
 
-// 2. High-Performance Standalone Runner Fallback (Zero-Dependency Shared Hosting Mode)
-require_once __DIR__.'/../app/StandaloneRunner.php';
-\App\StandaloneRunner::run();
+    $relativeClass = substr($class, $len);
+    $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
 
+    if (file_exists($file)) {
+        require_once $file;
+    }
+});
+
+// Dispatch request through Application Router
+\App\Core\Router::dispatch();

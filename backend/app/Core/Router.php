@@ -1,0 +1,120 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Core;
+
+use App\Controllers\AuthController;
+use App\Controllers\DashboardController;
+use App\Controllers\ThemeController;
+use App\Controllers\PagesController;
+use App\Controllers\ApiController;
+
+/**
+ * Clean & Fast Application Router
+ */
+class Router
+{
+    public static function dispatch(): void
+    {
+        $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?? '/';
+        $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+
+        // Strip subfolder prefix if present (e.g. /dental-saas or /advanced-dental-clinic)
+        $uri = preg_replace('~^/(?:dental-saas|advanced-dental-clinic)~', '', $uri);
+        $uri = '/' . ltrim($uri, '/');
+
+        // Handle OPTIONS preflight for APIs
+        if ($method === 'OPTIONS') {
+            App::json(['success' => true]);
+        }
+
+        // ==========================================
+        // 1. REST API ROUTES (/api/v1/...)
+        // ==========================================
+        if (str_starts_with($uri, '/api/')) {
+            $apiCtrl = new ApiController();
+
+            if ($uri === '/api/v1/ping' || $uri === '/api/ping') {
+                $apiCtrl->ping();
+            }
+            if ($uri === '/api/v1/theme' || $uri === '/api/v1/theme/global') {
+                $apiCtrl->theme();
+            }
+            if ($uri === '/api/v1/pages' || $uri === '/api/pages') {
+                $apiCtrl->pages();
+            }
+            if ($uri === '/api/v1/pages/home' || $uri === '/api/v1/cms/pages/home' || $uri === '/api/v1/cms-pages/home') {
+                $apiCtrl->homePage();
+            }
+            if ($uri === '/api/v1/navigation' || $uri === '/api/v1/cms/navigation') {
+                $apiCtrl->navigation();
+            }
+            if (($uri === '/api/v1/appointments/book' || $uri === '/api/v1/appointments') && $method === 'POST') {
+                $apiCtrl->bookAppointment();
+            }
+
+            App::json(['success' => false, 'message' => 'API endpoint not found', 'path' => $uri], 404);
+        }
+
+        // ==========================================
+        // 2. ADMIN PORTAL ROUTES (/admin/...)
+        // ==========================================
+        if (str_starts_with($uri, '/admin')) {
+            $path = trim(preg_replace('~^/admin/?~', '', $uri), '/');
+
+            // Authentication Routes
+            if ($path === 'login') {
+                $auth = new AuthController();
+                if ($method === 'POST') {
+                    $auth->login();
+                } else {
+                    $auth->showLogin();
+                }
+            }
+
+            if ($path === 'logout') {
+                $auth = new AuthController();
+                $auth->logout();
+            }
+
+            // Dashboard
+            if ($path === '' || $path === 'dashboard') {
+                $dash = new DashboardController();
+                $dash->index();
+            }
+
+            // Theme & Whitelabeling Studio
+            if ($path === 'theme' || $path === 'theme-customizer') {
+                $theme = new ThemeController();
+                if ($method === 'POST') {
+                    $theme->update();
+                } else {
+                    $theme->index();
+                }
+            }
+
+            // Pages List
+            if ($path === 'pages' || $path === 'cms-pages') {
+                $pages = new PagesController();
+                $pages->index();
+            }
+
+            // Homepage Content & Assets Editor
+            if ($path === 'pages/home/edit' || $path === 'pages/home' || $path === 'cms/pages/home') {
+                $pages = new PagesController();
+                if ($method === 'POST') {
+                    $pages->updateHome();
+                } else {
+                    $pages->editHome();
+                }
+            }
+
+            // Fallback for any unknown /admin URL
+            App::redirect('/admin/dashboard');
+        }
+
+        // Root redirect to Admin Dashboard
+        App::redirect('/admin/dashboard');
+    }
+}
