@@ -9,6 +9,7 @@ use App\Services\ThemeService;
 use App\Services\CmsService;
 use App\Services\ServicesService;
 use App\Services\BookingService;
+use App\Services\BlogService;
 
 class ApiController
 {
@@ -190,5 +191,87 @@ class ApiController
             'whatsapp_link' => $booking['whatsapp_url'],
             'data' => $booking,
         ]);
+    }
+
+    public function blogPosts(): void
+    {
+        $categorySlug = trim((string) ($_GET['category'] ?? ''));
+        $tagSlug = trim((string) ($_GET['tag'] ?? ''));
+        $search = strtolower(trim((string) ($_GET['q'] ?? '')));
+
+        $livePosts = BlogService::getAllPosts(true);
+        $filtered = array_values(array_filter($livePosts, static function ($p) use ($categorySlug, $tagSlug, $search) {
+            if ($categorySlug !== '' && $categorySlug !== 'all') {
+                $catSlugs = array_map(static fn($c) => $c['slug'] ?? '', $p['categories'] ?? []);
+                if (!in_array($categorySlug, $catSlugs, true)) {
+                    return false;
+                }
+            }
+            if ($tagSlug !== '' && $tagSlug !== 'all') {
+                $tagSlugs = array_map(static fn($t) => $t['slug'] ?? '', $p['tags'] ?? []);
+                if (!in_array($tagSlug, $tagSlugs, true)) {
+                    return false;
+                }
+            }
+            if ($search !== '') {
+                $hay = strtolower(($p['title'] ?? '') . ' ' . ($p['excerpt'] ?? '') . ' ' . ($p['author'] ?? ''));
+                if (!str_contains($hay, $search)) {
+                    return false;
+                }
+            }
+            return true;
+        }));
+
+        $activeCats = array_values(array_filter(BlogService::getCategories(), static fn($c) => !empty($c['is_active'])));
+
+        App::json([
+            'success' => true,
+            'total' => count($filtered),
+            'data' => $filtered,
+            'categories' => $activeCats,
+            'tags' => BlogService::getTags(),
+        ]);
+    }
+
+    public function blogPostDetail(string $slug): void
+    {
+        $post = BlogService::getPostBySlug($slug, true);
+        if (!$post) {
+            App::json(['success' => false, 'message' => 'Blog post not found'], 404);
+        }
+
+        // Filter only active FAQs
+        if (!empty($post['show_faqs']) && !empty($post['faqs'])) {
+            $post['faqs'] = array_values(array_filter(
+                $post['faqs'],
+                static fn($f) => !isset($f['is_active']) || !empty($f['is_active'])
+            ));
+        } else {
+            $post['faqs'] = [];
+        }
+
+        // Related posts (up to 3 other live posts)
+        $allLive = BlogService::getAllPosts(true);
+        $related = array_values(array_slice(array_filter(
+            $allLive,
+            static fn($p) => ($p['slug'] ?? '') !== $post['slug']
+        ), 0, 3));
+
+        App::json([
+            'success' => true,
+            'data' => $post,
+            'related' => $related,
+        ]);
+    }
+
+    public function blogCategories(): void
+    {
+        $cats = array_values(array_filter(BlogService::getCategories(), static fn($c) => !empty($c['is_active'])));
+        App::json(['success' => true, 'data' => $cats]);
+    }
+
+    public function blogTags(): void
+    {
+        App::json(['success' => true, 'data' => BlogService::getTags()]);
     }
 }

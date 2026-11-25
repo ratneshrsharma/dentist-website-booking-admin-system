@@ -12,6 +12,7 @@ use App\Controllers\ComponentsController;
 use App\Controllers\BookingsController;
 use App\Controllers\SettingsController;
 use App\Controllers\ApiController;
+use App\Controllers\BlogController;
 
 /**
  * Clean & Fast Application Router
@@ -73,6 +74,20 @@ class Router
             }
             if (($uri === '/api/v1/appointments/book' || $uri === '/api/v1/appointments') && $method === 'POST') {
                 $apiCtrl->bookAppointment();
+            }
+
+            // Blog REST API
+            if ($uri === '/api/v1/blog/posts' || $uri === '/api/blog/posts') {
+                $apiCtrl->blogPosts();
+            }
+            if (preg_match('~^/api/v1/blog/posts/([A-Za-z0-9_-]+)$~', $uri, $bm)) {
+                $apiCtrl->blogPostDetail($bm[1]);
+            }
+            if ($uri === '/api/v1/blog/categories') {
+                $apiCtrl->blogCategories();
+            }
+            if ($uri === '/api/v1/blog/tags') {
+                $apiCtrl->blogTags();
             }
 
             App::json(['success' => false, 'message' => 'API endpoint not found', 'path' => $uri], 404);
@@ -277,6 +292,46 @@ class Router
                 }
                 if ($sub === 'contact') {
                     $comp->contact();
+                }
+            }
+
+            // WordPress-style Blog Management (/admin/blog/...)
+            if (str_starts_with($path, 'blog')) {
+                $blog = new BlogController();
+                $sub = trim(substr($path, strlen('blog')), '/');
+
+                if ($sub === '' || $sub === 'posts') {
+                    $blog->posts();
+                }
+                if ($sub === 'posts/create') {
+                    $blog->createPost();
+                }
+                if (preg_match('~^posts/([A-Za-z0-9_-]+)/edit$~', $sub, $bm)) {
+                    $blog->editPost($bm[1]);
+                }
+                if (preg_match('~^posts/([A-Za-z0-9_-]+)/toggle$~', $sub, $bm) && $method === 'POST') {
+                    $blog->togglePostStatus($bm[1]);
+                }
+                if (preg_match('~^posts/([A-Za-z0-9_-]+)/delete$~', $sub, $bm) && $method === 'POST') {
+                    $blog->deletePost($bm[1]);
+                }
+                if ($sub === 'categories') {
+                    $blog->categories();
+                }
+                if ($sub === 'categories/save' && $method === 'POST') {
+                    $blog->saveCategory();
+                }
+                if (preg_match('~^categories/([A-Za-z0-9_-]+)/delete$~', $sub, $bm) && $method === 'POST') {
+                    $blog->deleteCategory($bm[1]);
+                }
+                if ($sub === 'tags') {
+                    $blog->tags();
+                }
+                if ($sub === 'tags/save' && $method === 'POST') {
+                    $blog->saveTag();
+                }
+                if (preg_match('~^tags/([A-Za-z0-9_-]+)/delete$~', $sub, $bm) && $method === 'POST') {
+                    $blog->deleteTag($bm[1]);
                 }
             }
 

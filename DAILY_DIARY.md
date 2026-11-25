@@ -9,6 +9,20 @@
 
 ---
 
+### [2026-11-25 16:00] - WordPress-Style Blog System (Posts, Categories, Tags, Scheduling, SEO, FAQs & Dedicated Post Pages)
+* **Micro-Task:** WordPress-style Blog CMS & Frontend:
+  1. **Backend Blog Service & Controller (`BlogService.php`, `BlogController.php`, `Router.php`, `ApiController.php`, `layouts/admin.php`):**
+     - Built full CRUD for Posts (`/admin/blog/posts`), Categories (`/admin/blog/categories`), and Tags (`/admin/blog/tags`) with sidebar navigation under `Blog & Articles`.
+     - Added support per post for unique auto/editable `slug`, `status` (`published`, `draft`, `scheduled` with `published_at` auto-live check), Categories & Tags assignment (plus quick-add tags), Featured Image upload (`uploads/blog/`) with `featured_image_alt`, Rich HTML content, Post FAQs section (Active/Inactive + Add/Reorder/Remove), and SEO & Social Metadata tab.
+     - Exposed REST endpoints `/api/v1/blog/posts`, `/api/v1/blog/posts/{slug}`, `/api/v1/blog/categories`, and `/api/v1/blog/tags`.
+  2. **Frontend Blog Listing & Dedicated Single Post Pages (`frontend/src/app/blog/page.tsx`, `frontend/src/app/blog/[slug]/page.tsx`, `BlogPostClient.tsx`, `.htaccess`):**
+     - Replaced modal pop-ups on `/blog` with dedicated single-post page links (`/blog/[slug]/`), plus Category pills, Tag chips, and search filtering.
+     - Added dynamic `.htaccess` fallback to `blog/post-template/index.html` so newly created or scheduled CMS posts resolve directly at their unique `/blog/<slug>/` URL without rebuilding Next.js.
+* **Verification & QA:**
+  - Verified `/admin/blog/categories`, `/admin/blog/tags`, `/admin/blog/posts/create`, live `/blog/` & `/blog/qa-test-dental-implant-guide/` (HTML rendering, alt tag, FAQ accordion, SEO title, no pop-up), future-scheduled hiding, and post deletion.
+
+---
+
 ### [2026-11-25 15:35] - Treatments Catalog 3-Tab CMS Editor, Inner Page Section/Item Controls & Services Toggle Fix
 * **Micro-Task:** Treatments CMS Upgrade & Bug Fixes:
   1. **Services Active/Inactive Toggle Fix (`admin/components/services.php`):**

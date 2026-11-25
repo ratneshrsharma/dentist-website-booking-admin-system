@@ -371,6 +371,33 @@ $activeNav = $activeNav ?? 'dashboard';
                             </a>
                         </li>
 
+                        <!-- Blog & Articles (WordPress-style) -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-2 mb-1" style="font-size: 9.5px; letter-spacing: 0.06em; opacity: 0.85;">— Blog &amp; Articles</li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/blog/posts') ?>" class="nav-link <?= $activeNav === 'blog-posts' ? 'active' : '' ?>">
+                                <i class="bi bi-journal-richtext text-info"></i>
+                                <p>All Posts</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/blog/posts/create') ?>" class="nav-link <?= $activeNav === 'blog-new' ? 'active' : '' ?>">
+                                <i class="bi bi-plus-circle"></i>
+                                <p>Add New Post</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/blog/categories') ?>" class="nav-link <?= $activeNav === 'blog-categories' ? 'active' : '' ?>">
+                                <i class="bi bi-folder2-open"></i>
+                                <p>Categories</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/blog/tags') ?>" class="nav-link <?= $activeNav === 'blog-tags' ? 'active' : '' ?>">
+                                <i class="bi bi-tags"></i>
+                                <p>Tags</p>
+                            </a>
+                        </li>
+
                         <!-- Common Components Nested -->
                         <li class="nav-header text-uppercase text-secondary px-3 mt-2 mb-1" style="font-size: 9.5px; letter-spacing: 0.06em; opacity: 0.85;">— Common Components</li>
                         <li class="nav-item">

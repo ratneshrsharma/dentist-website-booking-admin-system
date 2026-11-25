@@ -11,16 +11,40 @@ import { Footer } from '@/components/layout/Footer/Footer';
 import { MobileAppNavBar } from '@/components/layout/MobileAppNavBar/MobileAppNavBar';
 import { BookingModal } from '@/components/common/BookingModal/BookingModal';
 
+interface BlogCategory {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+interface BlogTag {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 interface BlogPost {
   id: string;
   title: string;
+  slug: string;
   category: string;
+  categories?: BlogCategory[];
+  tags?: BlogTag[];
   date: string;
+  date_formatted?: string;
   author: string;
   read_time?: string;
-  image: string;
+  featured_image?: string;
+  featured_image_alt?: string;
+  image?: string;
   excerpt: string;
   content: string;
+}
+
+interface BlogPostsResponse {
+  data: BlogPost[];
+  categories?: BlogCategory[];
+  tags?: BlogTag[];
 }
 
 interface BlogPageData {
@@ -30,296 +54,341 @@ interface BlogPageData {
     subtitle?: string;
   };
   sections?: Array<{
-    eyebrow?: string;
-    title?: string;
-    summary?: string;
     grid_cols?: number;
   }>;
-  blog_posts?: BlogPost[];
   seo?: {
     meta_title?: string;
   };
 }
 
-const DEFAULT_POSTS: BlogPost[] = [
-  {
-    id: 'post_1',
-    title: 'How Often Should You Book a Dental Hygiene & Airflow Polish?',
-    category: 'Preventive Care',
-    date: '2026-11-18',
-    author: 'Claire, Dental Hygienist',
-    read_time: '4 min read',
-    image: '/uploads/home/treatment-room.jpg',
-    excerpt:
-      'Learn how Airflow warm-water polishing removes stubborn tea, coffee, and plaque biofilm gently without scraping sensitive enamel.',
-    content:
-      'Regular dental hygiene appointments every 3 to 6 months are essential for preventing gum disease and preserving natural enamel. Our Airflow system uses a gentle stream of warm water, air, and fine erythritol powder to lift surface stains painlessly.',
-  },
-  {
-    id: 'post_2',
-    title: 'NHS vs Private Dental Care in Birmingham: What Is Included?',
-    category: 'Patient Guides',
-    date: '2026-11-10',
-    author: 'Dr. Atandrilla Das',
-    read_time: '5 min read',
-    image: '/uploads/home/hero-patient.jpg',
-    excerpt:
-      'A transparent breakdown of NHS Band 1, Band 2, and Band 3 treatments alongside private cosmetic options like white fillings and Invisalign.',
-    content:
-      'Understanding your dental treatment options should always be clear and stress-free. At Acocks Green Dental Practice, we explain both NHS and private pathways upfront so you can choose what suits your clinical needs and budget.',
-  },
-  {
-    id: 'post_3',
-    title: 'Same-Day Emergency Dental Triage: What Counts as Urgent?',
-    category: 'Emergency Care',
-    date: '2026-11-02',
-    author: 'Dr. Nadeem Sohail',
-    read_time: '3 min read',
-    image: '/uploads/home/surgery-clinic.jpg',
-    excerpt:
-      'Severe toothache, facial swelling, or a knocked-out tooth? Here is how our Birmingham B27 triage line gets you seen the very same day.',
-    content:
-      'Dental emergencies can happen without warning. If you experience severe throbbing pain, swelling, or dental trauma, call our reception on +44 121 765 2870 before 10:00 AM for priority same-day clinical triage.',
-  },
-];
-
 export default function BlogPage() {
-  const [blogData, setBlogData] = useState<BlogPageData>({
+  const [pageData, setPageData] = useState<BlogPageData>({
     hero: {
       eyebrow: 'Clinical Insights & Oral Wellness',
       headline: 'Dental Health Blog & Patient Guides',
       subtitle:
         'Evidence-based dental advice, NHS & private care tips, and practice updates from our Birmingham B27 clinical team.',
     },
-    blog_posts: DEFAULT_POSTS,
   });
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
-  const [activePost, setActivePost] = useState<BlogPost | null>(null);
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [categories, setCategories] = useState<BlogCategory[]>([]);
+  const [tags, setTags] = useState<BlogTag[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedTag, setSelectedTag] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(true);
   const [isBookingOpen, setIsBookingOpen] = useState(false);
 
   useEffect(() => {
-    async function loadBlog() {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('category');
+      const tagParam = params.get('tag');
+      if (catParam) setSelectedCategory(catParam);
+      if (tagParam) setSelectedTag(tagParam);
+    }
+
+    async function loadData() {
       try {
-        const res = await apiClient.get<BlogPageData>(`/pages/blog?_t=${Date.now()}`);
-        if (res?.success && res.data) {
-          setBlogData(res.data);
-          if (res.data.seo?.meta_title) {
-            document.title = res.data.seo.meta_title;
+        const [pageRes, postsRes] = await Promise.all([
+          apiClient.get<BlogPageData>(`/pages/blog?_t=${Date.now()}`),
+          apiClient.get<BlogPost[]>(`/blog/posts?_t=${Date.now()}`),
+        ]);
+
+        if (pageRes?.success && pageRes.data) {
+          setPageData(pageRes.data);
+          if (pageRes.data.seo?.meta_title) {
+            document.title = pageRes.data.seo.meta_title;
           }
         }
+
+        const rawPosts = postsRes as unknown as BlogPostsResponse & { success?: boolean };
+        if (rawPosts?.success && Array.isArray(rawPosts.data)) {
+          setPosts(rawPosts.data);
+          if (Array.isArray(rawPosts.categories)) setCategories(rawPosts.categories);
+          if (Array.isArray(rawPosts.tags)) setTags(rawPosts.tags);
+        }
       } catch {
-        // Fallback to default posts
+        // Keep empty state gracefully
+      } finally {
+        setLoading(false);
       }
     }
-    loadBlog();
+    loadData();
   }, []);
 
-  const posts = blogData.blog_posts && blogData.blog_posts.length > 0 ? blogData.blog_posts : DEFAULT_POSTS;
-  const categories = ['All', ...Array.from(new Set(posts.map((p) => p.category).filter(Boolean)))];
-  const filteredPosts = selectedCategory === 'All' ? posts : posts.filter((p) => p.category === selectedCategory);
-  const gridCols = blogData.sections?.[0]?.grid_cols || 3;
+  const filteredPosts = posts.filter((post) => {
+    if (selectedCategory !== 'all') {
+      const catSlugs = (post.categories || []).map((c) => c.slug);
+      if (!catSlugs.includes(selectedCategory)) return false;
+    }
+    if (selectedTag !== 'all') {
+      const tagSlugs = (post.tags || []).map((t) => t.slug);
+      if (!tagSlugs.includes(selectedTag)) return false;
+    }
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase();
+      const hay = `${post.title} ${post.excerpt} ${post.author}`.toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const gridCols = pageData.sections?.[0]?.grid_cols || 3;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#f8fafc' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc' }}>
       <HeaderTopBar />
       <HeaderNavBar onBookClick={() => setIsBookingOpen(true)} />
 
       <main style={{ flex: 1 }}>
-        {/* Hero Banner */}
-        <section style={{ background: 'linear-gradient(135deg, #f2fcf5 0%, #e7f8ec 100%)', padding: '48px 0 40px', borderBottom: '1px solid #dcfce7' }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px' }}>
-            <nav aria-label="Breadcrumb" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#64748b', marginBottom: '16px' }}>
-              <Link href="/" style={{ color: '#0d631b', textDecoration: 'none', fontWeight: 600 }}>Home</Link>
-              <span>/</span>
-              <span>Blog</span>
-            </nav>
-            <span
-              style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#0d631b', display: 'block', marginBottom: '8px' }}
-              dangerouslySetInnerHTML={{ __html: blogData.hero?.eyebrow || 'Clinical Insights & Oral Wellness' }}
-            />
-            <h1
-              style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, color: '#0f172a', margin: '0 0 12px', lineHeight: 1.15 }}
-              dangerouslySetInnerHTML={{ __html: blogData.hero?.headline || 'Dental Health Blog & Patient Guides' }}
-            />
-            <p
-              style={{ fontSize: '16px', color: '#475569', maxWidth: '720px', margin: 0, lineHeight: 1.6 }}
-              dangerouslySetInnerHTML={{ __html: blogData.hero?.subtitle || '' }}
-            />
+        {/* Hero */}
+        <section
+          style={{
+            background: 'linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%)',
+            borderBottom: '1px solid #e2e8f0',
+            padding: '56px 0 44px',
+          }}
+        >
+          <div className="container" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px' }}>
+            <div style={{ maxWidth: 780 }}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  fontSize: 12,
+                  fontWeight: 700,
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  color: '#0d631b',
+                  background: '#dcfce7',
+                  padding: '6px 14px',
+                  borderRadius: 999,
+                  marginBottom: 14,
+                }}
+              >
+                {pageData.hero?.eyebrow || 'Clinical Insights & Oral Wellness'}
+              </span>
+              <h1 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontWeight: 800, color: '#0f172a', marginBottom: 14 }}>
+                {pageData.hero?.headline || 'Dental Health Blog & Patient Guides'}
+              </h1>
+              <p style={{ fontSize: 17, lineHeight: 1.65, color: '#475569', margin: 0 }}>
+                {pageData.hero?.subtitle ||
+                  'Evidence-based dental advice, NHS & private care tips, and practice updates from our Birmingham B27 clinical team.'}
+              </p>
+            </div>
           </div>
         </section>
 
-        {/* Blog Posts Grid */}
-        <section style={{ padding: '48px 0 72px' }}>
-          <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '0 24px' }}>
-            {/* Category Filter Pills */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px', marginBottom: '28px' }}>
-              {categories.map((cat) => (
+        {/* Filter & Search Bar */}
+        <section style={{ padding: '40px 0 72px' }}>
+          <div className="container" style={{ maxWidth: 1400, margin: '0 auto', padding: '0 24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, marginBottom: 20 }}>
+              {/* Category Pills */}
+              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                 <button
-                  key={cat}
                   type="button"
-                  onClick={() => setSelectedCategory(cat)}
+                  onClick={() => setSelectedCategory('all')}
                   style={{
-                    padding: '8px 18px',
-                    borderRadius: '9999px',
-                    border: selectedCategory === cat ? '1px solid #0d631b' : '1px solid #cbd5e1',
-                    backgroundColor: selectedCategory === cat ? '#0d631b' : '#ffffff',
-                    color: selectedCategory === cat ? '#ffffff' : '#334155',
-                    fontSize: '13px',
+                    padding: '9px 18px',
+                    borderRadius: 999,
+                    border: '1px solid',
+                    borderColor: selectedCategory === 'all' ? '#0d631b' : '#cbd5e1',
+                    background: selectedCategory === 'all' ? '#0d631b' : '#ffffff',
+                    color: selectedCategory === 'all' ? '#ffffff' : '#334155',
                     fontWeight: 600,
+                    fontSize: 14,
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
                   }}
                 >
-                  {cat}
+                  All Articles
                 </button>
-              ))}
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setSelectedCategory(cat.slug)}
+                    style={{
+                      padding: '9px 18px',
+                      borderRadius: 999,
+                      border: '1px solid',
+                      borderColor: selectedCategory === cat.slug ? '#0d631b' : '#cbd5e1',
+                      background: selectedCategory === cat.slug ? '#0d631b' : '#ffffff',
+                      color: selectedCategory === cat.slug ? '#ffffff' : '#334155',
+                      fontWeight: 600,
+                      fontSize: 14,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {cat.name}
+                  </button>
+                ))}
+              </div>
+
+              {/* Search */}
+              <input
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search articles..."
+                style={{
+                  padding: '9px 16px',
+                  borderRadius: 999,
+                  border: '1px solid #cbd5e1',
+                  fontSize: 14,
+                  minWidth: 240,
+                  background: '#ffffff',
+                }}
+              />
             </div>
 
-            {/* Posts Grid */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: `repeat(auto-fill, minmax(${gridCols >= 4 ? '260px' : '320px'}, 1fr))`,
-                gap: '24px',
-              }}
-            >
-              {filteredPosts.map((post) => (
-                <article
-                  key={post.id}
+            {/* Tag Chips */}
+            {tags.length > 0 && (
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center', marginBottom: 30 }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>Topics:</span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedTag('all')}
                   style={{
-                    background: '#ffffff',
-                    borderRadius: '18px',
-                    border: '1px solid #e2e8f0',
-                    overflow: 'hidden',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    boxShadow: '0 4px 16px rgba(15, 23, 42, 0.04)',
+                    padding: '4px 12px',
+                    borderRadius: 999,
+                    border: '1px solid',
+                    borderColor: selectedTag === 'all' ? '#0f172a' : '#e2e8f0',
+                    background: selectedTag === 'all' ? '#0f172a' : '#ffffff',
+                    color: selectedTag === 'all' ? '#ffffff' : '#475569',
+                    fontSize: 12,
+                    fontWeight: 600,
+                    cursor: 'pointer',
                   }}
                 >
-                  <div style={{ position: 'relative', height: '210px', background: '#e2e8f0' }}>
-                    <Image
-                      src={assetUrl(post.image || '/uploads/home/treatment-room.jpg')}
-                      alt={post.title}
-                      fill
-                      style={{ objectFit: 'cover' }}
-                    />
-                    <span
+                  All Tags
+                </button>
+                {tags.map((tag) => (
+                  <button
+                    key={tag.id}
+                    type="button"
+                    onClick={() => setSelectedTag(selectedTag === tag.slug ? 'all' : tag.slug)}
+                    style={{
+                      padding: '4px 12px',
+                      borderRadius: 999,
+                      border: '1px solid',
+                      borderColor: selectedTag === tag.slug ? '#0d631b' : '#e2e8f0',
+                      background: selectedTag === tag.slug ? '#dcfce7' : '#ffffff',
+                      color: selectedTag === tag.slug ? '#0d631b' : '#475569',
+                      fontSize: 12,
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    #{tag.name}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* Posts Grid */}
+            {loading ? (
+              <div style={{ textAlign: 'center', padding: '60px 0', color: '#64748b' }}>Loading dental articles...</div>
+            ) : filteredPosts.length === 0 ? (
+              <div style={{ textAlign: 'center', padding: '60px 24px', background: '#ffffff', borderRadius: 16, border: '1px solid #e2e8f0' }}>
+                <h3 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 8 }}>No articles match your filter</h3>
+                <p style={{ color: '#64748b', marginBottom: 16 }}>Try clearing your category, tag, or search filter.</p>
+                <button
+                  type="button"
+                  onClick={() => { setSelectedCategory('all'); setSelectedTag('all'); setSearchQuery(''); }}
+                  style={{ padding: '10px 20px', borderRadius: 10, border: 'none', background: '#0d631b', color: '#fff', fontWeight: 600, cursor: 'pointer' }}
+                >
+                  Reset Filters
+                </button>
+              </div>
+            ) : (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: `repeat(auto-fill, minmax(${gridCols >= 3 ? '330px' : '420px'}, 1fr))`,
+                  gap: 28,
+                }}
+              >
+                {filteredPosts.map((post) => {
+                  const postImg = post.featured_image || post.image || '/uploads/home/treatment-room.jpg';
+                  return (
+                    <article
+                      key={post.id}
                       style={{
-                        position: 'absolute',
-                        top: '14px',
-                        left: '14px',
-                        background: '#0d631b',
-                        color: '#ffffff',
-                        fontSize: '11px',
-                        fontWeight: 700,
-                        padding: '4px 12px',
-                        borderRadius: '9999px',
+                        background: '#ffffff',
+                        borderRadius: 18,
+                        overflow: 'hidden',
+                        border: '1px solid #e2e8f0',
+                        boxShadow: '0 8px 24px rgba(15, 23, 42, 0.04)',
+                        display: 'flex',
+                        flexDirection: 'column',
                       }}
                     >
-                      {post.category}
-                    </span>
-                  </div>
-                  <div style={{ padding: '20px', display: 'flex', flexDirection: 'column', flex: 1, justifyContent: 'space-between', gap: '14px' }}>
-                    <div>
-                      <div style={{ fontSize: '12px', color: '#64748b', marginBottom: '8px' }}>
-                        {post.date} • {post.read_time || '4 min read'}
+                      <Link href={`/blog/${post.slug}`} style={{ display: 'block', position: 'relative', height: 220, background: '#e2e8f0' }}>
+                        <Image
+                          src={assetUrl(postImg)}
+                          alt={post.featured_image_alt || post.title}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                        />
+                      </Link>
+                      <div style={{ padding: 24, display: 'flex', flexDirection: 'column', flex: 1 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, fontSize: 12, color: '#64748b', gap: 8, flexWrap: 'wrap' }}>
+                          <span
+                            style={{
+                              fontWeight: 700,
+                              color: '#0d631b',
+                              background: '#dcfce7',
+                              padding: '4px 10px',
+                              borderRadius: 999,
+                            }}
+                          >
+                            {post.categories?.[0]?.name || post.category || 'Clinical Guide'}
+                          </span>
+                          <span>{post.date_formatted || post.date} • {post.read_time || '4 min read'}</span>
+                        </div>
+                        <Link href={`/blog/${post.slug}`} style={{ textDecoration: 'none' }}>
+                          <h2 style={{ fontSize: 20, fontWeight: 700, color: '#0f172a', marginBottom: 10, lineHeight: 1.35 }}>
+                            {post.title}
+                          </h2>
+                        </Link>
+                        <p style={{ fontSize: 14, color: '#475569', lineHeight: 1.65, flex: 1, marginBottom: 16 }}>
+                          {post.excerpt}
+                        </p>
+                        {post.tags && post.tags.length > 0 && (
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 16 }}>
+                            {post.tags.slice(0, 3).map((t) => (
+                              <span key={t.id} style={{ fontSize: 11, color: '#475569', background: '#f1f5f9', padding: '3px 8px', borderRadius: 6 }}>
+                                #{t.name}
+                              </span>
+                            ))}
+                          </div>
+                        )}
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid #f1f5f9', paddingTop: 14 }}>
+                          <span style={{ fontSize: 13, fontWeight: 600, color: '#334155' }}>{post.author}</span>
+                          <Link
+                            href={`/blog/${post.slug}`}
+                            style={{
+                              color: '#0d631b',
+                              fontWeight: 700,
+                              fontSize: 14,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 4,
+                              textDecoration: 'none',
+                            }}
+                          >
+                            Read Full Guide →
+                          </Link>
+                        </div>
                       </div>
-                      <h2 style={{ fontSize: '18px', fontWeight: 700, color: '#0f172a', margin: '0 0 10px', lineHeight: 1.35 }}>
-                        {post.title}
-                      </h2>
-                      <p style={{ fontSize: '14px', color: '#475569', margin: 0, lineHeight: 1.55 }}>
-                        {post.excerpt}
-                      </p>
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '12px', borderTop: '1px solid #f1f5f9' }}>
-                      <span style={{ fontSize: '12px', fontWeight: 600, color: '#334155' }}>{post.author}</span>
-                      <button
-                        type="button"
-                        onClick={() => setActivePost(post)}
-                        style={{
-                          background: '#f0fdf4',
-                          color: '#0d631b',
-                          border: '1px solid #bbf7d0',
-                          borderRadius: '9999px',
-                          padding: '6px 14px',
-                          fontSize: '12.5px',
-                          fontWeight: 700,
-                          cursor: 'pointer',
-                        }}
-                      >
-                        Read Article →
-                      </button>
-                    </div>
-                  </div>
-                </article>
-              ))}
-            </div>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </section>
       </main>
-
-      {/* Article Reader Modal */}
-      {activePost && (
-        <div
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(15, 23, 42, 0.7)',
-            zIndex: 999999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-          }}
-          onClick={() => setActivePost(null)}
-        >
-          <div
-            style={{
-              background: '#ffffff',
-              borderRadius: '20px',
-              maxWidth: '720px',
-              width: '100%',
-              maxHeight: '85vh',
-              overflowY: 'auto',
-              padding: '28px',
-              position: 'relative',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              onClick={() => setActivePost(null)}
-              style={{
-                position: 'absolute',
-                top: '16px',
-                right: '16px',
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                border: '1px solid #cbd5e1',
-                background: '#ffffff',
-                cursor: 'pointer',
-                fontWeight: 700,
-              }}
-            >
-              ✕
-            </button>
-            <span style={{ fontSize: '12px', fontWeight: 700, color: '#0d631b', textTransform: 'uppercase' }}>
-              {activePost.category} • {activePost.date}
-            </span>
-            <h2 style={{ fontSize: '24px', fontWeight: 800, color: '#0f172a', margin: '8px 0 12px' }}>
-              {activePost.title}
-            </h2>
-            <p style={{ fontSize: '13px', color: '#64748b', marginBottom: '20px' }}>
-              By {activePost.author}
-            </p>
-            <div
-              style={{ fontSize: '15px', color: '#334155', lineHeight: 1.7 }}
-              dangerouslySetInnerHTML={{ __html: activePost.content || activePost.excerpt }}
-            />
-          </div>
-        </div>
-      )}
 
       <Footer />
       <MobileAppNavBar onBookClick={() => setIsBookingOpen(true)} />
