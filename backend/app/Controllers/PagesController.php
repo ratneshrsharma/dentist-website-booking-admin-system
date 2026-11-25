@@ -375,7 +375,25 @@ class PagesController
 
         // 2. Dynamic Page Sections Composition
         if (isset($_POST['sections']) && is_array($_POST['sections'])) {
-            $about['sections'] = $this->parseSectionsFromRequest($_POST['sections'], $_FILES, 'about-us');
+            $parsedAboutSections = $this->parseSectionsFromRequest($_POST['sections'], $_FILES, 'about-us');
+            $about['sections'] = $parsedAboutSections;
+
+            // Keep legacy keys in sync with section headers
+            foreach ($parsedAboutSections as $ps) {
+                if (($ps['type'] ?? '') === 'why_us_block') {
+                    $about['why_us']['eyebrow'] = $ps['eyebrow'];
+                    $about['why_us']['headline'] = $ps['title'];
+                    $about['why_us']['subtitle'] = $ps['summary'];
+                } elseif (($ps['type'] ?? '') === 'clinics_block') {
+                    $about['clinics']['eyebrow'] = $ps['eyebrow'];
+                    $about['clinics']['headline'] = $ps['title'];
+                    $about['clinics']['subtitle'] = $ps['summary'];
+                } elseif (($ps['type'] ?? '') === 'safety_charter_cards') {
+                    $about['safety_charter']['eyebrow'] = $ps['eyebrow'];
+                    $about['safety_charter']['headline'] = $ps['title'];
+                    $about['safety_charter']['subtitle'] = $ps['summary'];
+                }
+            }
         }
 
         // 3. Why Us & Ethos (Stats + 4 Pillars)

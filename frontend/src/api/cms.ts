@@ -426,7 +426,7 @@ export const CmsService = {
    */
   getHomePage: async (): Promise<HomePageData> => {
     try {
-      const response = await apiClient.get<HomePageData>('/pages/home');
+      const response = await apiClient.get<HomePageData>(`/pages/home?_t=${Date.now()}`);
       if (response && response.success && response.data) {
         return response.data;
       }
@@ -486,7 +486,7 @@ export const CmsService = {
    */
   getAboutPage: async (): Promise<AboutPageData> => {
     try {
-      const response = await apiClient.get<AboutPageData>('/pages/about-us');
+      const response = await apiClient.get<AboutPageData>(`/pages/about-us?_t=${Date.now()}`);
       if (response && response.success && response.data) {
         return response.data;
       }

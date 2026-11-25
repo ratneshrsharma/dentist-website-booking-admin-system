@@ -209,15 +209,54 @@ $activeNav = $activeNav ?? 'dashboard';
             background-color: var(--brand-primary);
             color: #ffffff;
         }
+        /* Uniform CMS Button Sizing (Small & Medium Only) */
+        .app-main .btn {
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 0.42rem 0.95rem;
+            line-height: 1.4;
+            transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+        }
+        .app-main .btn-lg {
+            font-size: 0.875rem !important;
+            padding: 0.48rem 1.2rem !important;
+        }
+        .app-main .btn-sm {
+            font-size: 0.78rem !important;
+            padding: 0.28rem 0.65rem !important;
+            line-height: 1.35;
+        }
+        .app-main .btn-group-sm > .btn,
+        .app-main .btn-group-sm > .btn-group > .btn {
+            min-width: 32px;
+            height: 30px;
+            padding: 0.25rem 0.5rem !important;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem !important;
+        }
+        .app-main .btn:focus,
+        .app-main .btn:focus-visible {
+            box-shadow: 0 0 0 3px rgba(13, 99, 27, 0.22) !important;
+            outline: none;
+        }
+        .app-main .btn:active {
+            transform: translateY(0) !important;
+            filter: brightness(0.94);
+        }
         .btn-brand {
             background-color: var(--brand-primary);
             border-color: var(--brand-primary);
             color: #ffffff;
             font-weight: 600;
         }
-        .btn-brand:hover {
-            filter: brightness(0.9);
-            color: #ffffff;
+        .btn-brand:hover,
+        .btn-brand:focus,
+        .btn-brand:active {
+            background-color: #094713 !important;
+            border-color: #094713 !important;
+            color: #ffffff !important;
         }
         .preview-img-box {
             width: 100px;

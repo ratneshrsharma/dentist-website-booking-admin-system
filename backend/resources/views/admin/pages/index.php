@@ -75,15 +75,16 @@ use App\Core\App;
                                 <small class="text-muted"><?= htmlspecialchars($p['updated_at']) ?></small>
                             </td>
                             <td class="text-end pe-4">
-                                <?php if ($p['is_editable']): ?>
-                                    <a href="<?= App::url($p['slug'] === 'about-us' ? '/admin/pages/about-us/edit' : '/admin/pages/home/edit') ?>" class="btn btn-brand btn-sm rounded-pill px-3 shadow-sm">
-                                        <i class="bi bi-pencil-square me-1"></i> Edit Content
+                                <div class="btn-group btn-group-sm" role="group" aria-label="Page Actions">
+                                    <a href="<?= App::url($p['route']) ?>" target="_blank" class="btn btn-outline-secondary" title="Preview Live Page">
+                                        <i class="bi bi-eye"></i>
                                     </a>
-                                <?php else: ?>
-                                    <a href="<?= App::url($p['route']) ?>" target="_blank" class="btn btn-outline-secondary btn-sm rounded-pill px-3">
-                                        <i class="bi bi-eye me-1"></i> View
-                                    </a>
-                                <?php endif; ?>
+                                    <?php if ($p['is_editable']): ?>
+                                        <a href="<?= App::url($p['slug'] === 'about-us' ? '/admin/pages/about-us/edit' : '/admin/pages/home/edit') ?>" class="btn btn-outline-primary" title="Edit Page Content">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>

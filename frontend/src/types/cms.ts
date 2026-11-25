@@ -88,7 +88,10 @@ export type SectionType =
   | 'contact_block'
   | 'page_snippet'
   | 'custom_content'
-  | 'blog_block';
+  | 'blog_block'
+  | 'why_us_block'
+  | 'clinics_block'
+  | 'safety_charter_cards';
 
 export interface PageSection {
   id: string;

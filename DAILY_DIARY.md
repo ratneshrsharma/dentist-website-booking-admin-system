@@ -9,6 +9,22 @@
 
 ---
 
+### [2026-11-25 11:32] - About Page Dynamic CMS Propagation & Uniform CMS Icon Actions / Button Sizing
+* **Micro-Task:** CMS Data Sync & Admin UI Standardization:
+  1. **About Page CMS -> Frontend Live Propagation (`about-us/page.tsx`, `PagesController.php`, `api/cms.ts`, `types/cms.ts`):**
+     - Refactored `about-us/page.tsx` to render `data.sections` dynamically in exact CMS order, respecting `is_active`, custom backgrounds (`bg_type`), and section-level `eyebrow`, `title`, and `summary` (plus `ContentBlockSection`, `ServicesGrid4x3`, and `ClinicAddressAndContact` for added blocks).
+     - Synced section headers back to `why_us`, `clinics`, and `safety_charter` in `PagesController::updateAbout()`.
+     - Added cache-buster `_t=${Date.now()}` to `CmsService::getHomePage()` and `CmsService::getAboutPage()` so CMS edits appear immediately on the frontend.
+     - Extended `SectionType` in `types/cms.ts` with `why_us_block`, `clinics_block`, and `safety_charter_cards`.
+  2. **Uniform Icon-Based Actions & Small/Medium CMS Buttons (`layouts/admin.php`, `admin/pages/index.php`, `admin/bookings/availability.php`):**
+     - Standardized action columns on **CMS Page List** (`bi-eye`, `bi-pencil-square`) and **Scheduled Leaves & Blackout Dates** (`bi-trash`) to use the same compact `btn-group btn-group-sm` (`32x30px`) icon-only buttons with `title` tooltips on hover as the **Services** listing.
+     - Added global CMS button sizing rules in `layouts/admin.php` restricting buttons to uniform small (`btn-sm`) and medium (`btn` / `btn-brand`, overriding `btn-lg`) sizes with consistent `:hover`, `:active`, and `:focus` states.
+* **Verification & QA:**
+  - Browser QA verified saving `Why Birmingham Patients Choose<br />Acocks Green Dental` in `/admin/pages/about-us/edit` propagates live to `/about-us` with a real `<br>` line break.
+  - Verified uniform `32x30px` icon action groups and small/medium button sizing on `/admin/pages` and `/admin/bookings/availability`.
+
+---
+
 ### [2026-11-25 11:09] - Mobile Slide-In Menu Alignment, Page-Name-Only Submenus, Full Unclipped List & Z-Index Layering Fix
 * **Micro-Task:** Responsive Drawer Polish:
   1. **Exact Vertical Alignment (`HeaderNavBar.tsx`, `HeaderNavBar.module.less`):**

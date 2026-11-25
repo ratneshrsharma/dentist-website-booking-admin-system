@@ -300,11 +300,13 @@ $maxChairs = (int)($schedule['max_chairs'] ?? 1);
                                             <span class="small text-secondary"><?= htmlspecialchars($l['reason'] ?? 'Doctor Leave') ?></span>
                                         </td>
                                         <td class="text-end pe-3">
-                                            <form action="<?= App::url('/admin/doctors/leave/' . urlencode($l['id']) . '/delete') ?>" method="POST" onsubmit="return confirm('Remove this leave exception?');">
+                                            <form action="<?= App::url('/admin/doctors/leave/' . urlencode($l['id']) . '/delete') ?>" method="POST" onsubmit="return confirm('Remove this leave exception?');" class="d-inline">
                                                 <input type="hidden" name="doctor_id" value="<?= $docId ?>">
-                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle p-1" style="width: 28px; height: 28px;" title="Remove Leave">
-                                                    <i class="bi bi-trash"></i>
-                                                </button>
+                                                <div class="btn-group btn-group-sm" role="group" aria-label="Leave Actions">
+                                                    <button type="submit" class="btn btn-outline-danger" title="Remove Leave">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </div>
                                             </form>
                                         </td>
                                     </tr>
