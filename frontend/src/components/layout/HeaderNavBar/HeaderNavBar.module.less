@@ -68,7 +68,7 @@
   align-items: center;
   gap: 28px;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
     display: none;
   }
 }
@@ -77,16 +77,19 @@
   position: relative;
 
   &:hover {
-    > .dropdownMenu,
-    > .megaMenu {
+    > .dropdownMenu {
       display: block;
       animation: fadeIn 0.2s ease-in-out forwards;
+    }
+    > .megaMenu {
+      display: block;
+      animation: megaFadeIn 0.2s ease-in-out forwards;
     }
   }
 
   &.hasMega:hover .megaMenu {
     display: block;
-    animation: fadeIn 0.2s ease-in-out forwards;
+    animation: megaFadeIn 0.2s ease-in-out forwards;
   }
 
   &.hasDropdown:hover .dropdownMenu {
@@ -340,7 +343,7 @@
   cursor: pointer;
   padding: 8px;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 1200px) {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -348,19 +351,99 @@
 }
 
 /* =========================================================================
-   Mobile Drawer & Accordion
+   Mobile & Tablet Full-Height Right Slide-In Drawer (<= 1200px)
    ========================================================================= */
+.mobileBackdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 9998;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+
+  &.open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+}
+
 .mobileDrawer {
   position: fixed;
-  inset: @nav-height 0 0 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(380px, 88vw);
+  height: 100dvh;
   background-color: #ffffff;
-  z-index: 1000;
-  padding: 20px;
-  overflow-y: auto;
+  z-index: 9999;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  box-shadow: @shadow-lg;
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.22);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.32s ease;
+
+  &.open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+}
+
+.mobileDrawerHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e2e8f0;
+  background: #f8fafc;
+  flex-shrink: 0;
+
+  .drawerBrandTitle {
+    font-family: @font-headline;
+    font-size: 16px;
+    font-weight: 700;
+    color: @primary;
+  }
+
+  .drawerCloseBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background: #f1f5f9;
+      color: #0f172a;
+    }
+  }
+}
+
+.mobileDrawerBody {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mobileDrawerFooter {
+  padding: 16px 20px;
+  border-top: 1px solid #e2e8f0;
+  background: #f8fafc;
+  flex-shrink: 0;
 }
 
 .mobileLink {
@@ -447,5 +530,16 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes megaFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 }

@@ -9,6 +9,24 @@
 
 ---
 
+### [2026-11-25 10:57] - CMS Favicon Sync, Centered Treatments Mega Dropdown & 1200px Full-Height Right Slide-In Mobile Menu
+* **Micro-Task:** Navigation & Branding Polish:
+  1. **CMS Admin Favicon (`layouts/admin.php`):**
+     - Added `<link rel="icon" type="image/png" href="<?= App::url('/images/acocks-green-logo.png') ?>">` and `shortcut icon` so the CMS Admin Portal uses the exact same favicon as the frontend website.
+  2. **Treatments & Services Mega Dropdown Centering (`HeaderNavBar.module.less`):**
+     - Fixed the off-center positioning caused by `@keyframes fadeIn` overwriting `transform: translateX(-50%)` on `.megaMenu`.
+     - Added `@keyframes megaFadeIn` preserving `translateX(-50%)`, centering the mega dropdown directly beneath the "Treatments & Services" menu link (`0.01px` center alignment verified at `1440px`).
+  3. **1200px Responsive Full-Height Right Slide-In/Out Mobile Menu (`HeaderNavBar.tsx`, `HeaderNavBar.module.less`):**
+     - Updated responsive navigation breakpoint from `1024px` to `1200px` (`@media (max-width: 1200px)`).
+     - Moved `.mobileBackdrop` and `.mobileDrawer` outside `<header>` (which had `backdrop-filter` trapping `position: fixed` elements to header height).
+     - Configured `.mobileDrawer` as a `100dvh` full-height right-edge drawer (`transform: translateX(100%)` -> `translateX(0)`) with smooth slide-in/slide-out transitions on close button, backdrop click, or any menu item click.
+* **Verification & QA:**
+  - Verified CMS favicon in `/admin/pages/home/edit`.
+  - Verified dead-center mega dropdown alignment (`653.29px` vs `653.28px`) at `1440x900`.
+  - Verified full-height (`900px` at `1100x900`, `800px` at `400x800`) right slide-in drawer and clean slide-out dismissal on backdrop & menu link clicks.
+
+---
+
 ### [2026-11-25 10:50] - Unified 3-Tab CMS Editors, Collapsed Primary-Colored Accordions, HTML Tag Rendering & Page-Folder Image Uploads
 * **Micro-Task:** Implementation of CMS Architecture, UI Polish, HTML Rendering & Asset Management:
   1. **HTML Tag Support in CMS Content & Inputs (`HeroBanner.tsx`, `ContentBlockSection.tsx`, `DoctorsGrid.tsx`, `ServicesGrid4x3.tsx`, `ServicesSidebarList.tsx`, `TestimonialsSlider.tsx`, `ClinicAddressAndContact.tsx`, `AboutOurTeam.tsx`, `about-us/page.tsx`):**

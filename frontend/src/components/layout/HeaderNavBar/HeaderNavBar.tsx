@@ -155,6 +155,7 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
   };
 
   return (
+    <>
     <header className={styles.header}>
       <div className={styles.container}>
         {/* Brand Logo & Title */}
@@ -340,135 +341,166 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
           </button>
         </div>
       </div>
+    </header>
 
-      {/* Mobile & iPad Drawer Navigation */}
-      {mobileOpen && (
-        <div className={styles.mobileDrawer}>
-          <Link
-            href="/"
-            className={styles.mobileLink}
-            onClick={() => setMobileOpen(false)}
-          >
-            <span className="material-symbols-outlined">home</span>
-            <span>Home</span>
-          </Link>
+    {/* Mobile & Tablet Full-Height Right Slide-In Drawer (<= 1200px) */}
+    <div
+      className={`${styles.mobileBackdrop} ${mobileOpen ? styles.open : ''}`}
+      onClick={() => setMobileOpen(false)}
+      aria-hidden={!mobileOpen}
+    />
 
-          {/* Mobile Treatments Accordion */}
-          <div className={styles.mobileAccordion}>
-            <button
-              type="button"
-              className={styles.mobileAccordionHeader}
-              onClick={() => setMobileMegaOpen(!mobileMegaOpen)}
-            >
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined">dentistry</span>
-                <span>Treatments & Services</span>
-              </div>
-              <span className="material-symbols-outlined">
-                {mobileMegaOpen ? 'expand_less' : 'expand_more'}
-              </span>
-            </button>
-            {mobileMegaOpen && (
-              <div className={styles.mobileSubList}>
-                {CLINICAL_TREATMENTS.map((treatment, idx) => (
-                  <Link
-                    key={idx}
-                    href={treatment.path}
-                    className={styles.mobileSubItem}
-                    onClick={() => setMobileOpen(false)}
-                  >
-                    <span className="material-symbols-outlined text-[18px] text-[#094713]">
-                      {treatment.icon}
-                    </span>
-                    <div>
-                      <div className="font-semibold text-[13px] text-gray-900">
-                        {treatment.title}
-                      </div>
-                      <div className="text-[11px] text-gray-500">
-                        {treatment.price}
-                      </div>
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            )}
-          </div>
+    <aside
+      className={`${styles.mobileDrawer} ${mobileOpen ? styles.open : ''}`}
+      aria-label="Mobile Navigation Drawer"
+      aria-hidden={!mobileOpen}
+    >
+      <div className={styles.mobileDrawerHeader}>
+        <span className={styles.drawerBrandTitle}>{clinic_name}</span>
+        <button
+          type="button"
+          className={styles.drawerCloseBtn}
+          onClick={() => setMobileOpen(false)}
+          aria-label="Close mobile menu"
+        >
+          <span className="material-symbols-outlined">close</span>
+        </button>
+      </div>
 
-          <Link
-            href="/blog"
-            className={styles.mobileLink}
-            onClick={() => setMobileOpen(false)}
-          >
-            <span className="material-symbols-outlined">article</span>
-            <span>Blog</span>
-          </Link>
+      <div className={styles.mobileDrawerBody}>
+        <Link
+          href="/"
+          className={styles.mobileLink}
+          onClick={() => setMobileOpen(false)}
+        >
+          <span className="material-symbols-outlined">home</span>
+          <span>Home</span>
+        </Link>
 
-          {/* Mobile About Accordion */}
-          <div className={styles.mobileAccordion}>
-            <button
-              type="button"
-              className={styles.mobileAccordionHeader}
-              onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
-            >
-              <div className="flex items-center gap-2">
-                <span className="material-symbols-outlined">info</span>
-                <span>About</span>
-              </div>
-              <span className="material-symbols-outlined">
-                {mobileAboutOpen ? 'expand_less' : 'expand_more'}
-              </span>
-            </button>
-            {mobileAboutOpen && (
-              <div className={styles.mobileSubList}>
-                {ABOUT_SUBMENU.map((sub, sIdx) => (
-                  <a
-                    key={sIdx}
-                    href={sub.path}
-                    className={styles.mobileSubItem}
-                    onClick={(e) => handleSmoothAnchor(e, sub.path)}
-                  >
-                    <span className="material-symbols-outlined text-[18px] text-[#094713]">
-                      {sub.icon}
-                    </span>
-                    <div>
-                      <div className="font-semibold text-[13px] text-gray-900">
-                        {sub.title}
-                      </div>
-                      <div className="text-[11px] text-gray-500">
-                        {sub.desc}
-                      </div>
-                    </div>
-                  </a>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <a
-            href="/#contact"
-            className={styles.mobileLink}
-            onClick={(e) => handleSmoothAnchor(e, '/#contact')}
-          >
-            <span className="material-symbols-outlined">location_on</span>
-            <span>Contact</span>
-          </a>
-
+        {/* Mobile Treatments Accordion */}
+        <div className={styles.mobileAccordion}>
           <button
             type="button"
-            className={styles.bookButton}
-            style={{ display: 'inline-flex', marginTop: '1.5rem', width: '100%', justifyContent: 'center' }}
-            onClick={() => {
-              setMobileOpen(false);
-              if (onBookClick) onBookClick();
-            }}
+            className={styles.mobileAccordionHeader}
+            onClick={() => setMobileMegaOpen(!mobileMegaOpen)}
           >
-            <span>Book An Appointment</span>
-            <span className="material-symbols-outlined text-[18px]">
-              calendar_month
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined">dentistry</span>
+              <span>Treatments & Services</span>
+            </div>
+            <span className="material-symbols-outlined">
+              {mobileMegaOpen ? 'expand_less' : 'expand_more'}
             </span>
           </button>
+          {mobileMegaOpen && (
+            <div className={styles.mobileSubList}>
+              {CLINICAL_TREATMENTS.map((treatment, idx) => (
+                <Link
+                  key={idx}
+                  href={treatment.path}
+                  className={styles.mobileSubItem}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <span className="material-symbols-outlined text-[18px] text-[#094713]">
+                    {treatment.icon}
+                  </span>
+                  <div>
+                    <div className="font-semibold text-[13px] text-gray-900">
+                      {treatment.title}
+                    </div>
+                    <div className="text-[11px] text-gray-500">
+                      {treatment.price}
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </header>
+
+        <Link
+          href="/blog"
+          className={styles.mobileLink}
+          onClick={() => setMobileOpen(false)}
+        >
+          <span className="material-symbols-outlined">article</span>
+          <span>Blog</span>
+        </Link>
+
+        {/* Mobile About Accordion */}
+        <div className={styles.mobileAccordion}>
+          <button
+            type="button"
+            className={styles.mobileAccordionHeader}
+            onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
+          >
+            <div className="flex items-center gap-2">
+              <span className="material-symbols-outlined">info</span>
+              <span>About</span>
+            </div>
+            <span className="material-symbols-outlined">
+              {mobileAboutOpen ? 'expand_less' : 'expand_more'}
+            </span>
+          </button>
+          {mobileAboutOpen && (
+            <div className={styles.mobileSubList}>
+              {ABOUT_SUBMENU.map((sub, sIdx) => (
+                <a
+                  key={sIdx}
+                  href={sub.path}
+                  className={styles.mobileSubItem}
+                  onClick={(e) => {
+                    setMobileOpen(false);
+                    handleSmoothAnchor(e, sub.path);
+                  }}
+                >
+                  <span className="material-symbols-outlined text-[18px] text-[#094713]">
+                    {sub.icon}
+                  </span>
+                  <div>
+                    <div className="font-semibold text-[13px] text-gray-900">
+                      {sub.title}
+                    </div>
+                    <div className="text-[11px] text-gray-500">
+                      {sub.desc}
+                    </div>
+                  </div>
+                </a>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <a
+          href="/#contact"
+          className={styles.mobileLink}
+          onClick={(e) => {
+            setMobileOpen(false);
+            handleSmoothAnchor(e, '/#contact');
+          }}
+        >
+          <span className="material-symbols-outlined">location_on</span>
+          <span>Contact</span>
+        </a>
+      </div>
+
+      <div className={styles.mobileDrawerFooter}>
+        <button
+          type="button"
+          className={styles.bookButton}
+          style={{ display: 'inline-flex', width: '100%', justifyContent: 'center' }}
+          onClick={() => {
+            setMobileOpen(false);
+            if (onBookClick) onBookClick();
+          }}
+        >
+          <span>Book An Appointment</span>
+          <span className="material-symbols-outlined text-[18px]">
+            calendar_month
+          </span>
+        </button>
+      </div>
+    </aside>
+    </>
   );
 };

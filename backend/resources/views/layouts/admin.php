@@ -20,6 +20,8 @@ $activeNav = $activeNav ?? 'dashboard';
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><?= htmlspecialchars($pageTitle ?? 'Admin Portal') ?> — <?= htmlspecialchars($clinicName) ?></title>
+    <link rel="icon" type="image/png" href="<?= App::url('/images/acocks-green-logo.png') ?>">
+    <link rel="shortcut icon" href="<?= App::url('/images/acocks-green-logo.png') ?>">
     
     <!-- Google Fonts & Material Symbols Icons -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
