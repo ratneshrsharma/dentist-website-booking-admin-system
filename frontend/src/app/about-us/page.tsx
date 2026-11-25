@@ -44,45 +44,57 @@ export default function AboutPage() {
   const clinics = data.clinics || DEFAULT_ABOUT_PAGE.clinics;
   const charter = data.safety_charter || DEFAULT_ABOUT_PAGE.safety_charter;
 
-  // Curated team members (from API or defaults matching the design template)
+  // Curated team members (from API or defaults with uploaded clinician photos)
   const defaultTeam = [
     {
-      name: 'Dr. Sarah Jenkins',
-      title: 'Principal Dentist',
-      credentials: 'BDS (Birm) MJDF RCS (Eng)',
+      name: 'Dr. Atandrilla Das',
+      title: 'Lead Associate Dentist',
+      credentials: 'BDS Associate Dental Surgeon',
       gdc: '178234',
-      avatar: '/images/doctor-1.jpg',
-      specialisms: 'General Dentistry, Invisalign Orthodontics, Smile Rehabilitation',
+      avatar: '/uploads/about-us/doctor-das.jpg',
+      specialisms: 'Restorative Dentistry, Invisalign Orthodontics, Pediatric Care',
       quote: '“Our philosophy is built around gentle listening and preventing future dental issues before they start.”',
     },
     {
-      name: 'Dr. Tariq Mahmood',
+      name: 'Dr. Harjeevan Rai',
       title: 'Associate Dentist',
-      credentials: 'BDS (Hons) MSc Restorative (Manc)',
+      credentials: 'BDS Dental Surgeon',
       gdc: '219485',
-      avatar: '/images/doctor-2.jpg',
-      specialisms: 'Endodontics (Root Canal), Aesthetic Crowns, Minimally Invasive Fillings',
+      avatar: '/uploads/about-us/doctor-rai.jpg',
+      specialisms: 'Preventive Care, Biomechanical Restorations, Minimally Invasive Fillings',
       quote: '“Delivering pain-free treatments with hospital-grade diagnostics and clinical precision.”',
     },
     {
-      name: 'Claire Hughes',
-      title: 'Lead Dental Hygienist',
-      credentials: 'BSc (Hons) Hygiene & Therapy',
+      name: 'Dr. Nadeem Sohail',
+      title: 'Associate Dentist',
+      credentials: 'BDS Dental Surgeon',
       gdc: '254109',
-      avatar: '/images/doctor-3.jpg',
-      specialisms: 'Airflow Stain Removal, Periodontal Health, Preventive Care',
-      quote: '“Empowering patients with personalized home care regimens that keep gums healthy for life.”',
+      avatar: '/uploads/about-us/doctor-sohail.jpg',
+      specialisms: 'Endodontics (Root Canal), Oral Surgery Extractions, Crowns & Bridges',
+      quote: '“Empowering patients with personalized treatment plans and calm chairside reassurance.”',
     },
     {
-      name: 'Priya Sharma',
-      title: 'Senior Nurse & Care Coordinator',
-      credentials: 'NEBDN Dip Dental Nursing',
+      name: 'Claire',
+      title: 'Dental Hygienist',
+      credentials: 'BSc (Hons) Hygiene & Therapy',
       gdc: '289412',
-      avatar: '/images/doctor-4.jpg',
-      specialisms: 'Nervous Patient Support, Infection Prevention & CQC Compliance',
+      avatar: '/uploads/about-us/hygienist-claire.jpg',
+      specialisms: 'Periodontal Therapy, Airflow Stain Polishing, Preventive Gum Care',
       quote: '“Ensuring every patient feels welcomed, relaxed, and fully cared for from the moment they walk through our door.”',
     },
   ];
+
+  const teamMembers = (data.clinicians && data.clinicians.length > 0)
+    ? data.clinicians.map((c, idx) => ({
+        name: c.name,
+        title: c.badge || c.title || 'Dental Clinician',
+        credentials: c.title || 'BDS Dental Surgeon',
+        gdc: defaultTeam[idx]?.gdc || '20419' + idx,
+        avatar: c.avatar || defaultTeam[idx]?.avatar || '/uploads/about-us/doctor-das.jpg',
+        specialisms: c.bio || defaultTeam[idx]?.specialisms || '',
+        quote: defaultTeam[idx]?.quote || '“Committed to gentle, patient-first dental care.”',
+      }))
+    : defaultTeam;
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
@@ -108,43 +120,41 @@ export default function AboutPage() {
 
             <div className={styles.heroGrid}>
               <div className={styles.heroContent}>
-                <span className={styles.eyebrow}>{hero.eyebrow}</span>
-                <h1 className={styles.headline}>{hero.headline}</h1>
-                <p className={styles.subtitle}>{hero.subtitle}</p>
+                <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: hero.eyebrow || '' }} />
+                <h1 className={styles.headline} dangerouslySetInnerHTML={{ __html: hero.headline || '' }} />
+                <p className={styles.subtitle} dangerouslySetInnerHTML={{ __html: hero.subtitle || '' }} />
 
-                {/* 4 Trust Badges */}
+                {/* 4 Trust Badges (Editable in CMS) */}
                 <div className={styles.trustBadgesRow}>
-                  <div className={styles.badgeCard}>
-                    <span className="material-symbols-outlined">local_hospital</span>
-                    <span>NHS & Private</span>
-                  </div>
-                  <div className={styles.badgeCard}>
-                    <span className="material-symbols-outlined">verified_user</span>
-                    <span>CQC Regulated</span>
-                  </div>
-                  <div className={styles.badgeCard}>
-                    <span className="material-symbols-outlined">workspace_premium</span>
-                    <span>BDA Member</span>
-                  </div>
-                  <div className={styles.badgeCard}>
-                    <span className="material-symbols-outlined">military_tech</span>
-                    <span>Award-Winning</span>
-                  </div>
+                  {(hero.trust_badges && hero.trust_badges.length > 0
+                    ? hero.trust_badges
+                    : [
+                        { icon: 'local_hospital', label: 'NHS & Private' },
+                        { icon: 'verified_user', label: 'CQC Regulated' },
+                        { icon: 'workspace_premium', label: 'BDA Member' },
+                        { icon: 'military_tech', label: 'Award-Winning' },
+                      ]
+                  ).map((tb, bIdx) => {
+                    const icon = typeof tb === 'string' ? 'verified_user' : tb.icon || 'verified_user';
+                    const label = typeof tb === 'string' ? tb : tb.label;
+                    return (
+                      <div key={bIdx} className={styles.badgeCard}>
+                        <span className="material-symbols-outlined">{icon}</span>
+                        <span>{label}</span>
+                      </div>
+                    );
+                  })}
                 </div>
 
-                {/* Actions */}
+                {/* Actions (Editable in CMS) */}
                 <div className={styles.heroActions}>
-                  <a href="#our-team" className={styles.primaryCta}>
-                    <span className="material-symbols-outlined text-[18px]">
-                      groups
-                    </span>
-                    <span>Meet Our Team</span>
+                  <a href={hero.cta_primary_link || '#our-team'} className={styles.primaryCta}>
+                    <span className="material-symbols-outlined text-[18px]">groups</span>
+                    <span>{hero.cta_primary || 'Meet Our Team'}</span>
                   </a>
-                  <a href="tel:+441217652870" className={styles.secondaryCta}>
-                    <span className="material-symbols-outlined text-[18px]">
-                      call
-                    </span>
-                    <span>0121 765 2870</span>
+                  <a href={hero.cta_secondary_link || 'tel:+441217652870'} className={styles.secondaryCta}>
+                    <span className="material-symbols-outlined text-[18px]">call</span>
+                    <span>{hero.cta_secondary || '0121 765 2870'}</span>
                   </a>
                 </div>
               </div>
@@ -153,7 +163,7 @@ export default function AboutPage() {
               <div className={styles.heroImageFrame}>
                 <div className={styles.imageWrapper}>
                   <Image
-                    src={assetUrl(hero.image || '/images/acocks-green-team.jpg')}
+                    src={assetUrl(hero.image || '/uploads/about-us/about-team.jpg')}
                     alt="Clinical team at Acocks Green Dental Practice"
                     fill
                     priority
@@ -178,9 +188,9 @@ export default function AboutPage() {
         <section className={styles.whyUsSection} id="why-us">
           <div className={styles.container}>
             <div className={styles.sectionHeader}>
-              <span className={styles.eyebrow}>{whyUs.eyebrow}</span>
-              <h2>{whyUs.headline}</h2>
-              <p>{whyUs.subtitle}</p>
+              <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: whyUs.eyebrow || '' }} />
+              <h2 dangerouslySetInnerHTML={{ __html: whyUs.headline || '' }} />
+              <p dangerouslySetInnerHTML={{ __html: whyUs.subtitle || '' }} />
             </div>
 
             {/* 4 Pillars Grid */}
@@ -235,7 +245,7 @@ export default function AboutPage() {
             </div>
 
             <div className={styles.teamGrid}>
-              {defaultTeam.map((member, idx) => (
+              {teamMembers.map((member, idx) => (
                 <div key={idx} className={styles.teamCard}>
                   <div className={styles.avatarFrame}>
                     <Image
@@ -269,9 +279,9 @@ export default function AboutPage() {
         <section className={styles.clinicsSection} id="our-clinics">
           <div className={styles.container}>
             <div className={styles.sectionHeader}>
-              <span className={styles.eyebrow}>{clinics.eyebrow}</span>
-              <h2>{clinics.headline}</h2>
-              <p>{clinics.subtitle}</p>
+              <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: clinics.eyebrow || '' }} />
+              <h2 dangerouslySetInnerHTML={{ __html: clinics.headline || '' }} />
+              <p dangerouslySetInnerHTML={{ __html: clinics.subtitle || '' }} />
             </div>
 
             <div className={styles.clinicsGrid}>
@@ -296,7 +306,7 @@ export default function AboutPage() {
               <div className={styles.surgeryPhotoCard}>
                 <div className={styles.surgeryImageWrapper}>
                   <Image
-                    src={assetUrl(clinics.surgery_image || '/images/surgery-clinic.jpg')}
+                    src={assetUrl(clinics.surgery_image || '/uploads/about-us/surgery-clinic.jpg')}
                     alt={clinics.surgery_title}
                     fill
                   />
@@ -308,7 +318,7 @@ export default function AboutPage() {
                   </div>
                   <span className={styles.activePill}>
                     <span className={styles.dot} />
-                    Active Clinical Suite
+                    {clinics.surgery_badge || 'Active Clinical Suite'}
                   </span>
                 </div>
               </div>
@@ -322,9 +332,9 @@ export default function AboutPage() {
         <section className={styles.charterSection} id="nhs-charter">
           <div className={styles.container}>
             <div className={styles.sectionHeader}>
-              <span className={styles.eyebrow}>{charter.eyebrow}</span>
-              <h2>{charter.headline}</h2>
-              <p>{charter.subtitle}</p>
+              <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: charter.eyebrow || '' }} />
+              <h2 dangerouslySetInnerHTML={{ __html: charter.headline || '' }} />
+              <p dangerouslySetInnerHTML={{ __html: charter.subtitle || '' }} />
             </div>
 
             <div className={styles.charterCardsGrid}>

@@ -27,10 +27,10 @@ export const ServicesGrid4x3: React.FC<ServicesGrid4x3Props> = ({
         {/* Section Header */}
         <div className={styles.headerRow}>
           <div className={styles.headerLeft}>
-            <span className={styles.eyebrow}>{eyebrow}</span>
-            <h2 className={styles.title}>{title}</h2>
+            <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: eyebrow }} />
+            <h2 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
           </div>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+          {subtitle && <p className={styles.subtitle} dangerouslySetInnerHTML={{ __html: subtitle }} />}
         </div>
 
         {/* Services Grid */}

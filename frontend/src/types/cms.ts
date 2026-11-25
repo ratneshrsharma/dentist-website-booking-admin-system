@@ -257,7 +257,11 @@ export interface AboutPageData {
     subtitle: string;
     image: string;
     image_caption?: string;
-    trust_badges?: string[];
+    cta_primary?: string;
+    cta_primary_link?: string;
+    cta_secondary?: string;
+    cta_secondary_link?: string;
+    trust_badges?: Array<string | { icon: string; label: string }>;
   };
   why_us: {
     eyebrow: string;
@@ -274,6 +278,7 @@ export interface AboutPageData {
     surgery_image: string;
     surgery_title: string;
     surgery_desc: string;
+    surgery_badge?: string;
   };
   safety_charter: {
     eyebrow: string;
@@ -290,6 +295,7 @@ export interface AboutPageData {
   clinicians?: ClinicianItem[];
   support_team?: ClinicianItem[];
   reviews?: ReviewsData;
+  sections?: PageSection[];
   seo?: {
     meta_title: string;
     meta_description: string;

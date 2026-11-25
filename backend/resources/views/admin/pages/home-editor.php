@@ -6,6 +6,7 @@ use App\Core\App;
 
 $hero = $home['hero'] ?? [];
 $sections = $home['sections'] ?? [];
+$seo = $home['seo'] ?? [];
 $servicesIntro = $home['services_intro'] ?? [];
 $services = $home['featured_services'] ?? [];
 $about = $home['about_summary'] ?? [];
@@ -13,6 +14,8 @@ $clinicians = $home['clinicians'] ?? [];
 $testimonials = $home['testimonials'] ?? [];
 $charter = $home['safety_charter'] ?? [];
 $contact = $home['contact_section'] ?? [];
+
+require __DIR__ . '/_editor-styles.php';
 ?>
 
 <div class="row mb-4 align-items-center">
@@ -39,16 +42,21 @@ $contact = $home['contact_section'] ?? [];
 </div>
 
 <form action="<?= App::url('/admin/pages/home/edit') ?>" method="POST" enctype="multipart/form-data" id="homeEditorForm">
-    <!-- Section Tabs: Hero Banner & Dynamic Sections Composition Engine -->
-    <ul class="nav nav-tabs mb-4 border-bottom-0" id="homeEditorTabs" role="tablist">
+    <!-- Section Tabs: Banner, Content Sections, SEO & Metadata -->
+    <ul class="nav cms-editor-tabs mb-4" id="homeEditorTabs" role="tablist">
         <li class="nav-item">
-            <button class="nav-link active px-4 py-2 fw-semibold" data-bs-toggle="tab" data-bs-target="#sec-hero" type="button">
-                <i class="bi bi-image me-1"></i> 1. Hero Banner & CTAs
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#sec-hero" type="button">
+                <i class="bi bi-image"></i> 1. Banner &amp; CTAs
             </button>
         </li>
         <li class="nav-item">
-            <button class="nav-link px-4 py-2 fw-bold text-success border-success" data-bs-toggle="tab" data-bs-target="#sec-composition" type="button">
-                <i class="bi bi-layers-fill me-1"></i> 2. Page Sections Composition & Layout (<?= count($sections) ?>)
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sec-composition" type="button">
+                <i class="bi bi-layers-fill"></i> 2. Content Sections (<?= count($sections) ?>)
+            </button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#sec-seo" type="button">
+                <i class="bi bi-search"></i> 3. SEO &amp; Metadata
             </button>
         </li>
     </ul>
@@ -152,6 +160,36 @@ $contact = $home['contact_section'] ?? [];
                             </div>
                         <?php endforeach; ?>
                     </div>
+
+                    <!-- Hero Floating Trust Badges -->
+                    <div class="mt-4 pt-4 border-top">
+                        <h6 class="fw-bold text-secondary mb-3">Hero Image Floating Badges</h6>
+                        <div class="row g-3">
+                            <?php foreach (($hero['hero_badges'] ?? [
+                                ['title' => 'CQC Regulated Standards', 'subtitle' => 'Fully compliant', 'icon' => 'verified'],
+                                ['title' => 'Same-Day Emergency Slots', 'subtitle' => 'Fast pain relief', 'icon' => 'e911_emergency'],
+                            ]) as $bIdx => $badge): ?>
+                                <div class="col-md-6">
+                                    <div class="p-3 bg-light rounded-3 border">
+                                        <div class="row g-2">
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">Material Icon</label>
+                                                <input type="text" name="hero_badge_icons[]" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($badge['icon'] ?? 'verified') ?>">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">Badge Title</label>
+                                                <input type="text" name="hero_badge_titles[]" class="form-control form-control-sm fw-bold" value="<?= htmlspecialchars($badge['title'] ?? '') ?>">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label class="form-label small fw-bold">Badge Subtitle</label>
+                                                <input type="text" name="hero_badge_subtitles[]" class="form-control form-control-sm" value="<?= htmlspecialchars($badge['subtitle'] ?? '') ?>">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -193,8 +231,8 @@ $contact = $home['contact_section'] ?? [];
                                 ?>
                                 <div class="card border rounded-4 shadow-none bg-light section-item-card" id="sectionCard_<?= $secId ?>" data-section-id="<?= $secId ?>">
                                     <!-- Section Header Bar -->
-                                    <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2 border-bottom">
-                                        <div class="d-flex align-items-center gap-3">
+                                    <div class="card-header section-acc-header border-bottom">
+                                        <div class="section-acc-left">
                                             <!-- Move Up / Move Down Buttons -->
                                             <div class="btn-group btn-group-sm">
                                                 <button type="button" class="btn btn-outline-secondary" onclick="moveSectionUp(this)" title="Move Up">
@@ -211,13 +249,13 @@ $contact = $home['contact_section'] ?? [];
 
                                             <div>
                                                 <span class="fw-bold text-dark section-name-display"><?= htmlspecialchars($sec['name'] ?? $sec['title'] ?? 'Section') ?></span>
-                                                <span class="badge ms-2 <?= $secCat === 'prebuilt' ? 'bg-primary-subtle text-primary' : ($secCat === 'page_snippet' ? 'bg-info-subtle text-info' : 'bg-success-subtle text-success') ?>">
+                                                <span class="badge ms-2 section-cat-badge <?= $secCat === 'prebuilt' ? 'bg-primary-subtle text-primary' : ($secCat === 'page_snippet' ? 'bg-info-subtle text-info' : 'bg-success-subtle text-success') ?>">
                                                     <?= ucfirst(str_replace('_', ' ', $secCat)) ?> (<?= htmlspecialchars($secType) ?>)
                                                 </span>
                                             </div>
                                         </div>
 
-                                        <div class="d-flex align-items-center gap-3">
+                                        <div class="section-acc-right">
                                             <!-- Active Switch -->
                                             <div class="form-check form-switch m-0">
                                                 <input class="form-check-input" type="checkbox" name="sections[<?= $idx ?>][is_active]" value="1" 
@@ -225,20 +263,20 @@ $contact = $home['contact_section'] ?? [];
                                                 <label class="form-check-label small fw-semibold" for="secActive_<?= $secId ?>">Active</label>
                                             </div>
 
-                                            <!-- Toggle Details Button -->
-                                            <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" data-bs-toggle="collapse" data-bs-target="#secCollapse_<?= $secId ?>">
-                                                <i class="bi bi-sliders me-1"></i> Configure
-                                            </button>
-
                                             <!-- Delete Section Button -->
                                             <button type="button" class="btn btn-sm btn-outline-danger rounded-circle" onclick="removeSection(this)" title="Remove Section">
                                                 <i class="bi bi-trash"></i>
                                             </button>
+
+                                            <!-- Expand / Collapse (+/-) Button on Far Right -->
+                                            <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#secCollapse_<?= $secId ?>" aria-expanded="false" title="Expand / Collapse">
+                                                <i class="bi bi-plus-lg"></i>
+                                            </button>
                                         </div>
                                     </div>
 
-                                    <!-- Section Settings Collapse -->
-                                    <div class="collapse show" id="secCollapse_<?= $secId ?>">
+                                    <!-- Section Settings Collapse (Collapsed by Default) -->
+                                    <div class="collapse" id="secCollapse_<?= $secId ?>">
                                         <div class="card-body p-4 bg-white border-top">
                                             <!-- Hidden Identification Inputs -->
                                             <input type="hidden" name="sections[<?= $idx ?>][id]" value="<?= htmlspecialchars($secId) ?>">
@@ -441,7 +479,31 @@ $contact = $home['contact_section'] ?? [];
             </div>
         </div>
 
-        
+        <!-- ============================================================== -->
+        <!-- 3. SEO & METADATA -->
+        <!-- ============================================================== -->
+        <div class="tab-pane fade" id="sec-seo">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-search text-success me-2"></i> Search Engine Optimization &amp; Social Metadata</h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Meta Title (Browser Tab &amp; Google Heading)</label>
+                            <input type="text" name="meta_title" class="form-control" value="<?= htmlspecialchars($seo['meta_title'] ?? 'Acocks Green Dental Practice | NHS & Private Family Dentist Birmingham B27') ?>">
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Meta Description</label>
+                            <textarea name="meta_description" class="form-control" rows="3"><?= htmlspecialchars($seo['meta_description'] ?? '') ?></textarea>
+                        </div>
+                        <div class="col-md-12">
+                            <label class="form-label fw-bold">Target Keywords (comma-separated)</label>
+                            <input type="text" name="keywords" class="form-control" value="<?= htmlspecialchars($seo['keywords'] ?? '') ?>">
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -877,9 +939,9 @@ function createAndAppendSectionCard(data) {
     const isCustom = (data.category === 'custom_content' || data.category === 'page_snippet');
 
     const html = `
-    <div class="card border rounded-4 shadow-none bg-light section-item-card" id="sectionCard_${data.id}" data-section-id="${data.id}">
-        <div class="card-header bg-white py-3 d-flex align-items-center justify-content-between flex-wrap gap-2 border-bottom">
-            <div class="d-flex align-items-center gap-3">
+    <div class="card border rounded-4 shadow-none bg-light section-item-card is-open" id="sectionCard_${data.id}" data-section-id="${data.id}">
+        <div class="card-header section-acc-header border-bottom">
+            <div class="section-acc-left">
                 <div class="btn-group btn-group-sm">
                     <button type="button" class="btn btn-outline-secondary" onclick="moveSectionUp(this)" title="Move Up"><i class="bi bi-arrow-up"></i></button>
                     <button type="button" class="btn btn-outline-secondary" onclick="moveSectionDown(this)" title="Move Down"><i class="bi bi-arrow-down"></i></button>
@@ -887,19 +949,19 @@ function createAndAppendSectionCard(data) {
                 <span class="badge bg-dark-subtle text-dark font-monospace section-order-badge">#${newOrder}</span>
                 <div>
                     <span class="fw-bold text-dark section-name-display">${escapeHtml(data.name)}</span>
-                    <span class="badge ms-2 bg-success-subtle text-success">${escapeHtml(data.category)} (${escapeHtml(data.type)})</span>
+                    <span class="badge ms-2 section-cat-badge bg-success-subtle text-success">${escapeHtml(data.category)} (${escapeHtml(data.type)})</span>
                 </div>
             </div>
-            <div class="d-flex align-items-center gap-3">
+            <div class="section-acc-right">
                 <div class="form-check form-switch m-0">
                     <input class="form-check-input" type="checkbox" name="sections[${newIdx}][is_active]" value="1" id="secActive_${data.id}" checked>
                     <label class="form-check-label small fw-semibold" for="secActive_${data.id}">Active</label>
                 </div>
-                <button type="button" class="btn btn-sm btn-outline-secondary rounded-pill" data-bs-toggle="collapse" data-bs-target="#secCollapse_${data.id}">
-                    <i class="bi bi-sliders me-1"></i> Configure
-                </button>
                 <button type="button" class="btn btn-sm btn-outline-danger rounded-circle" onclick="removeSection(this)" title="Remove Section">
                     <i class="bi bi-trash"></i>
+                </button>
+                <button type="button" class="section-toggle-btn" data-bs-toggle="collapse" data-bs-target="#secCollapse_${data.id}" aria-expanded="true" title="Expand / Collapse">
+                    <i class="bi bi-dash-lg"></i>
                 </button>
             </div>
         </div>
@@ -1039,6 +1101,7 @@ function createAndAppendSectionCard(data) {
     div.innerHTML = html.trim();
     container.appendChild(div.firstChild);
     recalculateSectionOrders();
+    bindAccordionStateListeners(container);
 }
 
 function toggleSectionBgFields(select, secId) {

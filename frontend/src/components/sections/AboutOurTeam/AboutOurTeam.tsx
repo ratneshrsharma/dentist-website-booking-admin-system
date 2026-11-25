@@ -52,8 +52,8 @@ export const AboutOurTeam: React.FC<AboutOurTeamProps> = ({ about }) => {
 
           {/* Right Text Column */}
           <div className={styles.contentCol}>
-            <span className={styles.eyebrow}>{about.eyebrow}</span>
-            <h2 className={styles.headline}>{about.title}</h2>
+            <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: about.eyebrow || '' }} />
+            <h2 className={styles.headline} dangerouslySetInnerHTML={{ __html: about.title || '' }} />
             <p className={styles.paragraph}>{about.paragraph}</p>
 
             {/* Pillars */}

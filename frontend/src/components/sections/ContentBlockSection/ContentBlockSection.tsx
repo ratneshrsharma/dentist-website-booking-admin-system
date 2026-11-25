@@ -93,15 +93,15 @@ export const ContentBlockSection: React.FC<ContentBlockSectionProps> = ({ sectio
               {section.eyebrow && (
                 <div className={styles.actionBarEyebrow}>
                   <span className="material-symbols-outlined" style={{ fontSize: 16 }}>verified</span>
-                  <span>{section.eyebrow}</span>
+                  <span dangerouslySetInnerHTML={{ __html: section.eyebrow }} />
                 </div>
               )}
-              <h3 className={styles.actionBarTitle}>{section.title}</h3>
+              <h3 className={styles.actionBarTitle} dangerouslySetInnerHTML={{ __html: section.title || '' }} />
               {section.summary && (
-                <p className={styles.actionBarSummary}>{section.summary}</p>
+                <p className={styles.actionBarSummary} dangerouslySetInnerHTML={{ __html: section.summary }} />
               )}
               {section.description && (
-                <p className={styles.actionBarDesc}>{section.description}</p>
+                <p className={styles.actionBarDesc} dangerouslySetInnerHTML={{ __html: section.description }} />
               )}
             </div>
 
@@ -139,22 +139,30 @@ export const ContentBlockSection: React.FC<ContentBlockSectionProps> = ({ sectio
         <div className={styles.container} style={{ position: 'relative', zIndex: 2 }}>
           <div className={styles.fullWidthWrapper}>
             {section.eyebrow && (
-              <span className={styles.eyebrow} style={isLightText ? { color: '#a7f3d0' } : {}}>
-                {section.eyebrow}
-              </span>
+              <span
+                className={styles.eyebrow}
+                style={isLightText ? { color: '#a7f3d0' } : {}}
+                dangerouslySetInnerHTML={{ __html: section.eyebrow }}
+              />
             )}
-            <h2 className={styles.title} style={textColorStyle}>
-              {section.title}
-            </h2>
+            <h2
+              className={styles.title}
+              style={textColorStyle}
+              dangerouslySetInnerHTML={{ __html: section.title || '' }}
+            />
             {section.summary && (
-              <p className={styles.summary} style={subtitleColorStyle}>
-                {section.summary}
-              </p>
+              <p
+                className={styles.summary}
+                style={subtitleColorStyle}
+                dangerouslySetInnerHTML={{ __html: section.summary }}
+              />
             )}
             {section.description && (
-              <p className={styles.description} style={descColorStyle}>
-                {section.description}
-              </p>
+              <p
+                className={styles.description}
+                style={descColorStyle}
+                dangerouslySetInnerHTML={{ __html: section.description }}
+              />
             )}
             {section.cta_text && (
               <Link href={section.cta_link || '#'} className={styles.btnPrimary}>
@@ -180,7 +188,7 @@ export const ContentBlockSection: React.FC<ContentBlockSectionProps> = ({ sectio
           <div className={styles.imageCol}>
             <div className={styles.imageWrapper}>
               <Image
-                src={assetUrl(section.feature_image || '/images/surgery-clinic.jpg')}
+                src={assetUrl(section.feature_image || '/uploads/home/surgery-clinic.jpg')}
                 alt={section.title}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
@@ -192,22 +200,30 @@ export const ContentBlockSection: React.FC<ContentBlockSectionProps> = ({ sectio
           {/* Text Content Column */}
           <div className={styles.textCol}>
             {section.eyebrow && (
-              <span className={styles.eyebrow} style={isLightText ? { color: '#a7f3d0' } : {}}>
-                {section.eyebrow}
-              </span>
+              <span
+                className={styles.eyebrow}
+                style={isLightText ? { color: '#a7f3d0' } : {}}
+                dangerouslySetInnerHTML={{ __html: section.eyebrow }}
+              />
             )}
-            <h2 className={styles.title} style={textColorStyle}>
-              {section.title}
-            </h2>
+            <h2
+              className={styles.title}
+              style={textColorStyle}
+              dangerouslySetInnerHTML={{ __html: section.title || '' }}
+            />
             {section.summary && (
-              <p className={styles.summary} style={subtitleColorStyle}>
-                {section.summary}
-              </p>
+              <p
+                className={styles.summary}
+                style={subtitleColorStyle}
+                dangerouslySetInnerHTML={{ __html: section.summary }}
+              />
             )}
             {section.description && (
-              <p className={styles.description} style={descColorStyle}>
-                {section.description}
-              </p>
+              <p
+                className={styles.description}
+                style={descColorStyle}
+                dangerouslySetInnerHTML={{ __html: section.description }}
+              />
             )}
             {section.cta_text && (
               <Link href={section.cta_link || '#'} className={styles.btnPrimary}>

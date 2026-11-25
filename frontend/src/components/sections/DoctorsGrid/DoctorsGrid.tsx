@@ -28,9 +28,9 @@ export const DoctorsGrid: React.FC<DoctorsGridProps> = ({
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.headerRow}>
-          <span className={styles.eyebrow}>{eyebrow}</span>
-          <h2 className={styles.title}>{title}</h2>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+          <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: eyebrow }} />
+          <h2 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
+          {subtitle && <p className={styles.subtitle} dangerouslySetInnerHTML={{ __html: subtitle }} />}
         </div>
 
         {/* 4 Clinician Cards */}

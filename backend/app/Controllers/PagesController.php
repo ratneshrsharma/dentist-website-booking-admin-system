@@ -33,10 +33,12 @@ class PagesController
 
         $homeData = CmsService::getHomePageData();
         $theme = ThemeService::getTheme();
+        $allPages = CmsService::getPages();
 
         App::render('admin/pages/home-editor', [
             'home' => $homeData,
             'theme' => $theme,
+            'allPages' => $allPages,
             'pageTitle' => 'Homepage Content & Visual Asset Editor',
             'activeNav' => 'pages',
         ]);
@@ -107,12 +109,29 @@ class PagesController
 
         // Hero Image File Upload
         if (!empty($_FILES['hero_image_file']['name'])) {
-            $heroImgUrl = Uploader::uploadImage($_FILES['hero_image_file'], 'hero');
+            $heroImgUrl = Uploader::uploadImage($_FILES['hero_image_file'], 'hero', 'home');
             if ($heroImgUrl) {
                 $home['hero']['hero_image'] = $heroImgUrl;
             }
         } elseif (!empty($_POST['hero_image_manual'])) {
             $home['hero']['hero_image'] = trim($_POST['hero_image_manual']);
+        }
+
+        // Hero Floating Badges
+        if (isset($_POST['hero_badge_titles']) && is_array($_POST['hero_badge_titles'])) {
+            $badges = [];
+            foreach ($_POST['hero_badge_titles'] as $bIdx => $bTitle) {
+                if (trim($bTitle) !== '') {
+                    $badges[] = [
+                        'title' => trim($bTitle),
+                        'subtitle' => trim($_POST['hero_badge_subtitles'][$bIdx] ?? ''),
+                        'icon' => trim($_POST['hero_badge_icons'][$bIdx] ?? 'verified'),
+                    ];
+                }
+            }
+            if (!empty($badges)) {
+                $home['hero']['hero_badges'] = $badges;
+            }
         }
 
         // ----------------------------------------------------
@@ -275,98 +294,20 @@ class PagesController
         // 8. DYNAMIC PAGE SECTIONS COMPOSITION
         // ----------------------------------------------------
         if (isset($_POST['sections']) && is_array($_POST['sections'])) {
-            $parsedSections = [];
-            foreach ($_POST['sections'] as $idx => $sec) {
-                $secId = trim($sec['id'] ?? ('sec_' . ($idx + 1)));
-                $secType = trim($sec['type'] ?? 'custom_content');
-                $secCat = trim($sec['category'] ?? 'custom_content');
-                $secName = trim($sec['name'] ?? $sec['title'] ?? 'Section');
-                $eyebrow = trim($sec['eyebrow'] ?? '');
-                $title = trim($sec['title'] ?? '');
-                $summary = trim($sec['summary'] ?? '');
-                $desc = trim($sec['description'] ?? '');
-                $layout = trim($sec['layout'] ?? 'thumbnail');
-                $imgPos = trim($sec['image_position'] ?? 'right');
-                $colLayout = trim($sec['column_layout'] ?? 'two_col_split');
-                $ctaText = trim($sec['cta_text'] ?? '');
-                $ctaLink = trim($sec['cta_link'] ?? '');
-                $isActive = isset($sec['is_active']) && ($sec['is_active'] === '1' || $sec['is_active'] === 'on' || $sec['is_active'] === true);
-                $order = (int)($sec['order'] ?? ($idx + 1));
-                $featureImg = trim($sec['feature_image'] ?? '');
+            $home['sections'] = $this->parseSectionsFromRequest($_POST['sections'], $_FILES, 'home');
+        }
 
-                if (!empty($_FILES['section_image_files']['name'][$idx])) {
-                    $singleFile = [
-                        'name' => $_FILES['section_image_files']['name'][$idx],
-                        'type' => $_FILES['section_image_files']['type'][$idx],
-                        'tmp_name' => $_FILES['section_image_files']['tmp_name'][$idx],
-                        'error' => $_FILES['section_image_files']['error'][$idx],
-                        'size' => $_FILES['section_image_files']['size'][$idx],
-                    ];
-                    $up = Uploader::uploadImage($singleFile, 'sec_' . $secId);
-                    if ($up) {
-                        $featureImg = $up;
-                    }
-                }
-
-                // Background & Creative Section Styling
-                $bgType = trim($sec['bg_type'] ?? 'default');
-                $bgColor = trim($sec['bg_color'] ?? '#ffffff');
-                $bgGradStart = trim($sec['bg_gradient_start'] ?? '#094713');
-                $bgGradEnd = trim($sec['bg_gradient_end'] ?? '#15803d');
-                $bgGradAngle = trim($sec['bg_gradient_angle'] ?? '135deg');
-                $bgImg = trim($sec['bg_image'] ?? '');
-                $bgOverlayColor = trim($sec['bg_overlay_color'] ?? '#000000');
-                $bgOverlayOpacity = (float)($sec['bg_overlay_opacity'] ?? 0.6);
-                $textContrast = trim($sec['text_contrast'] ?? 'auto');
-                $paddingY = trim($sec['padding_y'] ?? 'normal');
-
-                if (!empty($_FILES['section_bg_files']['name'][$idx])) {
-                    $singleBg = [
-                        'name' => $_FILES['section_bg_files']['name'][$idx],
-                        'type' => $_FILES['section_bg_files']['type'][$idx],
-                        'tmp_name' => $_FILES['section_bg_files']['tmp_name'][$idx],
-                        'error' => $_FILES['section_bg_files']['error'][$idx],
-                        'size' => $_FILES['section_bg_files']['size'][$idx],
-                    ];
-                    $upBg = Uploader::uploadImage($singleBg, 'bg_' . $secId);
-                    if ($upBg) {
-                        $bgImg = $upBg;
-                    }
-                }
-
-                $parsedSections[] = [
-                    'id' => $secId,
-                    'type' => $secType,
-                    'category' => $secCat,
-                    'name' => $secName,
-                    'page_slug' => trim($sec['page_slug'] ?? ''),
-                    'eyebrow' => $eyebrow,
-                    'title' => $title,
-                    'summary' => $summary,
-                    'description' => $desc,
-                    'layout' => $layout,
-                    'feature_image' => $featureImg,
-                    'image_position' => $imgPos,
-                    'column_layout' => $colLayout,
-                    'cta_text' => $ctaText,
-                    'cta_link' => $ctaLink,
-                    'bg_type' => $bgType,
-                    'bg_color' => $bgColor,
-                    'bg_gradient_start' => $bgGradStart,
-                    'bg_gradient_end' => $bgGradEnd,
-                    'bg_gradient_angle' => $bgGradAngle,
-                    'bg_image' => $bgImg,
-                    'bg_overlay_color' => $bgOverlayColor,
-                    'bg_overlay_opacity' => $bgOverlayOpacity,
-                    'text_contrast' => $textContrast,
-                    'padding_y' => $paddingY,
-                    'is_active' => $isActive,
-                    'order' => $order,
-                ];
-            }
-
-            usort($parsedSections, fn($a, $b) => $a['order'] <=> $b['order']);
-            $home['sections'] = $parsedSections;
+        // ----------------------------------------------------
+        // 9. SEO & METADATA
+        // ----------------------------------------------------
+        if (isset($_POST['meta_title'])) {
+            $home['seo']['meta_title'] = trim($_POST['meta_title']);
+        }
+        if (isset($_POST['meta_description'])) {
+            $home['seo']['meta_description'] = trim($_POST['meta_description']);
+        }
+        if (isset($_POST['keywords'])) {
+            $home['seo']['keywords'] = trim($_POST['keywords']);
         }
 
         CmsService::saveHomePageData($home);
@@ -382,10 +323,12 @@ class PagesController
 
         $aboutData = CmsService::getAboutPageData();
         $theme = ThemeService::getTheme();
+        $allPages = CmsService::getPages();
 
         App::render('admin/pages/about-editor', [
             'about' => $aboutData,
             'theme' => $theme,
+            'allPages' => $allPages,
             'pageTitle' => 'About Page Content & Practice Standards Editor',
             'activeNav' => 'pages',
         ]);
@@ -402,20 +345,44 @@ class PagesController
         if (isset($_POST['hero_headline'])) $about['hero']['headline'] = trim($_POST['hero_headline']);
         if (isset($_POST['hero_subtitle'])) $about['hero']['subtitle'] = trim($_POST['hero_subtitle']);
         if (isset($_POST['hero_image_caption'])) $about['hero']['image_caption'] = trim($_POST['hero_image_caption']);
+        if (isset($_POST['hero_cta_primary'])) $about['hero']['cta_primary'] = trim($_POST['hero_cta_primary']);
+        if (isset($_POST['hero_cta_primary_link'])) $about['hero']['cta_primary_link'] = trim($_POST['hero_cta_primary_link']);
+        if (isset($_POST['hero_cta_secondary'])) $about['hero']['cta_secondary'] = trim($_POST['hero_cta_secondary']);
+        if (isset($_POST['hero_cta_secondary_link'])) $about['hero']['cta_secondary_link'] = trim($_POST['hero_cta_secondary_link']);
 
         if (!empty($_FILES['hero_image_file']['name'])) {
-            $up = Uploader::uploadImage($_FILES['hero_image_file'], 'about_team');
+            $up = Uploader::uploadImage($_FILES['hero_image_file'], 'about_team', 'about-us');
             if ($up) $about['hero']['image'] = $up;
         } elseif (!empty($_POST['hero_image_manual'])) {
             $about['hero']['image'] = trim($_POST['hero_image_manual']);
         }
 
-        // 2. Why Us & Ethos
+        // Hero Trust Badges (4 items)
+        if (isset($_POST['trust_badge_labels']) && is_array($_POST['trust_badge_labels'])) {
+            $badges = [];
+            foreach ($_POST['trust_badge_labels'] as $bIdx => $bLabel) {
+                if (trim($bLabel) !== '') {
+                    $badges[] = [
+                        'icon' => trim($_POST['trust_badge_icons'][$bIdx] ?? 'verified_user'),
+                        'label' => trim($bLabel),
+                    ];
+                }
+            }
+            if (!empty($badges)) {
+                $about['hero']['trust_badges'] = $badges;
+            }
+        }
+
+        // 2. Dynamic Page Sections Composition
+        if (isset($_POST['sections']) && is_array($_POST['sections'])) {
+            $about['sections'] = $this->parseSectionsFromRequest($_POST['sections'], $_FILES, 'about-us');
+        }
+
+        // 3. Why Us & Ethos (Stats + 4 Pillars)
         if (isset($_POST['why_us_eyebrow'])) $about['why_us']['eyebrow'] = trim($_POST['why_us_eyebrow']);
         if (isset($_POST['why_us_headline'])) $about['why_us']['headline'] = trim($_POST['why_us_headline']);
         if (isset($_POST['why_us_subtitle'])) $about['why_us']['subtitle'] = trim($_POST['why_us_subtitle']);
 
-        // Stats (4 items)
         if (isset($_POST['stats']) && is_array($_POST['stats'])) {
             $newStats = [];
             foreach ($_POST['stats'] as $st) {
@@ -432,26 +399,82 @@ class PagesController
             }
         }
 
-        // 3. Our Clinics & Surgeries
+        if (isset($_POST['pillars']) && is_array($_POST['pillars'])) {
+            $newPillars = [];
+            foreach ($_POST['pillars'] as $pl) {
+                if (!empty($pl['title'])) {
+                    $newPillars[] = [
+                        'icon' => trim($pl['icon'] ?? 'spa'),
+                        'title' => trim($pl['title']),
+                        'desc' => trim($pl['desc'] ?? ''),
+                        'badge' => trim($pl['badge'] ?? ''),
+                    ];
+                }
+            }
+            if (!empty($newPillars)) {
+                $about['why_us']['pillars'] = $newPillars;
+            }
+        }
+
+        // 4. Our Clinics & Surgeries (5 Features + Surgery Card)
         if (isset($_POST['clinics_eyebrow'])) $about['clinics']['eyebrow'] = trim($_POST['clinics_eyebrow']);
         if (isset($_POST['clinics_headline'])) $about['clinics']['headline'] = trim($_POST['clinics_headline']);
         if (isset($_POST['clinics_subtitle'])) $about['clinics']['subtitle'] = trim($_POST['clinics_subtitle']);
         if (isset($_POST['clinics_surgery_title'])) $about['clinics']['surgery_title'] = trim($_POST['clinics_surgery_title']);
         if (isset($_POST['clinics_surgery_desc'])) $about['clinics']['surgery_desc'] = trim($_POST['clinics_surgery_desc']);
+        if (isset($_POST['clinics_surgery_badge'])) $about['clinics']['surgery_badge'] = trim($_POST['clinics_surgery_badge']);
 
         if (!empty($_FILES['clinics_image_file']['name'])) {
-            $upC = Uploader::uploadImage($_FILES['clinics_image_file'], 'about_surgery');
+            $upC = Uploader::uploadImage($_FILES['clinics_image_file'], 'about_surgery', 'about-us');
             if ($upC) $about['clinics']['surgery_image'] = $upC;
         } elseif (!empty($_POST['clinics_image_manual'])) {
             $about['clinics']['surgery_image'] = trim($_POST['clinics_image_manual']);
         }
 
-        // 4. NHS Safety Charter
+        if (isset($_POST['clinic_features']) && is_array($_POST['clinic_features'])) {
+            $newFeatures = [];
+            foreach ($_POST['clinic_features'] as $cf) {
+                if (!empty($cf['title'])) {
+                    $newFeatures[] = [
+                        'icon' => trim($cf['icon'] ?? 'radiology'),
+                        'title' => trim($cf['title']),
+                        'desc' => trim($cf['desc'] ?? ''),
+                    ];
+                }
+            }
+            if (!empty($newFeatures)) {
+                $about['clinics']['features'] = $newFeatures;
+            }
+        }
+
+        // 5. NHS Safety Charter (3 Cards + Emergency Box)
         if (isset($_POST['charter_eyebrow'])) $about['safety_charter']['eyebrow'] = trim($_POST['charter_eyebrow']);
         if (isset($_POST['charter_headline'])) $about['safety_charter']['headline'] = trim($_POST['charter_headline']);
         if (isset($_POST['charter_subtitle'])) $about['safety_charter']['subtitle'] = trim($_POST['charter_subtitle']);
 
-        // 5. SEO Metadata
+        if (isset($_POST['charter_cards']) && is_array($_POST['charter_cards'])) {
+            $newCards = [];
+            foreach ($_POST['charter_cards'] as $cc) {
+                if (!empty($cc['title'])) {
+                    $newCards[] = [
+                        'icon' => trim($cc['icon'] ?? 'verified'),
+                        'title' => trim($cc['title']),
+                        'desc' => trim($cc['desc'] ?? ''),
+                        'footer_label' => trim($cc['footer_label'] ?? ''),
+                    ];
+                }
+            }
+            if (!empty($newCards)) {
+                $about['safety_charter']['cards'] = $newCards;
+            }
+        }
+
+        if (isset($_POST['emergency_title'])) $about['safety_charter']['emergency_box']['title'] = trim($_POST['emergency_title']);
+        if (isset($_POST['emergency_subtitle'])) $about['safety_charter']['emergency_box']['subtitle'] = trim($_POST['emergency_subtitle']);
+        if (isset($_POST['emergency_phone'])) $about['safety_charter']['emergency_box']['phone'] = trim($_POST['emergency_phone']);
+        if (isset($_POST['emergency_nhs111'])) $about['safety_charter']['emergency_box']['nhs111'] = trim($_POST['emergency_nhs111']);
+
+        // 6. SEO Metadata
         if (isset($_POST['meta_title'])) $about['seo']['meta_title'] = trim($_POST['meta_title']);
         if (isset($_POST['meta_description'])) $about['seo']['meta_description'] = trim($_POST['meta_description']);
         if (isset($_POST['keywords'])) $about['seo']['keywords'] = trim($_POST['keywords']);
@@ -461,5 +484,103 @@ class PagesController
         App::redirect('/admin/pages/about-us/edit', [
             'success' => 'About page content and practice standards saved successfully! Changes are immediately live on the website.',
         ]);
+    }
+
+    /**
+     * Shared helper to parse dynamic page sections for Home, About, and custom CMS pages
+     */
+    private function parseSectionsFromRequest(array $postSections, array $files, string $subFolder): array
+    {
+        $parsedSections = [];
+        foreach ($postSections as $idx => $sec) {
+            $secId = trim($sec['id'] ?? ('sec_' . ($idx + 1)));
+            $secType = trim($sec['type'] ?? 'custom_content');
+            $secCat = trim($sec['category'] ?? 'custom_content');
+            $secName = trim($sec['name'] ?? $sec['title'] ?? 'Section');
+            $eyebrow = trim($sec['eyebrow'] ?? '');
+            $title = trim($sec['title'] ?? '');
+            $summary = trim($sec['summary'] ?? '');
+            $desc = trim($sec['description'] ?? '');
+            $layout = trim($sec['layout'] ?? 'thumbnail');
+            $imgPos = trim($sec['image_position'] ?? 'right');
+            $colLayout = trim($sec['column_layout'] ?? 'two_col_split');
+            $ctaText = trim($sec['cta_text'] ?? '');
+            $ctaLink = trim($sec['cta_link'] ?? '');
+            $isActive = isset($sec['is_active']) && ($sec['is_active'] === '1' || $sec['is_active'] === 'on' || $sec['is_active'] === true);
+            $order = (int)($sec['order'] ?? ($idx + 1));
+            $featureImg = trim($sec['feature_image'] ?? '');
+
+            if (!empty($files['section_image_files']['name'][$idx])) {
+                $singleFile = [
+                    'name' => $files['section_image_files']['name'][$idx],
+                    'type' => $files['section_image_files']['type'][$idx],
+                    'tmp_name' => $files['section_image_files']['tmp_name'][$idx],
+                    'error' => $files['section_image_files']['error'][$idx],
+                    'size' => $files['section_image_files']['size'][$idx],
+                ];
+                $up = Uploader::uploadImage($singleFile, 'sec_' . $secId, $subFolder);
+                if ($up) {
+                    $featureImg = $up;
+                }
+            }
+
+            $bgType = trim($sec['bg_type'] ?? 'default');
+            $bgColor = trim($sec['bg_color'] ?? '#ffffff');
+            $bgGradStart = trim($sec['bg_gradient_start'] ?? '#094713');
+            $bgGradEnd = trim($sec['bg_gradient_end'] ?? '#15803d');
+            $bgGradAngle = trim($sec['bg_gradient_angle'] ?? '135deg');
+            $bgImg = trim($sec['bg_image'] ?? '');
+            $bgOverlayColor = trim($sec['bg_overlay_color'] ?? '#000000');
+            $bgOverlayOpacity = (float)($sec['bg_overlay_opacity'] ?? 0.6);
+            $textContrast = trim($sec['text_contrast'] ?? 'auto');
+            $paddingY = trim($sec['padding_y'] ?? 'normal');
+
+            if (!empty($files['section_bg_files']['name'][$idx])) {
+                $singleBg = [
+                    'name' => $files['section_bg_files']['name'][$idx],
+                    'type' => $files['section_bg_files']['type'][$idx],
+                    'tmp_name' => $files['section_bg_files']['tmp_name'][$idx],
+                    'error' => $files['section_bg_files']['error'][$idx],
+                    'size' => $files['section_bg_files']['size'][$idx],
+                ];
+                $upBg = Uploader::uploadImage($singleBg, 'bg_' . $secId, $subFolder);
+                if ($upBg) {
+                    $bgImg = $upBg;
+                }
+            }
+
+            $parsedSections[] = [
+                'id' => $secId,
+                'type' => $secType,
+                'category' => $secCat,
+                'name' => $secName,
+                'page_slug' => trim($sec['page_slug'] ?? ''),
+                'eyebrow' => $eyebrow,
+                'title' => $title,
+                'summary' => $summary,
+                'description' => $desc,
+                'layout' => $layout,
+                'feature_image' => $featureImg,
+                'image_position' => $imgPos,
+                'column_layout' => $colLayout,
+                'cta_text' => $ctaText,
+                'cta_link' => $ctaLink,
+                'bg_type' => $bgType,
+                'bg_color' => $bgColor,
+                'bg_gradient_start' => $bgGradStart,
+                'bg_gradient_end' => $bgGradEnd,
+                'bg_gradient_angle' => $bgGradAngle,
+                'bg_image' => $bgImg,
+                'bg_overlay_color' => $bgOverlayColor,
+                'bg_overlay_opacity' => $bgOverlayOpacity,
+                'text_contrast' => $textContrast,
+                'padding_y' => $paddingY,
+                'is_active' => $isActive,
+                'order' => $order,
+            ];
+        }
+
+        usort($parsedSections, fn($a, $b) => $a['order'] <=> $b['order']);
+        return $parsedSections;
     }
 }

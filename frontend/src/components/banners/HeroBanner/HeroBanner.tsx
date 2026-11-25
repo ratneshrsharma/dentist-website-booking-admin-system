@@ -36,16 +36,29 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ hero, onBookClick }) => 
         <div className={styles.heroGrid}>
           {/* Left Text Column */}
           <div className={styles.contentCol}>
-            <span className={styles.eyebrow}>
-              {hero.eyebrow || 'NHS & Private Patients Welcomed'}
-            </span>
+            <span
+              className={styles.eyebrow}
+              dangerouslySetInnerHTML={{
+                __html: hero.eyebrow || 'NHS & Private Patients Welcomed',
+              }}
+            />
             <h1 className={styles.headline}>
-              {hero.headline || hero.title || 'Make your Dental Experience a'}{' '}
-              <span className={styles.highlight}>
-                {hero.headline_highlight || hero.highlight_word || 'Lot Brighter'}
-              </span>
+              <span
+                dangerouslySetInnerHTML={{
+                  __html: hero.headline || hero.title || 'Make your Dental Experience a',
+                }}
+              />{' '}
+              <span
+                className={styles.highlight}
+                dangerouslySetInnerHTML={{
+                  __html: hero.headline_highlight || hero.highlight_word || 'Lot Brighter',
+                }}
+              />
             </h1>
-            <p className={styles.subtitle}>{hero.subtitle}</p>
+            <p
+              className={styles.subtitle}
+              dangerouslySetInnerHTML={{ __html: hero.subtitle || '' }}
+            />
 
             {/* Statistics Row */}
             {hero.stats && hero.stats.length > 0 && (
@@ -99,7 +112,7 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ hero, onBookClick }) => 
           <div className={styles.visualCol}>
             <div className={styles.imageFrame}>
               <Image
-                src={assetUrl(hero.hero_image || '/images/hero-patient.jpg')}
+                src={assetUrl(hero.hero_image || '/uploads/home/hero-patient.jpg')}
                 alt="Friendly patient consultation"
                 fill
                 priority
@@ -108,22 +121,24 @@ export const HeroBanner: React.FC<HeroBannerProps> = ({ hero, onBookClick }) => 
 
               <div className={styles.cqcBadge}>
                 <span className={`material-symbols-outlined ${styles.badgeIcon}`}>
-                  verified
+                  {hero.hero_badges?.[0]?.icon || 'verified'}
                 </span>
-                <span>CQC Regulated Standards</span>
+                <span>{hero.hero_badges?.[0]?.title || 'CQC Regulated Standards'}</span>
               </div>
 
               <div className={styles.emergencySlotBanner}>
                 <div className={styles.bannerLeft}>
                   <div className={styles.emergencySlotIcon}>
                     <span className="material-symbols-outlined">
-                      e911_emergency
+                      {hero.hero_badges?.[1]?.icon || 'e911_emergency'}
                     </span>
                   </div>
                   <div>
-                    <p className={styles.bannerTitle}>Same-Day Emergency Slots</p>
+                    <p className={styles.bannerTitle}>
+                      {hero.hero_badges?.[1]?.title || 'Same-Day Emergency Slots'}
+                    </p>
                     <p className={styles.bannerSubtitle}>
-                      Fast relief for severe toothache & trauma
+                      {hero.hero_badges?.[1]?.subtitle || 'Fast relief for severe toothache & trauma'}
                     </p>
                   </div>
                 </div>

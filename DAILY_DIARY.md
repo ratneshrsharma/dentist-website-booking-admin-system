@@ -9,6 +9,29 @@
 
 ---
 
+### [2026-11-25 10:50] - Unified 3-Tab CMS Editors, Collapsed Primary-Colored Accordions, HTML Tag Rendering & Page-Folder Image Uploads
+* **Micro-Task:** Implementation of CMS Architecture, UI Polish, HTML Rendering & Asset Management:
+  1. **HTML Tag Support in CMS Content & Inputs (`HeroBanner.tsx`, `ContentBlockSection.tsx`, `DoctorsGrid.tsx`, `ServicesGrid4x3.tsx`, `ServicesSidebarList.tsx`, `TestimonialsSlider.tsx`, `ClinicAddressAndContact.tsx`, `AboutOurTeam.tsx`, `about-us/page.tsx`):**
+     - Replaced escaped text bindings with `dangerouslySetInnerHTML` for CMS eyebrows, headlines, titles, subtitles, summaries, and descriptions so `<br />`, `<strong>`, `<span>`, and other HTML formatting render properly instead of literal text.
+  2. **Unified 3-Tab CMS Editors (`home-editor.php`, `about-editor.php`, `_editor-styles.php`):**
+     - Replaced the 5-tab About editor with the unified **3-tab** layout matching the Homepage editor: `1. Banner & CTAs`, `2. Content Sections`, and `3. SEO & Metadata`.
+     - Added the missing `3. SEO & Metadata` tab to `home-editor.php` and wired `seo` persistence in `PagesController::updateHome()`.
+     - Styled `.cms-editor-tabs` so active tabs display a **solid primary color (`#0d631b`) background** with white text.
+  3. **Accordion Sections UI Overhaul (`_editor-styles.php`, `home-editor.php`, `about-editor.php`):**
+     - Configured all section accordions to start **collapsed** on initial load.
+     - Aligned accordion headers cleanly (left side: move up/down, order badge, title, type badge; right side: Active switch, delete button, and far-right `+`/`-` toggle button).
+     - Active/open accordion headers switch to a **solid primary color (`#0d631b`) background** with white text and `-` icon.
+  4. **Editable Missing Sections:**
+     - Added CMS editing for Hero Floating Badges (`home-editor.php`), About Hero 4 Trust Badges & CTAs (`about-editor.php`), and embedded Why Us (4 stats + 4 pillars), Clinics & Amenities (5 features + surgery card + badge), and NHS Safety Charter (3 cards + emergency bar) inside the About Content Sections builder.
+  5. **Page-Folder Image Uploads & Broken Image Fixes (`Uploader.php`, `PagesController.php`, `CmsService.php`, `about-us/page.tsx`):**
+     - Added `$subFolder` support to `Uploader::uploadImage()` so uploaded assets are saved in `public/uploads/<page_name>/` (`uploads/home/`, `uploads/about-us/`).
+     - Organized all Home and About page images into `uploads/home/` and `uploads/about-us/`, updated `CmsService` defaults and JSON data, and connected About clinicians to real uploaded avatars.
+* **Verification & QA:**
+  - Verified HTTP 200 on all 13 images in `/uploads/home/` and `/uploads/about-us/`.
+  - Browser QA verified zero broken images on `/` and `/about-us`, clean HTML rendering, 3-tab solid-green active tabs, and collapsed-by-default accordions with `+`/`-` toggle and solid-green open headers on both Home and About CMS editors.
+
+---
+
 ### [2026-11-24 18:18] - Request Clinical Appointment Right Slide-Over Drawer (70% PC, 100% Mobile) & Clinical Practice Rule Notice Text Wrap
 * **Micro-Task:** User Feedback Implementation for Clinical Booking Pop-up:
   1. **Right-Side Slide-Over Drawer Navigation (`BookingModal.module.less`, `BookingModal.tsx`):**

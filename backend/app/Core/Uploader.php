@@ -23,9 +23,10 @@ class Uploader
      *
      * @param array $file $_FILES['input_name']
      * @param string $prefix Prefix for generated file name
+     * @param string $subFolder Optional page-name subfolder inside /uploads/ (e.g. 'home', 'about-us')
      * @return string|null The uploaded file URL or null if failed/empty
      */
-    public static function uploadImage(array $file, string $prefix = 'img'): ?string
+    public static function uploadImage(array $file, string $prefix = 'img', string $subFolder = ''): ?string
     {
         if (empty($file['name']) || empty($file['tmp_name']) || $file['error'] !== UPLOAD_ERR_OK) {
             return null;
@@ -46,8 +47,12 @@ class Uploader
             return null;
         }
 
+        // Sanitize subfolder name
+        $subFolder = trim(preg_replace('/[^a-zA-Z0-9_-]/', '', $subFolder));
+        $relativeDir = $subFolder !== '' ? '/uploads/' . $subFolder : '/uploads';
+
         // Target upload directory
-        $targetDir = dirname(__DIR__, 2) . '/public/uploads';
+        $targetDir = dirname(__DIR__, 2) . '/public' . $relativeDir;
         if (!is_dir($targetDir)) {
             @mkdir($targetDir, 0755, true);
         }
@@ -57,7 +62,7 @@ class Uploader
         $targetPath = $targetDir . '/' . $fileName;
 
         if (move_uploaded_file($file['tmp_name'], $targetPath)) {
-            return App::url('/uploads/' . $fileName);
+            return App::url($relativeDir . '/' . $fileName);
         }
 
         return null;

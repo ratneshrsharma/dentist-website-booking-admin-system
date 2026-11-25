@@ -27,9 +27,9 @@ export const ClinicAddressAndContact: React.FC<ClinicAddressAndContactProps> = (
       <div className={styles.container}>
         {/* Header */}
         <div className={styles.headerRow}>
-          <span className={styles.eyebrow}>{eyebrow || contactData.eyebrow || 'Visit Our Surgery'}</span>
-          <h2 className={styles.title}>{title || contactData.title}</h2>
-          <p className={styles.subtitle}>{subtitle || contactData.subtitle}</p>
+          <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: eyebrow || contactData.eyebrow || 'Visit Our Surgery' }} />
+          <h2 className={styles.title} dangerouslySetInnerHTML={{ __html: title || contactData.title || '' }} />
+          <p className={styles.subtitle} dangerouslySetInnerHTML={{ __html: subtitle || contactData.subtitle || '' }} />
         </div>
 
         <div className={styles.grid}>

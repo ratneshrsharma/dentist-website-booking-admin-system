@@ -505,7 +505,7 @@ export const DEFAULT_ABOUT_PAGE: AboutPageData = {
     headline: 'Dedicated to Gentle, High-Quality Family & Cosmetic Dentistry in Acocks Green',
     subtitle:
       'With over 25 years of clinical heritage at 1078 Warwick Road, Acocks Green Dental Practice unites compassionate NHS primary dental health with advanced, minimally invasive private and cosmetic care. We believe modern dental visits should feel calm, transparent, and completely unhurried.',
-    image: '/images/acocks-green-team.jpg',
+    image: '/uploads/about-us/about-team.jpg',
     image_caption: 'Principal Clinicians & Care Team — Warwick Road',
     trust_badges: ['NHS & Private', 'CQC Regulated', 'BDA Member', 'Award-Winning'],
   },
@@ -579,7 +579,7 @@ export const DEFAULT_ABOUT_PAGE: AboutPageData = {
         desc: 'Dedicated on-site parking at the rear, directly opposite Warwick Road bus stops and 5 minutes from Acocks Green Railway Station.',
       },
     ],
-    surgery_image: '/images/surgery-clinic.jpg',
+    surgery_image: '/uploads/about-us/surgery-clinic.jpg',
     surgery_title: 'Modern Surgery 1',
     surgery_desc: 'Equipped with A-dec 500 ergonomic chair and digital radiographic suite',
   },

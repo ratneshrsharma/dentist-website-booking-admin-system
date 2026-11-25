@@ -25,8 +25,8 @@ export const TestimonialsSlider: React.FC<TestimonialsSliderProps> = ({
         {/* Header */}
         <div className={styles.headerRow}>
           <div>
-            <span className={styles.eyebrow}>{eyebrow}</span>
-            <h2 className={styles.title}>{title}</h2>
+            <span className={styles.eyebrow} dangerouslySetInnerHTML={{ __html: eyebrow }} />
+            <h2 className={styles.title} dangerouslySetInnerHTML={{ __html: title }} />
           </div>
 
           <div className={styles.ratingSummary}>

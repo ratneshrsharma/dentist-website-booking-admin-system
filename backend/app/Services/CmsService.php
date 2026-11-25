@@ -84,7 +84,7 @@ class CmsService
                 'cta_secondary_link' => '/contact/#emergency',
                 'phone' => '+44 121 765 2870',
                 'emergency_label' => 'Emergency Triage Line',
-                'hero_image' => App::url('/images/hero-patient.jpg'),
+                'hero_image' => App::url('/uploads/home/hero-patient.jpg'),
                 'stats' => [
                     ['label' => 'Happy Patients', 'value' => '5,000+', 'is_active' => true],
                     ['label' => 'Dentists & Staff', 'value' => '7+', 'is_active' => true],
@@ -188,8 +188,8 @@ class CmsService
                     'title' => 'Patient Comfort First',
                     'subtitle' => 'Gentle nervous patient protocols',
                 ],
-                'image_1' => App::url('/images/treatment-room.jpg'),
-                'image_2' => App::url('/images/surgery-clinic.jpg'),
+                'image_1' => App::url('/uploads/home/treatment-room.jpg'),
+                'image_2' => App::url('/uploads/home/surgery-clinic.jpg'),
             ],
             'clinicians' => [
                 [
@@ -197,7 +197,7 @@ class CmsService
                     'name' => 'Dr. Atandrilla Das',
                     'title' => 'BDS Associate Dental Surgeon',
                     'badge' => 'Associate Dentist',
-                    'avatar' => App::url('/images/doctor-das.jpg'),
+                    'avatar' => App::url('/uploads/home/doctor-das.jpg'),
                     'bio' => 'Special interest in comprehensive restorative therapy, minimal-prep restorations, and pediatric patient care.',
                 ],
                 [
@@ -205,7 +205,7 @@ class CmsService
                     'name' => 'Dr. Harjeevan Rai',
                     'title' => 'BDS Dental Surgeon',
                     'badge' => 'Associate Dentist',
-                    'avatar' => App::url('/images/doctor-rai.jpg'),
+                    'avatar' => App::url('/uploads/home/doctor-rai.jpg'),
                     'bio' => 'Focused on preventive oral health, biomechanical restorations, and gentle pain relief treatments.',
                 ],
                 [
@@ -213,7 +213,7 @@ class CmsService
                     'name' => 'Dr. Nadeem Sohail',
                     'title' => 'BDS Dental Surgeon',
                     'badge' => 'Associate Dentist',
-                    'avatar' => App::url('/images/doctor-sohail.jpg'),
+                    'avatar' => App::url('/uploads/home/doctor-sohail.jpg'),
                     'bio' => 'Experienced in complex endodontics, emergency extractions, and crown & bridge oral rehabilitation.',
                 ],
                 [
@@ -221,7 +221,7 @@ class CmsService
                     'name' => 'Claire',
                     'title' => 'Dental Hygienist',
                     'badge' => 'Dental Hygienist',
-                    'avatar' => App::url('/images/hygienist-claire.jpg'),
+                    'avatar' => App::url('/uploads/home/hygienist-claire.jpg'),
                     'bio' => 'Leading our hygiene suite with deep periodontal therapy, patient brushing coaching, and airflow stain polishing.',
                 ],
             ],
@@ -280,7 +280,12 @@ class CmsService
                     ['day_range' => 'Friday', 'hours' => '8:30 AM – 5:00 PM'],
                     ['day_range' => 'Saturday – Sunday', 'hours' => 'Emergency Triage On-Call'],
                 ],
-                'map_image' => App::url('/images/surgery-clinic.jpg'),
+                'map_image' => App::url('/uploads/home/surgery-clinic.jpg'),
+            ],
+            'seo' => [
+                'meta_title' => 'Acocks Green Dental Practice | NHS & Private Family Dentist Birmingham B27',
+                'meta_description' => 'Trusted NHS & private dental clinic in Acocks Green, Birmingham B27. Routine exams, hygiene, Invisalign, composite fillings, and same-day emergency dental triage.',
+                'keywords' => 'dentist Acocks Green, Birmingham B27 dentist, NHS dentist Birmingham, emergency dentist, Invisalign Acocks Green',
             ],
             'sections' => [
                 [
@@ -311,7 +316,7 @@ class CmsService
                     'title' => 'Dedicated Dental Professionals Serving Birmingham B27',
                     'summary' => 'Our clinic was established with a clear mission: provide accessible, respectful, and clinically excellent dentistry.',
                     'description' => 'At Acocks Green Dental Practice, we believe that visiting the dentist should be a calm, reassuring experience. Our clinic has been trusted by families across South Birmingham for over two decades. From routine checkups to advanced cosmetic aligners, our clinicians pace treatments to your comfort.',
-                    'feature_image' => App::url('/images/surgery-clinic.jpg'),
+                    'feature_image' => App::url('/uploads/home/surgery-clinic.jpg'),
                     'image_position' => 'left', // 'left' or 'right'
                     'column_layout' => 'two_col_split',
                     'cta_text' => 'Discover Our Surgery Story',
@@ -470,22 +475,49 @@ class CmsService
     public static function getAboutPageData(): array
     {
         $file = self::getAboutStorageFile();
+        $data = [];
         if (file_exists($file)) {
-            $content = file_get_contents($file);
-            $decoded = json_decode($content, true);
-            if (is_array($decoded)) {
-                return $decoded;
+            $decoded = json_decode((string)file_get_contents($file), true);
+            if (is_array($decoded) && !empty($decoded)) {
+                $data = $decoded;
             }
         }
 
-        return self::getDefaultAboutPageData();
+        $defaults = self::getDefaultAboutPageData();
+        $merged = array_replace_recursive($defaults, $data);
+
+        if (!empty($data['sections']) && is_array($data['sections'])) {
+            $merged['sections'] = $data['sections'];
+        }
+        if (!empty($data['hero']['trust_badges']) && is_array($data['hero']['trust_badges'])) {
+            $merged['hero']['trust_badges'] = $data['hero']['trust_badges'];
+        }
+
+        // Sync clinicians from Home CMS if not customized on About
+        if (empty($merged['clinicians'])) {
+            $home = self::getHomePageData();
+            $merged['clinicians'] = $home['clinicians'] ?? [];
+        }
+
+        return $merged;
     }
 
     public static function saveAboutPageData(array $data): bool
     {
         $current = self::getAboutPageData();
         $data['_updated_at'] = date('Y-m-d H:i:s');
+
+        $explicitSections = $data['sections'] ?? null;
+        $explicitBadges = $data['hero']['trust_badges'] ?? null;
+
         $merged = array_replace_recursive($current, $data);
+
+        if ($explicitSections !== null && is_array($explicitSections)) {
+            $merged['sections'] = $explicitSections;
+        }
+        if ($explicitBadges !== null && is_array($explicitBadges)) {
+            $merged['hero']['trust_badges'] = $explicitBadges;
+        }
 
         $file = self::getAboutStorageFile();
         $dir = dirname($file);
@@ -506,9 +538,18 @@ class CmsService
                 'eyebrow' => 'Caring for Birmingham Smiles Since 1998',
                 'headline' => 'Dedicated to Gentle, High-Quality Family & Cosmetic Dentistry in Acocks Green',
                 'subtitle' => 'With over 25 years of clinical heritage at 1078 Warwick Road, Acocks Green Dental Practice unites compassionate NHS primary dental health with advanced, minimally invasive private and cosmetic care. We believe modern dental visits should feel calm, transparent, and completely unhurried.',
-                'image' => '/images/acocks-green-team.jpg',
+                'image' => App::url('/uploads/about-us/about-team.jpg'),
                 'image_caption' => 'Principal Clinicians & Care Team — Warwick Road',
-                'trust_badges' => ['NHS & Private', 'CQC Regulated', 'BDA Member', 'Award-Winning'],
+                'cta_primary' => 'Meet Our Team',
+                'cta_primary_link' => '#our-team',
+                'cta_secondary' => '0121 765 2870',
+                'cta_secondary_link' => 'tel:+441217652870',
+                'trust_badges' => [
+                    ['icon' => 'local_hospital', 'label' => 'NHS & Private'],
+                    ['icon' => 'verified_user', 'label' => 'CQC Regulated'],
+                    ['icon' => 'workspace_premium', 'label' => 'BDA Member'],
+                    ['icon' => 'military_tech', 'label' => 'Award-Winning'],
+                ],
             ],
             'why_us' => [
                 'eyebrow' => 'Practice Ethos & Clinical Standards',
@@ -578,9 +619,10 @@ class CmsService
                         'desc' => 'Dedicated on-site parking at the rear, directly opposite Warwick Road bus stops and 5 minutes from Acocks Green Railway Station.',
                     ],
                 ],
-                'surgery_image' => '/images/surgery-clinic.jpg',
+                'surgery_image' => App::url('/uploads/about-us/surgery-clinic.jpg'),
                 'surgery_title' => 'Modern Surgery 1',
                 'surgery_desc' => 'Equipped with A-dec 500 ergonomic chair and digital radiographic suite',
+                'surgery_badge' => 'Active Clinical Suite',
             ],
             'safety_charter' => [
                 'eyebrow' => 'Regulatory Rigor & Patient Safeguards',
@@ -617,6 +659,108 @@ class CmsService
                 'meta_title' => 'About Our Practice & Clinical Team | Acocks Green Dental Practice',
                 'meta_description' => 'Discover our patient-first clinical philosophy, hospital-grade sterilization protocols, and multi-specialty dental expertise in Birmingham B27.',
                 'keywords' => 'dental clinic about us, dental philosophy, sterile dental facility, multi-specialty dentistry, Acocks Green dentist',
+            ],
+            'sections' => [
+                [
+                    'id' => 'sec_about_why_us',
+                    'type' => 'why_us_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Why Us & Ethos Pillars',
+                    'page_slug' => '',
+                    'eyebrow' => 'Practice Ethos & Clinical Standards',
+                    'title' => 'Why Birmingham Patients Choose Acocks Green Dental',
+                    'summary' => 'We understand that many patients feel anxious or delay treatments due to fear of discomfort or unexpected bills. Our clinicians take time to listen, provide transparent NHS and private guidance, and deliver gentle treatment in a calm, modern setting.',
+                    'description' => '',
+                    'layout' => 'thumbnail',
+                    'feature_image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'two_col_split',
+                    'cta_text' => '',
+                    'cta_link' => '',
+                    'bg_type' => 'default',
+                    'is_active' => true,
+                    'order' => 1,
+                ],
+                [
+                    'id' => 'sec_about_team',
+                    'type' => 'team_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Our Clinical Team',
+                    'page_slug' => '',
+                    'eyebrow' => 'Meet Our Experienced Clinicians',
+                    'title' => 'GDC-Registered Dentists, Hygienists & Dental Nurses',
+                    'summary' => 'Every clinician at Acocks Green Dental Practice shares a commitment to gentle clinical precision, continuous professional learning, and friendly patient care.',
+                    'description' => '',
+                    'layout' => 'thumbnail',
+                    'feature_image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'two_col_split',
+                    'cta_text' => '',
+                    'cta_link' => '',
+                    'bg_type' => 'default',
+                    'is_active' => true,
+                    'order' => 2,
+                ],
+                [
+                    'id' => 'sec_about_clinics',
+                    'type' => 'clinics_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Our Clinics & Amenities',
+                    'page_slug' => '',
+                    'eyebrow' => 'Modern Surgery & Accessible Amenities',
+                    'title' => 'State-of-the-Art Surgeries on Warwick Road',
+                    'summary' => 'Designed for comfort, sterility, and seamless clinical efficiency. Located conveniently at 1078 Warwick Road, Birmingham with on-site parking and step-free disabled access.',
+                    'description' => '',
+                    'layout' => 'thumbnail',
+                    'feature_image' => App::url('/uploads/about-us/surgery-clinic.jpg'),
+                    'image_position' => 'right',
+                    'column_layout' => 'two_col_split',
+                    'cta_text' => '',
+                    'cta_link' => '',
+                    'bg_type' => 'default',
+                    'is_active' => true,
+                    'order' => 3,
+                ],
+                [
+                    'id' => 'sec_about_charter',
+                    'type' => 'safety_charter_cards',
+                    'category' => 'prebuilt',
+                    'name' => 'NHS Safety Charter & CQC Standards',
+                    'page_slug' => '',
+                    'eyebrow' => 'Regulatory Rigor & Patient Safeguards',
+                    'title' => 'Our NHS Safety Charter & CQC Quality Standards',
+                    'summary' => 'We are deeply committed to delivering safe, dignified, and clinically audited dental care under NHS primary care contracts and private healthcare regulations.',
+                    'description' => '',
+                    'layout' => 'thumbnail',
+                    'feature_image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'two_col_split',
+                    'cta_text' => '',
+                    'cta_link' => '',
+                    'bg_type' => 'default',
+                    'is_active' => true,
+                    'order' => 4,
+                ],
+                [
+                    'id' => 'sec_about_reviews',
+                    'type' => 'testimonials_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Patient Reviews & Stories',
+                    'page_slug' => '',
+                    'eyebrow' => 'Patient Voices',
+                    'title' => 'What Our Patients Say About Us',
+                    'summary' => 'Verified reviews from patients cared for at our Acocks Green dental practice.',
+                    'description' => '',
+                    'layout' => 'thumbnail',
+                    'feature_image' => '',
+                    'image_position' => 'right',
+                    'column_layout' => 'two_col_split',
+                    'cta_text' => 'Leave a Google Review',
+                    'cta_link' => 'https://g.page/review',
+                    'bg_type' => 'default',
+                    'is_active' => true,
+                    'order' => 5,
+                ],
             ],
         ];
     }
