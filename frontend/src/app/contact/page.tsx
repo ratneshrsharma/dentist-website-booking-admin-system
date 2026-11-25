@@ -428,7 +428,7 @@ export default function ContactPage() {
                             {[
                               { val: 'phone', label: 'Telephone Call' },
                               { val: 'email', label: 'Email Confirmation' },
-                              { val: 'sms', label: 'SMS Text Message' },
+                              { val: 'whatsapp', label: 'WhatsApp Message' },
                             ].map((m) => (
                               <label key={m.val} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, cursor: 'pointer' }}>
                                 <input type="radio" name="comm_method" checked={commMethod === m.val} onChange={() => setCommMethod(m.val)} />

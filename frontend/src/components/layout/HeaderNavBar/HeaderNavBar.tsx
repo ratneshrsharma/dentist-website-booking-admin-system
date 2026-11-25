@@ -306,13 +306,12 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
 
           {/* 5. Contact */}
           <div className={styles.navItem}>
-            <a
-              href="/#contact"
-              onClick={(e) => handleSmoothAnchor(e, '/#contact')}
-              className={`${styles.navLink} ${pathname === '/contact' ? styles.active : ''}`}
+            <Link
+              href="/contact"
+              className={`${styles.navLink} ${pathname === '/contact' || pathname === '/contact/' ? styles.active : ''}`}
             >
               <span>Contact</span>
-            </a>
+            </Link>
           </div>
         </nav>
 
@@ -457,17 +456,14 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
           )}
         </div>
 
-        <a
-          href="/#contact"
+        <Link
+          href="/contact"
           className={styles.mobileLink}
-          onClick={(e) => {
-            setMobileOpen(false);
-            handleSmoothAnchor(e, '/#contact');
-          }}
+          onClick={() => setMobileOpen(false)}
         >
           <span className="material-symbols-outlined">location_on</span>
           <span>Contact</span>
-        </a>
+        </Link>
       </div>
 
       <div className={styles.mobileDrawerFooter}>
