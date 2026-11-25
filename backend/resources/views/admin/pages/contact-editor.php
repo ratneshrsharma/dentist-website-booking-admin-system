@@ -37,55 +37,55 @@ include __DIR__ . '/_editor-styles.php';
 </div>
 
 <form method="POST" action="<?= App::url('/admin/pages/contact/edit') ?>" enctype="multipart/form-data">
-    <ul class="nav nav-tabs cms-tabs mb-4" role="tablist">
-        <li class="nav-item" role="presentation">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-banner" type="button" role="tab">
-                <i class="bi bi-image me-1"></i> 1. Banner &amp; CTAs
+    <ul class="nav cms-editor-tabs mb-4" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#tab-banner" type="button">
+                <i class="bi bi-image"></i> 1. Banner &amp; CTAs
             </button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-sections" type="button" role="tab">
-                <i class="bi bi-layers me-1"></i> 2. Content Sections (<?= count($sections) ?>)
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-sections" type="button">
+                <i class="bi bi-layers-fill"></i> 2. Content Sections (<?= count($sections) ?>)
             </button>
         </li>
-        <li class="nav-item" role="presentation">
-            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-seo" type="button" role="tab">
-                <i class="bi bi-search me-1"></i> 3. SEO &amp; Metadata
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="tab" data-bs-target="#tab-seo" type="button">
+                <i class="bi bi-search"></i> 3. SEO &amp; Metadata
             </button>
         </li>
     </ul>
 
     <div class="tab-content">
         <!-- TAB 1: BANNER & HERO -->
-        <div class="tab-pane fade show active" id="tab-banner" role="tabpanel">
-            <div class="card border-0 shadow-sm mb-4">
-                <div class="card-header bg-white py-3">
+        <div class="tab-pane fade show active" id="tab-banner">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white py-3 border-bottom">
                     <h5 class="fw-bold mb-0">Contact Hero Banner &amp; Reception Card</h5>
                 </div>
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Hero Eyebrow</label>
+                            <label class="form-label fw-semibold">Hero Eyebrow</label>
                             <input type="text" name="hero_eyebrow" class="form-control" value="<?= htmlspecialchars($hero['eyebrow'] ?? '') ?>">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label fw-bold">Hero Headline</label>
-                            <input type="text" name="hero_headline" class="form-control" value="<?= htmlspecialchars($hero['headline'] ?? '') ?>">
+                            <label class="form-label fw-semibold">Hero Headline (HTML supported)</label>
+                            <input type="text" name="hero_headline" class="form-control fw-bold" value="<?= htmlspecialchars($hero['headline'] ?? '') ?>">
                         </div>
                         <div class="col-12">
-                            <label class="form-label fw-bold">Hero Subtitle</label>
+                            <label class="form-label fw-semibold">Hero Subtitle</label>
                             <textarea name="hero_subtitle" class="form-control" rows="2"><?= htmlspecialchars($hero['subtitle'] ?? '') ?></textarea>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Triage Badge Label</label>
+                            <label class="form-label fw-semibold">Triage Badge Label</label>
                             <input type="text" name="hero_triage_label" class="form-control" value="<?= htmlspecialchars($hero['triage_label'] ?? 'Direct Clinical Triage') ?>">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Triage Phone Number</label>
+                            <label class="form-label fw-semibold">Triage Phone Number</label>
                             <input type="text" name="hero_triage_phone" class="form-control" value="<?= htmlspecialchars($hero['triage_phone'] ?? '0121 765 2870') ?>">
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label fw-bold">Upload Hero Reception Image</label>
+                            <label class="form-label fw-semibold">Upload Hero Reception Image</label>
                             <input type="file" name="hero_image_file" class="form-control" accept="image/*">
                             <input type="hidden" name="hero_image" value="<?= htmlspecialchars($hero['image'] ?? '/uploads/home/surgery-clinic.jpg') ?>">
                         </div>
@@ -93,18 +93,18 @@ include __DIR__ . '/_editor-styles.php';
                 </div>
             </div>
 
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white py-3 border-bottom">
                     <h5 class="fw-bold mb-0">Nervous / Dental Phobic Reassurance Card</h5>
                 </div>
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-md-5">
-                            <label class="form-label fw-bold">Card Title</label>
+                            <label class="form-label fw-semibold">Card Title</label>
                             <input type="text" name="reassurance_title" class="form-control" value="<?= htmlspecialchars($reassurance['title'] ?? '') ?>">
                         </div>
                         <div class="col-md-7">
-                            <label class="form-label fw-bold">Card Description</label>
+                            <label class="form-label fw-semibold">Card Description</label>
                             <textarea name="reassurance_desc" class="form-control" rows="2"><?= htmlspecialchars($reassurance['desc'] ?? '') ?></textarea>
                         </div>
                     </div>
@@ -113,84 +113,92 @@ include __DIR__ . '/_editor-styles.php';
         </div>
 
         <!-- TAB 2: CONTENT SECTIONS -->
-        <div class="tab-pane fade" id="tab-sections" role="tabpanel">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <small class="text-muted">Reorder sections, toggle Active/Inactive, edit copy, or add custom sections.</small>
-                <button type="button" class="btn btn-outline-success btn-sm" onclick="addContactSection()">
-                    <i class="bi bi-plus-lg me-1"></i> Add Custom Section
-                </button>
-            </div>
-
-            <div class="accordion cms-accordion" id="contactSectionsAccordion">
-                <?php foreach ($sections as $idx => $sec): ?>
-                    <?php $isActive = !isset($sec['is_active']) || !empty($sec['is_active']); ?>
-                    <div class="accordion-item contact-sec-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#csec_<?= $idx ?>">
-                                <div class="d-flex justify-content-between align-items-center w-100 pe-2">
-                                    <span>
-                                        <span class="badge bg-light text-dark border me-2 sec-num">#<?= $idx + 1 ?></span>
-                                        <strong><?= htmlspecialchars($sec['name'] ?? ($sec['title'] ?? 'Section')) ?></strong>
-                                        <span class="badge bg-success-subtle text-success ms-2"><?= htmlspecialchars($sec['type'] ?? 'custom') ?></span>
-                                    </span>
-                                    <div class="d-flex align-items-center gap-2" onclick="event.stopPropagation();">
-                                        <input type="hidden" name="sections[<?= $idx ?>][is_active]" value="<?= $isActive ? '1' : '0' ?>" class="sec-active-hidden">
-                                        <div class="form-check form-switch mb-0">
-                                            <input class="form-check-input" type="checkbox" <?= $isActive ? 'checked' : '' ?> onchange="this.closest('.contact-sec-item').querySelector('.sec-active-hidden').value = this.checked ? '1' : '0';">
-                                            <label class="form-check-label small">Active</label>
+        <div class="tab-pane fade" id="tab-sections">
+            <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center flex-wrap gap-2">
+                    <div>
+                        <h5 class="fw-bold mb-0">Contact Page Sections</h5>
+                        <small class="text-muted">Reorder sections, toggle Active/Inactive, edit copy, or add custom sections.</small>
+                    </div>
+                    <button type="button" class="btn btn-outline-success btn-sm" onclick="addContactSection()">
+                        <i class="bi bi-plus-lg me-1"></i> Add Custom Section
+                    </button>
+                </div>
+                <div class="card-body p-4">
+                    <div id="contactSectionsContainer" class="d-flex flex-column gap-3">
+                        <?php foreach ($sections as $idx => $sec):
+                            $isActive = !isset($sec['is_active']) || !empty($sec['is_active']);
+                            $secType = $sec['type'] ?? 'custom_content';
+                        ?>
+                            <div class="card border rounded-4 shadow-none bg-light section-item-card">
+                                <div class="card-header section-acc-header border-bottom">
+                                    <div class="section-acc-left">
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="moveContactSec(this, -1)" title="Move Up"><i class="bi bi-arrow-up"></i></button>
+                                            <button type="button" class="btn btn-outline-secondary" onclick="moveContactSec(this, 1)" title="Move Down"><i class="bi bi-arrow-down"></i></button>
                                         </div>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="moveContactSec(this, -1)" title="Move Up"><i class="bi bi-arrow-up"></i></button>
-                                        <button type="button" class="btn btn-outline-secondary btn-sm" onclick="moveContactSec(this, 1)" title="Move Down"><i class="bi bi-arrow-down"></i></button>
-                                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.contact-sec-item').remove()" title="Remove Section"><i class="bi bi-trash3"></i></button>
+                                        <span class="badge bg-dark-subtle text-dark font-monospace section-order-badge">#<?= $idx + 1 ?></span>
+                                        <div>
+                                            <span class="fw-bold text-dark"><?= htmlspecialchars($sec['name'] ?? ($sec['title'] ?? 'Section')) ?></span>
+                                            <span class="badge ms-2 bg-primary-subtle text-primary"><?= htmlspecialchars($secType) ?></span>
+                                        </div>
+                                    </div>
+                                    <div class="section-acc-right">
+                                        <div class="form-check form-switch m-0">
+                                            <input class="form-check-input" type="checkbox" name="sections[<?= $idx ?>][is_active]" value="1" id="cSecActive_<?= $idx ?>" <?= $isActive ? 'checked' : '' ?>>
+                                            <label class="form-check-label small fw-semibold" for="cSecActive_<?= $idx ?>">Active</label>
+                                        </div>
+                                        <button type="button" class="btn btn-sm btn-outline-danger rounded-circle" onclick="this.closest('.section-item-card').remove(); recalcContactOrders();" title="Remove Section"><i class="bi bi-trash"></i></button>
+                                        <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#cSecCollapse_<?= $idx ?>" aria-expanded="false"><i class="bi bi-plus-lg"></i></button>
                                     </div>
                                 </div>
-                            </button>
-                        </h2>
-                        <div id="csec_<?= $idx ?>" class="accordion-collapse collapse" data-bs-parent="#contactSectionsAccordion">
-                            <div class="accordion-body">
-                                <input type="hidden" name="sections[<?= $idx ?>][id]" value="<?= htmlspecialchars($sec['id'] ?? '') ?>">
-                                <input type="hidden" name="sections[<?= $idx ?>][type]" value="<?= htmlspecialchars($sec['type'] ?? 'custom_content') ?>">
-                                <input type="hidden" name="sections[<?= $idx ?>][category]" value="<?= htmlspecialchars($sec['category'] ?? 'custom') ?>">
-                                <input type="hidden" name="sections[<?= $idx ?>][name]" value="<?= htmlspecialchars($sec['name'] ?? '') ?>">
-                                <div class="row g-3">
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold">Eyebrow</label>
-                                        <input type="text" name="sections[<?= $idx ?>][eyebrow]" class="form-control form-control-sm" value="<?= htmlspecialchars($sec['eyebrow'] ?? '') ?>">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label small fw-bold">Section Title</label>
-                                        <input type="text" name="sections[<?= $idx ?>][title]" class="form-control form-control-sm" value="<?= htmlspecialchars($sec['title'] ?? '') ?>">
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label small fw-bold">Summary / Description (HTML supported)</label>
-                                        <textarea name="sections[<?= $idx ?>][summary]" class="form-control form-control-sm" rows="2"><?= htmlspecialchars($sec['summary'] ?? '') ?></textarea>
+                                <div class="collapse" id="cSecCollapse_<?= $idx ?>">
+                                    <div class="card-body p-4 bg-white border-top">
+                                        <input type="hidden" name="sections[<?= $idx ?>][id]" value="<?= htmlspecialchars($sec['id'] ?? '') ?>">
+                                        <input type="hidden" name="sections[<?= $idx ?>][type]" value="<?= htmlspecialchars($secType) ?>">
+                                        <input type="hidden" name="sections[<?= $idx ?>][category]" value="<?= htmlspecialchars($sec['category'] ?? 'custom') ?>">
+                                        <input type="hidden" name="sections[<?= $idx ?>][name]" value="<?= htmlspecialchars($sec['name'] ?? '') ?>">
+                                        <div class="row g-3">
+                                            <div class="col-md-5">
+                                                <label class="form-label small fw-semibold">Eyebrow</label>
+                                                <input type="text" name="sections[<?= $idx ?>][eyebrow]" class="form-control form-control-sm" value="<?= htmlspecialchars($sec['eyebrow'] ?? '') ?>">
+                                            </div>
+                                            <div class="col-md-7">
+                                                <label class="form-label small fw-semibold">Section Title (HTML supported)</label>
+                                                <input type="text" name="sections[<?= $idx ?>][title]" class="form-control form-control-sm fw-bold" value="<?= htmlspecialchars($sec['title'] ?? '') ?>">
+                                            </div>
+                                            <div class="col-12">
+                                                <label class="form-label small fw-semibold">Summary / Description (HTML supported)</label>
+                                                <textarea name="sections[<?= $idx ?>][summary]" class="form-control form-control-sm" rows="2"><?= htmlspecialchars($sec['summary'] ?? '') ?></textarea>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        <?php endforeach; ?>
                     </div>
-                <?php endforeach; ?>
+                </div>
             </div>
         </div>
 
         <!-- TAB 3: SEO & METADATA -->
-        <div class="tab-pane fade" id="tab-seo" role="tabpanel">
-            <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3">
+        <div class="tab-pane fade" id="tab-seo">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-header bg-white py-3 border-bottom">
                     <h5 class="fw-bold mb-0">SEO &amp; Metadata</h5>
                 </div>
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-12">
-                            <label class="form-label fw-bold">Meta Title</label>
+                            <label class="form-label fw-semibold">Meta Title</label>
                             <input type="text" name="meta_title" class="form-control" value="<?= htmlspecialchars($seo['meta_title'] ?? '') ?>">
                         </div>
                         <div class="col-12">
-                            <label class="form-label fw-bold">Meta Description</label>
+                            <label class="form-label fw-semibold">Meta Description</label>
                             <textarea name="meta_description" class="form-control" rows="3"><?= htmlspecialchars($seo['meta_description'] ?? '') ?></textarea>
                         </div>
                         <div class="col-12">
-                            <label class="form-label fw-bold">Keywords</label>
+                            <label class="form-label fw-semibold">Keywords</label>
                             <input type="text" name="keywords" class="form-control" value="<?= htmlspecialchars($seo['keywords'] ?? '') ?>">
                         </div>
                     </div>
@@ -208,60 +216,74 @@ include __DIR__ . '/_editor-styles.php';
 </form>
 
 <script>
+function recalcContactOrders() {
+    document.querySelectorAll('#contactSectionsContainer .section-item-card').forEach(function(card, i) {
+        var badge = card.querySelector('.section-order-badge');
+        if (badge) badge.textContent = '#' + (i + 1);
+    });
+}
+
 function moveContactSec(btn, dir) {
-    var item = btn.closest('.contact-sec-item');
-    var parent = document.getElementById('contactSectionsAccordion');
-    if (dir === -1 && item.previousElementSibling) {
-        parent.insertBefore(item, item.previousElementSibling);
-    } else if (dir === 1 && item.nextElementSibling) {
-        parent.insertBefore(item.nextElementSibling, item);
+    var card = btn.closest('.section-item-card');
+    var container = document.getElementById('contactSectionsContainer');
+    if (dir === -1 && card.previousElementSibling) {
+        container.insertBefore(card, card.previousElementSibling);
+    } else if (dir === 1 && card.nextElementSibling) {
+        container.insertBefore(card.nextElementSibling, card);
     }
+    recalcContactOrders();
 }
 
 function addContactSection() {
-    var acc = document.getElementById('contactSectionsAccordion');
-    var idx = acc.querySelectorAll('.contact-sec-item').length;
-    var cid = 'csec_new_' + Date.now();
+    var container = document.getElementById('contactSectionsContainer');
+    var idx = container.querySelectorAll('.section-item-card').length;
+    var cid = 'cSecCollapse_new_' + Date.now();
     var html = `
-    <div class="accordion-item contact-sec-item">
-        <h2 class="accordion-header">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#${cid}">
-                <div class="d-flex justify-content-between align-items-center w-100 pe-2">
-                    <span><span class="badge bg-light text-dark border me-2">#${idx + 1}</span> <strong>New Custom Section</strong></span>
-                    <div class="d-flex align-items-center gap-2" onclick="event.stopPropagation();">
-                        <input type="hidden" name="sections[${idx}][is_active]" value="1" class="sec-active-hidden">
-                        <div class="form-check form-switch mb-0">
-                            <input class="form-check-input" type="checkbox" checked onchange="this.closest('.contact-sec-item').querySelector('.sec-active-hidden').value = this.checked ? '1' : '0';">
-                            <label class="form-check-label small">Active</label>
-                        </div>
-                        <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.closest('.contact-sec-item').remove()"><i class="bi bi-trash3"></i></button>
-                    </div>
+    <div class="card border rounded-4 shadow-none bg-light section-item-card">
+        <div class="card-header section-acc-header border-bottom">
+            <div class="section-acc-left">
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveContactSec(this, -1)" title="Move Up"><i class="bi bi-arrow-up"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveContactSec(this, 1)" title="Move Down"><i class="bi bi-arrow-down"></i></button>
                 </div>
-            </button>
-        </h2>
-        <div id="${cid}" class="accordion-collapse collapse show" data-bs-parent="#contactSectionsAccordion">
-            <div class="accordion-body">
+                <span class="badge bg-dark-subtle text-dark font-monospace section-order-badge">#${idx + 1}</span>
+                <div>
+                    <span class="fw-bold text-dark">New Custom Section</span>
+                    <span class="badge ms-2 bg-primary-subtle text-primary">custom_content</span>
+                </div>
+            </div>
+            <div class="section-acc-right">
+                <div class="form-check form-switch m-0">
+                    <input class="form-check-input" type="checkbox" name="sections[${idx}][is_active]" value="1" checked>
+                    <label class="form-check-label small fw-semibold">Active</label>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-circle" onclick="this.closest('.section-item-card').remove(); recalcContactOrders();" title="Remove Section"><i class="bi bi-trash"></i></button>
+                <button type="button" class="section-toggle-btn" data-bs-toggle="collapse" data-bs-target="#${cid}" aria-expanded="true"><i class="bi bi-plus-lg"></i></button>
+            </div>
+        </div>
+        <div class="collapse show" id="${cid}">
+            <div class="card-body p-4 bg-white border-top">
                 <input type="hidden" name="sections[${idx}][id]" value="sec_contact_${Date.now()}">
                 <input type="hidden" name="sections[${idx}][type]" value="custom_content">
                 <input type="hidden" name="sections[${idx}][category]" value="custom">
                 <input type="hidden" name="sections[${idx}][name]" value="Custom Section">
                 <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold">Eyebrow</label>
+                    <div class="col-md-5">
+                        <label class="form-label small fw-semibold">Eyebrow</label>
                         <input type="text" name="sections[${idx}][eyebrow]" class="form-control form-control-sm">
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold">Section Title</label>
-                        <input type="text" name="sections[${idx}][title]" class="form-control form-control-sm" value="New Section">
+                    <div class="col-md-7">
+                        <label class="form-label small fw-semibold">Section Title (HTML supported)</label>
+                        <input type="text" name="sections[${idx}][title]" class="form-control form-control-sm fw-bold" value="New Section">
                     </div>
                     <div class="col-12">
-                        <label class="form-label small fw-bold">Summary / Description (HTML supported)</label>
+                        <label class="form-label small fw-semibold">Summary / Description (HTML supported)</label>
                         <textarea name="sections[${idx}][summary]" class="form-control form-control-sm" rows="2"></textarea>
                     </div>
                 </div>
             </div>
         </div>
     </div>`;
-    acc.insertAdjacentHTML('beforeend', html);
+    container.insertAdjacentHTML('beforeend', html);
 }
 </script>

@@ -9,6 +9,20 @@
 
 ---
 
+### [2026-11-25 17:10] - Contact Page Editor UI Fix, Blog Editor Cleanup & 1–6 Column Blog Grid Sync
+* **Micro-Task:** UI & Grid Column Fixes:
+  1. **Contact & Location Page Editor (`admin/pages/contact-editor.php`):**
+     - Fixed broken tab/section layout caused by nested `<button>` tags inside Bootstrap accordion headers; converted to `.cms-editor-tabs` (solid green active tab) and `.section-item-card` / `.section-acc-header` layout matching `treatments-editor.php`.
+  2. **Dental Health Blog & News Page Editor (`admin/pages/custom-editor.php`):**
+     - Removed legacy `Managed Blog Posts` form block and replaced it with a direct notice linking to `All Posts` (`/admin/blog/posts`) and `Add New Post` (`/admin/blog/posts/create`).
+  3. **1–6 Column Blog Grid (`BlogPostsSection.tsx`, `frontend/src/app/blog/page.tsx`, `frontend/src/app/page.tsx`):**
+     - Updated both `.home-blog-dynamic-grid` and `.blog-list-dynamic-grid` to render explicit `repeat(gridCols, minmax(0, 1fr))` on desktop (with responsive 2-col/1-col breakpoints), and synced homepage `blog_block` with `All Blog Posts Grid` (`4 Cols`).
+* **Verification & QA:**
+  - Verified `/admin/pages/contact/edit` tabs and collapsed/expandable sections render cleanly without leakage.
+  - Verified `/admin/pages/blog/edit` shows the `All Posts` notice with `4 Cols` selected, and both `/` and `/blog/` render 4-column grids (`286.25px` per card at `1280x800`).
+
+---
+
 ### [2026-11-25 16:55] - Homepage `blog_block` Post Grid, Contact Page CMS & Frontend, Form Entries & Comma-Separated Forwarding
 * **Micro-Task:** Homepage Blog Section + Contact Page & Form System:
   1. **Homepage `blog_block` (`BlogPostsSection.tsx`, `frontend/src/app/page.tsx`):**

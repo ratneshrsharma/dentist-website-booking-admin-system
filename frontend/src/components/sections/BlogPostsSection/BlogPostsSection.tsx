@@ -37,20 +37,33 @@ export const BlogPostsSection: React.FC<BlogPostsSectionProps> = ({
   subtitle = 'Clinical insights, preventive brushing advice, and community health updates.',
   actionText = 'View All Articles',
   actionUrl = '/blog/',
-  gridCols = 3,
-  limit = 3,
+  gridCols,
+  limit = 6,
 }) => {
   const [posts, setPosts] = useState<BlogPostItem[]>([]);
+  const [resolvedCols, setResolvedCols] = useState<number>(gridCols || 3);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let mounted = true;
     async function loadPosts() {
       try {
-        const res = await apiClient.get<BlogPostItem[]>(`/blog/posts?_t=${Date.now()}`);
-        const raw = res as unknown as { success?: boolean; data?: BlogPostItem[] };
+        const [postsRes, blogPageRes] = await Promise.all([
+          apiClient.get<BlogPostItem[]>(`/blog/posts?_t=${Date.now()}`),
+          gridCols ? Promise.resolve(null) : apiClient.get<{ sections?: Array<{ grid_cols?: number }> }>(`/pages/blog?_t=${Date.now()}`),
+        ]);
+
+        let cols = gridCols || 3;
+        if (!gridCols && blogPageRes?.success && blogPageRes.data?.sections?.[0]?.grid_cols) {
+          cols = Number(blogPageRes.data.sections[0].grid_cols) || 3;
+        }
+        cols = Math.max(1, Math.min(6, cols));
+        if (mounted) setResolvedCols(cols);
+
+        const raw = postsRes as unknown as { success?: boolean; data?: BlogPostItem[] };
         if (mounted && raw?.success && Array.isArray(raw.data)) {
-          setPosts(raw.data.slice(0, limit));
+          const maxItems = Math.max(limit, cols);
+          setPosts(raw.data.slice(0, maxItems));
         }
       } catch {
         // Ignore gracefully
@@ -62,9 +75,7 @@ export const BlogPostsSection: React.FC<BlogPostsSectionProps> = ({
     return () => {
       mounted = false;
     };
-  }, [limit]);
-
-  const colMinWidth = gridCols >= 4 ? '260px' : gridCols === 2 ? '420px' : '320px';
+  }, [gridCols, limit]);
 
   return (
     <section style={{ padding: '16px 0' }}>
@@ -152,13 +163,24 @@ export const BlogPostsSection: React.FC<BlogPostsSectionProps> = ({
             No published articles yet.
           </div>
         ) : (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: `repeat(auto-fill, minmax(${colMinWidth}, 1fr))`,
-              gap: 26,
-            }}
-          >
+          <div className="home-blog-dynamic-grid">
+            <style>{`
+              .home-blog-dynamic-grid {
+                display: grid;
+                grid-template-columns: repeat(${resolvedCols}, minmax(0, 1fr));
+                gap: 24px;
+              }
+              @media (max-width: 1100px) {
+                .home-blog-dynamic-grid {
+                  grid-template-columns: repeat(${Math.min(2, resolvedCols)}, minmax(0, 1fr));
+                }
+              }
+              @media (max-width: 640px) {
+                .home-blog-dynamic-grid {
+                  grid-template-columns: 1fr;
+                }
+              }
+            `}</style>
             {posts.map((post) => {
               const imgPath = post.featured_image || '/uploads/home/treatment-room.jpg';
               const catName = post.categories?.[0]?.name || post.category || 'Clinical Guide';

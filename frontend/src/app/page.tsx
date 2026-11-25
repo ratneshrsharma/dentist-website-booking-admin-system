@@ -194,7 +194,8 @@ export default function HomePage() {
         }
         return <ContentBlockSection key={sec.id || `sec-${index}`} section={sec} index={index} />;
 
-      case 'blog_block':
+      case 'blog_block': {
+        const explicitCols = (sec as unknown as { grid_cols?: number }).grid_cols;
         return wrapSection(
           sec,
           index,
@@ -204,9 +205,10 @@ export default function HomePage() {
             subtitle={sec.summary || sec.description || 'Clinical insights, preventive brushing advice, and community health updates.'}
             actionText={sec.cta_text || (sec as unknown as { action_btn_text?: string }).action_btn_text || 'View All'}
             actionUrl={sec.cta_link || (sec as unknown as { action_btn_url?: string }).action_btn_url || '/blog/'}
-            gridCols={(sec as unknown as { grid_cols?: number }).grid_cols || 3}
+            gridCols={explicitCols && Number(explicitCols) !== 3 ? Number(explicitCols) : undefined}
           />
         );
+      }
 
       case 'page_snippet':
       case 'custom_content':

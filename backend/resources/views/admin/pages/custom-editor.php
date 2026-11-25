@@ -93,58 +93,18 @@ require __DIR__ . '/_editor-styles.php';
         <!-- 2. CONTENT & BLOG POSTS -->
         <div class="tab-pane fade" id="sec-composition">
             <?php if ($isBlog): ?>
-                <div class="card border-0 shadow-sm rounded-4 mb-4">
-                    <div class="card-header bg-white py-3 border-bottom">
-                        <div class="d-flex justify-content-between align-items-center w-100">
-                            <div>
-                                <h5 class="fw-bold mb-0"><i class="bi bi-journal-richtext text-success me-2"></i> Managed Blog Posts (<?= count($blogPosts) ?>)</h5>
-                                <small class="text-muted">Add, reorder, or remove articles displayed on <code>/blog</code>.</small>
-                            </div>
-                            <button type="button" class="btn btn-brand rounded-pill btn-sm" onclick="addBlogPostRow()">
-                                <i class="bi bi-plus-circle me-1"></i> Add Blog Post
-                            </button>
-                        </div>
+                <div class="alert alert-light border shadow-sm rounded-4 d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
+                    <div>
+                        <h6 class="fw-bold mb-1 text-dark"><i class="bi bi-journal-richtext text-success me-2"></i> Blog Posts Are Managed in the WordPress-Style Blog Section</h6>
+                        <small class="text-muted">Create, schedule, categorize, tag, and edit SEO/FAQs for individual articles in <strong>All Posts</strong>.</small>
                     </div>
-                    <div class="card-body p-4">
-                        <div id="blogPostsContainer" class="row g-3">
-                            <?php foreach ($blogPosts as $bIdx => $bp): ?>
-                                <div class="col-md-6 blog-post-item">
-                                    <div class="p-3 bg-light rounded-3 border h-100">
-                                        <div class="d-flex justify-content-between align-items-center mb-2">
-                                            <span class="badge bg-success-subtle text-success fw-bold">Article #<?= $bIdx + 1 ?></span>
-                                            <div class="btn-group btn-group-sm">
-                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopItem(this, '.blog-post-item', -1)" title="Move Up"><i class="bi bi-arrow-up"></i></button>
-                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopItem(this, '.blog-post-item', 1)" title="Move Down"><i class="bi bi-arrow-down"></i></button>
-                                                <button type="button" class="btn btn-outline-danger" onclick="this.closest('.blog-post-item').remove()" title="Delete Post"><i class="bi bi-trash"></i></button>
-                                            </div>
-                                        </div>
-                                        <input type="hidden" name="blog_posts[<?= $bIdx ?>][id]" value="<?= htmlspecialchars($bp['id'] ?? ('post_' . ($bIdx + 1))) ?>">
-                                        <label class="form-label small fw-bold">Title</label>
-                                        <input type="text" name="blog_posts[<?= $bIdx ?>][title]" class="form-control form-control-sm fw-bold mb-2" value="<?= htmlspecialchars($bp['title'] ?? '') ?>">
-                                        <div class="row g-2 mb-2">
-                                            <div class="col-4">
-                                                <label class="form-label small fw-bold">Category</label>
-                                                <input type="text" name="blog_posts[<?= $bIdx ?>][category]" class="form-control form-control-sm" value="<?= htmlspecialchars($bp['category'] ?? '') ?>">
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="form-label small fw-bold">Author</label>
-                                                <input type="text" name="blog_posts[<?= $bIdx ?>][author]" class="form-control form-control-sm" value="<?= htmlspecialchars($bp['author'] ?? '') ?>">
-                                            </div>
-                                            <div class="col-4">
-                                                <label class="form-label small fw-bold">Date</label>
-                                                <input type="date" name="blog_posts[<?= $bIdx ?>][date]" class="form-control form-control-sm" value="<?= htmlspecialchars($bp['date'] ?? date('Y-m-d')) ?>">
-                                            </div>
-                                        </div>
-                                        <label class="form-label small fw-bold">Excerpt</label>
-                                        <textarea name="blog_posts[<?= $bIdx ?>][excerpt]" class="form-control form-control-sm mb-2" rows="2"><?= htmlspecialchars($bp['excerpt'] ?? '') ?></textarea>
-                                        <label class="form-label small fw-bold">Full Content (HTML supported)</label>
-                                        <textarea name="blog_posts[<?= $bIdx ?>][content]" class="form-control form-control-sm mb-2" rows="3"><?= htmlspecialchars($bp['content'] ?? '') ?></textarea>
-                                        <label class="form-label small fw-bold">Featured Image URL</label>
-                                        <input type="text" name="blog_posts[<?= $bIdx ?>][image]" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($bp['image'] ?? '') ?>">
-                                    </div>
-                                </div>
-                            <?php endforeach; ?>
-                        </div>
+                    <div class="d-flex gap-2">
+                        <a href="<?= App::url('/admin/blog/posts') ?>" class="btn btn-outline-success btn-sm px-3">
+                            <i class="bi bi-journal-richtext me-1"></i> Go to All Posts
+                        </a>
+                        <a href="<?= App::url('/admin/blog/posts/create') ?>" class="btn btn-brand btn-sm px-3">
+                            <i class="bi bi-plus-lg me-1"></i> Add New Post
+                        </a>
                     </div>
                 </div>
             <?php endif; ?>

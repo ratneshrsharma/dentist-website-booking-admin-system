@@ -134,7 +134,7 @@ export default function BlogPage() {
     return true;
   });
 
-  const gridCols = pageData.sections?.[0]?.grid_cols || 3;
+  const gridCols = Math.max(1, Math.min(6, Number(pageData.sections?.[0]?.grid_cols) || 3));
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#f8fafc' }}>
@@ -301,13 +301,24 @@ export default function BlogPage() {
                 </button>
               </div>
             ) : (
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(auto-fill, minmax(${gridCols >= 3 ? '330px' : '420px'}, 1fr))`,
-                  gap: 28,
-                }}
-              >
+              <div className="blog-list-dynamic-grid">
+                <style>{`
+                  .blog-list-dynamic-grid {
+                    display: grid;
+                    grid-template-columns: repeat(${gridCols}, minmax(0, 1fr));
+                    gap: 24px;
+                  }
+                  @media (max-width: 1100px) {
+                    .blog-list-dynamic-grid {
+                      grid-template-columns: repeat(${Math.min(2, gridCols)}, minmax(0, 1fr));
+                    }
+                  }
+                  @media (max-width: 640px) {
+                    .blog-list-dynamic-grid {
+                      grid-template-columns: 1fr;
+                    }
+                  }
+                `}</style>
                 {filteredPosts.map((post) => {
                   const postImg = post.featured_image || post.image || '/uploads/home/treatment-room.jpg';
                   return (
