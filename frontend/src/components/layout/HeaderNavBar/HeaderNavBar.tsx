@@ -384,7 +384,7 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
             className={styles.mobileAccordionHeader}
             onClick={() => setMobileMegaOpen(!mobileMegaOpen)}
           >
-            <div className="flex items-center gap-2">
+            <div className={styles.mobileAccordionLabel}>
               <span className="material-symbols-outlined">dentistry</span>
               <span>Treatments & Services</span>
             </div>
@@ -401,17 +401,10 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
                   className={styles.mobileSubItem}
                   onClick={() => setMobileOpen(false)}
                 >
-                  <span className="material-symbols-outlined text-[18px] text-[#094713]">
+                  <span className="material-symbols-outlined text-[18px] text-[#0d631b]">
                     {treatment.icon}
                   </span>
-                  <div>
-                    <div className="font-semibold text-[13px] text-gray-900">
-                      {treatment.title}
-                    </div>
-                    <div className="text-[11px] text-gray-500">
-                      {treatment.price}
-                    </div>
-                  </div>
+                  <span>{treatment.title}</span>
                 </Link>
               ))}
             </div>
@@ -434,7 +427,7 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
             className={styles.mobileAccordionHeader}
             onClick={() => setMobileAboutOpen(!mobileAboutOpen)}
           >
-            <div className="flex items-center gap-2">
+            <div className={styles.mobileAccordionLabel}>
               <span className="material-symbols-outlined">info</span>
               <span>About</span>
             </div>
@@ -454,17 +447,10 @@ export const HeaderNavBar: React.FC<HeaderNavBarProps> = ({ onBookClick }) => {
                     handleSmoothAnchor(e, sub.path);
                   }}
                 >
-                  <span className="material-symbols-outlined text-[18px] text-[#094713]">
+                  <span className="material-symbols-outlined text-[18px] text-[#0d631b]">
                     {sub.icon}
                   </span>
-                  <div>
-                    <div className="font-semibold text-[13px] text-gray-900">
-                      {sub.title}
-                    </div>
-                    <div className="text-[11px] text-gray-500">
-                      {sub.desc}
-                    </div>
-                  </div>
+                  <span>{sub.title}</span>
                 </a>
               ))}
             </div>

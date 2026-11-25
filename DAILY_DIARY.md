@@ -9,6 +9,20 @@
 
 ---
 
+### [2026-11-25 11:09] - Mobile Slide-In Menu Alignment, Page-Name-Only Submenus, Full Unclipped List & Z-Index Layering Fix
+* **Micro-Task:** Responsive Drawer Polish:
+  1. **Exact Vertical Alignment (`HeaderNavBar.tsx`, `HeaderNavBar.module.less`):**
+     - Unified leading icon widths (`width: 24px`) and gap (`gap: 12px`) across `.mobileLink` and `.mobileAccordionHeader > .mobileAccordionLabel` so all 5 top-level labels (`Home`, `Treatments & Services`, `Blog`, `About`, `Contact`) align on the exact same vertical axis (`x = 103px`).
+  2. **Page Names Only in Submenus (`HeaderNavBar.tsx`):**
+     - Removed prices from `Treatments & Services` mobile items and removed descriptions from `About` mobile items, showing strictly the icon and page/section name.
+  3. **Full List Visibility & Z-Index Layering (`HeaderNavBar.module.less`, `MobileAppNavBar.module.css`):**
+     - Removed `overflow: hidden` from `.mobileAccordion` and added `flex-shrink: 0` on drawer items so expanding accordions never shrink or clip any menu item.
+     - Adjusted `.mobileNavBar` to `z-index: 900 !important` (below `.mobileBackdrop: 99998` and `.mobileDrawer: 99999`) so the full-height drawer and its bottom `Book An Appointment` CTA sit cleanly above the bottom sticky mobile bar.
+* **Verification & QA:**
+  - Verified at `400x800`: exact `x = 103px` label alignment, all 8 Treatments and 5 About items unclipped with page names only, and unobstructed bottom `Book An Appointment` button above the bottom sticky bar.
+
+---
+
 ### [2026-11-25 10:57] - CMS Favicon Sync, Centered Treatments Mega Dropdown & 1200px Full-Height Right Slide-In Mobile Menu
 * **Micro-Task:** Navigation & Branding Polish:
   1. **CMS Admin Favicon (`layouts/admin.php`):**

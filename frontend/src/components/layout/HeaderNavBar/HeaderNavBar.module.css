@@ -349,7 +349,7 @@
   background: rgba(15, 23, 42, 0.55);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
-  z-index: 9998;
+  z-index: 99998;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -368,7 +368,7 @@
   width: min(380px, 88vw);
   height: 100dvh;
   background-color: #ffffff;
-  z-index: 9999;
+  z-index: 99999;
   display: flex;
   flex-direction: column;
   box-shadow: -12px 0 40px rgba(0, 0, 0, 0.22);
@@ -436,10 +436,14 @@
   color: #1e293b;
   text-decoration: none;
   border-radius: 8px;
+  flex-shrink: 0;
 }
-.mobileLink span:first-child {
+.mobileLink > span:first-child {
+  width: 24px;
+  text-align: center;
   font-size: 22px;
   color: #0d631b;
+  flex-shrink: 0;
 }
 .mobileLink:hover {
   background-color: #f0fdf4;
@@ -449,7 +453,7 @@
   display: flex;
   flex-direction: column;
   border-radius: 8px;
-  overflow: hidden;
+  flex-shrink: 0;
 }
 .mobileAccordionHeader {
   display: flex;
@@ -462,12 +466,22 @@
   color: #1e293b;
   background: none;
   border: none;
+  border-radius: 8px;
   cursor: pointer;
   text-align: left;
+  flex-shrink: 0;
 }
-.mobileAccordionHeader span:first-child {
+.mobileAccordionHeader .mobileAccordionLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.mobileAccordionHeader .mobileAccordionLabel > span:first-child {
+  width: 24px;
+  text-align: center;
   font-size: 22px;
   color: #0d631b;
+  flex-shrink: 0;
 }
 .mobileAccordionHeader:hover {
   background-color: #f0fdf4;
@@ -476,21 +490,25 @@
 .mobileSubList {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding-left: 20px;
-  padding-right: 8px;
-  padding-bottom: 8px;
+  gap: 2px;
+  padding: 4px 8px 8px 36px;
+  flex-shrink: 0;
 }
 .mobileSubItem {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
-  padding: 8px 10px;
-  border-radius: 6px;
+  padding: 9px 12px;
+  border-radius: 8px;
   text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+  flex-shrink: 0;
 }
 .mobileSubItem:hover {
-  background-color: #f1f5f9;
+  background-color: #f0fdf4;
+  color: #0d631b;
 }
 @keyframes fadeIn {
   from {
