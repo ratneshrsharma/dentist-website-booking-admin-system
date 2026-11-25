@@ -96,8 +96,8 @@ $services = $services ?? [];
         </div>
     </div>
 
-    <form action="<?= App::url('/admin/components/services/reorder') ?>" method="POST" id="reorderForm">
-        <div class="table-responsive">
+    <form action="<?= App::url('/admin/components/services/reorder') ?>" method="POST" id="reorderForm"></form>
+    <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
@@ -123,8 +123,8 @@ $services = $services ?? [];
                         <?php foreach ($services as $s): ?>
                             <tr>
                                 <td class="ps-4">
-                                    <input type="hidden" name="service_ids[]" value="<?= $s['id'] ?>">
-                                    <input type="number" name="display_orders[]" 
+                                    <input type="hidden" name="service_ids[]" value="<?= $s['id'] ?>" form="reorderForm">
+                                    <input type="number" name="display_orders[]" form="reorderForm"
                                            class="form-control form-control-sm text-center fw-bold" 
                                            value="<?= htmlspecialchars((string)($s['display_order'] ?? 1)) ?>" 
                                            style="width: 65px;" min="1">
@@ -220,7 +220,6 @@ $services = $services ?? [];
                 </nav>
             </div>
         </div>
-    </form>
 </div>
 
 <!-- Delete Confirmation Modal -->

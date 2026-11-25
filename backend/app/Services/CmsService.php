@@ -27,6 +27,172 @@ class CmsService
         return dirname(__DIR__, 2) . '/storage/app/cms_page_' . $safe . '.json';
     }
 
+    private static function getTreatmentsStorageFile(): string
+    {
+        return dirname(__DIR__, 2) . '/storage/app/cms_treatments.json';
+    }
+
+    public static function getTreatmentsPageData(): array
+    {
+        $file = self::getTreatmentsStorageFile();
+        $data = [];
+        if (file_exists($file)) {
+            $decoded = json_decode((string)file_get_contents($file), true);
+            if (is_array($decoded) && !empty($decoded)) {
+                $data = $decoded;
+            }
+        }
+        $defaults = self::getDefaultTreatmentsPageData();
+        $merged = array_replace_recursive($defaults, $data);
+
+        if (isset($data['sections']) && is_array($data['sections'])) {
+            $merged['sections'] = $data['sections'];
+        }
+        if (isset($data['fee_bands']) && is_array($data['fee_bands'])) {
+            $merged['fee_bands'] = $data['fee_bands'];
+        }
+        if (isset($data['clinical_pillars']) && is_array($data['clinical_pillars'])) {
+            $merged['clinical_pillars'] = $data['clinical_pillars'];
+        }
+
+        return $merged;
+    }
+
+    public static function saveTreatmentsPageData(array $data): bool
+    {
+        $current = self::getTreatmentsPageData();
+        $data['_updated_at'] = date('Y-m-d H:i:s');
+
+        $explicitSections = $data['sections'] ?? null;
+        $explicitFeeBands = $data['fee_bands'] ?? null;
+        $explicitPillars = $data['clinical_pillars'] ?? null;
+
+        $merged = array_replace_recursive($current, $data);
+
+        if ($explicitSections !== null && is_array($explicitSections)) {
+            $merged['sections'] = $explicitSections;
+        }
+        if ($explicitFeeBands !== null && is_array($explicitFeeBands)) {
+            $merged['fee_bands'] = $explicitFeeBands;
+        }
+        if ($explicitPillars !== null && is_array($explicitPillars)) {
+            $merged['clinical_pillars'] = $explicitPillars;
+        }
+
+        $file = self::getTreatmentsStorageFile();
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+        return file_put_contents($file, json_encode($merged, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) !== false;
+    }
+
+    public static function getDefaultTreatmentsPageData(): array
+    {
+        return [
+            '_updated_at' => date('Y-m-d H:i:s'),
+            'slug' => 'treatments',
+            'title' => 'Treatments & Services Catalog',
+            'hero' => [
+                'eyebrow' => 'OUR CLINICAL SERVICES & PROCEDURES',
+                'headline' => 'Comprehensive Dental Care & Specialized Treatments',
+                'subtitle' => 'From essential routine NHS care to advanced cosmetic smile makeovers and restorative procedures in Acocks Green, Birmingham. Delivered with gentle compassion and state-of-the-art diagnostics.',
+                'image' => App::url('/uploads/home/hero-patient.jpg'),
+                'cta_primary' => 'Book Consultation',
+                'cta_primary_link' => '#quick-book',
+            ],
+            'fee_bands' => [
+                [
+                    'icon' => 'local_hospital',
+                    'title' => 'NHS Band 1',
+                    'badge' => 'Examination & Diagnosis',
+                    'price' => '£26.80',
+                    'desc' => 'Includes comprehensive examination, diagnosis, X-rays, and preventive clinical advice.',
+                    'is_active' => true,
+                ],
+                [
+                    'icon' => 'healing',
+                    'title' => 'NHS Band 2',
+                    'badge' => 'Fillings & Root Canals',
+                    'price' => '£73.50',
+                    'desc' => 'Covers Band 1 plus fillings, root canal treatments, and tooth extractions.',
+                    'is_active' => true,
+                ],
+                [
+                    'icon' => 'workspace_premium',
+                    'title' => 'Private Dentistry Options',
+                    'badge' => 'Cosmetic & Flexible',
+                    'price' => 'From £45.00',
+                    'desc' => 'Extended appointment times, white composite fillings, Airflow hygiene, and Invisalign® aligners.',
+                    'is_active' => true,
+                ],
+            ],
+            'clinical_pillars' => [
+                ['icon' => 'biotech', 'title' => 'Modern Digital Technology', 'desc' => 'Low-radiation 3D digital radiography and iTero optical scanners.', 'is_active' => true],
+                ['icon' => 'sentiment_satisfied', 'title' => 'Welcoming Phobic Patients', 'desc' => 'Unhurried appointments with gentle numbing techniques.', 'is_active' => true],
+                ['icon' => 'calendar_month', 'title' => 'Flexible Appointments', 'desc' => 'Same-day emergency triage slots and convenient scheduling.', 'is_active' => true],
+                ['icon' => 'verified_user', 'title' => 'Strict NHS & CQC Safety', 'desc' => 'HTM 01-05 gold standard decontamination and CQC compliance.', 'is_active' => true],
+            ],
+            'sections' => [
+                [
+                    'id' => 'sec_trt_grid',
+                    'type' => 'services_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Treatments & Services Grid',
+                    'eyebrow' => 'Clinical Catalog',
+                    'title' => 'Explore Our Dental Treatments',
+                    'summary' => 'Filter by specialty or click any treatment to explore full clinical details and pricing.',
+                    'grid_cols' => 3,
+                    'is_active' => true,
+                    'order' => 1,
+                ],
+                [
+                    'id' => 'sec_trt_fees',
+                    'type' => 'fee_bands_block',
+                    'category' => 'prebuilt',
+                    'name' => 'NHS Fee Bands & Private Options',
+                    'eyebrow' => 'Transparent Pricing',
+                    'title' => 'NHS Fee Bands & Private Care Options',
+                    'summary' => 'Clear upfront pricing with zero hidden fees across both NHS and private pathways.',
+                    'grid_cols' => 3,
+                    'is_active' => true,
+                    'order' => 2,
+                ],
+                [
+                    'id' => 'sec_trt_pillars',
+                    'type' => 'why_us_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Clinical Pillars & Care Standards',
+                    'eyebrow' => 'Why Choose Us',
+                    'title' => 'Patient-First Care in Birmingham B27',
+                    'summary' => 'Combining modern clinical technology with gentle chairside reassurance.',
+                    'grid_cols' => 4,
+                    'is_active' => true,
+                    'order' => 3,
+                ],
+                [
+                    'id' => 'sec_trt_cta',
+                    'type' => 'custom_content',
+                    'category' => 'custom_content',
+                    'name' => 'Quick Book Consultation Banner',
+                    'eyebrow' => 'NEED CLINICAL ADVICE FIRST?',
+                    'title' => 'Not Sure Which Treatment is Right for You?',
+                    'summary' => 'Speak directly with our clinical team or book a consultation at our Warwick Road surgery. We will guide you through all NHS and private options clearly, with zero obligation.',
+                    'column_layout' => 'action_bar',
+                    'cta_text' => 'Book Consultation',
+                    'cta_link' => '#quick-book',
+                    'is_active' => true,
+                    'order' => 4,
+                ],
+            ],
+            'seo' => [
+                'meta_title' => 'Treatments & Services | Acocks Green Dental Practice',
+                'meta_description' => 'Comprehensive NHS and private dental treatments in Acocks Green, Birmingham B27.',
+                'keywords' => 'dental treatments Birmingham, NHS dentist, Airflow hygiene, Invisalign, emergency dentist',
+            ],
+        ];
+    }
+
     public static function getPages(): array
     {
         $file = self::getPagesRegistryFile();
@@ -44,6 +210,12 @@ class CmsService
                     } elseif ($p['slug'] === 'about-us') {
                         $p['sections_count'] = count($aboutData['sections'] ?? []);
                         $p['updated_at'] = $aboutData['_updated_at'] ?? $p['updated_at'];
+                    } elseif ($p['slug'] === 'treatments') {
+                        $tData = self::getTreatmentsPageData();
+                        $p['is_editable'] = true;
+                        $p['route'] = '/treatments';
+                        $p['sections_count'] = count($tData['sections'] ?? []);
+                        $p['updated_at'] = $tData['_updated_at'] ?? $p['updated_at'];
                     } elseif (!empty($p['is_custom']) || $p['slug'] === 'blog') {
                         $cData = self::getCustomPageData($p['slug']);
                         $p['sections_count'] = count($cData['sections'] ?? []);
@@ -99,14 +271,14 @@ class CmsService
                 'id' => 4,
                 'title' => 'Treatments & Services Catalog',
                 'slug' => 'treatments',
-                'route' => '/#services',
-                'template' => 'services',
+                'route' => '/treatments',
+                'template' => 'treatments',
                 'status' => 'published',
                 'is_primary' => false,
-                'is_editable' => false,
+                'is_editable' => true,
                 'is_custom' => false,
-                'sections_count' => 8,
-                'updated_at' => '2026-11-21 16:15:00',
+                'sections_count' => 4,
+                'updated_at' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => 5,
@@ -300,9 +472,9 @@ class CmsService
             'title' => $title,
             'hero' => [
                 'eyebrow' => $isBlog ? 'Clinical Insights & Oral Wellness' : 'Acocks Green Dental Practice',
-                'headline' => $isBlog ? 'Dental Health Blog &amp; Patient Guides' : $title,
+                'headline' => $isBlog ? 'Dental Health Blog & Patient Guides' : $title,
                 'subtitle' => $isBlog
-                    ? 'Evidence-based dental advice, NHS &amp; private care tips, and practice updates from our Birmingham B27 clinical team.'
+                    ? 'Evidence-based dental advice, NHS & private care tips, and practice updates from our Birmingham B27 clinical team.'
                     : 'Discover personalized dental care and clinical excellence at Acocks Green Dental Practice.',
                 'image' => App::url('/uploads/home/surgery-clinic.jpg'),
                 'cta_primary' => 'Book An Appointment',

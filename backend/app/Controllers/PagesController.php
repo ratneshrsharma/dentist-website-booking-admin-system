@@ -746,4 +746,89 @@ class PagesController
             'success' => 'Page saved successfully!',
         ]);
     }
+
+    public function editTreatments(): void
+    {
+        Auth::requireAuth();
+        $treatmentsData = CmsService::getTreatmentsPageData();
+        $theme = ThemeService::getTheme();
+
+        App::render('admin/pages/treatments-editor', [
+            'treatments' => $treatmentsData,
+            'theme' => $theme,
+            'pageTitle' => 'Treatments & Services Catalog Page Editor',
+            'activeNav' => 'pages',
+        ]);
+    }
+
+    public function updateTreatments(): void
+    {
+        Auth::requireAuth();
+        $data = CmsService::getTreatmentsPageData();
+
+        if (isset($_POST['hero_eyebrow'])) $data['hero']['eyebrow'] = trim($_POST['hero_eyebrow']);
+        if (isset($_POST['hero_headline'])) $data['hero']['headline'] = trim($_POST['hero_headline']);
+        if (isset($_POST['hero_subtitle'])) $data['hero']['subtitle'] = trim($_POST['hero_subtitle']);
+        if (isset($_POST['hero_cta_primary'])) $data['hero']['cta_primary'] = trim($_POST['hero_cta_primary']);
+        if (isset($_POST['hero_cta_primary_link'])) $data['hero']['cta_primary_link'] = trim($_POST['hero_cta_primary_link']);
+
+        if (!empty($_FILES['hero_image_file']['name'])) {
+            $up = Uploader::uploadImage($_FILES['hero_image_file'], 'treatments_hero', 'treatments');
+            if ($up) $data['hero']['image'] = $up;
+        } elseif (!empty($_POST['hero_image_manual'])) {
+            $data['hero']['image'] = trim($_POST['hero_image_manual']);
+        }
+
+        if (isset($_POST['sections']) && is_array($_POST['sections'])) {
+            $data['sections'] = $this->parseSectionsFromRequest($_POST['sections'], $_FILES, 'treatments');
+        }
+
+        if (isset($_POST['fee_bands']) && is_array($_POST['fee_bands'])) {
+            $fees = [];
+            foreach ($_POST['fee_bands'] as $fb) {
+                if (trim($fb['title'] ?? '') !== '') {
+                    $fees[] = [
+                        'icon' => trim($fb['icon'] ?? 'local_hospital'),
+                        'title' => trim($fb['title']),
+                        'badge' => trim($fb['badge'] ?? ''),
+                        'price' => trim($fb['price'] ?? ''),
+                        'desc' => trim($fb['desc'] ?? ''),
+                        'is_active' => !empty($fb['is_active']),
+                    ];
+                }
+            }
+            $data['fee_bands'] = $fees;
+        }
+        if (isset($_POST['fee_bands_cols'])) {
+            $data['fee_bands_cols'] = max(1, min(6, (int)$_POST['fee_bands_cols']));
+        }
+
+        if (isset($_POST['clinical_pillars']) && is_array($_POST['clinical_pillars'])) {
+            $pillars = [];
+            foreach ($_POST['clinical_pillars'] as $cp) {
+                if (trim($cp['title'] ?? '') !== '') {
+                    $pillars[] = [
+                        'icon' => trim($cp['icon'] ?? 'biotech'),
+                        'title' => trim($cp['title']),
+                        'desc' => trim($cp['desc'] ?? ''),
+                        'is_active' => !empty($cp['is_active']),
+                    ];
+                }
+            }
+            $data['clinical_pillars'] = $pillars;
+        }
+        if (isset($_POST['pillars_cols'])) {
+            $data['pillars_cols'] = max(1, min(6, (int)$_POST['pillars_cols']));
+        }
+
+        if (isset($_POST['meta_title'])) $data['seo']['meta_title'] = trim($_POST['meta_title']);
+        if (isset($_POST['meta_description'])) $data['seo']['meta_description'] = trim($_POST['meta_description']);
+        if (isset($_POST['keywords'])) $data['seo']['keywords'] = trim($_POST['keywords']);
+
+        CmsService::saveTreatmentsPageData($data);
+
+        App::redirect('/admin/pages/treatments/edit', [
+            'success' => 'Treatments & Services Catalog page saved successfully!',
+        ]);
+    }
 }

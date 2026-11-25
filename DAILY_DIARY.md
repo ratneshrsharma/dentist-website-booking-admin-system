@@ -9,6 +9,25 @@
 
 ---
 
+### [2026-11-25 15:35] - Treatments Catalog 3-Tab CMS Editor, Inner Page Section/Item Controls & Services Toggle Fix
+* **Micro-Task:** Treatments CMS Upgrade & Bug Fixes:
+  1. **Services Active/Inactive Toggle Fix (`admin/components/services.php`):**
+     - Fixed nested `<form>` HTML5 bug by detaching `<form id="reorderForm">` as a sibling above the table and linking `service_ids[]` and `display_orders[]` via `form="reorderForm"`, allowing per-row status toggle forms to submit properly.
+  2. **Treatments & Services Catalog 3-Tab CMS Editor (`CmsService.php`, `PagesController.php`, `ApiController.php`, `Router.php`, `treatments-editor.php`, `frontend/src/app/treatments/page.tsx`):**
+     - Enabled full CMS editing for `/treatments` at `/admin/pages/treatments/edit` with 3 tabs (`1. Banner & CTAs`, `2. Content Sections`, `3. SEO & Metadata`).
+     - Added Add/Edit/Remove/Reorder/Active-Inactive controls for sections (`services_block`, `fee_bands_block`, `why_us_block`, `testimonials_block`, `contact_block`, `custom_content`), grid column selectors (`1–6 Cols`), Material Icon Picker, and internal `fee_bands` / `clinical_pillars` cards.
+     - Updated `/treatments` frontend to hydrate dynamically from `/api/v1/pages/treatments` and `/api/v1/services`, respecting active/inactive flags and column layouts.
+  3. **Treatment Inner Page Section & Sub-Element Controls (`ComponentsController.php`, `ServicesService.php`, `service-form.php`, `TreatmentDetailClient.tsx`):**
+     - Added section-level `section_flags` (`show_included`, `show_journey`, `show_pricing`, `show_faqs`) Active/Inactive switches plus per-item `Add / Edit / Remove / Move Left-Right / Active-Inactive` controls for What's Included, Patient Journey, Pricing Tiers, and FAQs.
+     - Updated `TreatmentDetailClient.tsx` to respect `section_flags` and per-item `is_active !== false`.
+     - Fixed `service-form.php` `declare(strict_types=1);` fatal error, cleaned `&amp;` entity encoding in `CmsService.php` & `cms_treatments.json`, and aligned Footer `Same-Day Emergency Relief` link to `/treatments/same-day-emergency-relief`.
+* **Verification & QA:**
+  - Verified `/admin/components/services` Active/Inactive toggle cycles cleanly (`Active` -> `Inactive` -> `Active`).
+  - Verified `/admin/pages/treatments/edit` 3 tabs, section/card controls, and live `/treatments/` round-trip update.
+  - Verified `/admin/components/services/1/edit` loads cleanly and tested adding, saving, live rendering, and removing an FAQ item on `/treatments/routine-examinations/`.
+
+---
+
 ### [2026-11-25 12:18] - CMS-Managed Treatments Catalog (`/treatments`), 8 Treatment Inner Pages (`/treatments/[slug]`), and Services List Alignment
 * **Micro-Task:** Treatments & Services Pages + CMS Integration:
   1. **Services List Alignment (`admin/components/services.php`):**

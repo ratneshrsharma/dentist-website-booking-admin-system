@@ -15,12 +15,14 @@ interface IncludedItem {
   icon: string;
   title: string;
   desc: string;
+  is_active?: boolean;
 }
 
 interface JourneyStep {
   step: string;
   title: string;
   desc: string;
+  is_active?: boolean;
 }
 
 interface PricingOption {
@@ -29,11 +31,13 @@ interface PricingOption {
   price: string;
   features: string[];
   is_featured?: boolean;
+  is_active?: boolean;
 }
 
 interface FaqItem {
   question: string;
   answer: string;
+  is_active?: boolean;
 }
 
 export interface TreatmentDetailData {
@@ -54,6 +58,12 @@ export interface TreatmentDetailData {
   journey_steps?: JourneyStep[];
   pricing_options?: PricingOption[];
   faqs?: FaqItem[];
+  section_flags?: {
+    show_included?: boolean;
+    show_journey?: boolean;
+    show_pricing?: boolean;
+    show_faqs?: boolean;
+  };
 }
 
 export function TreatmentDetailClient({ initialService }: { initialService: TreatmentDetailData }) {
@@ -77,10 +87,11 @@ export function TreatmentDetailClient({ initialService }: { initialService: Trea
     loadLive();
   }, [initialService.slug]);
 
-  const included = service.included_items || [];
-  const journey = service.journey_steps || [];
-  const pricing = service.pricing_options || [];
-  const faqs = service.faqs || [];
+  const flags = service.section_flags || { show_included: true, show_journey: true, show_pricing: true, show_faqs: true };
+  const included = flags.show_included !== false ? (service.included_items || []).filter((i) => i.is_active !== false) : [];
+  const journey = flags.show_journey !== false ? (service.journey_steps || []).filter((i) => i.is_active !== false) : [];
+  const pricing = flags.show_pricing !== false ? (service.pricing_options || []).filter((i) => i.is_active !== false) : [];
+  const faqs = flags.show_faqs !== false ? (service.faqs || []).filter((i) => i.is_active !== false) : [];
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', background: '#ffffff' }}>

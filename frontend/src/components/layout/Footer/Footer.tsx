@@ -15,7 +15,7 @@ export const TREATMENTS_QUICK_LINKS = [
   { title: 'Dental Crowns & Fixed Bridges', path: '/treatments/crowns-and-bridges' },
   { title: 'Invisalign® Clear Aligners', path: '/treatments/invisalign-clear-aligners' },
   { title: 'Emergency Tooth Extraction', path: '/treatments/tooth-extractions' },
-  { title: 'Same-Day Emergency Relief', path: '/treatments/emergency-relief' },
+  { title: 'Same-Day Emergency Relief', path: '/treatments/same-day-emergency-relief' },
 ];
 
 export const Footer: React.FC = () => {

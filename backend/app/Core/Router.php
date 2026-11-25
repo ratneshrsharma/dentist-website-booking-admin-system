@@ -146,6 +146,16 @@ class Router
                 }
             }
 
+            // Treatments & Services Catalog Editor
+            if ($path === 'pages/treatments/edit') {
+                $pages = new PagesController();
+                if ($method === 'POST') {
+                    $pages->updateTreatments();
+                } else {
+                    $pages->editTreatments();
+                }
+            }
+
             // Create / Toggle / Set Primary / Delete / Edit Custom CMS Pages
             if ($path === 'pages/create' && $method === 'POST') {
                 $pages = new PagesController();

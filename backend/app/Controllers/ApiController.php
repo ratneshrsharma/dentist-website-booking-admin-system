@@ -76,6 +76,12 @@ class ApiController
         if ($slug === 'about' || $slug === 'about-us') {
             $this->aboutPage();
         }
+        if ($slug === 'treatments') {
+            App::json([
+                'success' => true,
+                'data' => CmsService::getTreatmentsPageData(),
+            ]);
+        }
         $pageData = CmsService::getCustomPageData($slug);
         App::json([
             'success' => true,

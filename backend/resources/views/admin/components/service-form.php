@@ -1,6 +1,4 @@
-<?php
-
-declare(strict_types=1);
+﻿<?php
 
 use App\Core\App;
 
@@ -238,7 +236,7 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                         <label class="form-label fw-semibold">Starting Price / Tariff</label>
                         <input type="text" name="starting_price" class="form-control" 
                                value="<?= htmlspecialchars($service['starting_price'] ?? '') ?>" 
-                               placeholder="e.g. From £65.00 or NHS Band 1 (£26.80)">
+                               placeholder="e.g. From Â£65.00 or NHS Band 1 (Â£26.80)">
                     </div>
                     <div class="mb-3">
                         <label class="form-label fw-semibold">Estimated Duration</label>
@@ -266,8 +264,10 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
             <!-- Eyebrow -->
             <div>
                 <label class="form-label small fw-bold">Hero Eyebrow Tagline</label>
-                <input type="text" name="eyebrow" class="form-control form-control-sm" value="<?= htmlspecialchars($service['eyebrow'] ?? '') ?>" placeholder="e.g. GENERAL DENTISTRY • ACOCKS GREEN SURGERY">
+                <input type="text" name="eyebrow" class="form-control form-control-sm" value="<?= htmlspecialchars($service['eyebrow'] ?? '') ?>" placeholder="e.g. GENERAL DENTISTRY â€¢ ACOCKS GREEN SURGERY">
             </div>
+
+            <?php $flags = $service['section_flags'] ?? ['show_included' => true, 'show_journey' => true, 'show_pricing' => true, 'show_faqs' => true]; ?>
 
             <!-- 1. What's Included -->
             <div class="card border rounded-4 shadow-none bg-light section-item-card">
@@ -277,6 +277,10 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                         <span class="fw-bold text-dark section-name-display">What&apos;s Included / Clinical Overview (<?= count($includedItems) ?>)</span>
                     </div>
                     <div class="section-acc-right">
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" name="section_flags[show_included]" value="1" id="flagInc" <?= ($flags['show_included'] ?? true) ? 'checked' : '' ?>>
+                            <label class="form-check-label small fw-semibold" for="flagInc">Active</label>
+                        </div>
                         <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#svcIncCollapse" aria-expanded="false">
                             <i class="bi bi-plus-lg"></i>
                         </button>
@@ -284,10 +288,24 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                 </div>
                 <div class="collapse" id="svcIncCollapse">
                     <div class="card-body p-4 bg-white border-top">
-                        <div class="row g-3">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addSvcIncluded()"><i class="bi bi-plus-circle me-1"></i> Add Included Item</button>
+                        </div>
+                        <div class="row g-3" id="svcIncludedContainer">
                             <?php foreach ($includedItems as $iIdx => $inc): ?>
-                                <div class="col-md-4">
+                                <div class="col-md-4 loop-svc-inc">
                                     <div class="p-3 bg-light rounded border h-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="form-check form-switch m-0">
+                                                <input class="form-check-input" type="checkbox" name="included_items[<?= $iIdx ?>][is_active]" value="1" <?= ($inc['is_active'] ?? true) ? 'checked' : '' ?>>
+                                                <label class="form-check-label small fw-semibold">Active</label>
+                                            </div>
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-inc', -1)"><i class="bi bi-arrow-left"></i></button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-inc', 1)"><i class="bi bi-arrow-right"></i></button>
+                                                <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-svc-inc')"><i class="bi bi-trash"></i></button>
+                                            </div>
+                                        </div>
                                         <label class="form-label small fw-bold">Icon</label>
                                         <div class="mb-2"><?php renderIconPickerInput("included_items[{$iIdx}][icon]", $inc['icon'] ?? 'clinical_notes', 'clinical_notes'); ?></div>
                                         <label class="form-label small fw-bold">Title</label>
@@ -310,6 +328,10 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                         <span class="fw-bold text-dark section-name-display">Patient Step-by-Step Journey (<?= count($journeySteps) ?>)</span>
                     </div>
                     <div class="section-acc-right">
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" name="section_flags[show_journey]" value="1" id="flagJrn" <?= ($flags['show_journey'] ?? true) ? 'checked' : '' ?>>
+                            <label class="form-check-label small fw-semibold" for="flagJrn">Active</label>
+                        </div>
                         <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#svcJourneyCollapse" aria-expanded="false">
                             <i class="bi bi-plus-lg"></i>
                         </button>
@@ -317,10 +339,24 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                 </div>
                 <div class="collapse" id="svcJourneyCollapse">
                     <div class="card-body p-4 bg-white border-top">
-                        <div class="row g-3">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addSvcJourney()"><i class="bi bi-plus-circle me-1"></i> Add Journey Step</button>
+                        </div>
+                        <div class="row g-3" id="svcJourneyContainer">
                             <?php foreach ($journeySteps as $jIdx => $js): ?>
-                                <div class="col-md-3">
+                                <div class="col-md-3 loop-svc-jrn">
                                     <div class="p-3 bg-light rounded border h-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="form-check form-switch m-0">
+                                                <input class="form-check-input" type="checkbox" name="journey_steps[<?= $jIdx ?>][is_active]" value="1" <?= ($js['is_active'] ?? true) ? 'checked' : '' ?>>
+                                                <label class="form-check-label small fw-semibold">Active</label>
+                                            </div>
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-jrn', -1)"><i class="bi bi-arrow-left"></i></button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-jrn', 1)"><i class="bi bi-arrow-right"></i></button>
+                                                <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-svc-jrn')"><i class="bi bi-trash"></i></button>
+                                            </div>
+                                        </div>
                                         <label class="form-label small fw-bold">Step #</label>
                                         <input type="text" name="journey_steps[<?= $jIdx ?>][step]" class="form-control form-control-sm font-monospace mb-2" value="<?= htmlspecialchars($js['step'] ?? sprintf('%02d', $jIdx + 1)) ?>">
                                         <label class="form-label small fw-bold">Step Title</label>
@@ -343,6 +379,10 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                         <span class="fw-bold text-dark section-name-display">Transparent Pricing Tiers (<?= count($pricingOptions) ?>)</span>
                     </div>
                     <div class="section-acc-right">
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" name="section_flags[show_pricing]" value="1" id="flagPrc" <?= ($flags['show_pricing'] ?? true) ? 'checked' : '' ?>>
+                            <label class="form-check-label small fw-semibold" for="flagPrc">Active</label>
+                        </div>
                         <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#svcPricingCollapse" aria-expanded="false">
                             <i class="bi bi-plus-lg"></i>
                         </button>
@@ -350,10 +390,24 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                 </div>
                 <div class="collapse" id="svcPricingCollapse">
                     <div class="card-body p-4 bg-white border-top">
-                        <div class="row g-3">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addSvcPricing()"><i class="bi bi-plus-circle me-1"></i> Add Pricing Tier</button>
+                        </div>
+                        <div class="row g-3" id="svcPricingContainer">
                             <?php foreach ($pricingOptions as $pIdx => $po): ?>
-                                <div class="col-md-4">
+                                <div class="col-md-4 loop-svc-prc">
                                     <div class="p-3 bg-light rounded border h-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="form-check form-switch m-0">
+                                                <input class="form-check-input" type="checkbox" name="pricing_options[<?= $pIdx ?>][is_active]" value="1" <?= ($po['is_active'] ?? true) ? 'checked' : '' ?>>
+                                                <label class="form-check-label small fw-semibold">Active</label>
+                                            </div>
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-prc', -1)"><i class="bi bi-arrow-left"></i></button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-prc', 1)"><i class="bi bi-arrow-right"></i></button>
+                                                <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-svc-prc')"><i class="bi bi-trash"></i></button>
+                                            </div>
+                                        </div>
                                         <input type="text" name="pricing_options[<?= $pIdx ?>][title]" class="form-control form-control-sm fw-bold mb-2" value="<?= htmlspecialchars($po['title'] ?? '') ?>" placeholder="Tier Title">
                                         <div class="row g-2 mb-2">
                                             <div class="col-6"><input type="text" name="pricing_options[<?= $pIdx ?>][badge]" class="form-control form-control-sm" value="<?= htmlspecialchars($po['badge'] ?? '') ?>" placeholder="Badge"></div>
@@ -381,6 +435,10 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                         <span class="fw-bold text-dark section-name-display">Treatment FAQs (<?= count($faqs) ?>)</span>
                     </div>
                     <div class="section-acc-right">
+                        <div class="form-check form-switch m-0">
+                            <input class="form-check-input" type="checkbox" name="section_flags[show_faqs]" value="1" id="flagFaq" <?= ($flags['show_faqs'] ?? true) ? 'checked' : '' ?>>
+                            <label class="form-check-label small fw-semibold" for="flagFaq">Active</label>
+                        </div>
                         <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#svcFaqCollapse" aria-expanded="false">
                             <i class="bi bi-plus-lg"></i>
                         </button>
@@ -388,10 +446,24 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
                 </div>
                 <div class="collapse" id="svcFaqCollapse">
                     <div class="card-body p-4 bg-white border-top">
-                        <div class="row g-3">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addSvcFaq()"><i class="bi bi-plus-circle me-1"></i> Add FAQ</button>
+                        </div>
+                        <div class="row g-3" id="svcFaqContainer">
                             <?php foreach ($faqs as $fIdx => $fq): ?>
-                                <div class="col-md-4">
+                                <div class="col-md-4 loop-svc-faq">
                                     <div class="p-3 bg-light rounded border h-100">
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <div class="form-check form-switch m-0">
+                                                <input class="form-check-input" type="checkbox" name="faqs[<?= $fIdx ?>][is_active]" value="1" <?= ($fq['is_active'] ?? true) ? 'checked' : '' ?>>
+                                                <label class="form-check-label small fw-semibold">Active</label>
+                                            </div>
+                                            <div class="btn-group btn-group-sm">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-faq', -1)"><i class="bi bi-arrow-left"></i></button>
+                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-faq', 1)"><i class="bi bi-arrow-right"></i></button>
+                                                <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-svc-faq')"><i class="bi bi-trash"></i></button>
+                                            </div>
+                                        </div>
                                         <label class="form-label small fw-bold">Question</label>
                                         <input type="text" name="faqs[<?= $fIdx ?>][question]" class="form-control form-control-sm fw-bold mb-2" value="<?= htmlspecialchars($fq['question'] ?? '') ?>">
                                         <label class="form-label small fw-bold">Answer</label>
@@ -406,6 +478,96 @@ require dirname(__DIR__) . '/pages/_editor-styles.php';
         </div>
     </div>
 
+<script>
+function addSvcIncluded() {
+    const idx = Date.now();
+    document.getElementById('svcIncludedContainer').insertAdjacentHTML('beforeend', `
+    <div class="col-md-4 loop-svc-inc">
+        <div class="p-3 bg-light rounded border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" name="included_items[${idx}][is_active]" value="1" checked><label class="form-check-label small fw-semibold">Active</label></div>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-inc', -1)"><i class="bi bi-arrow-left"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-inc', 1)"><i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-svc-inc')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <label class="form-label small fw-bold">Icon</label>
+            <div class="mb-2"><div class="input-group input-group-sm icon-picker-group"><span class="input-group-text bg-white"><span class="material-symbols-outlined icon-picker-preview" style="font-size:18px; color:#0d631b;">clinical_notes</span></span><input type="text" name="included_items[${idx}][icon]" class="form-control font-monospace icon-picker-input" value="clinical_notes"><button type="button" class="btn btn-outline-secondary" onclick="openIconPicker(this)"><i class="bi bi-grid-3x3-gap"></i></button></div></div>
+            <label class="form-label small fw-bold">Title</label>
+            <input type="text" name="included_items[${idx}][title]" class="form-control form-control-sm fw-bold mb-2" placeholder="Item Title">
+            <label class="form-label small fw-bold">Description</label>
+            <textarea name="included_items[${idx}][desc]" class="form-control form-control-sm" rows="3" placeholder="Description"></textarea>
+        </div>
+    </div>`);
+}
+function addSvcJourney() {
+    const idx = Date.now();
+    document.getElementById('svcJourneyContainer').insertAdjacentHTML('beforeend', `
+    <div class="col-md-3 loop-svc-jrn">
+        <div class="p-3 bg-light rounded border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" name="journey_steps[${idx}][is_active]" value="1" checked><label class="form-check-label small fw-semibold">Active</label></div>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-jrn', -1)"><i class="bi bi-arrow-left"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-jrn', 1)"><i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-svc-jrn')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <label class="form-label small fw-bold">Step #</label>
+            <input type="text" name="journey_steps[${idx}][step]" class="form-control form-control-sm font-monospace mb-2" value="05">
+            <label class="form-label small fw-bold">Step Title</label>
+            <input type="text" name="journey_steps[${idx}][title]" class="form-control form-control-sm fw-bold mb-2" placeholder="Step Title">
+            <label class="form-label small fw-bold">Description</label>
+            <textarea name="journey_steps[${idx}][desc]" class="form-control form-control-sm" rows="3" placeholder="Description"></textarea>
+        </div>
+    </div>`);
+}
+function addSvcPricing() {
+    const idx = Date.now();
+    document.getElementById('svcPricingContainer').insertAdjacentHTML('beforeend', `
+    <div class="col-md-4 loop-svc-prc">
+        <div class="p-3 bg-light rounded border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" name="pricing_options[${idx}][is_active]" value="1" checked><label class="form-check-label small fw-semibold">Active</label></div>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-prc', -1)"><i class="bi bi-arrow-left"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-prc', 1)"><i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-svc-prc')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <input type="text" name="pricing_options[${idx}][title]" class="form-control form-control-sm fw-bold mb-2" placeholder="Tier Title">
+            <div class="row g-2 mb-2">
+                <div class="col-6"><input type="text" name="pricing_options[${idx}][badge]" class="form-control form-control-sm" placeholder="Badge"></div>
+                <div class="col-6"><input type="text" name="pricing_options[${idx}][price]" class="form-control form-control-sm fw-bold" placeholder="Price"></div>
+            </div>
+            <label class="form-label small fw-bold">Features (one per line)</label>
+            <textarea name="pricing_options[${idx}][features_text]" class="form-control form-control-sm mb-2" rows="3" placeholder="Feature 1&#10;Feature 2"></textarea>
+            <div class="form-check"><input class="form-check-input" type="checkbox" name="pricing_options[${idx}][is_featured]" value="1"><label class="form-check-label small fw-semibold">Highlight as Popular</label></div>
+        </div>
+    </div>`);
+}
+function addSvcFaq() {
+    const idx = Date.now();
+    document.getElementById('svcFaqContainer').insertAdjacentHTML('beforeend', `
+    <div class="col-md-4 loop-svc-faq">
+        <div class="p-3 bg-light rounded border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <div class="form-check form-switch m-0"><input class="form-check-input" type="checkbox" name="faqs[${idx}][is_active]" value="1" checked><label class="form-check-label small fw-semibold">Active</label></div>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-faq', -1)"><i class="bi bi-arrow-left"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-svc-faq', 1)"><i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-svc-faq')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <label class="form-label small fw-bold">Question</label>
+            <input type="text" name="faqs[${idx}][question]" class="form-control form-control-sm fw-bold mb-2" placeholder="Question?">
+            <label class="form-label small fw-bold">Answer</label>
+            <textarea name="faqs[${idx}][answer]" class="form-control form-control-sm" rows="3" placeholder="Answer..."></textarea>
+        </div>
+    </div>`);
+}
+</script>
     <!-- Sticky Action Footer -->
     <div class="sticky-bottom bg-white p-3 rounded-4 shadow-lg border d-flex justify-content-between align-items-center mb-4">
         <a href="<?= App::url('/admin/components/services') ?>" class="btn btn-outline-secondary px-4 py-2 rounded-pill">
@@ -456,3 +618,4 @@ function selectPresetIcon(iconName) {
     updateIconDisplay(iconName);
 }
 </script>
+

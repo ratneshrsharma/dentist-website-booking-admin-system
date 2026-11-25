@@ -112,6 +112,7 @@ class ComponentsController
                         'icon' => trim($inc['icon'] ?? 'clinical_notes'),
                         'title' => trim($inc['title']),
                         'desc' => trim($inc['desc'] ?? ''),
+                        'is_active' => !empty($inc['is_active']),
                     ];
                 }
             }
@@ -125,6 +126,7 @@ class ComponentsController
                         'step' => trim($js['step'] ?? sprintf('%02d', $jIdx + 1)),
                         'title' => trim($js['title']),
                         'desc' => trim($js['desc'] ?? ''),
+                        'is_active' => !empty($js['is_active']),
                     ];
                 }
             }
@@ -144,6 +146,7 @@ class ComponentsController
                         'price' => trim($po['price'] ?? ''),
                         'features' => $features,
                         'is_featured' => !empty($po['is_featured']),
+                        'is_active' => !empty($po['is_active']),
                     ];
                 }
             }
@@ -156,6 +159,7 @@ class ComponentsController
                     $faqs[] = [
                         'question' => trim($fq['question']),
                         'answer' => trim($fq['answer'] ?? ''),
+                        'is_active' => !empty($fq['is_active']),
                     ];
                 }
             }
@@ -180,6 +184,12 @@ class ComponentsController
             'journey_steps' => $journey,
             'pricing_options' => $pricing,
             'faqs' => $faqs,
+            'section_flags' => [
+                'show_included' => !empty($_POST['section_flags']['show_included']),
+                'show_journey' => !empty($_POST['section_flags']['show_journey']),
+                'show_pricing' => !empty($_POST['section_flags']['show_pricing']),
+                'show_faqs' => !empty($_POST['section_flags']['show_faqs']),
+            ],
         ];
     }
 

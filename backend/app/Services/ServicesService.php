@@ -415,6 +415,7 @@ class ServicesService
                 if (isset($data['journey_steps']) && is_array($data['journey_steps'])) $s['journey_steps'] = $data['journey_steps'];
                 if (isset($data['pricing_options']) && is_array($data['pricing_options'])) $s['pricing_options'] = $data['pricing_options'];
                 if (isset($data['faqs']) && is_array($data['faqs'])) $s['faqs'] = $data['faqs'];
+                if (isset($data['section_flags']) && is_array($data['section_flags'])) $s['section_flags'] = $data['section_flags'];
                 if (array_key_exists('is_active', $data)) $s['is_active'] = (bool)$data['is_active'];
                 $s['updated_at'] = date('Y-m-d H:i:s');
                 $found = true;
