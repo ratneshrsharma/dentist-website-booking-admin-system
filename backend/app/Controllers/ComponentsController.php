@@ -45,27 +45,13 @@ class ComponentsController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $featureImg = trim($_POST['feature_image'] ?? '');
             if (!empty($_FILES['feature_image_file']['name'])) {
-                $upUrl = Uploader::uploadImage($_FILES['feature_image_file'], 'service');
+                $upUrl = Uploader::uploadImage($_FILES['feature_image_file'], 'service', 'services');
                 if ($upUrl) {
                     $featureImg = $upUrl;
                 }
             }
 
-            $data = [
-                'title' => trim($_POST['title'] ?? ''),
-                'slug' => trim($_POST['slug'] ?? ''),
-                'category' => trim($_POST['category'] ?? 'General Dentistry'),
-                'badge' => trim($_POST['badge'] ?? ''),
-                'summary' => trim($_POST['summary'] ?? ''),
-                'content' => trim($_POST['content'] ?? ''),
-                'icon' => trim($_POST['icon'] ?? 'dentistry'),
-                'feature_image' => $featureImg,
-                'starting_price' => trim($_POST['starting_price'] ?? ''),
-                'duration' => trim($_POST['duration'] ?? ''),
-                'cdt_code' => trim($_POST['cdt_code'] ?? ''),
-                'display_order' => (int)($_POST['display_order'] ?? 1),
-                'is_active' => isset($_POST['is_active']),
-            ];
+            $data = $this->parseServiceFormData($featureImg);
 
             ServicesService::createService($data);
             App::flash('success', 'New clinical service created successfully.');
@@ -95,27 +81,13 @@ class ComponentsController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $featureImg = trim($_POST['feature_image'] ?? ($service['feature_image'] ?? ''));
             if (!empty($_FILES['feature_image_file']['name'])) {
-                $upUrl = Uploader::uploadImage($_FILES['feature_image_file'], 'service');
+                $upUrl = Uploader::uploadImage($_FILES['feature_image_file'], 'service', 'services');
                 if ($upUrl) {
                     $featureImg = $upUrl;
                 }
             }
 
-            $data = [
-                'title' => trim($_POST['title'] ?? ''),
-                'slug' => trim($_POST['slug'] ?? ''),
-                'category' => trim($_POST['category'] ?? 'General Dentistry'),
-                'badge' => trim($_POST['badge'] ?? ''),
-                'summary' => trim($_POST['summary'] ?? ''),
-                'content' => trim($_POST['content'] ?? ''),
-                'icon' => trim($_POST['icon'] ?? 'dentistry'),
-                'feature_image' => $featureImg,
-                'starting_price' => trim($_POST['starting_price'] ?? ''),
-                'duration' => trim($_POST['duration'] ?? ''),
-                'cdt_code' => trim($_POST['cdt_code'] ?? ''),
-                'display_order' => (int)($_POST['display_order'] ?? 1),
-                'is_active' => isset($_POST['is_active']),
-            ];
+            $data = $this->parseServiceFormData($featureImg);
 
             ServicesService::updateService($id, $data);
             App::flash('success', 'Service "' . $data['title'] . '" updated successfully.');
@@ -128,6 +100,87 @@ class ComponentsController
             'pageTitle' => 'Edit Service — ' . ($service['title'] ?? ''),
             'activeNav' => 'comp-services',
         ]);
+    }
+
+    private function parseServiceFormData(string $featureImg): array
+    {
+        $included = [];
+        if (isset($_POST['included_items']) && is_array($_POST['included_items'])) {
+            foreach ($_POST['included_items'] as $inc) {
+                if (trim($inc['title'] ?? '') !== '') {
+                    $included[] = [
+                        'icon' => trim($inc['icon'] ?? 'clinical_notes'),
+                        'title' => trim($inc['title']),
+                        'desc' => trim($inc['desc'] ?? ''),
+                    ];
+                }
+            }
+        }
+
+        $journey = [];
+        if (isset($_POST['journey_steps']) && is_array($_POST['journey_steps'])) {
+            foreach ($_POST['journey_steps'] as $jIdx => $js) {
+                if (trim($js['title'] ?? '') !== '') {
+                    $journey[] = [
+                        'step' => trim($js['step'] ?? sprintf('%02d', $jIdx + 1)),
+                        'title' => trim($js['title']),
+                        'desc' => trim($js['desc'] ?? ''),
+                    ];
+                }
+            }
+        }
+
+        $pricing = [];
+        if (isset($_POST['pricing_options']) && is_array($_POST['pricing_options'])) {
+            foreach ($_POST['pricing_options'] as $po) {
+                if (trim($po['title'] ?? '') !== '') {
+                    $featuresRaw = trim($po['features_text'] ?? '');
+                    $features = $featuresRaw !== ''
+                        ? array_values(array_filter(array_map('trim', explode("\n", $featuresRaw))))
+                        : ($po['features'] ?? []);
+                    $pricing[] = [
+                        'title' => trim($po['title']),
+                        'badge' => trim($po['badge'] ?? ''),
+                        'price' => trim($po['price'] ?? ''),
+                        'features' => $features,
+                        'is_featured' => !empty($po['is_featured']),
+                    ];
+                }
+            }
+        }
+
+        $faqs = [];
+        if (isset($_POST['faqs']) && is_array($_POST['faqs'])) {
+            foreach ($_POST['faqs'] as $fq) {
+                if (trim($fq['question'] ?? '') !== '') {
+                    $faqs[] = [
+                        'question' => trim($fq['question']),
+                        'answer' => trim($fq['answer'] ?? ''),
+                    ];
+                }
+            }
+        }
+
+        return [
+            'title' => trim($_POST['title'] ?? ''),
+            'slug' => trim($_POST['slug'] ?? ''),
+            'category' => trim($_POST['category'] ?? 'General Dentistry'),
+            'badge' => trim($_POST['badge'] ?? ''),
+            'eyebrow' => trim($_POST['eyebrow'] ?? ''),
+            'summary' => trim($_POST['summary'] ?? ''),
+            'content' => trim($_POST['content'] ?? ''),
+            'icon' => trim($_POST['icon'] ?? 'dentistry'),
+            'feature_image' => $featureImg,
+            'starting_price' => trim($_POST['starting_price'] ?? ''),
+            'duration' => trim($_POST['duration'] ?? ''),
+            'cdt_code' => trim($_POST['cdt_code'] ?? ''),
+            'display_order' => (int)($_POST['display_order'] ?? 1),
+            'is_active' => isset($_POST['is_active']),
+            'included_items' => $included,
+            'journey_steps' => $journey,
+            'pricing_options' => $pricing,
+            'faqs' => $faqs,
+        ];
     }
 
     /**

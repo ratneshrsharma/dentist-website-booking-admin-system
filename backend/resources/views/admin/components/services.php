@@ -82,15 +82,17 @@ $services = $services ?? [];
 
 <!-- 2. Services Data Table Card with Reordering & CRUD -->
 <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
-    <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-        <div>
-            <h5 class="fw-bold mb-0">Managed Clinical Services List</h5>
-            <small class="text-muted">Total: <?= count($services) ?> Treatments Registered</small>
-        </div>
-        <div>
-            <button type="submit" form="reorderForm" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm">
-                <i class="bi bi-arrow-down-up me-1"></i> Save Custom Orders
-            </button>
+    <div class="card-header bg-white py-3 border-bottom">
+        <div class="d-flex justify-content-between align-items-center w-100 flex-wrap gap-2">
+            <div>
+                <h5 class="fw-bold mb-0">Managed Clinical Services List</h5>
+                <small class="text-muted">Total: <?= count($services) ?> Treatments Registered</small>
+            </div>
+            <div>
+                <button type="submit" form="reorderForm" class="btn btn-outline-primary btn-sm rounded-pill px-3 shadow-sm">
+                    <i class="bi bi-arrow-down-up me-1"></i> Save Custom Orders
+                </button>
+            </div>
         </div>
     </div>
 
@@ -204,19 +206,19 @@ $services = $services ?? [];
         </div>
 
         <!-- Pagination & Responsive Footer Toolbar -->
-        <div class="card-footer bg-white border-top py-3 d-flex flex-wrap justify-content-between align-items-center gap-2">
-            <div class="d-flex align-items-center gap-3">
+        <div class="card-footer bg-white border-top py-3">
+            <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 w-100">
                 <small class="text-muted fw-semibold">
                     Showing <span class="text-dark fw-bold"><?= count($services) ?></span> of <span class="text-dark fw-bold"><?= count($services) ?></span> registered treatments
                 </small>
+                <nav aria-label="Services table navigation">
+                    <ul class="pagination pagination-sm m-0">
+                        <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
+                    </ul>
+                </nav>
             </div>
-            <nav aria-label="Services table navigation">
-                <ul class="pagination pagination-sm m-0">
-                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-left"></i></a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item disabled"><a class="page-link" href="#"><i class="bi bi-chevron-right"></i></a></li>
-                </ul>
-            </nav>
         </div>
     </form>
 </div>

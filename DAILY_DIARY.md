@@ -9,6 +9,21 @@
 
 ---
 
+### [2026-11-25 12:18] - CMS-Managed Treatments Catalog (`/treatments`), 8 Treatment Inner Pages (`/treatments/[slug]`), and Services List Alignment
+* **Micro-Task:** Treatments & Services Pages + CMS Integration:
+  1. **Services List Alignment (`admin/components/services.php`):**
+     - Fixed `.card-header` (`Save Custom Orders`) and `.card-footer` (pagination `< 1 >`) right-edge alignment using `w-100` flex wrappers.
+  2. **Treatment Inner Page CMS Support (`ServicesService.php`, `ComponentsController.php`, `service-form.php`):**
+     - Added structured inner-page fields (`eyebrow`, `included_items`, `journey_steps`, `pricing_options`, `faqs`) with rich clinical defaults per treatment and `uploads/services/` folder uploads.
+     - Added collapsed-by-default primary-colored accordions in `service-form.php` for editing What's Included (with Material Icon Picker), Patient Step-by-Step Journey, Transparent Pricing Tiers, and Treatment FAQs.
+  3. **Frontend Treatments Catalog & Inner Pages (`frontend/src/app/treatments/page.tsx`, `frontend/src/app/treatments/[slug]/page.tsx`, `TreatmentDetailClient.tsx`):**
+     - Built `/treatments` catalog page matching `02 - Treatments & Services/code.html` with live `/api/v1/services` fetch, category filter tabs, and Quick Book banner.
+     - Built `/treatments/[slug]` static-generated + live-hydrated inner pages for all 8 clinical treatments matching `03 - Treatments & Services - Inner pages/code.html` (Hero, What's Included, 4-Step Journey, NHS/Private Pricing Tiers, and FAQs accordion).
+* **Verification & QA:**
+  - Browser QA verified `/admin/components/services`, `/admin/components/services/1/edit`, `/treatments`, and `/treatments/routine-examinations`.
+
+---
+
 ### [2026-11-25 11:56] - Common Material Icon Picker, Repeatable Box Controls (1–6 Cols), WordPress-Style Page Manager & Blog List Page
 * **Micro-Task:** CMS Standardization & Page Management Overhaul:
   1. **Global Searchable Material Icon Picker (`_icon-picker.php`, `layouts/admin.php`, `_editor-styles.php`):**

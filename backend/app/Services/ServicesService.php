@@ -207,7 +207,7 @@ class ServicesService
         $services = self::getAllServices();
         foreach ($services as $s) {
             if ((int)$s['id'] === $id) {
-                return $s;
+                return self::enrichWithInnerPageDefaults($s);
             }
         }
         return null;
@@ -221,10 +221,126 @@ class ServicesService
         $services = self::getAllServices();
         foreach ($services as $s) {
             if ($s['slug'] === $slug) {
-                return $s;
+                return self::enrichWithInnerPageDefaults($s);
             }
         }
         return null;
+    }
+
+    /**
+     * Provide structured inner-page defaults matching the Treatments Inner Page HTML template
+     */
+    public static function enrichWithInnerPageDefaults(array $s): array
+    {
+        $title = $s['title'] ?? 'Dental Treatment';
+        $category = $s['category'] ?? 'General Dentistry';
+        $price = $s['starting_price'] ?? 'From £45.00';
+
+        if (empty($s['eyebrow'])) {
+            $s['eyebrow'] = strtoupper($category) . ' • ACOCKS GREEN SURGERY';
+        }
+
+        if (empty($s['included_items']) || !is_array($s['included_items'])) {
+            $s['included_items'] = [
+                [
+                    'icon' => 'clinical_notes',
+                    'title' => 'Comprehensive Clinical Assessment',
+                    'desc' => "Thorough diagnostic evaluation tailored to {$title}, checking tooth integrity, gum health, and bite alignment.",
+                ],
+                [
+                    'icon' => 'radiology',
+                    'title' => 'Low-Dose Digital Diagnostics',
+                    'desc' => 'High-definition digital radiography and chairside visual explanation so you understand every step clearly.',
+                ],
+                [
+                    'icon' => 'verified_user',
+                    'title' => 'Transparent NHS & Private Plan',
+                    'desc' => 'Clear written treatment plan with exact NHS bandings or private fee breakdowns before any procedure begins.',
+                ],
+            ];
+        }
+
+        if (empty($s['journey_steps']) || !is_array($s['journey_steps'])) {
+            $s['journey_steps'] = [
+                [
+                    'step' => '01',
+                    'title' => 'Warm Welcome & Consultation',
+                    'desc' => 'Discuss your goals, symptoms, or dental anxiety with our friendly Birmingham clinical team.',
+                ],
+                [
+                    'step' => '02',
+                    'title' => 'Gentle Clinical Examination',
+                    'desc' => 'Digital imaging and thorough assessment using modern, minimally invasive techniques.',
+                ],
+                [
+                    'step' => '03',
+                    'title' => 'Tailored Treatment Delivery',
+                    'desc' => "Unhurried {$title} performed with your comfort and long-term oral health as top priority.",
+                ],
+                [
+                    'step' => '04',
+                    'title' => 'Aftercare & Recall Support',
+                    'desc' => 'Clear home-care advice, transparent follow-up, and preventive recall scheduling.',
+                ],
+            ];
+        }
+
+        if (empty($s['pricing_options']) || !is_array($s['pricing_options'])) {
+            $s['pricing_options'] = [
+                [
+                    'title' => 'NHS Care Pathway',
+                    'badge' => 'Standard NHS Banding',
+                    'price' => 'NHS Band 1–3',
+                    'features' => [
+                        'Regulated NHS clinical standards',
+                        'Full diagnostic & treatment plan',
+                        'Transparent NHS banding fees',
+                    ],
+                    'is_featured' => false,
+                ],
+                [
+                    'title' => $title . ' (Private)',
+                    'badge' => 'Most Popular',
+                    'price' => $price,
+                    'features' => [
+                        'Extended unhurried appointment time',
+                        'Premium aesthetic materials',
+                        'Flexible evening & weekend triage',
+                    ],
+                    'is_featured' => true,
+                ],
+                [
+                    'title' => 'Complete Care + Hygiene',
+                    'badge' => 'Preventive Bundle',
+                    'price' => 'Custom Plan',
+                    'features' => [
+                        'Includes Airflow stain removal',
+                        '0% APR finance options available',
+                        'Priority recall reminders',
+                    ],
+                    'is_featured' => false,
+                ],
+            ];
+        }
+
+        if (empty($s['faqs']) || !is_array($s['faqs'])) {
+            $s['faqs'] = [
+                [
+                    'question' => "Is {$title} painful?",
+                    'answer' => 'Our clinicians specialize in gentle, unhurried care for nervous patients, using effective numbing and calm pacing to keep you completely comfortable.',
+                ],
+                [
+                    'question' => "How long does {$title} take?",
+                    'answer' => 'Typical appointments last ' . ($s['duration'] ?? '30–45 mins') . ', depending on your individual clinical requirements.',
+                ],
+                [
+                    'question' => 'Are both NHS and private options available?',
+                    'answer' => 'Yes. We clearly explain both NHS and private pathways upfront so you can choose the option that best suits your needs.',
+                ],
+            ];
+        }
+
+        return $s;
     }
 
     /**
@@ -294,6 +410,11 @@ class ServicesService
                 if (isset($data['duration'])) $s['duration'] = trim($data['duration']);
                 if (isset($data['cdt_code'])) $s['cdt_code'] = trim($data['cdt_code']);
                 if (isset($data['display_order'])) $s['display_order'] = (int)$data['display_order'];
+                if (isset($data['eyebrow'])) $s['eyebrow'] = trim($data['eyebrow']);
+                if (isset($data['included_items']) && is_array($data['included_items'])) $s['included_items'] = $data['included_items'];
+                if (isset($data['journey_steps']) && is_array($data['journey_steps'])) $s['journey_steps'] = $data['journey_steps'];
+                if (isset($data['pricing_options']) && is_array($data['pricing_options'])) $s['pricing_options'] = $data['pricing_options'];
+                if (isset($data['faqs']) && is_array($data['faqs'])) $s['faqs'] = $data['faqs'];
                 if (array_key_exists('is_active', $data)) $s['is_active'] = (bool)$data['is_active'];
                 $s['updated_at'] = date('Y-m-d H:i:s');
                 $found = true;

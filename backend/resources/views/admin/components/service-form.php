@@ -8,6 +8,13 @@ $isEdit = isset($service) && !empty($service['id']);
 $formAction = $isEdit 
     ? App::url('/admin/components/services/' . $service['id'] . '/edit') 
     : App::url('/admin/components/services/create');
+
+$includedItems = $service['included_items'] ?? [];
+$journeySteps = $service['journey_steps'] ?? [];
+$pricingOptions = $service['pricing_options'] ?? [];
+$faqs = $service['faqs'] ?? [];
+
+require dirname(__DIR__) . '/pages/_editor-styles.php';
 ?>
 
 <div class="row mb-4 align-items-center">
@@ -244,6 +251,155 @@ $formAction = $isEdit
                         <input type="text" name="cdt_code" class="form-control font-monospace" 
                                value="<?= htmlspecialchars($service['cdt_code'] ?? '') ?>" 
                                placeholder="e.g. D0120">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Treatment Inner Page Sections (Matching HTML Inner Page Template) -->
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-header bg-white py-3 border-bottom">
+            <h5 class="fw-bold mb-0"><i class="bi bi-file-earmark-richtext text-success me-2"></i> Treatment Inner Page Content (<code>/treatments/<?= htmlspecialchars($service['slug'] ?? 'slug') ?></code>)</h5>
+        </div>
+        <div class="card-body p-4 d-flex flex-column gap-3">
+            <!-- Eyebrow -->
+            <div>
+                <label class="form-label small fw-bold">Hero Eyebrow Tagline</label>
+                <input type="text" name="eyebrow" class="form-control form-control-sm" value="<?= htmlspecialchars($service['eyebrow'] ?? '') ?>" placeholder="e.g. GENERAL DENTISTRY • ACOCKS GREEN SURGERY">
+            </div>
+
+            <!-- 1. What's Included -->
+            <div class="card border rounded-4 shadow-none bg-light section-item-card">
+                <div class="card-header section-acc-header border-bottom">
+                    <div class="section-acc-left">
+                        <span class="badge bg-dark-subtle text-dark font-monospace section-order-badge">#1</span>
+                        <span class="fw-bold text-dark section-name-display">What&apos;s Included / Clinical Overview (<?= count($includedItems) ?>)</span>
+                    </div>
+                    <div class="section-acc-right">
+                        <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#svcIncCollapse" aria-expanded="false">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="svcIncCollapse">
+                    <div class="card-body p-4 bg-white border-top">
+                        <div class="row g-3">
+                            <?php foreach ($includedItems as $iIdx => $inc): ?>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded border h-100">
+                                        <label class="form-label small fw-bold">Icon</label>
+                                        <div class="mb-2"><?php renderIconPickerInput("included_items[{$iIdx}][icon]", $inc['icon'] ?? 'clinical_notes', 'clinical_notes'); ?></div>
+                                        <label class="form-label small fw-bold">Title</label>
+                                        <input type="text" name="included_items[<?= $iIdx ?>][title]" class="form-control form-control-sm fw-bold mb-2" value="<?= htmlspecialchars($inc['title'] ?? '') ?>">
+                                        <label class="form-label small fw-bold">Description</label>
+                                        <textarea name="included_items[<?= $iIdx ?>][desc]" class="form-control form-control-sm" rows="3"><?= htmlspecialchars($inc['desc'] ?? '') ?></textarea>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Patient Journey -->
+            <div class="card border rounded-4 shadow-none bg-light section-item-card">
+                <div class="card-header section-acc-header border-bottom">
+                    <div class="section-acc-left">
+                        <span class="badge bg-dark-subtle text-dark font-monospace section-order-badge">#2</span>
+                        <span class="fw-bold text-dark section-name-display">Patient Step-by-Step Journey (<?= count($journeySteps) ?>)</span>
+                    </div>
+                    <div class="section-acc-right">
+                        <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#svcJourneyCollapse" aria-expanded="false">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="svcJourneyCollapse">
+                    <div class="card-body p-4 bg-white border-top">
+                        <div class="row g-3">
+                            <?php foreach ($journeySteps as $jIdx => $js): ?>
+                                <div class="col-md-3">
+                                    <div class="p-3 bg-light rounded border h-100">
+                                        <label class="form-label small fw-bold">Step #</label>
+                                        <input type="text" name="journey_steps[<?= $jIdx ?>][step]" class="form-control form-control-sm font-monospace mb-2" value="<?= htmlspecialchars($js['step'] ?? sprintf('%02d', $jIdx + 1)) ?>">
+                                        <label class="form-label small fw-bold">Step Title</label>
+                                        <input type="text" name="journey_steps[<?= $jIdx ?>][title]" class="form-control form-control-sm fw-bold mb-2" value="<?= htmlspecialchars($js['title'] ?? '') ?>">
+                                        <label class="form-label small fw-bold">Description</label>
+                                        <textarea name="journey_steps[<?= $jIdx ?>][desc]" class="form-control form-control-sm" rows="3"><?= htmlspecialchars($js['desc'] ?? '') ?></textarea>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Pricing Options -->
+            <div class="card border rounded-4 shadow-none bg-light section-item-card">
+                <div class="card-header section-acc-header border-bottom">
+                    <div class="section-acc-left">
+                        <span class="badge bg-dark-subtle text-dark font-monospace section-order-badge">#3</span>
+                        <span class="fw-bold text-dark section-name-display">Transparent Pricing Tiers (<?= count($pricingOptions) ?>)</span>
+                    </div>
+                    <div class="section-acc-right">
+                        <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#svcPricingCollapse" aria-expanded="false">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="svcPricingCollapse">
+                    <div class="card-body p-4 bg-white border-top">
+                        <div class="row g-3">
+                            <?php foreach ($pricingOptions as $pIdx => $po): ?>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded border h-100">
+                                        <input type="text" name="pricing_options[<?= $pIdx ?>][title]" class="form-control form-control-sm fw-bold mb-2" value="<?= htmlspecialchars($po['title'] ?? '') ?>" placeholder="Tier Title">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-6"><input type="text" name="pricing_options[<?= $pIdx ?>][badge]" class="form-control form-control-sm" value="<?= htmlspecialchars($po['badge'] ?? '') ?>" placeholder="Badge"></div>
+                                            <div class="col-6"><input type="text" name="pricing_options[<?= $pIdx ?>][price]" class="form-control form-control-sm fw-bold" value="<?= htmlspecialchars($po['price'] ?? '') ?>" placeholder="Price"></div>
+                                        </div>
+                                        <label class="form-label small fw-bold">Features (one per line)</label>
+                                        <textarea name="pricing_options[<?= $pIdx ?>][features_text]" class="form-control form-control-sm mb-2" rows="3"><?= htmlspecialchars(implode("\n", $po['features'] ?? [])) ?></textarea>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="pricing_options[<?= $pIdx ?>][is_featured]" value="1" id="poFeat<?= $pIdx ?>" <?= !empty($po['is_featured']) ? 'checked' : '' ?>>
+                                            <label class="form-check-label small fw-semibold" for="poFeat<?= $pIdx ?>">Highlight as Popular</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. FAQs -->
+            <div class="card border rounded-4 shadow-none bg-light section-item-card">
+                <div class="card-header section-acc-header border-bottom">
+                    <div class="section-acc-left">
+                        <span class="badge bg-dark-subtle text-dark font-monospace section-order-badge">#4</span>
+                        <span class="fw-bold text-dark section-name-display">Treatment FAQs (<?= count($faqs) ?>)</span>
+                    </div>
+                    <div class="section-acc-right">
+                        <button type="button" class="section-toggle-btn collapsed" data-bs-toggle="collapse" data-bs-target="#svcFaqCollapse" aria-expanded="false">
+                            <i class="bi bi-plus-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="collapse" id="svcFaqCollapse">
+                    <div class="card-body p-4 bg-white border-top">
+                        <div class="row g-3">
+                            <?php foreach ($faqs as $fIdx => $fq): ?>
+                                <div class="col-md-4">
+                                    <div class="p-3 bg-light rounded border h-100">
+                                        <label class="form-label small fw-bold">Question</label>
+                                        <input type="text" name="faqs[<?= $fIdx ?>][question]" class="form-control form-control-sm fw-bold mb-2" value="<?= htmlspecialchars($fq['question'] ?? '') ?>">
+                                        <label class="form-label small fw-bold">Answer</label>
+                                        <textarea name="faqs[<?= $fIdx ?>][answer]" class="form-control form-control-sm" rows="3"><?= htmlspecialchars($fq['answer'] ?? '') ?></textarea>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
                     </div>
                 </div>
             </div>
