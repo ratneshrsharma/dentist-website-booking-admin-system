@@ -16,53 +16,354 @@ class CmsService
         return dirname(__DIR__, 2) . '/storage/app/cms_home.json';
     }
 
+    private static function getPagesRegistryFile(): string
+    {
+        return dirname(__DIR__, 2) . '/storage/app/cms_pages.json';
+    }
+
+    private static function getCustomPageStorageFile(string $slug): string
+    {
+        $safe = preg_replace('/[^a-z0-9_-]/', '', strtolower($slug));
+        return dirname(__DIR__, 2) . '/storage/app/cms_page_' . $safe . '.json';
+    }
+
     public static function getPages(): array
     {
+        $file = self::getPagesRegistryFile();
         $homeData = self::getHomePageData();
-        $updatedAt = $homeData['_updated_at'] ?? '2026-11-24 10:00:00';
         $aboutData = self::getAboutPageData();
-        $aboutUpdatedAt = $aboutData['_updated_at'] ?? '2026-11-24 12:00:00';
 
-        return [
+        if (file_exists($file)) {
+            $decoded = json_decode((string)file_get_contents($file), true);
+            if (is_array($decoded) && !empty($decoded)) {
+                // Sync dynamic counts & timestamps
+                foreach ($decoded as &$p) {
+                    if ($p['slug'] === 'home') {
+                        $p['sections_count'] = count($homeData['sections'] ?? []);
+                        $p['updated_at'] = $homeData['_updated_at'] ?? $p['updated_at'];
+                    } elseif ($p['slug'] === 'about-us') {
+                        $p['sections_count'] = count($aboutData['sections'] ?? []);
+                        $p['updated_at'] = $aboutData['_updated_at'] ?? $p['updated_at'];
+                    } elseif (!empty($p['is_custom']) || $p['slug'] === 'blog') {
+                        $cData = self::getCustomPageData($p['slug']);
+                        $p['sections_count'] = count($cData['sections'] ?? []);
+                        $p['updated_at'] = $cData['_updated_at'] ?? $p['updated_at'];
+                    }
+                }
+                unset($p);
+                return $decoded;
+            }
+        }
+
+        $defaults = [
             [
                 'id' => 1,
                 'title' => 'Home Page',
                 'slug' => 'home',
                 'route' => '/',
+                'template' => 'home',
                 'status' => 'published',
-                'sections_count' => 7,
-                'updated_at' => $updatedAt,
+                'is_primary' => true,
                 'is_editable' => true,
+                'is_custom' => false,
+                'sections_count' => count($homeData['sections'] ?? []),
+                'updated_at' => $homeData['_updated_at'] ?? date('Y-m-d H:i:s'),
             ],
             [
                 'id' => 2,
                 'title' => 'About Our Practice & Team',
                 'slug' => 'about-us',
                 'route' => '/about-us',
+                'template' => 'about',
                 'status' => 'published',
-                'sections_count' => 5,
-                'updated_at' => $aboutUpdatedAt,
+                'is_primary' => false,
                 'is_editable' => true,
+                'is_custom' => false,
+                'sections_count' => count($aboutData['sections'] ?? []),
+                'updated_at' => $aboutData['_updated_at'] ?? date('Y-m-d H:i:s'),
             ],
             [
                 'id' => 3,
-                'title' => 'Treatments & Services Catalog',
-                'slug' => 'treatments',
-                'route' => '/treatments',
+                'title' => 'Dental Health Blog & News',
+                'slug' => 'blog',
+                'route' => '/blog',
+                'template' => 'blog_list',
                 'status' => 'published',
-                'sections_count' => 8,
-                'updated_at' => '2026-11-21 16:15:00',
-                'is_editable' => false,
+                'is_primary' => false,
+                'is_editable' => true,
+                'is_custom' => true,
+                'sections_count' => 1,
+                'updated_at' => date('Y-m-d H:i:s'),
             ],
             [
                 'id' => 4,
+                'title' => 'Treatments & Services Catalog',
+                'slug' => 'treatments',
+                'route' => '/#services',
+                'template' => 'services',
+                'status' => 'published',
+                'is_primary' => false,
+                'is_editable' => false,
+                'is_custom' => false,
+                'sections_count' => 8,
+                'updated_at' => '2026-11-21 16:15:00',
+            ],
+            [
+                'id' => 5,
                 'title' => 'Contact & Emergency Location',
                 'slug' => 'contact',
-                'route' => '/contact',
+                'route' => '/#contact',
+                'template' => 'contact',
                 'status' => 'published',
+                'is_primary' => false,
+                'is_editable' => false,
+                'is_custom' => false,
                 'sections_count' => 3,
                 'updated_at' => '2026-11-22 09:45:00',
-                'is_editable' => false,
+            ],
+        ];
+
+        self::savePagesRegistry($defaults);
+        return $defaults;
+    }
+
+    public static function savePagesRegistry(array $pages): bool
+    {
+        $file = self::getPagesRegistryFile();
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+        return file_put_contents($file, json_encode(array_values($pages), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) !== false;
+    }
+
+    public static function createPage(string $title, string $slug, string $template = 'standard', string $status = 'published'): array
+    {
+        $pages = self::getPages();
+        $cleanSlug = trim(preg_replace('/[^a-z0-9-]+/', '-', strtolower($slug)), '-');
+        if ($cleanSlug === '') {
+            $cleanSlug = 'page-' . time();
+        }
+        // Ensure unique slug
+        foreach ($pages as $existing) {
+            if ($existing['slug'] === $cleanSlug) {
+                $cleanSlug .= '-' . substr((string)time(), -4);
+                break;
+            }
+        }
+
+        $maxId = 0;
+        foreach ($pages as $p) {
+            if ((int)($p['id'] ?? 0) > $maxId) {
+                $maxId = (int)$p['id'];
+            }
+        }
+
+        $route = $template === 'blog_list' ? '/blog' : '/' . $cleanSlug;
+        $newPage = [
+            'id' => $maxId + 1,
+            'title' => trim($title),
+            'slug' => $cleanSlug,
+            'route' => $route,
+            'template' => $template,
+            'status' => $status,
+            'is_primary' => false,
+            'is_editable' => true,
+            'is_custom' => true,
+            'sections_count' => 1,
+            'updated_at' => date('Y-m-d H:i:s'),
+        ];
+
+        $pages[] = $newPage;
+        self::savePagesRegistry($pages);
+
+        // Initialize custom page data
+        self::saveCustomPageData($cleanSlug, self::getDefaultCustomPageData($cleanSlug, $title, $template));
+
+        return $newPage;
+    }
+
+    public static function togglePageStatus(string $slug): ?string
+    {
+        $pages = self::getPages();
+        $newStatus = null;
+        foreach ($pages as &$p) {
+            if ($p['slug'] === $slug) {
+                $p['status'] = ($p['status'] ?? 'published') === 'published' ? 'inactive' : 'published';
+                $p['updated_at'] = date('Y-m-d H:i:s');
+                $newStatus = $p['status'];
+                break;
+            }
+        }
+        unset($p);
+        if ($newStatus !== null) {
+            self::savePagesRegistry($pages);
+        }
+        return $newStatus;
+    }
+
+    public static function setPrimaryPage(string $slug): bool
+    {
+        $pages = self::getPages();
+        $found = false;
+        foreach ($pages as &$p) {
+            if ($p['slug'] === $slug) {
+                $p['is_primary'] = true;
+                $p['status'] = 'published';
+                $found = true;
+            } else {
+                $p['is_primary'] = false;
+            }
+        }
+        unset($p);
+        if ($found) {
+            self::savePagesRegistry($pages);
+        }
+        return $found;
+    }
+
+    public static function deletePage(string $slug): bool
+    {
+        $pages = self::getPages();
+        $filtered = [];
+        $deleted = false;
+        foreach ($pages as $p) {
+            if ($p['slug'] === $slug && empty($p['is_primary'])) {
+                $deleted = true;
+                $customFile = self::getCustomPageStorageFile($slug);
+                if (file_exists($customFile)) {
+                    @unlink($customFile);
+                }
+                continue;
+            }
+            $filtered[] = $p;
+        }
+        if ($deleted) {
+            self::savePagesRegistry($filtered);
+        }
+        return $deleted;
+    }
+
+    public static function getPrimarySlug(): string
+    {
+        foreach (self::getPages() as $p) {
+            if (!empty($p['is_primary'])) {
+                return (string)$p['slug'];
+            }
+        }
+        return 'home';
+    }
+
+    public static function getCustomPageData(string $slug): array
+    {
+        $file = self::getCustomPageStorageFile($slug);
+        if (file_exists($file)) {
+            $decoded = json_decode((string)file_get_contents($file), true);
+            if (is_array($decoded) && !empty($decoded)) {
+                return $decoded;
+            }
+        }
+        $title = $slug === 'blog' ? 'Dental Health Blog & News' : ucwords(str_replace('-', ' ', $slug));
+        $template = $slug === 'blog' ? 'blog_list' : 'standard';
+        return self::getDefaultCustomPageData($slug, $title, $template);
+    }
+
+    public static function saveCustomPageData(string $slug, array $data): bool
+    {
+        $current = self::getCustomPageData($slug);
+        $data['_updated_at'] = date('Y-m-d H:i:s');
+        $explicitSections = $data['sections'] ?? null;
+        $explicitPosts = $data['blog_posts'] ?? null;
+        $merged = array_replace_recursive($current, $data);
+        if ($explicitSections !== null && is_array($explicitSections)) {
+            $merged['sections'] = $explicitSections;
+        }
+        if ($explicitPosts !== null && is_array($explicitPosts)) {
+            $merged['blog_posts'] = $explicitPosts;
+        }
+
+        $file = self::getCustomPageStorageFile($slug);
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+        return file_put_contents($file, json_encode($merged, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) !== false;
+    }
+
+    public static function getDefaultCustomPageData(string $slug, string $title, string $template = 'standard'): array
+    {
+        $isBlog = ($template === 'blog_list' || $slug === 'blog');
+        return [
+            '_updated_at' => date('Y-m-d H:i:s'),
+            'slug' => $slug,
+            'template' => $template,
+            'title' => $title,
+            'hero' => [
+                'eyebrow' => $isBlog ? 'Clinical Insights & Oral Wellness' : 'Acocks Green Dental Practice',
+                'headline' => $isBlog ? 'Dental Health Blog &amp; Patient Guides' : $title,
+                'subtitle' => $isBlog
+                    ? 'Evidence-based dental advice, NHS &amp; private care tips, and practice updates from our Birmingham B27 clinical team.'
+                    : 'Discover personalized dental care and clinical excellence at Acocks Green Dental Practice.',
+                'image' => App::url('/uploads/home/surgery-clinic.jpg'),
+                'cta_primary' => 'Book An Appointment',
+                'cta_primary_link' => '#quick-book',
+            ],
+            'sections' => [
+                [
+                    'id' => 'sec_' . $slug . '_intro',
+                    'type' => $isBlog ? 'blog_block' : 'custom_content',
+                    'category' => $isBlog ? 'prebuilt' : 'custom_content',
+                    'name' => $isBlog ? 'All Blog Posts Grid' : 'Main Content Section',
+                    'eyebrow' => $isBlog ? 'Latest Articles' : 'Overview',
+                    'title' => $isBlog ? 'Recent Dental Health Articles' : $title,
+                    'summary' => $isBlog ? 'Written and clinically reviewed by our GDC-registered dental surgeons.' : 'Add your page content, images, and layout options below.',
+                    'description' => '',
+                    'column_layout' => 'two_col_split',
+                    'image_position' => 'right',
+                    'grid_cols' => 3,
+                    'is_active' => true,
+                    'order' => 1,
+                ],
+            ],
+            'blog_posts' => $isBlog ? [
+                [
+                    'id' => 'post_1',
+                    'title' => 'How Often Should You Book a Dental Hygiene & Airflow Polish?',
+                    'category' => 'Preventive Care',
+                    'date' => '2026-11-18',
+                    'author' => 'Claire, Dental Hygienist',
+                    'read_time' => '4 min read',
+                    'image' => App::url('/uploads/home/treatment-room.jpg'),
+                    'excerpt' => 'Learn how Airflow warm-water polishing removes stubborn tea, coffee, and plaque biofilm gently without scraping sensitive enamel.',
+                    'content' => 'Regular dental hygiene appointments every 3 to 6 months are essential for preventing gum disease and preserving natural enamel. Our Airflow system uses a gentle stream of warm water, air, and fine erythritol powder to lift surface stains painlessly.',
+                ],
+                [
+                    'id' => 'post_2',
+                    'title' => 'NHS vs Private Dental Care in Birmingham: What Is Included?',
+                    'category' => 'Patient Guides',
+                    'date' => '2026-11-10',
+                    'author' => 'Dr. Atandrilla Das',
+                    'read_time' => '5 min read',
+                    'image' => App::url('/uploads/home/hero-patient.jpg'),
+                    'excerpt' => 'A transparent breakdown of NHS Band 1, Band 2, and Band 3 treatments alongside private cosmetic options like white fillings and Invisalign.',
+                    'content' => 'Understanding your dental treatment options should always be clear and stress-free. At Acocks Green Dental Practice, we explain both NHS and private pathways upfront so you can choose what suits your clinical needs and budget.',
+                ],
+                [
+                    'id' => 'post_3',
+                    'title' => 'Same-Day Emergency Dental Triage: What Counts as Urgent?',
+                    'category' => 'Emergency Care',
+                    'date' => '2026-11-02',
+                    'author' => 'Dr. Nadeem Sohail',
+                    'read_time' => '3 min read',
+                    'image' => App::url('/uploads/home/surgery-clinic.jpg'),
+                    'excerpt' => 'Severe toothache, facial swelling, or a knocked-out tooth? Here is how our Birmingham B27 triage line gets you seen the very same day.',
+                    'content' => 'Dental emergencies can happen without warning. If you experience severe throbbing pain, swelling, or dental trauma, call our reception on +44 121 765 2870 before 10:00 AM for priority same-day clinical triage.',
+                ],
+            ] : [],
+            'seo' => [
+                'meta_title' => $title . ' | Acocks Green Dental Practice',
+                'meta_description' => 'Acocks Green Dental Practice — NHS & Private Family Dentistry in Birmingham B27.',
+                'keywords' => 'dental clinic Birmingham, Acocks Green dentist, dental blog',
             ],
         ];
     }
@@ -492,6 +793,18 @@ class CmsService
         if (!empty($data['hero']['trust_badges']) && is_array($data['hero']['trust_badges'])) {
             $merged['hero']['trust_badges'] = $data['hero']['trust_badges'];
         }
+        if (isset($data['why_us']['stats']) && is_array($data['why_us']['stats'])) {
+            $merged['why_us']['stats'] = $data['why_us']['stats'];
+        }
+        if (isset($data['why_us']['pillars']) && is_array($data['why_us']['pillars'])) {
+            $merged['why_us']['pillars'] = $data['why_us']['pillars'];
+        }
+        if (isset($data['clinics']['features']) && is_array($data['clinics']['features'])) {
+            $merged['clinics']['features'] = $data['clinics']['features'];
+        }
+        if (isset($data['safety_charter']['cards']) && is_array($data['safety_charter']['cards'])) {
+            $merged['safety_charter']['cards'] = $data['safety_charter']['cards'];
+        }
 
         // Sync clinicians from Home CMS if not customized on About
         if (empty($merged['clinicians'])) {
@@ -509,6 +822,10 @@ class CmsService
 
         $explicitSections = $data['sections'] ?? null;
         $explicitBadges = $data['hero']['trust_badges'] ?? null;
+        $explicitStats = $data['why_us']['stats'] ?? null;
+        $explicitPillars = $data['why_us']['pillars'] ?? null;
+        $explicitFeatures = $data['clinics']['features'] ?? null;
+        $explicitCharterCards = $data['safety_charter']['cards'] ?? null;
 
         $merged = array_replace_recursive($current, $data);
 
@@ -517,6 +834,18 @@ class CmsService
         }
         if ($explicitBadges !== null && is_array($explicitBadges)) {
             $merged['hero']['trust_badges'] = $explicitBadges;
+        }
+        if ($explicitStats !== null && is_array($explicitStats)) {
+            $merged['why_us']['stats'] = $explicitStats;
+        }
+        if ($explicitPillars !== null && is_array($explicitPillars)) {
+            $merged['why_us']['pillars'] = $explicitPillars;
+        }
+        if ($explicitFeatures !== null && is_array($explicitFeatures)) {
+            $merged['clinics']['features'] = $explicitFeatures;
+        }
+        if ($explicitCharterCards !== null && is_array($explicitCharterCards)) {
+            $merged['safety_charter']['cards'] = $explicitCharterCards;
         }
 
         $file = self::getAboutStorageFile();

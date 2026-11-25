@@ -44,7 +44,9 @@ class ApiController
 
     public function homePage(): void
     {
+        $primarySlug = CmsService::getPrimarySlug();
         $home = CmsService::getHomePageData();
+        $home['primary_slug'] = $primarySlug;
         App::json([
             'success' => true,
             'data' => $home,
@@ -63,6 +65,21 @@ class ApiController
         App::json([
             'success' => true,
             'data' => $about,
+        ]);
+    }
+
+    public function customPage(string $slug): void
+    {
+        if ($slug === 'home') {
+            $this->homePage();
+        }
+        if ($slug === 'about' || $slug === 'about-us') {
+            $this->aboutPage();
+        }
+        $pageData = CmsService::getCustomPageData($slug);
+        App::json([
+            'success' => true,
+            'data' => $pageData,
         ]);
     }
 

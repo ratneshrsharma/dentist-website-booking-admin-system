@@ -210,8 +210,11 @@ export default function AboutPage() {
                 <h1 className={styles.headline} dangerouslySetInnerHTML={{ __html: hero.headline || '' }} />
                 <p className={styles.subtitle} dangerouslySetInnerHTML={{ __html: hero.subtitle || '' }} />
 
-                {/* 4 Trust Badges (Editable in CMS) */}
-                <div className={styles.trustBadgesRow}>
+                {/* Trust Badges (Editable in CMS) */}
+                <div
+                  className={styles.trustBadgesRow}
+                  style={{ '--grid-cols': (hero as any).trust_badges_cols || 4 } as React.CSSProperties}
+                >
                   {(hero.trust_badges && hero.trust_badges.length > 0
                     ? hero.trust_badges
                     : [
@@ -285,8 +288,11 @@ export default function AboutPage() {
                     <p dangerouslySetInnerHTML={{ __html: sec.summary || whyUs.subtitle || '' }} />
                   </div>
 
-                  {/* 4 Pillars Grid */}
-                  <div className={styles.pillarsGrid}>
+                  {/* Pillars Grid */}
+                  <div
+                    className={styles.pillarsGrid}
+                    style={{ '--grid-cols': (whyUs as any).pillars_cols || 4 } as React.CSSProperties}
+                  >
                     {whyUs.pillars.map((pillar, pIdx) => (
                       <div key={pIdx} className={styles.pillarCard}>
                         <div>
@@ -306,7 +312,10 @@ export default function AboutPage() {
 
                   {/* Stats Banner */}
                   <div className={styles.statsBanner}>
-                    <div className={styles.statsGrid}>
+                    <div
+                      className={styles.statsGrid}
+                      style={{ '--grid-cols': (whyUs as any).stats_cols || 4 } as React.CSSProperties}
+                    >
                       {whyUs.stats.map((st, sIdx) => (
                         <div key={sIdx} className={styles.statItem}>
                           <div className={styles.statNumber}>{st.value}</div>
@@ -373,7 +382,10 @@ export default function AboutPage() {
                   </div>
 
                   <div className={styles.clinicsGrid}>
-                    <div className={styles.featureList}>
+                    <div
+                      className={styles.featureList}
+                      style={{ '--grid-cols': (clinics as any).features_cols || 1 } as React.CSSProperties}
+                    >
                       {clinics.features.map((feat, fIdx) => (
                         <div key={fIdx} className={styles.featureCard}>
                           <div className={styles.featureIcon}>
@@ -422,7 +434,10 @@ export default function AboutPage() {
                     <p dangerouslySetInnerHTML={{ __html: sec.summary || charter.subtitle || '' }} />
                   </div>
 
-                  <div className={styles.charterCardsGrid}>
+                  <div
+                    className={styles.charterCardsGrid}
+                    style={{ '--grid-cols': (charter as any).cards_cols || 3 } as React.CSSProperties}
+                  >
                     {charter.cards.map((card, cIdx) => (
                       <div key={cIdx} className={styles.charterCard}>
                         <div>

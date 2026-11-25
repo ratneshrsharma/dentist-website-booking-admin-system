@@ -174,7 +174,7 @@ require __DIR__ . '/_editor-styles.php';
                                         <div class="row g-2">
                                             <div class="col-md-4">
                                                 <label class="form-label small fw-bold">Material Icon</label>
-                                                <input type="text" name="hero_badge_icons[]" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($badge['icon'] ?? 'verified') ?>">
+                                                <?php renderIconPickerInput('hero_badge_icons[]', $badge['icon'] ?? 'verified', 'verified'); ?>
                                             </div>
                                             <div class="col-md-4">
                                                 <label class="form-label small fw-bold">Badge Title</label>

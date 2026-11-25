@@ -492,6 +492,13 @@ class PagesController
         if (isset($_POST['emergency_phone'])) $about['safety_charter']['emergency_box']['phone'] = trim($_POST['emergency_phone']);
         if (isset($_POST['emergency_nhs111'])) $about['safety_charter']['emergency_box']['nhs111'] = trim($_POST['emergency_nhs111']);
 
+        // Column counts (1..6 cols)
+        if (isset($_POST['trust_badges_cols'])) $about['hero']['trust_badges_cols'] = max(1, min(6, (int)$_POST['trust_badges_cols']));
+        if (isset($_POST['stats_cols'])) $about['why_us']['stats_cols'] = max(1, min(6, (int)$_POST['stats_cols']));
+        if (isset($_POST['pillars_cols'])) $about['why_us']['pillars_cols'] = max(1, min(6, (int)$_POST['pillars_cols']));
+        if (isset($_POST['clinic_features_cols'])) $about['clinics']['features_cols'] = max(1, min(6, (int)$_POST['clinic_features_cols']));
+        if (isset($_POST['charter_cards_cols'])) $about['safety_charter']['cards_cols'] = max(1, min(6, (int)$_POST['charter_cards_cols']));
+
         // 6. SEO Metadata
         if (isset($_POST['meta_title'])) $about['seo']['meta_title'] = trim($_POST['meta_title']);
         if (isset($_POST['meta_description'])) $about['seo']['meta_description'] = trim($_POST['meta_description']);
@@ -593,6 +600,7 @@ class PagesController
                 'bg_overlay_opacity' => $bgOverlayOpacity,
                 'text_contrast' => $textContrast,
                 'padding_y' => $paddingY,
+                'grid_cols' => max(1, min(6, (int)($sec['grid_cols'] ?? 3))),
                 'is_active' => $isActive,
                 'order' => $order,
             ];
@@ -600,5 +608,142 @@ class PagesController
 
         usort($parsedSections, fn($a, $b) => $a['order'] <=> $b['order']);
         return $parsedSections;
+    }
+
+    public function create(): void
+    {
+        Auth::requireAuth();
+        $title = trim($_POST['title'] ?? '');
+        $slug = trim($_POST['slug'] ?? '');
+        $template = trim($_POST['template'] ?? 'standard');
+        $status = trim($_POST['status'] ?? 'published');
+
+        if ($title === '') {
+            App::redirect('/admin/pages', ['error' => 'Page title is required.']);
+        }
+        if ($slug === '') {
+            $slug = $title;
+        }
+
+        $newPage = CmsService::createPage($title, $slug, $template, $status);
+        App::redirect('/admin/pages/' . urlencode($newPage['slug']) . '/edit', [
+            'success' => 'New page "' . $newPage['title'] . '" created! Customize its Banner, Content Sections, and SEO below.',
+        ]);
+    }
+
+    public function toggleStatus(string $slug): void
+    {
+        Auth::requireAuth();
+        $newStatus = CmsService::togglePageStatus($slug);
+        if ($newStatus === null) {
+            App::redirect('/admin/pages', ['error' => 'Page not found.']);
+        }
+        $label = $newStatus === 'published' ? 'activated' : 'deactivated';
+        App::redirect('/admin/pages', [
+            'success' => "Page '{$slug}' has been {$label}.",
+        ]);
+    }
+
+    public function setPrimary(string $slug): void
+    {
+        Auth::requireAuth();
+        if (CmsService::setPrimaryPage($slug)) {
+            App::redirect('/admin/pages', [
+                'success' => "Page '{$slug}' is now set as your Primary Homepage!",
+            ]);
+        }
+        App::redirect('/admin/pages', ['error' => 'Unable to set primary page.']);
+    }
+
+    public function delete(string $slug): void
+    {
+        Auth::requireAuth();
+        if (CmsService::deletePage($slug)) {
+            App::redirect('/admin/pages', [
+                'success' => "Page '{$slug}' deleted permanently.",
+            ]);
+        }
+        App::redirect('/admin/pages', ['error' => 'Cannot delete the active Primary Homepage or page not found.']);
+    }
+
+    public function editCustomPage(string $slug): void
+    {
+        Auth::requireAuth();
+        $pageData = CmsService::getCustomPageData($slug);
+        $theme = ThemeService::getTheme();
+        $allPages = CmsService::getPages();
+
+        App::render('admin/pages/custom-editor', [
+            'pageData' => $pageData,
+            'slug' => $slug,
+            'theme' => $theme,
+            'allPages' => $allPages,
+            'pageTitle' => ($pageData['title'] ?? ucfirst($slug)) . ' — Page Editor',
+            'activeNav' => 'pages',
+        ]);
+    }
+
+    public function updateCustomPage(string $slug): void
+    {
+        Auth::requireAuth();
+        $data = CmsService::getCustomPageData($slug);
+
+        if (isset($_POST['hero_eyebrow'])) $data['hero']['eyebrow'] = trim($_POST['hero_eyebrow']);
+        if (isset($_POST['hero_headline'])) $data['hero']['headline'] = trim($_POST['hero_headline']);
+        if (isset($_POST['hero_subtitle'])) $data['hero']['subtitle'] = trim($_POST['hero_subtitle']);
+        if (isset($_POST['hero_cta_primary'])) $data['hero']['cta_primary'] = trim($_POST['hero_cta_primary']);
+        if (isset($_POST['hero_cta_primary_link'])) $data['hero']['cta_primary_link'] = trim($_POST['hero_cta_primary_link']);
+
+        if (!empty($_FILES['hero_image_file']['name'])) {
+            $up = Uploader::uploadImage($_FILES['hero_image_file'], 'hero_' . $slug, $slug);
+            if ($up) $data['hero']['image'] = $up;
+        } elseif (!empty($_POST['hero_image_manual'])) {
+            $data['hero']['image'] = trim($_POST['hero_image_manual']);
+        }
+
+        if (isset($_POST['sections']) && is_array($_POST['sections'])) {
+            $data['sections'] = $this->parseSectionsFromRequest($_POST['sections'], $_FILES, $slug);
+        }
+
+        if (isset($_POST['blog_posts']) && is_array($_POST['blog_posts'])) {
+            $posts = [];
+            foreach ($_POST['blog_posts'] as $pIdx => $bp) {
+                if (trim($bp['title'] ?? '') === '') continue;
+                $img = trim($bp['image'] ?? '');
+                if (!empty($_FILES['blog_image_files']['name'][$pIdx])) {
+                    $singleFile = [
+                        'name' => $_FILES['blog_image_files']['name'][$pIdx],
+                        'type' => $_FILES['blog_image_files']['type'][$pIdx],
+                        'tmp_name' => $_FILES['blog_image_files']['tmp_name'][$pIdx],
+                        'error' => $_FILES['blog_image_files']['error'][$pIdx],
+                        'size' => $_FILES['blog_image_files']['size'][$pIdx],
+                    ];
+                    $up = Uploader::uploadImage($singleFile, 'blog_' . ($pIdx + 1), $slug);
+                    if ($up) $img = $up;
+                }
+                $posts[] = [
+                    'id' => trim($bp['id'] ?? ('post_' . ($pIdx + 1))),
+                    'title' => trim($bp['title']),
+                    'category' => trim($bp['category'] ?? 'Dental Care'),
+                    'date' => trim($bp['date'] ?? date('Y-m-d')),
+                    'author' => trim($bp['author'] ?? 'Clinical Team'),
+                    'read_time' => trim($bp['read_time'] ?? '4 min read'),
+                    'image' => $img ?: App::url('/uploads/home/treatment-room.jpg'),
+                    'excerpt' => trim($bp['excerpt'] ?? ''),
+                    'content' => trim($bp['content'] ?? ''),
+                ];
+            }
+            $data['blog_posts'] = $posts;
+        }
+
+        if (isset($_POST['meta_title'])) $data['seo']['meta_title'] = trim($_POST['meta_title']);
+        if (isset($_POST['meta_description'])) $data['seo']['meta_description'] = trim($_POST['meta_description']);
+        if (isset($_POST['keywords'])) $data['seo']['keywords'] = trim($_POST['keywords']);
+
+        CmsService::saveCustomPageData($slug, $data);
+
+        App::redirect('/admin/pages/' . urlencode($slug) . '/edit', [
+            'success' => 'Page saved successfully!',
+        ]);
     }
 }

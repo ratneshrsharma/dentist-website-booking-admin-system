@@ -9,6 +9,21 @@
 
 ---
 
+### [2026-11-25 11:56] - Common Material Icon Picker, Repeatable Box Controls (1–6 Cols), WordPress-Style Page Manager & Blog List Page
+* **Micro-Task:** CMS Standardization & Page Management Overhaul:
+  1. **Global Searchable Material Icon Picker (`_icon-picker.php`, `layouts/admin.php`, `_editor-styles.php`):**
+     - Created a reusable searchable Material Symbols Icon Picker modal (`61` curated clinical/UI icons with live preview) integrated across About Hero Trust Badges, Ethos Pillars, Clinic Amenities, Safety Charter Cards, and Home Hero Floating Badges.
+  2. **Repeatable Loop Controls & 1–6 Column Selectors (`about-editor.php`, `about-us/page.tsx`, `about.module.less`):**
+     - Added `+ Add`, Reorder (`←`/`→` or `▲`/`▼`), Remove (`🗑`), and **Columns (1–6 Cols)** selectors to Hero Trust Badges, Practice Statistics, Clinical Ethos Pillars, Clinic Amenities, and Safety Charter Cards, wired to `--grid-cols` CSS variables on the frontend.
+  3. **WordPress-Style Page Manager & Blog List (`CmsService.php`, `PagesController.php`, `Router.php`, `ApiController.php`, `admin/pages/index.php`, `custom-editor.php`, `frontend/src/app/blog/page.tsx`):**
+     - Persisted pages in `storage/app/cms_pages.json` with **Add New Page**, **Active/Inactive** toggle, **Set as Primary Homepage**, and **Delete** (non-primary) actions.
+     - Fixed right-alignment of header `Total Pages` badge and footer pagination, and unified `.btn-group-sm .btn` sizing across `<a>` and `<form><button>` actions (`32x30px`).
+     - Added a dedicated **Dental Health Blog & News** (`/blog`) CMS page and frontend Blog List view with category filters, dynamic grid, and article reader modal.
+* **Verification & QA:**
+  - Browser QA verified `/admin/pages`, `/admin/pages/about-us/edit` (Icon Picker modal, 1–6 Cols dropdowns, repeatable loops), and `/blog` (3 articles, category filters, reader modal).
+
+---
+
 ### [2026-11-25 11:32] - About Page Dynamic CMS Propagation & Uniform CMS Icon Actions / Button Sizing
 * **Micro-Task:** CMS Data Sync & Admin UI Standardization:
   1. **About Page CMS -> Frontend Live Propagation (`about-us/page.tsx`, `PagesController.php`, `api/cms.ts`, `types/cms.ts`):**

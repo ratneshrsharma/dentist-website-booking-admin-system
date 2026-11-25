@@ -137,17 +137,33 @@ require __DIR__ . '/_editor-styles.php';
                         </div>
                     </div>
 
-                    <!-- 4 Hero Trust Badges -->
-                    <h6 class="fw-bold text-secondary mb-3">Hero Trust Badges (4 Items)</h6>
-                    <div class="row g-3">
+                    <!-- Hero Trust Badges (Repeatable + Icon Picker + Columns) -->
+                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+                        <h6 class="fw-bold text-secondary mb-0">Hero Trust Badges</h6>
+                        <div class="d-flex align-items-center gap-3">
+                            <?php renderColsSelector('trust_badges_cols', (int)($hero['trust_badges_cols'] ?? 4)); ?>
+                            <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addTrustBadgeCard()">
+                                <i class="bi bi-plus-circle me-1"></i> Add Badge
+                            </button>
+                        </div>
+                    </div>
+                    <div class="row g-3" id="trustBadgesContainer">
                         <?php foreach ($trustBadges as $bIdx => $tb):
                             $tbIcon = is_array($tb) ? ($tb['icon'] ?? 'verified_user') : 'verified_user';
                             $tbLabel = is_array($tb) ? ($tb['label'] ?? '') : (string)$tb;
                         ?>
-                            <div class="col-md-3">
-                                <div class="p-3 bg-light rounded-3 border">
-                                    <label class="form-label small fw-bold">Material Icon #<?= $bIdx + 1 ?></label>
-                                    <input type="text" name="trust_badge_icons[]" class="form-control form-control-sm font-monospace mb-2" value="<?= htmlspecialchars($tbIcon) ?>">
+                            <div class="col-md-3 loop-badge-card">
+                                <div class="p-3 bg-light rounded-3 border h-100">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="small fw-bold text-muted">Badge</span>
+                                        <div class="btn-group btn-group-sm">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-badge-card', -1)" title="Move Left/Up"><i class="bi bi-arrow-left"></i></button>
+                                            <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-badge-card', 1)" title="Move Right/Down"><i class="bi bi-arrow-right"></i></button>
+                                            <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-badge-card')" title="Remove"><i class="bi bi-trash"></i></button>
+                                        </div>
+                                    </div>
+                                    <label class="form-label small fw-bold">Icon</label>
+                                    <div class="mb-2"><?php renderIconPickerInput('trust_badge_icons[]', $tbIcon); ?></div>
                                     <label class="form-label small fw-bold">Badge Label</label>
                                     <input type="text" name="trust_badge_labels[]" class="form-control form-control-sm fw-semibold" value="<?= htmlspecialchars($tbLabel) ?>">
                                 </div>
@@ -283,11 +299,26 @@ require __DIR__ . '/_editor-styles.php';
                                                 <!-- Specialized Sub-Editors Inside Accordion -->
                                                 <?php if ($secType === 'why_us_block'): ?>
                                                     <div class="col-12 mt-3 pt-3 border-top">
-                                                        <h6 class="fw-bold text-success mb-2"><i class="bi bi-bar-chart-fill me-1"></i> Key Practice Statistics (4 Milestones)</h6>
-                                                        <div class="row g-2 mb-3">
+                                                        <!-- Stats Loop -->
+                                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                                            <h6 class="fw-bold text-success mb-0"><i class="bi bi-bar-chart-fill me-1"></i> Key Practice Statistics</h6>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <?php renderColsSelector('stats_cols', (int)($whyUs['stats_cols'] ?? 4)); ?>
+                                                                <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addStatCard()"><i class="bi bi-plus-circle me-1"></i> Add Stat</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row g-2 mb-4" id="statsLoopContainer">
                                                             <?php foreach ($stats as $sIdx => $st): ?>
-                                                                <div class="col-md-3">
-                                                                    <div class="p-2 bg-light rounded border">
+                                                                <div class="col-md-3 loop-stat-card">
+                                                                    <div class="p-2 bg-light rounded border h-100">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                            <span class="small fw-bold text-muted">Stat</span>
+                                                                            <div class="btn-group btn-group-sm">
+                                                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-stat-card', -1)"><i class="bi bi-arrow-left"></i></button>
+                                                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-stat-card', 1)"><i class="bi bi-arrow-right"></i></button>
+                                                                                <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-stat-card')"><i class="bi bi-trash"></i></button>
+                                                                            </div>
+                                                                        </div>
                                                                         <input type="text" name="stats[<?= $sIdx ?>][value]" class="form-control form-control-sm fw-bold mb-1" value="<?= htmlspecialchars($st['value'] ?? '') ?>" placeholder="25+">
                                                                         <input type="text" name="stats[<?= $sIdx ?>][label]" class="form-control form-control-sm mb-1" value="<?= htmlspecialchars($st['label'] ?? '') ?>" placeholder="Label">
                                                                         <input type="text" name="stats[<?= $sIdx ?>][desc]" class="form-control form-control-sm" value="<?= htmlspecialchars($st['desc'] ?? '') ?>" placeholder="Sub-description">
@@ -295,17 +326,33 @@ require __DIR__ . '/_editor-styles.php';
                                                                 </div>
                                                             <?php endforeach; ?>
                                                         </div>
-                                                        <h6 class="fw-bold text-success mb-2"><i class="bi bi-shield-check me-1"></i> 4 Clinical Ethos Pillars</h6>
-                                                        <div class="row g-2">
+
+                                                        <!-- Pillars Loop -->
+                                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                                            <h6 class="fw-bold text-success mb-0"><i class="bi bi-shield-check me-1"></i> Clinical Ethos Pillars</h6>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <?php renderColsSelector('pillars_cols', (int)($whyUs['pillars_cols'] ?? 4)); ?>
+                                                                <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addPillarCard()"><i class="bi bi-plus-circle me-1"></i> Add Pillar</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row g-2" id="pillarsLoopContainer">
                                                             <?php foreach ($pillars as $pIdx => $pl): ?>
-                                                                <div class="col-md-6">
-                                                                    <div class="p-3 bg-light rounded border">
-                                                                        <div class="row g-2">
-                                                                            <div class="col-4">
-                                                                                <label class="form-label small fw-bold">Icon</label>
-                                                                                <input type="text" name="pillars[<?= $pIdx ?>][icon]" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($pl['icon'] ?? 'spa') ?>">
+                                                                <div class="col-md-6 loop-pillar-card">
+                                                                    <div class="p-3 bg-light rounded border h-100">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                                            <span class="small fw-bold text-muted">Pillar</span>
+                                                                            <div class="btn-group btn-group-sm">
+                                                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-pillar-card', -1)"><i class="bi bi-arrow-up"></i></button>
+                                                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-pillar-card', 1)"><i class="bi bi-arrow-down"></i></button>
+                                                                                <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-pillar-card')"><i class="bi bi-trash"></i></button>
                                                                             </div>
-                                                                            <div class="col-8">
+                                                                        </div>
+                                                                        <div class="row g-2">
+                                                                            <div class="col-5">
+                                                                                <label class="form-label small fw-bold">Icon</label>
+                                                                                <?php renderIconPickerInput("pillars[{$pIdx}][icon]", $pl['icon'] ?? 'spa', 'spa'); ?>
+                                                                            </div>
+                                                                            <div class="col-7">
                                                                                 <label class="form-label small fw-bold">Pillar Title</label>
                                                                                 <input type="text" name="pillars[<?= $pIdx ?>][title]" class="form-control form-control-sm fw-bold" value="<?= htmlspecialchars($pl['title'] ?? '') ?>">
                                                                             </div>
@@ -323,7 +370,7 @@ require __DIR__ . '/_editor-styles.php';
                                                     </div>
                                                 <?php elseif ($secType === 'clinics_block'): ?>
                                                     <div class="col-12 mt-3 pt-3 border-top">
-                                                        <h6 class="fw-bold text-success mb-2"><i class="bi bi-building me-1"></i> Surgery Card &amp; 5 Amenities</h6>
+                                                        <h6 class="fw-bold text-success mb-2"><i class="bi bi-building me-1"></i> Surgery Card</h6>
                                                         <div class="row g-2 mb-3 bg-light p-3 rounded border">
                                                             <div class="col-md-4">
                                                                 <label class="form-label small fw-bold">Surgery Title</label>
@@ -346,15 +393,31 @@ require __DIR__ . '/_editor-styles.php';
                                                                 <input type="text" name="clinics_image_manual" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($clinics['surgery_image'] ?? '') ?>">
                                                             </div>
                                                         </div>
-                                                        <div class="row g-2">
+
+                                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                                            <h6 class="fw-bold text-success mb-0"><i class="bi bi-list-check me-1"></i> Clinic Amenities</h6>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <?php renderColsSelector('clinic_features_cols', (int)($clinics['features_cols'] ?? 1)); ?>
+                                                                <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addAmenityCard()"><i class="bi bi-plus-circle me-1"></i> Add Amenity</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row g-2" id="amenitiesLoopContainer">
                                                             <?php foreach ($clinicFeatures as $cfIdx => $cf): ?>
-                                                                <div class="col-md-6">
-                                                                    <div class="p-2 bg-light rounded border">
-                                                                        <div class="row g-2">
-                                                                            <div class="col-4">
-                                                                                <input type="text" name="clinic_features[<?= $cfIdx ?>][icon]" class="form-control form-control-sm font-monospace" value="<?= htmlspecialchars($cf['icon'] ?? 'radiology') ?>">
+                                                                <div class="col-md-6 loop-amenity-card">
+                                                                    <div class="p-2 bg-light rounded border h-100">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                            <span class="small fw-bold text-muted">Amenity</span>
+                                                                            <div class="btn-group btn-group-sm">
+                                                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-amenity-card', -1)"><i class="bi bi-arrow-up"></i></button>
+                                                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-amenity-card', 1)"><i class="bi bi-arrow-down"></i></button>
+                                                                                <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-amenity-card')"><i class="bi bi-trash"></i></button>
                                                                             </div>
-                                                                            <div class="col-8">
+                                                                        </div>
+                                                                        <div class="row g-2">
+                                                                            <div class="col-5">
+                                                                                <?php renderIconPickerInput("clinic_features[{$cfIdx}][icon]", $cf['icon'] ?? 'radiology', 'radiology'); ?>
+                                                                            </div>
+                                                                            <div class="col-7">
                                                                                 <input type="text" name="clinic_features[<?= $cfIdx ?>][title]" class="form-control form-control-sm fw-bold" value="<?= htmlspecialchars($cf['title'] ?? '') ?>">
                                                                             </div>
                                                                             <div class="col-12">
@@ -368,12 +431,26 @@ require __DIR__ . '/_editor-styles.php';
                                                     </div>
                                                 <?php elseif ($secType === 'safety_charter_cards'): ?>
                                                     <div class="col-12 mt-3 pt-3 border-top">
-                                                        <h6 class="fw-bold text-success mb-2"><i class="bi bi-file-earmark-medical me-1"></i> 3 Safety Charter Cards &amp; Emergency Bar</h6>
-                                                        <div class="row g-2 mb-3">
+                                                        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2">
+                                                            <h6 class="fw-bold text-success mb-0"><i class="bi bi-file-earmark-medical me-1"></i> Safety Charter Cards</h6>
+                                                            <div class="d-flex align-items-center gap-2">
+                                                                <?php renderColsSelector('charter_cards_cols', (int)($charter['cards_cols'] ?? 3)); ?>
+                                                                <button type="button" class="btn btn-sm btn-outline-success rounded-pill" onclick="addCharterCard()"><i class="bi bi-plus-circle me-1"></i> Add Card</button>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row g-2 mb-3" id="charterLoopContainer">
                                                             <?php foreach ($charterCards as $ccIdx => $cc): ?>
-                                                                <div class="col-md-4">
-                                                                    <div class="p-2 bg-light rounded border">
-                                                                        <input type="text" name="charter_cards[<?= $ccIdx ?>][icon]" class="form-control form-control-sm font-monospace mb-1" value="<?= htmlspecialchars($cc['icon'] ?? 'verified') ?>" placeholder="Icon">
+                                                                <div class="col-md-4 loop-charter-card">
+                                                                    <div class="p-2 bg-light rounded border h-100">
+                                                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                                                            <span class="small fw-bold text-muted">Card</span>
+                                                                            <div class="btn-group btn-group-sm">
+                                                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-charter-card', -1)"><i class="bi bi-arrow-left"></i></button>
+                                                                                <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-charter-card', 1)"><i class="bi bi-arrow-right"></i></button>
+                                                                                <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-charter-card')"><i class="bi bi-trash"></i></button>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="mb-1"><?php renderIconPickerInput("charter_cards[{$ccIdx}][icon]", $cc['icon'] ?? 'verified', 'verified'); ?></div>
                                                                         <input type="text" name="charter_cards[<?= $ccIdx ?>][title]" class="form-control form-control-sm fw-bold mb-1" value="<?= htmlspecialchars($cc['title'] ?? '') ?>" placeholder="Card Title">
                                                                         <textarea name="charter_cards[<?= $ccIdx ?>][desc]" class="form-control form-control-sm mb-1" rows="3"><?= htmlspecialchars($cc['desc'] ?? '') ?></textarea>
                                                                         <input type="text" name="charter_cards[<?= $ccIdx ?>][footer_label]" class="form-control form-control-sm" value="<?= htmlspecialchars($cc['footer_label'] ?? '') ?>" placeholder="Footer Label">
@@ -753,5 +830,125 @@ function appendAboutSectionCard(data) {
     container.appendChild(div.firstChild);
     recalculateSectionOrders();
     bindAccordionStateListeners(container);
+}
+
+function buildIconPickerHtml(name, defaultVal) {
+    return `
+    <div class="input-group input-group-sm icon-picker-group">
+        <span class="input-group-text bg-white"><span class="material-symbols-outlined icon-picker-preview" style="font-size:18px; color:#0d631b;">${defaultVal}</span></span>
+        <input type="text" name="${name}" class="form-control font-monospace icon-picker-input" value="${defaultVal}" oninput="this.previousElementSibling.querySelector('.icon-picker-preview').textContent = this.value || 'help'">
+        <button type="button" class="btn btn-outline-secondary" onclick="openIconPicker(this)" title="Choose Material Icon"><i class="bi bi-grid-3x3-gap"></i></button>
+    </div>`;
+}
+
+function addTrustBadgeCard() {
+    const c = document.getElementById('trustBadgesContainer');
+    c.insertAdjacentHTML('beforeend', `
+    <div class="col-md-3 loop-badge-card">
+        <div class="p-3 bg-light rounded-3 border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-bold text-muted">Badge</span>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-badge-card', -1)"><i class="bi bi-arrow-left"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-badge-card', 1)"><i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-badge-card')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <label class="form-label small fw-bold">Icon</label>
+            <div class="mb-2">${buildIconPickerHtml('trust_badge_icons[]', 'verified_user')}</div>
+            <label class="form-label small fw-bold">Badge Label</label>
+            <input type="text" name="trust_badge_labels[]" class="form-control form-control-sm fw-semibold" placeholder="New Badge">
+        </div>
+    </div>`);
+}
+
+function addStatCard() {
+    const c = document.getElementById('statsLoopContainer');
+    const idx = Date.now();
+    c.insertAdjacentHTML('beforeend', `
+    <div class="col-md-3 loop-stat-card">
+        <div class="p-2 bg-light rounded border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="small fw-bold text-muted">Stat</span>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-stat-card', -1)"><i class="bi bi-arrow-left"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-stat-card', 1)"><i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-stat-card')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <input type="text" name="stats[${idx}][value]" class="form-control form-control-sm fw-bold mb-1" placeholder="100%">
+            <input type="text" name="stats[${idx}][label]" class="form-control form-control-sm mb-1" placeholder="Label">
+            <input type="text" name="stats[${idx}][desc]" class="form-control form-control-sm" placeholder="Sub-description">
+        </div>
+    </div>`);
+}
+
+function addPillarCard() {
+    const c = document.getElementById('pillarsLoopContainer');
+    const idx = Date.now();
+    c.insertAdjacentHTML('beforeend', `
+    <div class="col-md-6 loop-pillar-card">
+        <div class="p-3 bg-light rounded border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="small fw-bold text-muted">Pillar</span>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-pillar-card', -1)"><i class="bi bi-arrow-up"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-pillar-card', 1)"><i class="bi bi-arrow-down"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-pillar-card')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="row g-2">
+                <div class="col-5"><label class="form-label small fw-bold">Icon</label>${buildIconPickerHtml(`pillars[${idx}][icon]`, 'spa')}</div>
+                <div class="col-7"><label class="form-label small fw-bold">Pillar Title</label><input type="text" name="pillars[${idx}][title]" class="form-control form-control-sm fw-bold" placeholder="Pillar Title"></div>
+                <div class="col-12"><textarea name="pillars[${idx}][desc]" class="form-control form-control-sm" rows="2" placeholder="Description"></textarea></div>
+                <div class="col-12"><input type="text" name="pillars[${idx}][badge]" class="form-control form-control-sm" placeholder="Footer badge"></div>
+            </div>
+        </div>
+    </div>`);
+}
+
+function addAmenityCard() {
+    const c = document.getElementById('amenitiesLoopContainer');
+    const idx = Date.now();
+    c.insertAdjacentHTML('beforeend', `
+    <div class="col-md-6 loop-amenity-card">
+        <div class="p-2 bg-light rounded border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="small fw-bold text-muted">Amenity</span>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-amenity-card', -1)"><i class="bi bi-arrow-up"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-amenity-card', 1)"><i class="bi bi-arrow-down"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-amenity-card')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="row g-2">
+                <div class="col-5">${buildIconPickerHtml(`clinic_features[${idx}][icon]`, 'radiology')}</div>
+                <div class="col-7"><input type="text" name="clinic_features[${idx}][title]" class="form-control form-control-sm fw-bold" placeholder="Amenity Title"></div>
+                <div class="col-12"><textarea name="clinic_features[${idx}][desc]" class="form-control form-control-sm" rows="2" placeholder="Description"></textarea></div>
+            </div>
+        </div>
+    </div>`);
+}
+
+function addCharterCard() {
+    const c = document.getElementById('charterLoopContainer');
+    const idx = Date.now();
+    c.insertAdjacentHTML('beforeend', `
+    <div class="col-md-4 loop-charter-card">
+        <div class="p-2 bg-light rounded border h-100">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="small fw-bold text-muted">Card</span>
+                <div class="btn-group btn-group-sm">
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-charter-card', -1)"><i class="bi bi-arrow-left"></i></button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="moveLoopCard(this, '.loop-charter-card', 1)"><i class="bi bi-arrow-right"></i></button>
+                    <button type="button" class="btn btn-outline-danger" onclick="removeLoopCard(this, '.loop-charter-card')"><i class="bi bi-trash"></i></button>
+                </div>
+            </div>
+            <div class="mb-1">${buildIconPickerHtml(`charter_cards[${idx}][icon]`, 'verified')}</div>
+            <input type="text" name="charter_cards[${idx}][title]" class="form-control form-control-sm fw-bold mb-1" placeholder="Card Title">
+            <textarea name="charter_cards[${idx}][desc]" class="form-control form-control-sm mb-1" rows="3" placeholder="Description"></textarea>
+            <input type="text" name="charter_cards[${idx}][footer_label]" class="form-control form-control-sm" placeholder="Footer Label">
+        </div>
+    </div>`);
 }
 </script>

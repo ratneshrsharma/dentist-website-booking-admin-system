@@ -53,6 +53,9 @@ class Router
             if ($uri === '/api/v1/pages/about' || $uri === '/api/v1/pages/about-us' || $uri === '/api/v1/cms/pages/about-us') {
                 $apiCtrl->aboutPage();
             }
+            if (preg_match('~^/api/v1/(?:cms/)?pages/([A-Za-z0-9_-]+)$~', $uri, $pm)) {
+                $apiCtrl->customPage($pm[1]);
+            }
             if ($uri === '/api/v1/navigation' || $uri === '/api/v1/cms/navigation') {
                 $apiCtrl->navigation();
             }
@@ -140,6 +143,32 @@ class Router
                     $pages->updateAbout();
                 } else {
                     $pages->editAbout();
+                }
+            }
+
+            // Create / Toggle / Set Primary / Delete / Edit Custom CMS Pages
+            if ($path === 'pages/create' && $method === 'POST') {
+                $pages = new PagesController();
+                $pages->create();
+            }
+            if (preg_match('~^pages/([A-Za-z0-9_-]+)/toggle$~', $path, $pm) && $method === 'POST') {
+                $pages = new PagesController();
+                $pages->toggleStatus($pm[1]);
+            }
+            if (preg_match('~^pages/([A-Za-z0-9_-]+)/primary$~', $path, $pm) && $method === 'POST') {
+                $pages = new PagesController();
+                $pages->setPrimary($pm[1]);
+            }
+            if (preg_match('~^pages/([A-Za-z0-9_-]+)/delete$~', $path, $pm) && $method === 'POST') {
+                $pages = new PagesController();
+                $pages->delete($pm[1]);
+            }
+            if (preg_match('~^pages/([A-Za-z0-9_-]+)/edit$~', $path, $pm)) {
+                $pages = new PagesController();
+                if ($method === 'POST') {
+                    $pages->updateCustomPage($pm[1]);
+                } else {
+                    $pages->editCustomPage($pm[1]);
                 }
             }
 

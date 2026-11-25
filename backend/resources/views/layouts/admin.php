@@ -226,8 +226,7 @@ $activeNav = $activeNav ?? 'dashboard';
             padding: 0.28rem 0.65rem !important;
             line-height: 1.35;
         }
-        .app-main .btn-group-sm > .btn,
-        .app-main .btn-group-sm > .btn-group > .btn {
+        .app-main .btn-group-sm .btn {
             min-width: 32px;
             height: 30px;
             padding: 0.25rem 0.5rem !important;
@@ -482,5 +481,6 @@ $activeNav = $activeNav ?? 'dashboard';
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- AdminLTE 4 JS -->
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-beta2/dist/js/adminlte.min.js"></script>
+    <?php require dirname(__DIR__) . '/admin/components/_icon-picker.php'; ?>
 </body>
 </html>

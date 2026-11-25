@@ -99,7 +99,7 @@
 }
 @media (min-width: 640px) {
   .trustBadgesRow {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--grid-cols, 4), minmax(0, 1fr));
   }
 }
 .badgeCard {
@@ -272,7 +272,7 @@
 }
 @media (min-width: 1024px) {
   .pillarsGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--grid-cols, 4), minmax(0, 1fr));
   }
 }
 .pillarCard {
@@ -346,7 +346,7 @@
 }
 @media (min-width: 1024px) {
   .statsGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--grid-cols, 4), minmax(0, 1fr));
   }
 }
 .statItem .statNumber {
@@ -388,7 +388,7 @@
 }
 @media (min-width: 1024px) {
   .teamGrid {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(var(--grid-cols, 4), minmax(0, 1fr));
   }
 }
 .teamCard {
@@ -500,8 +500,8 @@
   }
 }
 .featureList {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(var(--grid-cols, 1), minmax(0, 1fr));
   gap: 12px;
 }
 .featureCard {
@@ -618,7 +618,7 @@
 }
 @media (min-width: 768px) {
   .charterCardsGrid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(var(--grid-cols, 3), minmax(0, 1fr));
   }
 }
 .charterCard {
@@ -795,7 +795,7 @@
 }
 @media (min-width: 768px) {
   .reviewsGrid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(var(--grid-cols, 3), minmax(0, 1fr));
   }
 }
 .reviewCard {

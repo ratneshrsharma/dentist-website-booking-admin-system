@@ -156,4 +156,48 @@ function bindAccordionStateListeners(root) {
         });
     });
 }
+
+function moveLoopCard(btn, selector, dir) {
+    const item = btn.closest(selector);
+    if (!item) return;
+    if (dir < 0 && item.previousElementSibling && item.previousElementSibling.matches(selector)) {
+        item.parentNode.insertBefore(item, item.previousElementSibling);
+    } else if (dir > 0 && item.nextElementSibling && item.nextElementSibling.matches(selector)) {
+        item.parentNode.insertBefore(item.nextElementSibling, item);
+    }
+}
+
+function removeLoopCard(btn, selector) {
+    const item = btn.closest(selector);
+    if (item && item.parentNode.querySelectorAll(selector).length > 1) {
+        item.remove();
+    } else {
+        alert('At least 1 item must remain.');
+    }
+}
 </script>
+<?php
+if (!function_exists('renderIconPickerInput')) {
+    function renderIconPickerInput(string $name, string $value, string $placeholder = 'verified'): void {
+        $safeName = htmlspecialchars($name);
+        $safeVal = htmlspecialchars($value ?: $placeholder);
+        echo '<div class="input-group input-group-sm icon-picker-group">';
+        echo '<span class="input-group-text bg-white"><span class="material-symbols-outlined icon-picker-preview" style="font-size:18px; color:#0d631b;">' . $safeVal . '</span></span>';
+        echo '<input type="text" name="' . $safeName . '" class="form-control font-monospace icon-picker-input" value="' . $safeVal . '" placeholder="' . htmlspecialchars($placeholder) . '" oninput="this.previousElementSibling.querySelector(\'.icon-picker-preview\').textContent = this.value || \'help\'">';
+        echo '<button type="button" class="btn btn-outline-secondary" onclick="openIconPicker(this)" title="Choose Material Icon"><i class="bi bi-grid-3x3-gap"></i></button>';
+        echo '</div>';
+    }
+}
+if (!function_exists('renderColsSelector')) {
+    function renderColsSelector(string $name, int $selected = 4): void {
+        echo '<div class="d-inline-flex align-items-center gap-2">';
+        echo '<label class="small fw-semibold text-muted mb-0">Columns:</label>';
+        echo '<select name="' . htmlspecialchars($name) . '" class="form-select form-select-sm" style="width: auto;">';
+        for ($c = 1; $c <= 6; $c++) {
+            $sel = $selected === $c ? ' selected' : '';
+            echo '<option value="' . $c . '"' . $sel . '>' . $c . ' ' . ($c === 1 ? 'Col' : 'Cols') . '</option>';
+        }
+        echo '</select></div>';
+    }
+}
+?>
