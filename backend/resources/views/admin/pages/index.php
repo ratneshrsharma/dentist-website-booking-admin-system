@@ -103,6 +103,11 @@ use App\Core\App;
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
                                     <?php endif; ?>
+                                    <?php if ($slug === 'contact'): ?>
+                                        <a href="<?= App::url('/admin/contact/submissions') ?>" class="btn btn-outline-info" title="View Contact Form Entries">
+                                            <i class="bi bi-envelope-paper"></i>
+                                        </a>
+                                    <?php endif; ?>
                                     <?php if (!$isPrimary): ?>
                                         <form action="<?= App::url('/admin/pages/' . urlencode($slug) . '/primary') ?>" method="POST" class="d-inline" onsubmit="return confirm('Set \'<?= htmlspecialchars($p['title'], ENT_QUOTES) ?>\' as Primary Homepage?');">
                                             <button type="submit" class="btn btn-outline-success" title="Set as Primary Homepage" style="border-radius: 0;">

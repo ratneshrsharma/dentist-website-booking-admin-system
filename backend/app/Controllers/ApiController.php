@@ -10,6 +10,7 @@ use App\Services\CmsService;
 use App\Services\ServicesService;
 use App\Services\BookingService;
 use App\Services\BlogService;
+use App\Services\ContactService;
 
 class ApiController
 {
@@ -81,6 +82,12 @@ class ApiController
             App::json([
                 'success' => true,
                 'data' => CmsService::getTreatmentsPageData(),
+            ]);
+        }
+        if ($slug === 'contact') {
+            App::json([
+                'success' => true,
+                'data' => CmsService::getContactPageData(),
             ]);
         }
         $pageData = CmsService::getCustomPageData($slug);
@@ -273,5 +280,25 @@ class ApiController
     public function blogTags(): void
     {
         App::json(['success' => true, 'data' => BlogService::getTags()]);
+    }
+
+    public function submitContact(): void
+    {
+        $raw = file_get_contents('php://input');
+        $payload = json_decode($raw, true) ?? $_POST;
+
+        if (trim((string) ($payload['full_name'] ?? '')) === '' || trim((string) ($payload['phone'] ?? '')) === '') {
+            App::json(['success' => false, 'message' => 'Full name and telephone number are required.'], 422);
+        }
+
+        $entry = ContactService::createSubmission($payload);
+
+        App::json([
+            'success' => true,
+            'message' => 'Thank you! Your enquiry has been saved and routed to our Acocks Green reception team.',
+            'reference' => $entry['reference'],
+            'forwarded_to' => $entry['forwarded_to'],
+            'data' => $entry,
+        ]);
     }
 }

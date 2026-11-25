@@ -831,4 +831,78 @@ class PagesController
             'success' => 'Treatments & Services Catalog page saved successfully!',
         ]);
     }
+
+    public function editContact(): void
+    {
+        Auth::requireAuth();
+        $contact = CmsService::getContactPageData();
+        $entriesCount = count(\App\Services\ContactService::getAllSubmissions());
+
+        App::render('admin/pages/contact-editor', [
+            'contact' => $contact,
+            'entriesCount' => $entriesCount,
+            'pageTitle' => 'Edit Contact & Location Page',
+            'activeNav' => 'pages',
+        ]);
+    }
+
+    public function updateContact(): void
+    {
+        Auth::requireAuth();
+        $data = CmsService::getContactPageData();
+
+        if (isset($_POST['hero_eyebrow'])) $data['hero']['eyebrow'] = trim($_POST['hero_eyebrow']);
+        if (isset($_POST['hero_headline'])) $data['hero']['headline'] = trim($_POST['hero_headline']);
+        if (isset($_POST['hero_subtitle'])) $data['hero']['subtitle'] = trim($_POST['hero_subtitle']);
+        if (isset($_POST['hero_triage_label'])) $data['hero']['triage_label'] = trim($_POST['hero_triage_label']);
+        if (isset($_POST['hero_triage_phone'])) $data['hero']['triage_phone'] = trim($_POST['hero_triage_phone']);
+
+        if (!empty($_FILES['hero_image_file']['tmp_name']) && is_uploaded_file($_FILES['hero_image_file']['tmp_name'])) {
+            $ext = strtolower(pathinfo($_FILES['hero_image_file']['name'], PATHINFO_EXTENSION));
+            if (in_array($ext, ['jpg', 'jpeg', 'png', 'webp', 'gif'], true)) {
+                $uploadDir = dirname(__DIR__, 2) . '/public/uploads/contact';
+                if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+                $fname = 'contact-hero-' . time() . '.' . $ext;
+                if (move_uploaded_file($_FILES['hero_image_file']['tmp_name'], $uploadDir . '/' . $fname)) {
+                    $data['hero']['image'] = '/uploads/contact/' . $fname;
+                }
+            }
+        } elseif (isset($_POST['hero_image'])) {
+            $data['hero']['image'] = trim($_POST['hero_image']);
+        }
+
+        if (isset($_POST['reassurance_title'])) $data['reassurance_card']['title'] = trim($_POST['reassurance_title']);
+        if (isset($_POST['reassurance_desc'])) $data['reassurance_card']['desc'] = trim($_POST['reassurance_desc']);
+
+        if (isset($_POST['sections']) && is_array($_POST['sections'])) {
+            $sections = [];
+            $order = 1;
+            foreach ($_POST['sections'] as $sec) {
+                if (trim($sec['title'] ?? '') === '' && trim($sec['name'] ?? '') === '') continue;
+                $sections[] = [
+                    'id' => trim($sec['id'] ?? ('sec_contact_' . $order)),
+                    'type' => trim($sec['type'] ?? 'custom_content'),
+                    'category' => trim($sec['category'] ?? 'custom'),
+                    'name' => trim($sec['name'] ?? ($sec['title'] ?? 'Section')),
+                    'eyebrow' => trim($sec['eyebrow'] ?? ''),
+                    'title' => trim($sec['title'] ?? ''),
+                    'summary' => trim($sec['summary'] ?? ''),
+                    'description' => trim($sec['description'] ?? ''),
+                    'is_active' => !empty($sec['is_active']),
+                    'order' => $order++,
+                ];
+            }
+            $data['sections'] = $sections;
+        }
+
+        if (isset($_POST['meta_title'])) $data['seo']['meta_title'] = trim($_POST['meta_title']);
+        if (isset($_POST['meta_description'])) $data['seo']['meta_description'] = trim($_POST['meta_description']);
+        if (isset($_POST['keywords'])) $data['seo']['keywords'] = trim($_POST['keywords']);
+
+        CmsService::saveContactPageData($data);
+
+        App::redirect('/admin/pages/contact/edit', [
+            'success' => 'Contact & Location page updated successfully!',
+        ]);
+    }
 }

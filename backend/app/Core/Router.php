@@ -13,6 +13,7 @@ use App\Controllers\BookingsController;
 use App\Controllers\SettingsController;
 use App\Controllers\ApiController;
 use App\Controllers\BlogController;
+use App\Controllers\ContactController;
 
 /**
  * Clean & Fast Application Router
@@ -74,6 +75,9 @@ class Router
             }
             if (($uri === '/api/v1/appointments/book' || $uri === '/api/v1/appointments') && $method === 'POST') {
                 $apiCtrl->bookAppointment();
+            }
+            if ($uri === '/api/v1/contact/submit' && $method === 'POST') {
+                $apiCtrl->submitContact();
             }
 
             // Blog REST API
@@ -169,6 +173,30 @@ class Router
                 } else {
                     $pages->editTreatments();
                 }
+            }
+
+            // Contact & Location Page Editor
+            if ($path === 'pages/contact/edit') {
+                $pages = new PagesController();
+                if ($method === 'POST') {
+                    $pages->updateContact();
+                } else {
+                    $pages->editContact();
+                }
+            }
+
+            // Contact Form Submissions CMS
+            if ($path === 'contact/submissions') {
+                $cCtrl = new ContactController();
+                $cCtrl->submissions();
+            }
+            if (preg_match('~^contact/submissions/([A-Za-z0-9_-]+)/status$~', $path, $cm) && $method === 'POST') {
+                $cCtrl = new ContactController();
+                $cCtrl->updateStatus($cm[1]);
+            }
+            if (preg_match('~^contact/submissions/([A-Za-z0-9_-]+)/delete$~', $path, $cm) && $method === 'POST') {
+                $cCtrl = new ContactController();
+                $cCtrl->delete($cm[1]);
             }
 
             // Create / Toggle / Set Primary / Delete / Edit Custom CMS Pages

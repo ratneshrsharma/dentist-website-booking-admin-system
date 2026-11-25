@@ -216,6 +216,12 @@ class CmsService
                         $p['route'] = '/treatments';
                         $p['sections_count'] = count($tData['sections'] ?? []);
                         $p['updated_at'] = $tData['_updated_at'] ?? $p['updated_at'];
+                    } elseif ($p['slug'] === 'contact') {
+                        $ctData = self::getContactPageData();
+                        $p['is_editable'] = true;
+                        $p['route'] = '/contact';
+                        $p['sections_count'] = count($ctData['sections'] ?? []);
+                        $p['updated_at'] = $ctData['_updated_at'] ?? $p['updated_at'];
                     } elseif (!empty($p['is_custom']) || $p['slug'] === 'blog') {
                         $cData = self::getCustomPageData($p['slug']);
                         $p['sections_count'] = count($cData['sections'] ?? []);
@@ -284,11 +290,11 @@ class CmsService
                 'id' => 5,
                 'title' => 'Contact & Emergency Location',
                 'slug' => 'contact',
-                'route' => '/#contact',
+                'route' => '/contact',
                 'template' => 'contact',
                 'status' => 'published',
                 'is_primary' => false,
-                'is_editable' => false,
+                'is_editable' => true,
                 'is_custom' => false,
                 'sections_count' => 3,
                 'updated_at' => '2026-11-22 09:45:00',
@@ -1262,6 +1268,109 @@ class CmsService
                     'is_active' => true,
                     'order' => 5,
                 ],
+            ],
+        ];
+    }
+
+    // =========================================================================
+    // CONTACT PAGE DATA
+    // =========================================================================
+
+    private static function getContactStorageFile(): string
+    {
+        return dirname(__DIR__, 2) . '/storage/app/cms_contact.json';
+    }
+
+    public static function getContactPageData(): array
+    {
+        $file = self::getContactStorageFile();
+        $defaults = self::getDefaultContactPageData();
+        if (file_exists($file)) {
+            $decoded = json_decode((string) file_get_contents($file), true);
+            if (is_array($decoded)) {
+                return array_replace_recursive($defaults, $decoded);
+            }
+        }
+        return $defaults;
+    }
+
+    public static function saveContactPageData(array $data): bool
+    {
+        $file = self::getContactStorageFile();
+        $dir = dirname($file);
+        if (!is_dir($dir)) {
+            @mkdir($dir, 0755, true);
+        }
+        $data['_updated_at'] = date('Y-m-d H:i:s');
+        return file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) !== false;
+    }
+
+    public static function getDefaultContactPageData(): array
+    {
+        return [
+            '_updated_at' => date('Y-m-d H:i:s'),
+            'hero' => [
+                'eyebrow' => 'GET IN TOUCH WITH OUR TEAM',
+                'headline' => 'Contact Acocks Green Dental Practice in Birmingham',
+                'subtitle' => 'Whether you are booking a routine NHS check-up, inquiring about cosmetic Invisalign® aligners, or requiring emergency dental triage, our gentle team at 1078 Warwick Road is here to assist you.',
+                'image' => '/uploads/home/surgery-clinic.jpg',
+                'triage_label' => 'Direct Clinical Triage',
+                'triage_phone' => '0121 765 2870',
+                'badges' => [
+                    ['icon' => 'local_parking', 'label' => 'Free On-Site Patient Parking'],
+                    ['icon' => 'directions_subway', 'label' => '5 Mins from Acocks Green Station'],
+                    ['icon' => 'accessible', 'label' => 'Step-Free Ground Floor Access'],
+                    ['icon' => 'emergency', 'label' => 'Same-Day Emergency Slots'],
+                ],
+            ],
+            'journey_steps' => [
+                ['step' => '1', 'title' => 'Immediate Clinical Triage', 'desc' => 'A dedicated receptionist reviews your clinical needs within 2 working hours. If symptoms suggest pulpitis, swelling, or infection, we prioritise same-day treatment.', 'is_active' => true],
+                ['step' => '2', 'title' => 'Tailored Clinician Matching', 'desc' => 'We match your requirement with the right General Dental Council registered dentist or therapist (NHS Band 1-3 or private cosmetic clinician) at your preferred time.', 'is_active' => true],
+                ['step' => '3', 'title' => 'Digital Paperwork & SMS Check-In', 'desc' => 'You receive an encrypted SMS/email to complete medical history from home on your phone — avoiding waiting room clipboard queues entirely.', 'is_active' => true],
+            ],
+            'reassurance_card' => [
+                'title' => 'Nervous or Dental Phobic?',
+                'desc' => "Haven't visited a dental surgery in years? Don't worry — we never judge. Mention your dental anxiety in the message notes, and our team will book an extra unhurried consultation with our gentlest clinicians.",
+            ],
+            'sections' => [
+                [
+                    'id' => 'sec_contact_channels',
+                    'type' => 'channels_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Communication Channels & Clinical Hours',
+                    'eyebrow' => 'COMMUNICATION CHANNELS',
+                    'title' => 'Immediate Ways to Connect & Clinical Hours',
+                    'summary' => 'Connect directly with our dedicated Birmingham reception team, dental nurses, and clinical care coordinators.',
+                    'is_active' => true,
+                    'order' => 1,
+                ],
+                [
+                    'id' => 'sec_contact_form',
+                    'type' => 'contact_form_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Interactive Consultation & Triage Form',
+                    'eyebrow' => 'APPOINTMENT & CLINICAL INQUIRY',
+                    'title' => 'Send a Message or Request a Slot',
+                    'summary' => 'Complete the form below. For acute pain or same-day emergency triage, please call us directly on 0121 765 2870.',
+                    'is_active' => true,
+                    'order' => 2,
+                ],
+                [
+                    'id' => 'sec_contact_directions',
+                    'type' => 'directions_block',
+                    'category' => 'prebuilt',
+                    'name' => 'Finding Us, Transport & Map',
+                    'eyebrow' => 'LOCATION & ACCESSIBILITY',
+                    'title' => 'Finding Us: Transport & Dedicated Parking',
+                    'summary' => 'Situated on the bustling Warwick Road (A41), our dental practice is conveniently positioned for patients across Acocks Green, Hall Green, Solihull, and Greater Birmingham.',
+                    'is_active' => true,
+                    'order' => 3,
+                ],
+            ],
+            'seo' => [
+                'meta_title' => 'Contact Us & Location | Acocks Green Dental Practice Birmingham B27',
+                'meta_description' => 'Contact Acocks Green Dental Practice at 1078 Warwick Road, Birmingham B27 6BH. Call 0121 765 2870 or send an online appointment enquiry.',
+                'keywords' => 'contact dentist birmingham b27, acocks green dental practice phone, emergency dental triage',
             ],
         ];
     }

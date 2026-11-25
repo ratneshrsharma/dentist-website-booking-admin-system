@@ -23,6 +23,7 @@ import { TestimonialsSlider } from '@/components/sections/TestimonialsSlider/Tes
 import { SafetyCharterBanner } from '@/components/sections/SafetyCharterBanner/SafetyCharterBanner';
 import { ClinicAddressAndContact } from '@/components/sections/ClinicAddressAndContact/ClinicAddressAndContact';
 import { ContentBlockSection } from '@/components/sections/ContentBlockSection/ContentBlockSection';
+import { BlogPostsSection } from '@/components/sections/BlogPostsSection/BlogPostsSection';
 import { assetUrl } from '@/utils/asset';
 
 // Interactive Booking Modal
@@ -192,6 +193,20 @@ export default function HomePage() {
           );
         }
         return <ContentBlockSection key={sec.id || `sec-${index}`} section={sec} index={index} />;
+
+      case 'blog_block':
+        return wrapSection(
+          sec,
+          index,
+          <BlogPostsSection
+            eyebrow={sec.eyebrow || 'Get the latest news, offers and updates'}
+            title={sec.title || 'Latest Dental & Oral Health Articles'}
+            subtitle={sec.summary || sec.description || 'Clinical insights, preventive brushing advice, and community health updates.'}
+            actionText={sec.cta_text || (sec as unknown as { action_btn_text?: string }).action_btn_text || 'View All'}
+            actionUrl={sec.cta_link || (sec as unknown as { action_btn_url?: string }).action_btn_url || '/blog/'}
+            gridCols={(sec as unknown as { grid_cols?: number }).grid_cols || 3}
+          />
+        );
 
       case 'page_snippet':
       case 'custom_content':

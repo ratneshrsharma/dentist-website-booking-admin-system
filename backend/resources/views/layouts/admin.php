@@ -370,6 +370,12 @@ $activeNav = $activeNav ?? 'dashboard';
                                 <p>CMS Page List</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/contact/submissions') ?>" class="nav-link <?= $activeNav === 'contact-submissions' ? 'active' : '' ?>">
+                                <i class="bi bi-envelope-paper text-info"></i>
+                                <p>Contact Form Entries</p>
+                            </a>
+                        </li>
 
                         <!-- Blog & Articles (WordPress-style) -->
                         <li class="nav-header text-uppercase text-secondary px-3 mt-2 mb-1" style="font-size: 9.5px; letter-spacing: 0.06em; opacity: 0.85;">— Blog &amp; Articles</li>

@@ -49,6 +49,22 @@ $pageTitle = 'Practice & Communication Settings';
                         </small>
                     </div>
 
+                    <!-- Contact Form Forwarding Emails (Comma-Separated) -->
+                    <div>
+                        <label class="form-label fw-bold small text-secondary">
+                            Contact Form Forwarding Emails (Comma-Separated)
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-muted"><i class="bi bi-envelope-paper"></i></span>
+                            <input type="text" name="contact_forward_emails" class="form-control"
+                                   placeholder="bookings@acocksgreendental.co.uk, reception@acocksgreendental.co.uk"
+                                   value="<?= htmlspecialchars($branding['contact_forward_emails'] ?? ($branding['form_email'] ?? 'bookings@acocksgreendental.co.uk')) ?>">
+                        </div>
+                        <small class="text-muted" style="font-size: 11px;">
+                            Enter one or more email addresses separated by commas. Every Contact Form submission is saved in CMS and forwarded to these addresses.
+                        </small>
+                    </div>
+
                     <!-- General Reception Email -->
                     <div>
                         <label class="form-label fw-bold small text-secondary">

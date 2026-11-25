@@ -9,6 +9,20 @@
 
 ---
 
+### [2026-11-25 16:55] - Homepage `blog_block` Post Grid, Contact Page CMS & Frontend, Form Entries & Comma-Separated Forwarding
+* **Micro-Task:** Homepage Blog Section + Contact Page & Form System:
+  1. **Homepage `blog_block` (`BlogPostsSection.tsx`, `frontend/src/app/page.tsx`):**
+     - Created `BlogPostsSection` fetching live posts from `/api/v1/blog/posts` and wired `case 'blog_block':` in `page.tsx` so "Latest Dental & Oral Health Articles" renders live article cards linking directly to `/blog/[slug]/`.
+  2. **Contact Page CMS, Form Entries & Forwarding Emails (`ContactService.php`, `ContactController.php`, `CmsService.php`, `PagesController.php`, `SettingsController.php`, `contact-editor.php`, `submissions.php`, `settings/index.php`):**
+     - Added 3-tab Contact Page CMS editor (`/admin/pages/contact/edit`) with links to Form Entries & Forwarding Settings, plus a Form Entries icon link under Contact in CMS Page List and Sidebar.
+     - Built `ContactService` (`contact_submissions.json` storage + comma-separated email forwarding configured in `/admin/settings` via `contact_forward_emails`) and `POST /api/v1/contact/submit`.
+     - Built `/contact/` frontend page (`frontend/src/app/contact/page.tsx`) from `code/html/07 - Contact/code.html` with interactive consultation & triage form, 3-step journey timeline, communication channels, and Google Map.
+* **Verification & QA:**
+  - Verified homepage `blog_block` renders 3 live blog cards linking to `/blog/[slug]/`.
+  - Verified `/admin/settings` saves comma-separated `contact_forward_emails`, `/admin/pages/contact/edit` 3 tabs, `/contact/` form submission (`ENQ-...`), `/admin/contact/submissions` entry + forwarding badges, and entry deletion.
+
+---
+
 ### [2026-11-25 16:00] - WordPress-Style Blog System (Posts, Categories, Tags, Scheduling, SEO, FAQs & Dedicated Post Pages)
 * **Micro-Task:** WordPress-style Blog CMS & Frontend:
   1. **Backend Blog Service & Controller (`BlogService.php`, `BlogController.php`, `Router.php`, `ApiController.php`, `layouts/admin.php`):**

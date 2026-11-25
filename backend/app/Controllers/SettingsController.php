@@ -35,6 +35,7 @@ class SettingsController
         $theme['branding']['tagline'] = trim($_POST['tagline'] ?? $theme['branding']['tagline']);
         $theme['branding']['email'] = trim($_POST['email'] ?? 'reception@acocksgreendental.co.uk');
         $theme['branding']['form_email'] = trim($_POST['form_email'] ?? 'bookings@acocksgreendental.co.uk');
+        $theme['branding']['contact_forward_emails'] = trim($_POST['contact_forward_emails'] ?? ($theme['branding']['form_email'] ?? 'bookings@acocksgreendental.co.uk'));
         $theme['branding']['whatsapp'] = trim($_POST['whatsapp'] ?? '+441217652870');
         $theme['branding']['phone'] = trim($_POST['phone'] ?? '+44 121 765 2870');
         $theme['branding']['emergency_phone'] = trim($_POST['emergency_phone'] ?? '+44 121 765 2870');
