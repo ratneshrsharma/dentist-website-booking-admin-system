@@ -14,6 +14,7 @@ use App\Controllers\SettingsController;
 use App\Controllers\ApiController;
 use App\Controllers\BlogController;
 use App\Controllers\ContactController;
+use App\Controllers\ChatLogsController;
 
 /**
  * Clean & Fast Application Router
@@ -78,6 +79,9 @@ class Router
             }
             if ($uri === '/api/v1/contact/submit' && $method === 'POST') {
                 $apiCtrl->submitContact();
+            }
+            if ($uri === '/api/v1/assistant/chat' && $method === 'POST') {
+                $apiCtrl->assistantChat();
             }
 
             // Blog REST API
@@ -197,6 +201,16 @@ class Router
             if (preg_match('~^contact/submissions/([A-Za-z0-9_-]+)/delete$~', $path, $cm) && $method === 'POST') {
                 $cCtrl = new ContactController();
                 $cCtrl->delete($cm[1]);
+            }
+
+            // Smart Dental Assistant Chat Logs
+            if ($path === 'chat-logs') {
+                $chatCtrl = new ChatLogsController();
+                $chatCtrl->index();
+            }
+            if (preg_match('~^chat-logs/([A-Za-z0-9_-]+)/delete$~', $path, $clm) && $method === 'POST') {
+                $chatCtrl = new ChatLogsController();
+                $chatCtrl->delete($clm[1]);
             }
 
             // Create / Toggle / Set Primary / Delete / Edit Custom CMS Pages

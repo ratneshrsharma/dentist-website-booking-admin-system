@@ -3,6 +3,7 @@ import '@/styles/globals.css';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { BrandPreloader } from '@/components/common/BrandPreloader/BrandPreloader';
 import { PageTransition } from '@/components/common/PageTransition/PageTransition';
+import { FloatingWhatsAppMenu } from '@/components/common/FloatingWhatsAppMenu/FloatingWhatsAppMenu';
 
 export const metadata: Metadata = {
   title: 'Acocks Green Dental Practice | Birmingham B27 NHS & Private Care',
@@ -47,6 +48,7 @@ export default function RootLayout({
         <ThemeProvider>
           <BrandPreloader isReady={true} />
           <PageTransition>{children}</PageTransition>
+          <FloatingWhatsAppMenu />
         </ThemeProvider>
       </body>
     </html>

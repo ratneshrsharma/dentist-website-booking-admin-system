@@ -11,6 +11,7 @@ use App\Services\ServicesService;
 use App\Services\BookingService;
 use App\Services\BlogService;
 use App\Services\ContactService;
+use App\Services\AssistantService;
 
 class ApiController
 {
@@ -300,5 +301,13 @@ class ApiController
             'forwarded_to' => $entry['forwarded_to'],
             'data' => $entry,
         ]);
+    }
+
+    public function assistantChat(): void
+    {
+        $raw = file_get_contents('php://input');
+        $payload = json_decode($raw, true) ?? $_POST;
+        $result = AssistantService::handleRequest($payload);
+        App::json($result, !empty($result['success']) ? 200 : 422);
     }
 }

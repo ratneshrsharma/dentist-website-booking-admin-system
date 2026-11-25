@@ -376,6 +376,12 @@ $activeNav = $activeNav ?? 'dashboard';
                                 <p>Contact Form Entries</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/chat-logs') ?>" class="nav-link <?= $activeNav === 'chat-logs' ? 'active' : '' ?>">
+                                <i class="bi bi-chat-dots-fill text-success"></i>
+                                <p>Assistant Chat Logs</p>
+                            </a>
+                        </li>
 
                         <!-- Blog & Articles (WordPress-style) -->
                         <li class="nav-header text-uppercase text-secondary px-3 mt-2 mb-1" style="font-size: 9.5px; letter-spacing: 0.06em; opacity: 0.85;">— Blog &amp; Articles</li>

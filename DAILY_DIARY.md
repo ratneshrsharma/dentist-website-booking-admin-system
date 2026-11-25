@@ -9,6 +9,21 @@
 
 ---
 
+### [2026-11-25 17:55] - Fixed WhatsApp Floating Menu, DB-Powered Smart Dental Assistant & CMS Chat Logs UI
+* **Micro-Task:** Floating WhatsApp Action Widget + Smart Dental Assistant + CMS Chat UI:
+  1. **Backend Assistant & JSON Chat Logs (`ChatLogService.php`, `AssistantService.php`, `ChatLogsController.php`, `ApiController.php`, `Router.php`):**
+     - Built zero-external-API, DB/CMS-grounded `AssistantService` reading live treatments, prices, FAQs, doctors, schedules, opening hours, and emergency triage info, with 2-pass exact treatment matching.
+     - Added live slot checking (`BookingService::getAvailableSlots()`) and instant appointment creation (`BookingService::createBooking()`) directly from chat.
+     - Persisted visitor lead details (`visitor_name`, `phone`, `service_interest`, `booking_reference`) and full JSON conversation transcripts in `storage/app/chat_logs.json`.
+  2. **Admin CMS Chat Logs UI (`admin/chat/logs.php`, `layouts/admin.php`):**
+     - Added `Assistant Chat Logs` (`/admin/chat-logs`) to Admin sidebar with a 2-pane WhatsApp-style Chat UI (searchable visitor sessions list on left, chat bubbles + collapsible Raw JSON Log on right).
+  3. **Frontend Global Floating WhatsApp Menu (`FloatingWhatsAppMenu.tsx`, `layout.tsx`):**
+     - Mounted fixed WhatsApp icon globally with 3 actions: **Make a Booking** (`BookingModal`), **Contact us on WhatsApp** (`wa.me/...`), and **Smart Dental Assistant** (lead capture -> DB-powered chat -> inline live slot picker & booking).
+* **Verification & QA:**
+  - Verified 3-option WhatsApp menu, lead capture (`Dental Hygiene & Airflow Polish` -> `From £65.00, 45 mins`), readable time-slot buttons (`9:00 AM`..`4:30 PM`), live booking (`BKG-2026-6997`), and `/admin/chat-logs` Chat UI + JSON transcript + cleanup.
+
+---
+
 ### [2026-11-25 17:10] - Contact Page Editor UI Fix, Blog Editor Cleanup & 1–6 Column Blog Grid Sync
 * **Micro-Task:** UI & Grid Column Fixes:
   1. **Contact & Location Page Editor (`admin/pages/contact-editor.php`):**
