@@ -15,7 +15,20 @@ class Auth
     public static function check(): bool
     {
         App::initSession();
-        return !empty($_SESSION['auth_user']);
+        if (empty($_SESSION['auth_user'])) {
+            return false;
+        }
+        $theme = \App\Services\ThemeService::getTheme();
+        $timeoutHours = max(1, (int) ($theme['system_settings']['session_timeout_hours'] ?? 10));
+        $timeoutSec = $timeoutHours * 3600;
+        $lastAct = (int) ($_SESSION['last_activity'] ?? time());
+        if ((time() - $lastAct) > $timeoutSec) {
+            self::logout();
+            App::flash('error', "Session expired after {$timeoutHours} hour(s) of inactivity. Please sign in again.");
+            return false;
+        }
+        $_SESSION['last_activity'] = time();
+        return true;
     }
 
     public static function user(): ?array
@@ -121,6 +134,7 @@ class Auth
         $cleanEntered = preg_replace('/\s+/', '', trim($enteredCode));
         if ($cleanEntered === (string) $pending['code']) {
             $_SESSION['auth_user'] = $pending['user'];
+            $_SESSION['last_activity'] = time();
             unset($_SESSION['2fa_pending'], $_SESSION['impersonator_user_key']);
             return true;
         }

@@ -9,6 +9,22 @@
 
 ---
 
+### [2026-11-26 11:40] - Top-Right Profile Link Fix, 80% Audit Log Drawer, Log Purge & Global Theme System Settings Tab
+* **Micro-Task:** Profile Link, Audit Log Drawer & Global System Settings:
+  1. **Top-Right Profile Dropdown (`layouts/admin.php`):**
+     - Added explicit `z-index: 1080` and direct navigation handler on `My Profile` and `Sign Out` dropdown items so clicking `My Profile` reliably opens `/admin/profile`.
+  2. **Audit Logs 80% Drawer & Old-Log Purge (`ActivityLogService.php`, `LogsController.php`, `admin/logs/index.php`, `Router.php`):**
+     - Added `View` (`bi-eye`) button on every log row opening an `80%` width (`100%` on mobile) slide-over drawer displaying metadata cards, full formatted JSON, and Copy JSON.
+     - Added `purgeOlderThanMonths()` (`POST /admin/logs/purge`) and `Delete Logs > X Month(s) Old` button using the configured retention months (default `2` months).
+  3. **Global Theme `4. System & Contact Settings` Tab (`ThemeService.php`, `ThemeController.php`, `admin/theme/index.php`, `Auth.php`):**
+     - Added Tab 4 for `Super Admin` & `Admin` to configure Session Timeout (`10` hours default, enforced in `Auth::check()`), Log Retention Months (`2` default), Global Website WhatsApp Number, Global Website Public Email, Contact Form Forwarding Emails, Default Slot Duration, Require 2FA toggle, and Maintenance Mode toggle.
+* **Verification & QA:**
+  - Verified top-right `My Profile` link navigates to `/admin/profile` (HTTP 200).
+  - Verified `/admin/logs` 80% width drawer opens with formatted JSON and `Delete Logs > 2 Month(s) Old` button.
+  - Verified `/admin/theme` Tab 4 renders and saves all system & contact settings cleanly.
+
+---
+
 ### [2026-11-26 11:15] - Multi-Role RBAC, User Management CRUD, Self-Service Profile, Impersonation & Activity Logs
 * **Micro-Task:** Roles, Users, Profile, Impersonation & Audit Logs:
   1. **Multi-Role RBAC (`UserService.php`, `Auth.php`, `layouts/admin.php`, all Admin Controllers):**

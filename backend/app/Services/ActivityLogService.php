@@ -123,4 +123,25 @@ class ActivityLogService
     {
         self::saveAllLogs([]);
     }
+
+    public static function purgeOlderThanMonths(int $months): int
+    {
+        $months = max(1, $months);
+        $cutoff = strtotime("-{$months} months");
+        $all = self::getAllLogs();
+        $kept = [];
+        $deleted = 0;
+        foreach ($all as $l) {
+            $ts = strtotime((string) ($l['created_at'] ?? 'now'));
+            if ($ts !== false && $ts < $cutoff) {
+                $deleted++;
+            } else {
+                $kept[] = $l;
+            }
+        }
+        if ($deleted > 0) {
+            self::saveAllLogs($kept);
+        }
+        return $deleted;
+    }
 }

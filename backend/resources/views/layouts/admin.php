@@ -314,21 +314,21 @@ $activeNav = $activeNav ?? 'dashboard';
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" data-bs-toggle="dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="bi bi-person-circle fs-5 text-secondary"></i>
                             <span class="d-none d-md-inline fw-semibold"><?= htmlspecialchars($authUser['name'] ?? 'Admin') ?></span>
                         </a>
-                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0" style="z-index: 1080;">
                             <li><h6 class="dropdown-header"><?= htmlspecialchars($authUser['email'] ?? 'admin@example.com') ?></h6></li>
                             <li><span class="dropdown-item-text text-muted small"><i class="bi bi-award me-1"></i> <?= htmlspecialchars($authUser['role'] ?? 'Super Admin') ?></span></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <a class="dropdown-item fw-semibold" href="<?= App::url('/admin/profile') ?>">
+                                <a class="dropdown-item fw-semibold" href="<?= App::url('/admin/profile') ?>" onclick="window.location.href=this.href; return false;">
                                     <i class="bi bi-person-gear me-2 text-success"></i> My Profile
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item text-danger fw-semibold" href="<?= App::url('/admin/logout') ?>">
+                                <a class="dropdown-item text-danger fw-semibold" href="<?= App::url('/admin/logout') ?>" onclick="window.location.href=this.href; return false;">
                                     <i class="bi bi-box-arrow-right me-2"></i> Sign Out
                                 </a>
                             </li>

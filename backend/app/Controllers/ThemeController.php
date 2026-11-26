@@ -102,10 +102,43 @@ class ThemeController
             $theme['footer_data']['copyright_text'] = trim($_POST['copyright_text']);
         }
 
+        // 7. System & Contact Settings (Super Admin & Admin)
+        if (Auth::can('settings') || Auth::can('users')) {
+            if (isset($_POST['sys_email'])) {
+                $theme['branding']['email'] = trim($_POST['sys_email']);
+            }
+            if (isset($_POST['sys_whatsapp'])) {
+                $theme['branding']['whatsapp'] = trim($_POST['sys_whatsapp']);
+            }
+            if (isset($_POST['sys_phone'])) {
+                $theme['branding']['phone'] = trim($_POST['sys_phone']);
+            }
+            if (isset($_POST['sys_emergency_phone'])) {
+                $theme['branding']['emergency_phone'] = trim($_POST['sys_emergency_phone']);
+            }
+            if (isset($_POST['sys_contact_forward_emails'])) {
+                $theme['branding']['contact_forward_emails'] = trim($_POST['sys_contact_forward_emails']);
+            }
+            if (isset($_POST['session_timeout_hours'])) {
+                $theme['system_settings']['session_timeout_hours'] = max(1, min(720, (int) $_POST['session_timeout_hours']));
+            }
+            if (isset($_POST['log_retention_months'])) {
+                $theme['system_settings']['log_retention_months'] = max(1, min(60, (int) $_POST['log_retention_months']));
+            }
+            if (isset($_POST['default_slot_duration'])) {
+                $theme['system_settings']['default_slot_duration'] = max(10, min(120, (int) $_POST['default_slot_duration']));
+            }
+            if (isset($_POST['sys_settings_submitted'])) {
+                $theme['system_settings']['require_2fa'] = !empty($_POST['require_2fa']);
+                $theme['system_settings']['maintenance_mode'] = !empty($_POST['maintenance_mode']);
+            }
+        }
+
         ThemeService::saveTheme($theme);
+        \App\Services\ActivityLogService::log('Updated Global Theme & System Settings', 'Global Theme', 'Success');
 
         App::redirect('/admin/theme', [
-            'success' => 'Whitelabeling settings, brand tokens, and navigation menus successfully updated!',
+            'success' => 'Whitelabeling settings, brand tokens, and system settings successfully updated!',
         ]);
     }
 }

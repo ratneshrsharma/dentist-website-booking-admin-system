@@ -3,12 +3,15 @@
 declare(strict_types=1);
 
 use App\Core\App;
+use App\Core\Auth;
 
 $clinic = $theme['branding'] ?? [];
 $colors = $theme['colors'] ?? [];
 $typography = $theme['typography'] ?? [];
 $headerMenu = $theme['header_menu'] ?? [];
 $footerData = $theme['footer_data'] ?? [];
+$sys = $theme['system_settings'] ?? [];
+$canManageSystem = Auth::can('settings') || Auth::can('users');
 ?>
 
 <div class="row mb-4 align-items-center">
@@ -45,6 +48,13 @@ $footerData = $theme['footer_data'] ?? [];
                 <i class="bi bi-menu-button-wide me-1"></i> 3. Header & Footer Menus
             </button>
         </li>
+        <?php if ($canManageSystem): ?>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link px-4 py-2" id="system-tab" data-bs-toggle="tab" data-bs-target="#tab-system" type="button" role="tab">
+                <i class="bi bi-sliders me-1"></i> 4. System &amp; Contact Settings
+            </button>
+        </li>
+        <?php endif; ?>
     </ul>
 
     <!-- Tab Contents -->
@@ -225,6 +235,87 @@ $footerData = $theme['footer_data'] ?? [];
                 </div>
             </div>
         </div>
+
+        <?php if ($canManageSystem): ?>
+        <!-- ============================================================== -->
+        <!-- TAB 4: SYSTEM & CONTACT SETTINGS (SUPER ADMIN & ADMIN) -->
+        <!-- ============================================================== -->
+        <div class="tab-pane fade" id="tab-system" role="tabpanel">
+            <input type="hidden" name="sys_settings_submitted" value="1">
+            <div class="row g-4 mb-4">
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-white py-3 border-bottom">
+                            <h5 class="fw-bold mb-0"><i class="bi bi-shield-lock text-success me-2"></i> Session, Logs &amp; Security</h5>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column gap-3">
+                            <div>
+                                <label class="form-label fw-semibold">Admin Session Timeout (Hours)</label>
+                                <input type="number" name="session_timeout_hours" min="1" max="720" class="form-control" value="<?= (int) ($sys['session_timeout_hours'] ?? 10) ?>">
+                                <small class="text-muted">Default: 10 hours of inactivity before automatic logout.</small>
+                            </div>
+                            <div>
+                                <label class="form-label fw-semibold">Delete Audit Logs Older Than (Months)</label>
+                                <input type="number" name="log_retention_months" min="1" max="60" class="form-control" value="<?= (int) ($sys['log_retention_months'] ?? 2) ?>">
+                                <small class="text-muted">Default: 2 months. Used by the Purge Old Logs button in Activity Logs.</small>
+                            </div>
+                            <div>
+                                <label class="form-label fw-semibold">Default Appointment Slot Duration (Minutes)</label>
+                                <select name="default_slot_duration" class="form-select">
+                                    <?php $dur = (int) ($sys['default_slot_duration'] ?? 30); ?>
+                                    <?php foreach ([15, 20, 30, 45, 60] as $m): ?>
+                                        <option value="<?= $m ?>" <?= $dur === $m ? 'selected' : '' ?>><?= $m ?> minutes</option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-check form-switch mt-1">
+                                <input class="form-check-input" type="checkbox" name="require_2fa" value="1" id="sysRequire2fa" <?= !isset($sys['require_2fa']) || !empty($sys['require_2fa']) ? 'checked' : '' ?>>
+                                <label class="form-check-label fw-semibold" for="sysRequire2fa">Require 2FA Code on Staff Login</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" name="maintenance_mode" value="1" id="sysMaintMode" <?= !empty($sys['maintenance_mode']) ? 'checked' : '' ?>>
+                                <label class="form-check-label fw-semibold text-danger" for="sysMaintMode">Frontend Maintenance Mode</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-header bg-white py-3 border-bottom">
+                            <h5 class="fw-bold mb-0"><i class="bi bi-whatsapp text-success me-2"></i> Global Website WhatsApp &amp; Email</h5>
+                        </div>
+                        <div class="card-body p-4 d-flex flex-column gap-3">
+                            <div>
+                                <label class="form-label fw-semibold">Website WhatsApp Number (Global)</label>
+                                <input type="text" name="sys_whatsapp" class="form-control" value="<?= htmlspecialchars($clinic['whatsapp'] ?? '+441217652870') ?>" placeholder="+441217652870">
+                                <small class="text-muted">Updates WhatsApp links across the Floating Menu, Mobile Nav, Smart Dental Assistant, and Booking Modal.</small>
+                            </div>
+                            <div>
+                                <label class="form-label fw-semibold">Website Public Email (Global)</label>
+                                <input type="email" name="sys_email" class="form-control" value="<?= htmlspecialchars($clinic['email'] ?? 'reception@acocksgreendental.co.uk') ?>" placeholder="reception@acocksgreendental.co.uk">
+                                <small class="text-muted">Updates public email displayed in Header Top Bar, Footer, and Contact Page.</small>
+                            </div>
+                            <div>
+                                <label class="form-label fw-semibold">Contact Form Forwarding Emails (Comma-Separated)</label>
+                                <input type="text" name="sys_contact_forward_emails" class="form-control" value="<?= htmlspecialchars($clinic['contact_forward_emails'] ?? ($clinic['form_email'] ?? '')) ?>" placeholder="bookings@..., reception@...">
+                            </div>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold">Main Phone Line</label>
+                                    <input type="text" name="sys_phone" class="form-control" value="<?= htmlspecialchars($clinic['phone'] ?? '+44 121 765 2870') ?>">
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label fw-semibold">Emergency Triage Line</label>
+                                    <input type="text" name="sys_emergency_phone" class="form-control" value="<?= htmlspecialchars($clinic['emergency_phone'] ?? '+44 121 765 2870') ?>">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php endif; ?>
     </div>
 
     <!-- Sticky Bottom Save Bar -->

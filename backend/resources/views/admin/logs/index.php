@@ -6,7 +6,44 @@ $logs = $logs ?? [];
 $filters = $filters ?? [];
 $roles = $roles ?? [];
 $totalCount = (int) ($totalCount ?? 0);
+$retentionMonths = max(1, (int) ($retentionMonths ?? 2));
 ?>
+
+<style>
+.log-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 1090;
+    display: none;
+}
+.log-drawer-backdrop.open {
+    display: block;
+}
+.log-drawer-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 80vw;
+    max-width: 1180px;
+    background: #ffffff;
+    z-index: 1095;
+    box-shadow: -12px 0 40px rgba(15, 23, 42, 0.2);
+    transform: translateX(100%);
+    transition: transform 0.25s ease;
+    display: flex;
+    flex-direction: column;
+}
+.log-drawer-panel.open {
+    transform: translateX(0);
+}
+@media (max-width: 767.98px) {
+    .log-drawer-panel {
+        width: 100vw;
+    }
+}
+</style>
 
 <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
     <div>
@@ -17,11 +54,18 @@ $totalCount = (int) ($totalCount ?? 0);
             Super Admin only. Tracks all user logins, profile/user changes, RBAC warnings, and CMS actions in compact JSON storage (Total: <?= $totalCount ?>).
         </p>
     </div>
-    <form method="POST" action="<?= App::url('/admin/logs/clear') ?>" onsubmit="return confirm('Clear all previous activity logs?');">
-        <button type="submit" class="btn btn-outline-danger btn-sm px-3">
-            <i class="bi bi-trash3 me-1"></i> Clear All Logs
-        </button>
-    </form>
+    <div class="d-flex gap-2 flex-wrap">
+        <form method="POST" action="<?= App::url('/admin/logs/purge') ?>" onsubmit="return confirm('Delete all activity logs older than <?= $retentionMonths ?> month(s)?');">
+            <button type="submit" class="btn btn-outline-warning text-dark btn-sm px-3">
+                <i class="bi bi-calendar-x me-1"></i> Delete Logs &gt; <?= $retentionMonths ?> Month(s) Old
+            </button>
+        </form>
+        <form method="POST" action="<?= App::url('/admin/logs/clear') ?>" onsubmit="return confirm('Clear ALL activity logs permanently?');">
+            <button type="submit" class="btn btn-outline-danger btn-sm px-3">
+                <i class="bi bi-trash3 me-1"></i> Clear All Logs
+            </button>
+        </form>
+    </div>
 </div>
 
 <!-- Multi-Filter Bar -->
@@ -78,8 +122,8 @@ $totalCount = (int) ($totalCount ?? 0);
                     <th>Role</th>
                     <th>User (Key)</th>
                     <th>Module &amp; Action</th>
-                    <th>JSON Details</th>
-                    <th class="text-end" style="width: 70px;">Del</th>
+                    <th>JSON Summary</th>
+                    <th class="text-end" style="width: 110px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -91,6 +135,7 @@ $totalCount = (int) ($totalCount ?? 0);
                     <?php foreach ($logs as $log):
                         $st = $log['status'] ?? 'Success';
                         $stClass = $st === 'Error' ? 'bg-danger text-white' : ($st === 'Warning' ? 'bg-warning text-dark' : 'bg-success text-white');
+                        $logJson = json_encode($log, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
                     ?>
                         <tr>
                             <td class="small text-muted text-nowrap">
@@ -109,17 +154,26 @@ $totalCount = (int) ($totalCount ?? 0);
                             </td>
                             <td class="small" style="max-width: 240px;">
                                 <?php if (!empty($log['details'])): ?>
-                                    <code style="font-size: 11px; word-break: break-all;"><?= htmlspecialchars(json_encode($log['details'], JSON_UNESCAPED_SLASHES)) ?></code>
+                                    <code style="font-size: 11px; word-break: break-all;"><?= htmlspecialchars(substr((string) json_encode($log['details'], JSON_UNESCAPED_SLASHES), 0, 110)) ?></code>
                                 <?php else: ?>
                                     <span class="text-muted">—</span>
                                 <?php endif; ?>
                             </td>
                             <td class="text-end">
-                                <form method="POST" action="<?= App::url('/admin/logs/' . urlencode((string) ($log['id'] ?? '')) . '/delete') ?>" class="d-inline">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Log Entry">
-                                        <i class="bi bi-trash3"></i>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button"
+                                            class="btn btn-outline-secondary"
+                                            title="View Full Log & JSON"
+                                            data-log='<?= htmlspecialchars((string) $logJson, ENT_QUOTES) ?>'
+                                            onclick="openLogDrawer(this)">
+                                        <i class="bi bi-eye"></i>
                                     </button>
-                                </form>
+                                    <form method="POST" action="<?= App::url('/admin/logs/' . urlencode((string) ($log['id'] ?? '')) . '/delete') ?>" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Delete Log Entry" style="border-top-left-radius: 0; border-bottom-left-radius: 0;">
+                                            <i class="bi bi-trash3"></i>
+                                        </button>
+                                    </form>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; ?>
@@ -128,3 +182,60 @@ $totalCount = (int) ($totalCount ?? 0);
         </table>
     </div>
 </div>
+
+<!-- 80% Width Slide-Over Audit Log Drawer -->
+<div class="log-drawer-backdrop" id="logDrawerBackdrop" onclick="closeLogDrawer()"></div>
+<aside class="log-drawer-panel" id="logDrawerPanel" aria-hidden="true">
+    <div class="px-4 py-3 border-bottom bg-light d-flex justify-content-between align-items-center">
+        <div>
+            <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-braces-asterisk text-success me-2"></i> Audit Log Entry Details</h5>
+            <small class="text-muted" id="drawerLogId"></small>
+        </div>
+        <div class="d-flex gap-2">
+            <button type="button" class="btn btn-outline-primary btn-sm" onclick="copyDrawerJson()">
+                <i class="bi bi-clipboard me-1"></i> Copy JSON
+            </button>
+            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="closeLogDrawer()">
+                <i class="bi bi-x-lg"></i> Close
+            </button>
+        </div>
+    </div>
+    <div class="p-4 overflow-auto flex-grow-1">
+        <div class="row g-3 mb-4" id="drawerMetaGrid"></div>
+        <h6 class="fw-bold text-dark mb-2">Full Raw JSON Payload</h6>
+        <pre class="bg-dark text-light p-3 rounded-3 small mb-0" id="drawerRawJson" style="white-space: pre-wrap; word-break: break-word; font-size: 13px;"></pre>
+    </div>
+</aside>
+
+<script>
+function openLogDrawer(btn) {
+    var raw = btn.getAttribute('data-log');
+    if (!raw) return;
+    var obj = JSON.parse(raw);
+    document.getElementById('drawerLogId').textContent = 'Log ID: ' + (obj.id || '') + ' • ' + (obj.created_at || '');
+    var st = obj.status || 'Success';
+    var stBadge = st === 'Error' ? 'bg-danger text-white' : (st === 'Warning' ? 'bg-warning text-dark' : 'bg-success text-white');
+    document.getElementById('drawerMetaGrid').innerHTML = `
+        <div class="col-md-3"><div class="p-3 border rounded-3 bg-light"><div class="small text-muted">Status</div><span class="badge ${stBadge} mt-1">${st}</span></div></div>
+        <div class="col-md-3"><div class="p-3 border rounded-3 bg-light"><div class="small text-muted">User &amp; Key</div><div class="fw-bold">${obj.user_name || ''}</div><code>${obj.user_key || ''}</code></div></div>
+        <div class="col-md-3"><div class="p-3 border rounded-3 bg-light"><div class="small text-muted">Role &amp; Email</div><div class="fw-bold">${obj.role || ''}</div><div class="small text-muted">${obj.user_email || '—'}</div></div></div>
+        <div class="col-md-3"><div class="p-3 border rounded-3 bg-light"><div class="small text-muted">Module &amp; IP</div><div class="fw-bold">${obj.module || ''}</div><div class="small text-muted">${obj.ip || ''}</div></div></div>
+        <div class="col-12"><div class="p-3 border rounded-3 bg-light"><div class="small text-muted">Action</div><div class="fw-bold text-dark">${obj.action || ''}</div></div></div>
+    `;
+    document.getElementById('drawerRawJson').textContent = JSON.stringify(obj, null, 2);
+    document.getElementById('logDrawerBackdrop').classList.add('open');
+    document.getElementById('logDrawerPanel').classList.add('open');
+}
+
+function closeLogDrawer() {
+    document.getElementById('logDrawerBackdrop').classList.remove('open');
+    document.getElementById('logDrawerPanel').classList.remove('open');
+}
+
+function copyDrawerJson() {
+    var txt = document.getElementById('drawerRawJson').textContent;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(txt);
+    }
+}
+</script>

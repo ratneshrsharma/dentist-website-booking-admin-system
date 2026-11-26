@@ -261,6 +261,10 @@ class Router
                 $lCtrl = new LogsController();
                 $lCtrl->clear();
             }
+            if ($path === 'logs/purge' && $method === 'POST') {
+                $lCtrl = new LogsController();
+                $lCtrl->purgeOld();
+            }
             if (preg_match('~^logs/([A-Za-z0-9_-]+)/delete$~', $path, $lm) && $method === 'POST') {
                 $lCtrl = new LogsController();
                 $lCtrl->delete($lm[1]);
