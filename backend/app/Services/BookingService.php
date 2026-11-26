@@ -541,17 +541,18 @@ final class BookingService
     ): array {
         $bookings = self::getAllBookingsRaw();
         $today = date('Y-m-d');
-        $endOfWeek = date('Y-m-d', strtotime('+7 days'));
+        $nextWeekStart = date('Y-m-d', strtotime('monday next week'));
+        $nextWeekEnd = date('Y-m-d', strtotime('sunday next week'));
         $endOfMonth = date('Y-m-t');
 
-        return array_values(array_filter($bookings, function ($b) use ($period, $doctorId, $status, $search, $today, $endOfWeek, $endOfMonth) {
+        return array_values(array_filter($bookings, function ($b) use ($period, $doctorId, $status, $search, $today, $nextWeekStart, $nextWeekEnd, $endOfMonth) {
             // Period filter
             if ($period === 'today' && $b['appointment_date'] !== $today) {
                 return false;
             }
             if ($period === 'next_week') {
                 $apptDate = $b['appointment_date'];
-                if ($apptDate < $today || $apptDate > $endOfWeek) {
+                if ($apptDate < $nextWeekStart || $apptDate > $nextWeekEnd) {
                     return false;
                 }
             }
