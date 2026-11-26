@@ -9,6 +9,23 @@
 
 ---
 
+### [2026-11-26 12:15] - Patients Management CRUD, Accounts & On-the-Fly PDF Invoices, Password-Protected Web Invoices & Role Demo Users
+* **Micro-Task:** Patients, Accounts, Billing Web View & Role Test Users:
+  1. **Patients Management CRUD (`PatientService.php`, `PatientsController.php`, `admin/patients/*.php`):**
+     - Added full patient records (`patients.json`, keyed by `PAT_...`) aggregating visit counts (`completed`, `confirmed`, `rescheduled`, `cancelled`), treatments & clinical notes history, linked appointments, total paid/balance due, and patient invoices table with Web View, On-the-Fly PDF, Email & WhatsApp actions.
+  2. **Accounts & Invoices (`InvoiceService.php`, `AccountsController.php`, `SimplePdf.php`, `admin/accounts/index.php`):**
+     - Strictly restricted to `Super Admin`, `Admin`, and `Accountant` (`accounts` permission).
+     - Built pure-PHP `SimplePdf::streamInvoicePdf()` to generate and stream PDFs on the fly without saving any PDF file to disk.
+     - Added Email (`POST /admin/accounts/invoice/{id}/send-email`) and WhatsApp sharing links.
+  3. **Public Password-Protected Invoice Web View (`BillingController.php`, `billing/invoice.php`):**
+     - Public route `/billing/invoice/{invoice_no}` gated by the patient's mobile number as password, with `window.print()` and on-the-fly `/pdf` download.
+  4. **Dummy Test Users for All Roles (`UserService.php`):**
+     - Seeded test accounts for `Admin`, `Website Manager`, `Receptionist`, `Doctor`, and `Accountant` (`Test@1234`) alongside `Super Admin`.
+* **Verification & QA:**
+  - Verified all 6 role users in `/admin/users`, Patients CRUD + treatment logging in `/admin/patients`, Accounts KPIs + `application/pdf` stream + Receptionist 403 RBAC in `/admin/accounts`, and mobile-password unlock + print/PDF on `/billing/invoice/INV-2026-1001`.
+
+---
+
 ### [2026-11-26 11:40] - Top-Right Profile Link Fix, 80% Audit Log Drawer, Log Purge & Global Theme System Settings Tab
 * **Micro-Task:** Profile Link, Audit Log Drawer & Global System Settings:
   1. **Top-Right Profile Dropdown (`layouts/admin.php`):**

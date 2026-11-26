@@ -380,6 +380,22 @@ $activeNav = $activeNav ?? 'dashboard';
                             </a>
                         </li>
                         <?php endif; ?>
+                        <?php if (Auth::can('patients')): ?>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/patients') ?>" class="nav-link <?= $activeNav === 'patients' ? 'active' : '' ?>">
+                                <i class="bi bi-person-vcard-fill text-warning"></i>
+                                <p>Patients Management</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if (Auth::can('accounts')): ?>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/accounts') ?>" class="nav-link <?= $activeNav === 'accounts' ? 'active' : '' ?>">
+                                <i class="bi bi-receipt-cutoff text-success"></i>
+                                <p>Accounts &amp; Invoices</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
                         <?php endif; ?>
 
                         <!-- 3. WEBSITE CMS -->

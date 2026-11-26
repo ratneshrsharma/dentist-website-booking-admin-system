@@ -22,6 +22,7 @@ class UserService
         'super_admin' => ['*'],
         'admin' => [
             'dashboard', 'profile', 'bookings', 'doctors_availability',
+            'patients', 'accounts',
             'cms_pages', 'cms_components', 'blog', 'contact_submissions',
             'chat_logs', 'theme', 'settings', 'users',
         ],
@@ -31,13 +32,13 @@ class UserService
         ],
         'receptionist' => [
             'dashboard', 'profile', 'bookings', 'doctors_availability',
-            'contact_submissions', 'chat_logs',
+            'patients', 'contact_submissions', 'chat_logs',
         ],
         'doctor' => [
-            'dashboard', 'profile', 'bookings', 'doctors_availability',
+            'dashboard', 'profile', 'bookings', 'doctors_availability', 'patients',
         ],
         'accountant' => [
-            'dashboard', 'profile', 'bookings', 'settings',
+            'dashboard', 'profile', 'bookings', 'patients', 'accounts', 'settings',
         ],
     ];
 
@@ -75,12 +76,28 @@ class UserService
         if (file_exists($file)) {
             $data = json_decode((string) file_get_contents($file), true);
             if (is_array($data) && !empty($data)) {
+                // Ensure dummy test users for each role exist if only Super Admin is present
+                if (count($data) === 1 && ($data[0]['user_key'] ?? '') === 'USR_SUPERADMIN_001') {
+                    $data = self::mergeDefaultDummyUsers($data);
+                    self::saveAllUsers($data);
+                }
                 return $data;
             }
         }
         $defaults = self::getDefaultUsers();
         self::saveAllUsers($defaults);
         return $defaults;
+    }
+
+    private static function mergeDefaultDummyUsers(array $existing): array
+    {
+        $existingKeys = array_column($existing, 'user_key');
+        foreach (self::getDefaultUsers() as $def) {
+            if (!in_array($def['user_key'], $existingKeys, true)) {
+                $existing[] = $def;
+            }
+        }
+        return $existing;
     }
 
     public static function saveAllUsers(array $users): void
@@ -273,6 +290,7 @@ class UserService
 
     private static function getDefaultUsers(): array
     {
+        $demoHash = password_hash('Test@1234', PASSWORD_BCRYPT);
         return [
             [
                 'user_key' => 'USR_SUPERADMIN_001',
@@ -286,6 +304,71 @@ class UserService
                 'is_active' => true,
                 'created_at' => '2026-01-01T09:00:00+00:00',
                 'updated_at' => '2026-01-01T09:00:00+00:00',
+            ],
+            [
+                'user_key' => 'USR_ADMIN_002',
+                'name' => 'Practice Admin (Demo)',
+                'email' => 'admin.test@example.com',
+                'mobile' => '+44 7700 900101',
+                'role_key' => 'admin',
+                'role' => 'Admin',
+                'password_hash' => $demoHash,
+                'avatar' => '/images/doctor-das.jpg',
+                'is_active' => true,
+                'created_at' => '2026-01-02T09:00:00+00:00',
+                'updated_at' => '2026-01-02T09:00:00+00:00',
+            ],
+            [
+                'user_key' => 'USR_WEBMGR_003',
+                'name' => 'Website Manager (Demo)',
+                'email' => 'webmanager.test@example.com',
+                'mobile' => '+44 7700 900102',
+                'role_key' => 'website_manager',
+                'role' => 'Website Manager',
+                'password_hash' => $demoHash,
+                'avatar' => '/images/doctor-das.jpg',
+                'is_active' => true,
+                'created_at' => '2026-01-02T09:00:00+00:00',
+                'updated_at' => '2026-01-02T09:00:00+00:00',
+            ],
+            [
+                'user_key' => 'USR_RECEPT_004',
+                'name' => 'Receptionist (Demo)',
+                'email' => 'receptionist.test@example.com',
+                'mobile' => '+44 7700 900103',
+                'role_key' => 'receptionist',
+                'role' => 'Receptionist',
+                'password_hash' => $demoHash,
+                'avatar' => '/images/doctor-das.jpg',
+                'is_active' => true,
+                'created_at' => '2026-01-02T09:00:00+00:00',
+                'updated_at' => '2026-01-02T09:00:00+00:00',
+            ],
+            [
+                'user_key' => 'USR_DOCTOR_005',
+                'name' => 'Dr. Atandrilla Das (Demo)',
+                'email' => 'doctor.test@example.com',
+                'mobile' => '+44 7700 900104',
+                'role_key' => 'doctor',
+                'role' => 'Doctor',
+                'password_hash' => $demoHash,
+                'avatar' => '/images/doctor-das.jpg',
+                'is_active' => true,
+                'created_at' => '2026-01-02T09:00:00+00:00',
+                'updated_at' => '2026-01-02T09:00:00+00:00',
+            ],
+            [
+                'user_key' => 'USR_ACCOUNT_006',
+                'name' => 'Clinic Accountant (Demo)',
+                'email' => 'accountant.test@example.com',
+                'mobile' => '+44 7700 900105',
+                'role_key' => 'accountant',
+                'role' => 'Accountant',
+                'password_hash' => $demoHash,
+                'avatar' => '/images/doctor-das.jpg',
+                'is_active' => true,
+                'created_at' => '2026-01-02T09:00:00+00:00',
+                'updated_at' => '2026-01-02T09:00:00+00:00',
             ],
         ];
     }

@@ -18,6 +18,9 @@ use App\Controllers\ChatLogsController;
 use App\Controllers\UsersController;
 use App\Controllers\ProfileController;
 use App\Controllers\LogsController;
+use App\Controllers\PatientsController;
+use App\Controllers\AccountsController;
+use App\Controllers\BillingController;
 
 /**
  * Clean & Fast Application Router
@@ -102,6 +105,20 @@ class Router
             }
 
             App::json(['success' => false, 'message' => 'API endpoint not found', 'path' => $uri], 404);
+        }
+
+        // ==========================================
+        // 1B. PUBLIC BILLING INVOICE ROUTES (/billing/...)
+        // ==========================================
+        if (str_starts_with($uri, '/billing/invoice/')) {
+            $bCtrl = new BillingController();
+            $sub = trim(substr($uri, strlen('/billing/invoice/')), '/');
+            if (preg_match('~^([A-Za-z0-9_-]+)/pdf$~', $sub, $bm)) {
+                $bCtrl->downloadPdf($bm[1]);
+            }
+            if ($sub !== '') {
+                $bCtrl->showInvoice($sub);
+            }
         }
 
         // ==========================================
@@ -268,6 +285,58 @@ class Router
             if (preg_match('~^logs/([A-Za-z0-9_-]+)/delete$~', $path, $lm) && $method === 'POST') {
                 $lCtrl = new LogsController();
                 $lCtrl->delete($lm[1]);
+            }
+
+            // Patients Management CRUD
+            if ($path === 'patients') {
+                $patCtrl = new PatientsController();
+                $patCtrl->index();
+            }
+            if ($path === 'patients/create') {
+                $patCtrl = new PatientsController();
+                $patCtrl->create();
+            }
+            if (preg_match('~^patients/([A-Za-z0-9_-]+)/edit$~', $path, $pm)) {
+                $patCtrl = new PatientsController();
+                $patCtrl->edit($pm[1]);
+            }
+            if (preg_match('~^patients/([A-Za-z0-9_-]+)/treatment$~', $path, $pm) && $method === 'POST') {
+                $patCtrl = new PatientsController();
+                $patCtrl->addTreatment($pm[1]);
+            }
+            if (preg_match('~^patients/([A-Za-z0-9_-]+)/delete$~', $path, $pm) && $method === 'POST') {
+                $patCtrl = new PatientsController();
+                $patCtrl->delete($pm[1]);
+            }
+            if (preg_match('~^patients/([A-Za-z0-9_-]+)$~', $path, $pm)) {
+                $patCtrl = new PatientsController();
+                $patCtrl->view($pm[1]);
+            }
+
+            // Accounts & Invoices (Admin, Super Admin & Accountant ONLY)
+            if ($path === 'accounts') {
+                $accCtrl = new AccountsController();
+                $accCtrl->index();
+            }
+            if ($path === 'accounts/create' && $method === 'POST') {
+                $accCtrl = new AccountsController();
+                $accCtrl->create();
+            }
+            if (preg_match('~^accounts/invoice/([A-Za-z0-9_-]+)/pdf$~', $path, $am)) {
+                $accCtrl = new AccountsController();
+                $accCtrl->streamPdf($am[1]);
+            }
+            if (preg_match('~^accounts/invoice/([A-Za-z0-9_-]+)/send-email$~', $path, $am) && $method === 'POST') {
+                $accCtrl = new AccountsController();
+                $accCtrl->sendEmail($am[1]);
+            }
+            if (preg_match('~^accounts/invoice/([A-Za-z0-9_-]+)/mark-paid$~', $path, $am) && $method === 'POST') {
+                $accCtrl = new AccountsController();
+                $accCtrl->markPaid($am[1]);
+            }
+            if (preg_match('~^accounts/invoice/([A-Za-z0-9_-]+)/delete$~', $path, $am) && $method === 'POST') {
+                $accCtrl = new AccountsController();
+                $accCtrl->delete($am[1]);
             }
 
             // Create / Toggle / Set Primary / Delete / Edit Custom CMS Pages
