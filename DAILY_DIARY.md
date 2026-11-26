@@ -9,6 +9,23 @@
 
 ---
 
+### [2026-11-26 12:50] - Granular Role Management CRUD, Per-User Overrides & Strict Role Visibility Rules
+* **Micro-Task:** Role Management CRUD & Strict Visibility:
+  1. **Dynamic Role & Granular (`view`, `add`, `edit`, `delete`) Permissions (`RoleService.php`, `UserService.php`, `Auth.php`):**
+     - Replaced static role permission arrays with `RoleService` backed by `storage/app/roles.json`, supporting module-level `view`, `add`, `edit`, and `delete` rights.
+     - Enforced strict role boundaries: `Doctor` (`bookings` & `doctors_availability` only — no `patients`), `Accountant` (`accounts` & `settings` view — no `patients`, `doctors_availability`, `bookings`), `Website Manager` (CMS/Blog/Theme/Contact only — no `patients` or `chat_logs`).
+  2. **Role Management CRUD (`RolesController.php`, `admin/roles/*.php`, `Router.php`):**
+     - `Super Admin` and `Admin` can view and edit role permissions (`/admin/roles`, `/admin/roles/{key}/edit`) and assign any role (including custom roles) to users.
+     - **Super Admin ONLY** can create new custom roles (`/admin/roles/create`) and delete custom roles (`/admin/roles/{key}/delete`).
+  3. **Per-User Permission Overrides & Doctor Scoping (`UsersController.php`, `admin/users/form.php`, `BookingsController.php`):**
+     - Added `Use Custom Per-User Rights` (`view`/`add`/`edit`/`delete` matrix) and `Linked Doctor Profile` (`doctor_id`) on user accounts.
+     - Scoped `BookingsController::index()` and `availability()` so logged-in `Doctor` users only see their own `doctor_id` bookings and schedule/leave (hiding other doctors).
+     - Fixed `layouts/admin.php` sidebar clinical section gating so `Accounts & Invoices` and `Patients Management` render independently of `bookings`/`doctors_availability`.
+* **Verification & QA:**
+  - Verified `/admin/roles` CRUD, Super-Admin-only role creation/deletion (Admin blocked from `/admin/roles/create`), Doctor scoping to own `doctor_id` (`Dr. Atandrilla Das`) + 403 on `/admin/patients`, Accountant 403 on `/admin/patients`, `/admin/bookings`, `/admin/doctors/availability`, Website Manager 403 on `/admin/patients` and `/admin/chat-logs`, and per-user permission override persistence.
+
+---
+
 ### [2026-11-26 12:15] - Patients Management CRUD, Accounts & On-the-Fly PDF Invoices, Password-Protected Web Invoices & Role Demo Users
 * **Micro-Task:** Patients, Accounts, Billing Web View & Role Test Users:
   1. **Patients Management CRUD (`PatientService.php`, `PatientsController.php`, `admin/patients/*.php`):**

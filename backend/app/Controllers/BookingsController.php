@@ -15,14 +15,21 @@ class BookingsController
      */
     public function index(): void
     {
+        Auth::requirePermission('bookings', 'view');
         $period = $_GET['period'] ?? 'all';
         $doctorId = isset($_GET['doctor_id']) && $_GET['doctor_id'] !== '' ? (int)$_GET['doctor_id'] : null;
         $status = $_GET['status'] ?? null;
         $search = $_GET['q'] ?? null;
 
+        $doctors = BookingService::getDefaultDoctors();
+        if (Auth::roleKey() === 'doctor') {
+            $ownDocId = (int) (Auth::user()['doctor_id'] ?? 1);
+            $doctorId = $ownDocId;
+            $doctors = array_values(array_filter($doctors, static fn($d) => (int) ($d['id'] ?? 0) === $ownDocId));
+        }
+
         $bookings = BookingService::getFilteredBookings($period, $doctorId, $status, $search);
         $stats = BookingService::getBookingStats();
-        $doctors = BookingService::getDefaultDoctors();
 
         App::render('admin/bookings/index', [
             'activeNav' => 'bookings',
@@ -77,10 +84,17 @@ class BookingsController
      */
     public function availability(): void
     {
+        Auth::requirePermission('doctors_availability', 'view');
         $doctors = BookingService::getDefaultDoctors();
         $selectedDoctorId = isset($_GET['doctor_id']) ? (int)$_GET['doctor_id'] : (int)($doctors[0]['id'] ?? 1);
 
-        $selectedDoctor = BookingService::getDoctorById($selectedDoctorId) ?? $doctors[0];
+        if (Auth::roleKey() === 'doctor') {
+            $ownDocId = (int) (Auth::user()['doctor_id'] ?? 1);
+            $selectedDoctorId = $ownDocId;
+            $doctors = array_values(array_filter($doctors, static fn($d) => (int) ($d['id'] ?? 0) === $ownDocId));
+        }
+
+        $selectedDoctor = BookingService::getDoctorById($selectedDoctorId) ?? ($doctors[0] ?? []);
         $schedule = BookingService::getDoctorSchedule($selectedDoctorId);
         $doctorBookings = BookingService::getFilteredBookings(null, $selectedDoctorId);
         $leaves = BookingService::getDoctorLeaves($selectedDoctorId);

@@ -47,6 +47,9 @@ class Auth
                 $sessionUser['mobile'] = $fresh['mobile'] ?? '';
                 $sessionUser['role_key'] = $fresh['role_key'];
                 $sessionUser['role'] = $fresh['role'];
+                $sessionUser['doctor_id'] = $fresh['doctor_id'] ?? null;
+                $sessionUser['use_custom_permissions'] = !empty($fresh['use_custom_permissions']);
+                $sessionUser['custom_permissions'] = $fresh['custom_permissions'] ?? [];
                 $sessionUser['is_active'] = !empty($fresh['is_active']);
                 $_SESSION['auth_user'] = $sessionUser;
             }
@@ -65,12 +68,12 @@ class Auth
         return self::roleKey() === 'super_admin';
     }
 
-    public static function can(string $permission): bool
+    public static function can(string $permission, string $action = 'view'): bool
     {
         if (!self::check()) {
             return false;
         }
-        return UserService::hasPermission(self::roleKey(), $permission);
+        return UserService::hasPermission(self::roleKey(), $permission, $action, self::user());
     }
 
     public static function validateCredentials(string $email, string $password): ?array
@@ -246,21 +249,21 @@ class Auth
         }
     }
 
-    public static function requirePermission(string $permission): void
+    public static function requirePermission(string $permission, string $action = 'view'): void
     {
         self::requireAuth();
-        if (!self::can($permission)) {
+        if (!self::can($permission, $action)) {
             ActivityLogService::log(
-                "Unauthorized access attempt to module: {$permission}",
+                "Unauthorized access attempt to module: {$permission} ({$action})",
                 'RBAC Security',
                 'Warning',
-                ['permission' => $permission, 'uri' => $_SERVER['REQUEST_URI'] ?? '']
+                ['permission' => $permission, 'action' => $action, 'uri' => $_SERVER['REQUEST_URI'] ?? '']
             );
             http_response_code(403);
             App::render('admin/auth/forbidden', [
                 'pageTitle' => '403 Access Denied',
                 'activeNav' => 'dashboard',
-                'permission' => $permission,
+                'permission' => $permission . ' (' . $action . ')',
             ]);
             exit;
         }

@@ -21,6 +21,7 @@ use App\Controllers\LogsController;
 use App\Controllers\PatientsController;
 use App\Controllers\AccountsController;
 use App\Controllers\BillingController;
+use App\Controllers\RolesController;
 
 /**
  * Clean & Fast Application Router
@@ -267,6 +268,24 @@ class Router
             if (preg_match('~^users/([A-Za-z0-9_-]+)/impersonate$~', $path, $um) && $method === 'POST') {
                 $uCtrl = new UsersController();
                 $uCtrl->impersonate($um[1]);
+            }
+
+            // Role Management CRUD & Permissions (Super Admin & Admin)
+            if ($path === 'roles') {
+                $rCtrl = new RolesController();
+                $rCtrl->index();
+            }
+            if ($path === 'roles/create') {
+                $rCtrl = new RolesController();
+                $rCtrl->create();
+            }
+            if (preg_match('~^roles/([A-Za-z0-9_-]+)/edit$~', $path, $rm)) {
+                $rCtrl = new RolesController();
+                $rCtrl->edit($rm[1]);
+            }
+            if (preg_match('~^roles/([A-Za-z0-9_-]+)/delete$~', $path, $rm) && $method === 'POST') {
+                $rCtrl = new RolesController();
+                $rCtrl->delete($rm[1]);
             }
 
             // System Activity & Audit Logs (Super Admin ONLY)

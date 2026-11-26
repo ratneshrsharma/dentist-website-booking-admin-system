@@ -59,6 +59,9 @@ class UsersController
                     'email' => $_POST['email'] ?? '',
                     'mobile' => $_POST['mobile'] ?? '',
                     'role_key' => $roleKey,
+                    'doctor_id' => $_POST['doctor_id'] ?? null,
+                    'use_custom_permissions' => !empty($_POST['use_custom_permissions']),
+                    'custom_permissions' => $_POST['custom_permissions'] ?? [],
                     'password' => $_POST['password'] ?? '',
                     'is_active' => !empty($_POST['is_active']),
                 ]);
@@ -80,8 +83,11 @@ class UsersController
         App::render('admin/users/form', [
             'pageTitle' => 'Add New User',
             'activeNav' => 'users',
-            'user' => ['name' => '', 'email' => '', 'mobile' => '', 'role_key' => 'receptionist', 'is_active' => true],
+            'user' => ['name' => '', 'email' => '', 'mobile' => '', 'role_key' => 'receptionist', 'is_active' => true, 'use_custom_permissions' => false, 'custom_permissions' => []],
             'roles' => UserService::getRoles(Auth::isSuperAdmin()),
+            'modules' => \App\Services\RoleService::MODULES,
+            'actions' => \App\Services\RoleService::ACTIONS,
+            'doctors' => \App\Services\BookingService::getDefaultDoctors(),
             'isEdit' => false,
         ]);
     }
@@ -109,6 +115,9 @@ class UsersController
                     'email' => $_POST['email'] ?? '',
                     'mobile' => $_POST['mobile'] ?? '',
                     'role_key' => $_POST['role_key'] ?? $target['role_key'],
+                    'doctor_id' => $_POST['doctor_id'] ?? null,
+                    'use_custom_permissions' => !empty($_POST['use_custom_permissions']),
+                    'custom_permissions' => $_POST['custom_permissions'] ?? [],
                     'password' => $_POST['password'] ?? '',
                     'is_active' => !empty($_POST['is_active']),
                 ], Auth::roleKey());
@@ -137,6 +146,9 @@ class UsersController
             'activeNav' => 'users',
             'user' => $target,
             'roles' => UserService::getRoles(Auth::isSuperAdmin()),
+            'modules' => \App\Services\RoleService::MODULES,
+            'actions' => \App\Services\RoleService::ACTIONS,
+            'doctors' => \App\Services\BookingService::getDefaultDoctors(),
             'isEdit' => true,
         ]);
     }

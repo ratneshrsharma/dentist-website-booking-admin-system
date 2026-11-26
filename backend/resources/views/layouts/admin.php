@@ -361,7 +361,7 @@ $activeNav = $activeNav ?? 'dashboard';
                         </li>
 
                         <!-- 2. CLINICAL APPOINTMENTS -->
-                        <?php if (Auth::can('bookings') || Auth::can('doctors_availability')): ?>
+                        <?php if (Auth::can('bookings') || Auth::can('doctors_availability') || Auth::can('patients') || Auth::can('accounts')): ?>
                         <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Clinical Appointments</li>
                         <?php if (Auth::can('bookings')): ?>
                         <li class="nav-item">
@@ -528,6 +528,14 @@ $activeNav = $activeNav ?? 'dashboard';
                             <a href="<?= App::url('/admin/users') ?>" class="nav-link <?= $activeNav === 'users' ? 'active' : '' ?>">
                                 <i class="bi bi-people-fill text-warning"></i>
                                 <p>User Management</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if (Auth::can('roles')): ?>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/roles') ?>" class="nav-link <?= $activeNav === 'roles' ? 'active' : '' ?>">
+                                <i class="bi bi-shield-check text-success"></i>
+                                <p>Role Management</p>
                             </a>
                         </li>
                         <?php endif; ?>

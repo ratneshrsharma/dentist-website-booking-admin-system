@@ -49,25 +49,37 @@ class UserService
 
     public static function getRoles(bool $includeSuperAdmin = true): array
     {
-        $roles = self::ROLES;
-        if (!$includeSuperAdmin) {
-            unset($roles['super_admin']);
+        $roles = [];
+        foreach (RoleService::getAllRoles() as $r) {
+            $k = $r['role_key'] ?? '';
+            if ($k === '') continue;
+            if (!$includeSuperAdmin && $k === 'super_admin') continue;
+            $roles[$k] = $r['label'] ?? $k;
         }
         return $roles;
     }
 
     public static function getRoleLabel(string $roleKey): string
     {
+        $r = RoleService::findByKey($roleKey);
+        if ($r) {
+            return (string) ($r['label'] ?? $roleKey);
+        }
         return self::ROLES[$roleKey] ?? ucfirst(str_replace('_', ' ', $roleKey));
     }
 
-    public static function hasPermission(string $roleKey, string $permission): bool
+    public static function hasPermission(string $roleKey, string $module, string $action = 'view', ?array $user = null): bool
     {
-        $allowed = self::PERMISSIONS[$roleKey] ?? [];
-        if (in_array('*', $allowed, true)) {
+        if ($roleKey === 'super_admin') {
             return true;
         }
-        return in_array($permission, $allowed, true);
+        if ($module === 'dashboard' || $module === 'profile') {
+            return true;
+        }
+        if ($user && !empty($user['use_custom_permissions']) && isset($user['custom_permissions'][$module][$action])) {
+            return !empty($user['custom_permissions'][$module][$action]);
+        }
+        return RoleService::hasPermission($roleKey, $module, $action);
     }
 
     public static function getAllUsers(): array
@@ -153,7 +165,7 @@ class UserService
         }
 
         $roleKey = (string) ($input['role_key'] ?? 'receptionist');
-        if (!array_key_exists($roleKey, self::ROLES)) {
+        if (RoleService::findByKey($roleKey) === null) {
             $roleKey = 'receptionist';
         }
 
@@ -164,6 +176,9 @@ class UserService
             'mobile' => trim((string) ($input['mobile'] ?? '')),
             'role_key' => $roleKey,
             'role' => self::getRoleLabel($roleKey),
+            'doctor_id' => !empty($input['doctor_id']) ? (int) $input['doctor_id'] : null,
+            'use_custom_permissions' => !empty($input['use_custom_permissions']),
+            'custom_permissions' => !empty($input['custom_permissions']) ? RoleService::normalizePermissions((array) $input['custom_permissions']) : [],
             'password_hash' => password_hash($password, PASSWORD_BCRYPT),
             'avatar' => '/images/doctor-das.jpg',
             'is_active' => !empty($input['is_active']),
@@ -196,7 +211,7 @@ class UserService
                 }
 
                 $roleKey = (string) ($input['role_key'] ?? $u['role_key']);
-                if (!array_key_exists($roleKey, self::ROLES)) {
+                if (RoleService::findByKey($roleKey) === null) {
                     $roleKey = $u['role_key'];
                 }
                 if ($roleKey === 'super_admin' && $actorRoleKey !== 'super_admin') {
@@ -208,6 +223,15 @@ class UserService
                 $u['mobile'] = trim((string) ($input['mobile'] ?? ''));
                 $u['role_key'] = $roleKey;
                 $u['role'] = self::getRoleLabel($roleKey);
+                if (array_key_exists('doctor_id', $input)) {
+                    $u['doctor_id'] = !empty($input['doctor_id']) ? (int) $input['doctor_id'] : null;
+                }
+                if (array_key_exists('use_custom_permissions', $input)) {
+                    $u['use_custom_permissions'] = !empty($input['use_custom_permissions']);
+                }
+                if (isset($input['custom_permissions']) && is_array($input['custom_permissions'])) {
+                    $u['custom_permissions'] = RoleService::normalizePermissions($input['custom_permissions']);
+                }
                 $u['is_active'] = ($u['role_key'] === 'super_admin') ? true : !empty($input['is_active']);
 
                 $newPass = (string) ($input['password'] ?? '');
@@ -351,6 +375,7 @@ class UserService
                 'mobile' => '+44 7700 900104',
                 'role_key' => 'doctor',
                 'role' => 'Doctor',
+                'doctor_id' => 1,
                 'password_hash' => $demoHash,
                 'avatar' => '/images/doctor-das.jpg',
                 'is_active' => true,
