@@ -9,6 +9,21 @@
 
 ---
 
+### [2026-11-26 10:02] - Smart Dental Assistant Rich Queries (Doctors, WhatsApp Location, Email Dispatch & Blog Links)
+* **Micro-Task:** Enhanced `AssistantService` & `FloatingWhatsAppMenu`:
+  1. **Doctor Profile Lookup (`AssistantService.php`):**
+     - Added specific clinician matching from `cms_home.json` (`clinicians` / `support_team`) returning role, specialty badge, bio, and quick booking with that clinician.
+  2. **WhatsApp Location & Google Maps Sharing (`AssistantService.php`, `FloatingWhatsAppMenu.tsx`):**
+     - Added `action_links` metadata rendering clickable pill buttons inside chat bubbles (`Send Location on WhatsApp` via `wa.me/...` and `Open Google Maps`).
+  3. **Email Details Dispatch (`AssistantService.php`, `FloatingWhatsAppMenu.tsx`):**
+     - Added `show_email_input` inline email form + `action: 'send_email'` (and direct email detection in chat) to email practice & treatment details via `@mail()`.
+  4. **Blog Guide Matching & Link Sharing (`AssistantService.php`):**
+     - Added live `BlogService` post scoring so queries like `"NHS vs Private Dental Care"` return the article summary and a clickable `Read Full Guide →` link (`/blog/[slug]/`).
+* **Verification:**
+  - Verified all 4 queries via `POST /api/v1/assistant/chat` and cleaned up the QA test session.
+
+---
+
 ### [2026-11-25 17:55] - Fixed WhatsApp Floating Menu, DB-Powered Smart Dental Assistant & CMS Chat Logs UI
 * **Micro-Task:** Floating WhatsApp Action Widget + Smart Dental Assistant + CMS Chat UI:
   1. **Backend Assistant & JSON Chat Logs (`ChatLogService.php`, `AssistantService.php`, `ChatLogsController.php`, `ApiController.php`, `Router.php`):**

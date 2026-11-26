@@ -5,10 +5,21 @@ import { apiClient } from '@/api/client';
 import { useTheme } from '@/context/ThemeContext';
 import { BookingModal } from '@/components/common/BookingModal/BookingModal';
 
+interface ActionLink {
+  label: string;
+  url: string;
+  external?: boolean;
+}
+
 interface ChatMessage {
   id: string;
   sender: 'user' | 'assistant';
   text: string;
+  meta?: {
+    action_links?: ActionLink[];
+    booking_reference?: string;
+    whatsapp_url?: string;
+  };
   timestamp?: string;
 }
 
@@ -71,6 +82,8 @@ export const FloatingWhatsAppMenu: React.FC = () => {
   });
   const [availableSlots, setAvailableSlots] = useState<SlotOption[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
+  const [showEmailInput, setShowEmailInput] = useState(false);
+  const [visitorEmail, setVisitorEmail] = useState('');
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
@@ -180,16 +193,53 @@ export const FloatingWhatsAppMenu: React.FC = () => {
         messages?: ChatMessage[];
         quick_replies?: string[];
         show_booking_picker?: boolean;
+        show_email_input?: boolean;
+        preferred_doctor_id?: number | null;
         doctors?: DoctorOption[];
       };
       if (raw?.success) {
         setMessages(raw.messages || []);
         setQuickReplies(raw.quick_replies || []);
+        setShowEmailInput(Boolean(raw.show_email_input));
         if (raw.show_booking_picker) {
           setShowSlotPicker(true);
           if (raw.doctors) setDoctors(raw.doctors);
-          loadDoctorSlots(selectedDoctorId, selectedDate);
+          const docId = raw.preferred_doctor_id || selectedDoctorId;
+          if (raw.preferred_doctor_id) setSelectedDoctorId(raw.preferred_doctor_id);
+          loadDoctorSlots(docId, selectedDate);
         }
+      }
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleSendDetailsEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!visitorEmail.trim() || sending) return;
+    setSending(true);
+    try {
+      const res = await apiClient.add<{
+        messages?: ChatMessage[];
+        quick_replies?: string[];
+      }>('/assistant/chat', {
+        action: 'send_email',
+        session_id: sessionId,
+        visitor_name: visitorName,
+        phone: visitorPhone,
+        service_interest: serviceInterest,
+        email: visitorEmail.trim(),
+      });
+      const raw = res as unknown as {
+        success?: boolean;
+        messages?: ChatMessage[];
+        quick_replies?: string[];
+      };
+      if (raw?.success) {
+        setShowEmailInput(false);
+        setVisitorEmail('');
+        setMessages(raw.messages || []);
+        setQuickReplies(raw.quick_replies || []);
       }
     } finally {
       setSending(false);
@@ -455,8 +505,9 @@ export const FloatingWhatsAppMenu: React.FC = () => {
                 <div style={{ flex: 1, padding: 14, overflowY: 'auto', background: '#f2fcf5', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {messages.map((m) => {
                     const isUser = m.sender === 'user';
+                    const actionLinks = m.meta?.action_links || [];
                     return (
-                      <div key={m.id} style={{ display: 'flex', justifyContent: isUser ? 'flex-end' : 'flex-start' }}>
+                      <div key={m.id} style={{ display: 'flex', flexDirection: 'column', alignItems: isUser ? 'flex-end' : 'flex-start', gap: 6 }}>
                         <div
                           style={{
                             maxWidth: '84%',
@@ -471,10 +522,55 @@ export const FloatingWhatsAppMenu: React.FC = () => {
                           }}
                         >
                           {renderFormattedText(m.text)}
+                          {actionLinks.length > 0 && (
+                            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
+                              {actionLinks.map((lnk, lIdx) => (
+                                <a
+                                  key={lIdx}
+                                  href={lnk.url}
+                                  target={lnk.external ? '_blank' : undefined}
+                                  rel={lnk.external ? 'noopener noreferrer' : undefined}
+                                  style={{
+                                    display: 'inline-block',
+                                    padding: '6px 12px',
+                                    borderRadius: 8,
+                                    background: '#0d631b',
+                                    color: '#ffffff',
+                                    fontSize: 12,
+                                    fontWeight: 700,
+                                    textDecoration: 'none',
+                                  }}
+                                >
+                                  {lnk.label}
+                                </a>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     );
                   })}
+
+                  {/* Inline Email Input Box */}
+                  {showEmailInput && (
+                    <form onSubmit={handleSendDetailsEmail} style={{ background: '#ffffff', border: '1px solid #bbf7d0', borderRadius: 12, padding: 10, display: 'flex', gap: 6 }}>
+                      <input
+                        type="email"
+                        required
+                        value={visitorEmail}
+                        onChange={(e) => setVisitorEmail(e.target.value)}
+                        placeholder="you@example.co.uk"
+                        style={{ flex: 1, padding: '7px 10px', borderRadius: 8, border: '1px solid #cbd5e1', fontSize: 12.5 }}
+                      />
+                      <button
+                        type="submit"
+                        disabled={sending}
+                        style={{ padding: '7px 12px', borderRadius: 8, border: 'none', background: '#0d631b', color: '#fff', fontWeight: 700, fontSize: 12, cursor: 'pointer' }}
+                      >
+                        Send
+                      </button>
+                    </form>
+                  )}
 
                   {/* Inline Live Slot Picker */}
                   {showSlotPicker && (
