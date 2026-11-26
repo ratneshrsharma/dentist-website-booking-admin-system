@@ -13,7 +13,7 @@ class ThemeController
 {
     public function index(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('theme');
 
         $theme = ThemeService::getTheme();
 
@@ -26,7 +26,7 @@ class ThemeController
 
     public function update(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('theme');
 
         $theme = ThemeService::getTheme();
 
@@ -109,3 +109,4 @@ class ThemeController
         ]);
     }
 }
+

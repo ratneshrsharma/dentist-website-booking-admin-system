@@ -299,6 +299,15 @@ $activeNav = $activeNav ?? 'dashboard';
                 </ul>
 
                 <ul class="navbar-nav ms-auto align-items-center">
+                    <?php if (Auth::isImpersonating()): ?>
+                        <li class="nav-item me-3">
+                            <form method="POST" action="<?= App::url('/admin/users/stop-impersonate') ?>" class="d-inline">
+                                <button type="submit" class="btn btn-warning btn-sm rounded-pill px-3 fw-bold shadow-sm">
+                                    <i class="bi bi-arrow-return-left me-1"></i> Return to Super Admin
+                                </button>
+                            </form>
+                        </li>
+                    <?php endif; ?>
                     <li class="nav-item me-3">
                         <a href="<?= App::url('/') ?>" target="_blank" class="btn btn-outline-success btn-sm rounded-pill px-3 shadow-sm">
                             <i class="bi bi-box-arrow-up-right me-1"></i> View Live Website
@@ -311,8 +320,13 @@ $activeNav = $activeNav ?? 'dashboard';
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                             <li><h6 class="dropdown-header"><?= htmlspecialchars($authUser['email'] ?? 'admin@example.com') ?></h6></li>
-                            <li><span class="dropdown-item-text text-muted small"><i class="bi bi-award me-1"></i> <?= htmlspecialchars($authUser['role'] ?? 'Super Administrator') ?></span></li>
+                            <li><span class="dropdown-item-text text-muted small"><i class="bi bi-award me-1"></i> <?= htmlspecialchars($authUser['role'] ?? 'Super Admin') ?></span></li>
                             <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item fw-semibold" href="<?= App::url('/admin/profile') ?>">
+                                    <i class="bi bi-person-gear me-2 text-success"></i> My Profile
+                                </a>
+                            </li>
                             <li>
                                 <a class="dropdown-item text-danger fw-semibold" href="<?= App::url('/admin/logout') ?>">
                                     <i class="bi bi-box-arrow-right me-2"></i> Sign Out
@@ -347,7 +361,9 @@ $activeNav = $activeNav ?? 'dashboard';
                         </li>
 
                         <!-- 2. CLINICAL APPOINTMENTS -->
+                        <?php if (Auth::can('bookings') || Auth::can('doctors_availability')): ?>
                         <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Clinical Appointments</li>
+                        <?php if (Auth::can('bookings')): ?>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/bookings') ?>" class="nav-link <?= $activeNav === 'bookings' ? 'active' : '' ?>">
                                 <i class="bi bi-calendar2-check-fill text-success"></i>
@@ -355,34 +371,46 @@ $activeNav = $activeNav ?? 'dashboard';
                                 <span class="badge text-bg-success ms-auto">Roster</span>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php if (Auth::can('doctors_availability')): ?>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/doctors/availability') ?>" class="nav-link <?= $activeNav === 'doctor-availability' ? 'active' : '' ?>">
                                 <i class="bi bi-clock-history text-info"></i>
                                 <p>Doctor Availability & Leave</p>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php endif; ?>
 
                         <!-- 3. WEBSITE CMS -->
+                        <?php if (Auth::can('cms_pages') || Auth::can('cms_components') || Auth::can('blog') || Auth::can('contact_submissions') || Auth::can('chat_logs') || Auth::can('theme') || Auth::can('settings')): ?>
                         <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Website CMS</li>
+                        <?php if (Auth::can('cms_pages')): ?>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/pages') ?>" class="nav-link <?= $activeNav === 'pages' ? 'active' : '' ?>">
                                 <i class="bi bi-layout-text-window-reverse text-warning"></i>
                                 <p>CMS Page List</p>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php if (Auth::can('contact_submissions')): ?>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/contact/submissions') ?>" class="nav-link <?= $activeNav === 'contact-submissions' ? 'active' : '' ?>">
                                 <i class="bi bi-envelope-paper text-info"></i>
                                 <p>Contact Form Entries</p>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php if (Auth::can('chat_logs')): ?>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/chat-logs') ?>" class="nav-link <?= $activeNav === 'chat-logs' ? 'active' : '' ?>">
                                 <i class="bi bi-chat-dots-fill text-success"></i>
                                 <p>Assistant Chat Logs</p>
                             </a>
                         </li>
+                        <?php endif; ?>
 
+                        <?php if (Auth::can('blog')): ?>
                         <!-- Blog & Articles (WordPress-style) -->
                         <li class="nav-header text-uppercase text-secondary px-3 mt-2 mb-1" style="font-size: 9.5px; letter-spacing: 0.06em; opacity: 0.85;">— Blog &amp; Articles</li>
                         <li class="nav-item">
@@ -409,7 +437,9 @@ $activeNav = $activeNav ?? 'dashboard';
                                 <p>Tags</p>
                             </a>
                         </li>
+                        <?php endif; ?>
 
+                        <?php if (Auth::can('cms_components')): ?>
                         <!-- Common Components Nested -->
                         <li class="nav-header text-uppercase text-secondary px-3 mt-2 mb-1" style="font-size: 9.5px; letter-spacing: 0.06em; opacity: 0.85;">— Common Components</li>
                         <li class="nav-item">
@@ -448,22 +478,51 @@ $activeNav = $activeNav ?? 'dashboard';
                                 <p>Hours & Map</p>
                             </a>
                         </li>
+                        <?php endif; ?>
 
-                        <!-- Global Theme & Whitelabeling -->
+                        <?php if (Auth::can('theme')): ?>
                         <li class="nav-item mt-2">
                             <a href="<?= App::url('/admin/theme') ?>" class="nav-link <?= $activeNav === 'theme' ? 'active' : '' ?>">
                                 <i class="bi bi-palette" style="color: #c084fc;"></i>
                                 <p>Global Theme & Fonts</p>
                             </a>
                         </li>
+                        <?php endif; ?>
 
-                        <!-- Practice & Communication Settings -->
+                        <?php if (Auth::can('settings')): ?>
                         <li class="nav-item">
                             <a href="<?= App::url('/admin/settings') ?>" class="nav-link <?= $activeNav === 'settings' ? 'active' : '' ?>">
                                 <i class="bi bi-gear-wide-connected text-primary"></i>
                                 <p>Practice & Contact Settings</p>
                             </a>
                         </li>
+                        <?php endif; ?>
+                        <?php endif; ?>
+
+                        <!-- 4. ACCOUNT & SECURITY -->
+                        <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Account &amp; Security</li>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/profile') ?>" class="nav-link <?= $activeNav === 'profile' ? 'active' : '' ?>">
+                                <i class="bi bi-person-circle text-info"></i>
+                                <p>My Profile</p>
+                            </a>
+                        </li>
+                        <?php if (Auth::can('users')): ?>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/users') ?>" class="nav-link <?= $activeNav === 'users' ? 'active' : '' ?>">
+                                <i class="bi bi-people-fill text-warning"></i>
+                                <p>User Management</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
+                        <?php if (Auth::can('logs')): ?>
+                        <li class="nav-item">
+                            <a href="<?= App::url('/admin/logs') ?>" class="nav-link <?= $activeNav === 'logs' ? 'active' : '' ?>">
+                                <i class="bi bi-activity text-danger"></i>
+                                <p>Activity Logs</p>
+                            </a>
+                        </li>
+                        <?php endif; ?>
 
                         <!-- 4. LIVE PATIENT WEBSITE -->
                         <li class="nav-header text-uppercase text-secondary px-3 mt-3 mb-1" style="font-size: 10px; letter-spacing: 0.08em;">Live Portal</li>

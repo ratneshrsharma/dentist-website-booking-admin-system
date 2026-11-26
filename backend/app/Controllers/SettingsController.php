@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controllers;
 
 use App\Core\App;
+use App\Core\Auth;
 use App\Services\ThemeService;
 
 class SettingsController
@@ -65,3 +66,4 @@ class SettingsController
         ]);
     }
 }
+

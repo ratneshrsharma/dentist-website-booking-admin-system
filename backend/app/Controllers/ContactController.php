@@ -15,7 +15,7 @@ class ContactController
 {
     public function submissions(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('contact_submissions');
 
         $statusFilter = trim((string) ($_GET['status'] ?? 'all'));
         $all = ContactService::getAllSubmissions();
@@ -51,7 +51,7 @@ class ContactController
 
     public function updateStatus(string $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('contact_submissions');
         $status = trim((string) ($_POST['status'] ?? 'contacted'));
         ContactService::updateStatus($id, $status);
         App::flash('success', 'Enquiry status updated.');
@@ -60,9 +60,10 @@ class ContactController
 
     public function delete(string $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('contact_submissions');
         ContactService::deleteSubmission($id);
         App::flash('success', 'Contact form entry deleted.');
         App::redirect('/admin/contact/submissions');
     }
 }
+

@@ -9,6 +9,23 @@
 
 ---
 
+### [2026-11-26 11:15] - Multi-Role RBAC, User Management CRUD, Self-Service Profile, Impersonation & Activity Logs
+* **Micro-Task:** Roles, Users, Profile, Impersonation & Audit Logs:
+  1. **Multi-Role RBAC (`UserService.php`, `Auth.php`, `layouts/admin.php`, all Admin Controllers):**
+     - Added 6 roles: `Super Admin`, `Admin`, `Website Manager`, `Receptionist`, `Doctor`, and `Accountant` with strict module permissions (`Auth::requirePermission(...)` + HTTP `403` `admin/auth/forbidden.php` + sidebar visibility gating).
+     - Each user has an immutable `user_key` (`USR_...`) used across profile updates and activity logs so changing an email in User Management never orphans data.
+  2. **User Management CRUD & Super Admin Impersonation (`UsersController.php`, `admin/users/index.php`, `admin/users/form.php`):**
+     - Full CRUD for `Super Admin` & `Admin` (`/admin/users`) with role filtering, email editing, status toggle, and delete.
+     - Added **Login As** impersonation (`POST /admin/users/{key}/impersonate`) and **Return to Super Admin** (`POST /admin/users/stop-impersonate`) for `Super Admin` only.
+  3. **Self-Service Profile (`ProfileController.php`, `admin/profile/index.php`):**
+     - All logged-in users can update `name`, `mobile`, and `password` at `/admin/profile`; `email` is locked/read-only (editable only by Admin/Super Admin).
+  4. **Activity & Audit Logs (`ActivityLogService.php`, `LogsController.php`, `admin/logs/index.php`):**
+     - Compact JSON log storage (`activity_logs.json`) tracking logins, 2FA, impersonation, user/profile CRUD, and 403 RBAC warnings; Super Admin-only `/admin/logs` table with Role, Status (`Success`, `Warning`, `Error`), User, Date, and Keyword filters + Delete & Clear.
+* **Verification & QA:**
+  - Verified user creation, email change preserving `user_key`, Receptionist impersonation (sidebar hiding + HTTP 403 on `/admin/pages` & `/admin/logs`), locked email on `/admin/profile`, Return to Super Admin, `/admin/logs` filtering/deletion, and cleanup.
+
+---
+
 ### [2026-11-26 10:02] - Smart Dental Assistant Rich Queries (Doctors, WhatsApp Location, Email Dispatch & Blog Links)
 * **Micro-Task:** Enhanced `AssistantService` & `FloatingWhatsAppMenu`:
   1. **Doctor Profile Lookup (`AssistantService.php`):**

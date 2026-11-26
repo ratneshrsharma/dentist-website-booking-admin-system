@@ -7,6 +7,7 @@ namespace App\Controllers;
 use App\Core\App;
 use App\Core\Auth;
 use App\Services\ThemeService;
+use App\Services\ActivityLogService;
 
 class AuthController
 {
@@ -35,18 +36,26 @@ class AuthController
 
         if ($action === 'verify_2fa') {
             $code = trim($_POST['code'] ?? '');
+            $pending = Auth::getPending2FA();
             if (empty($code)) {
                 App::redirect('/admin/login', ['error' => 'Please enter the 6-digit security code.']);
             }
 
             if (Auth::verify2FACode($code)) {
+                ActivityLogService::log('Signed in (2FA verified)', 'Authentication', 'Success');
                 App::redirect('/admin/dashboard', ['success' => 'Two-Factor Authentication verified. Welcome back to the clinic workspace!']);
             }
 
+            ActivityLogService::log(
+                'Failed 2FA verification attempt',
+                'Authentication',
+                'Warning',
+                ['email' => $pending['user']['email'] ?? 'unknown'],
+                $pending['user'] ?? null
+            );
             App::redirect('/admin/login', ['error' => 'Invalid or expired 6-digit code. Please enter the verification code displayed below.']);
         }
 
-        // Credentials Step (No auto-fill, manual entry)
         $email = trim($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
 
@@ -56,11 +65,18 @@ class AuthController
 
         $user = Auth::validateCredentials($email, $password);
         if ($user !== null) {
-            $code = Auth::create2FASession($user);
+            Auth::create2FASession($user);
             App::redirect('/admin/login', ['success' => 'Credentials verified. Please enter the 6-digit security code to complete sign in.']);
         }
 
-        App::redirect('/admin/login', ['error' => 'Invalid email or password. Please verify your credentials and try again.']);
+        ActivityLogService::log(
+            'Failed login attempt',
+            'Authentication',
+            'Error',
+            ['email' => $email],
+            ['user_key' => 'GUEST', 'name' => $email, 'email' => $email, 'role_key' => 'guest', 'role' => 'Guest']
+        );
+        App::redirect('/admin/login', ['error' => 'Invalid email, password, or inactive account. Please try again.']);
     }
 
     public function cancel2FA(): void
@@ -71,6 +87,9 @@ class AuthController
 
     public function logout(): void
     {
+        if (Auth::check()) {
+            ActivityLogService::log('Signed out', 'Authentication', 'Success');
+        }
         Auth::logout();
         App::redirect('/admin/login', ['success' => 'You have been securely signed out.']);
     }

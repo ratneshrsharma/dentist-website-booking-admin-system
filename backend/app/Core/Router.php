@@ -15,6 +15,9 @@ use App\Controllers\ApiController;
 use App\Controllers\BlogController;
 use App\Controllers\ContactController;
 use App\Controllers\ChatLogsController;
+use App\Controllers\UsersController;
+use App\Controllers\ProfileController;
+use App\Controllers\LogsController;
 
 /**
  * Clean & Fast Application Router
@@ -211,6 +214,56 @@ class Router
             if (preg_match('~^chat-logs/([A-Za-z0-9_-]+)/delete$~', $path, $clm) && $method === 'POST') {
                 $chatCtrl = new ChatLogsController();
                 $chatCtrl->delete($clm[1]);
+            }
+
+            // Self-Service Profile
+            if ($path === 'profile') {
+                $pCtrl = new ProfileController();
+                $pCtrl->index();
+            }
+
+            // User Management & Impersonation (Admin & Super Admin)
+            if ($path === 'users') {
+                $uCtrl = new UsersController();
+                $uCtrl->index();
+            }
+            if ($path === 'users/create') {
+                $uCtrl = new UsersController();
+                $uCtrl->create();
+            }
+            if ($path === 'users/stop-impersonate' && $method === 'POST') {
+                $uCtrl = new UsersController();
+                $uCtrl->stopImpersonate();
+            }
+            if (preg_match('~^users/([A-Za-z0-9_-]+)/edit$~', $path, $um)) {
+                $uCtrl = new UsersController();
+                $uCtrl->edit($um[1]);
+            }
+            if (preg_match('~^users/([A-Za-z0-9_-]+)/toggle$~', $path, $um) && $method === 'POST') {
+                $uCtrl = new UsersController();
+                $uCtrl->toggle($um[1]);
+            }
+            if (preg_match('~^users/([A-Za-z0-9_-]+)/delete$~', $path, $um) && $method === 'POST') {
+                $uCtrl = new UsersController();
+                $uCtrl->delete($um[1]);
+            }
+            if (preg_match('~^users/([A-Za-z0-9_-]+)/impersonate$~', $path, $um) && $method === 'POST') {
+                $uCtrl = new UsersController();
+                $uCtrl->impersonate($um[1]);
+            }
+
+            // System Activity & Audit Logs (Super Admin ONLY)
+            if ($path === 'logs') {
+                $lCtrl = new LogsController();
+                $lCtrl->index();
+            }
+            if ($path === 'logs/clear' && $method === 'POST') {
+                $lCtrl = new LogsController();
+                $lCtrl->clear();
+            }
+            if (preg_match('~^logs/([A-Za-z0-9_-]+)/delete$~', $path, $lm) && $method === 'POST') {
+                $lCtrl = new LogsController();
+                $lCtrl->delete($lm[1]);
             }
 
             // Create / Toggle / Set Primary / Delete / Edit Custom CMS Pages

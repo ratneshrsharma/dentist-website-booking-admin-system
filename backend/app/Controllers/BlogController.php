@@ -15,7 +15,7 @@ class BlogController
 {
     public function posts(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
 
         $statusFilter = trim((string) ($_GET['status'] ?? 'all'));
         $search = strtolower(trim((string) ($_GET['q'] ?? '')));
@@ -59,7 +59,7 @@ class BlogController
 
     public function createPost(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
 
         if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             $this->handlePostSave(null);
@@ -101,7 +101,7 @@ class BlogController
 
     public function editPost(string $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
 
         $post = BlogService::getPostById($id);
         if (!$post) {
@@ -195,7 +195,7 @@ class BlogController
 
     public function togglePostStatus(string $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
         BlogService::togglePostStatus($id);
         App::flash('success', 'Post status updated.');
         App::redirect('/admin/blog/posts');
@@ -203,7 +203,7 @@ class BlogController
 
     public function deletePost(string $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
         BlogService::deletePost($id);
         App::flash('success', 'Blog post deleted.');
         App::redirect('/admin/blog/posts');
@@ -215,7 +215,7 @@ class BlogController
 
     public function categories(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
         $editId = trim((string) ($_GET['edit'] ?? ''));
         $editCategory = $editId !== '' ? BlogService::getCategoryById($editId) : null;
 
@@ -238,7 +238,7 @@ class BlogController
 
     public function saveCategory(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
         $name = trim((string) ($_POST['name'] ?? ''));
         if ($name === '') {
             App::flash('error', 'Category name is required.');
@@ -257,7 +257,7 @@ class BlogController
 
     public function deleteCategory(string $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
         BlogService::deleteCategory($id);
         App::flash('success', 'Category deleted.');
         App::redirect('/admin/blog/categories');
@@ -269,7 +269,7 @@ class BlogController
 
     public function tags(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
         $editId = trim((string) ($_GET['edit'] ?? ''));
         $editTag = $editId !== '' ? BlogService::getTagById($editId) : null;
 
@@ -292,7 +292,7 @@ class BlogController
 
     public function saveTag(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
         $name = trim((string) ($_POST['name'] ?? ''));
         if ($name === '') {
             App::flash('error', 'Tag name is required.');
@@ -309,9 +309,10 @@ class BlogController
 
     public function deleteTag(string $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('blog');
         BlogService::deleteTag($id);
         App::flash('success', 'Tag deleted.');
         App::redirect('/admin/blog/tags');
     }
 }
+

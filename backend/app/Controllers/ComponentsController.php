@@ -22,7 +22,7 @@ class ComponentsController
      */
     public function services(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $home = CmsService::getHomePageData();
         $services = ServicesService::getAllServices();
 
@@ -30,7 +30,7 @@ class ComponentsController
             'home' => $home,
             'services' => $services,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'Common Component — Clinical Services Catalog',
+            'pageTitle' => 'Common Component â€” Clinical Services Catalog',
             'activeNav' => 'comp-services',
         ]);
     }
@@ -40,7 +40,7 @@ class ComponentsController
      */
     public function createService(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $featureImg = trim($_POST['feature_image'] ?? '');
@@ -71,7 +71,7 @@ class ComponentsController
      */
     public function editService(int $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $service = ServicesService::getServiceById($id);
         if (!$service) {
             App::flash('error', 'Service not found.');
@@ -97,7 +97,7 @@ class ComponentsController
         App::render('admin/components/service-form', [
             'service' => $service,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'Edit Service — ' . ($service['title'] ?? ''),
+            'pageTitle' => 'Edit Service â€” ' . ($service['title'] ?? ''),
             'activeNav' => 'comp-services',
         ]);
     }
@@ -198,7 +198,7 @@ class ComponentsController
      */
     public function viewService(int $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $service = ServicesService::getServiceById($id);
         if (!$service) {
             App::flash('error', 'Service not found.');
@@ -208,7 +208,7 @@ class ComponentsController
         App::render('admin/components/service-view', [
             'service' => $service,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'View Service — ' . ($service['title'] ?? ''),
+            'pageTitle' => 'View Service â€” ' . ($service['title'] ?? ''),
             'activeNav' => 'comp-services',
         ]);
     }
@@ -218,7 +218,7 @@ class ComponentsController
      */
     public function toggleService(int $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         ServicesService::toggleStatus($id);
         App::redirect('/admin/components/services', [
             'success' => 'Service status updated successfully.'
@@ -230,7 +230,7 @@ class ComponentsController
      */
     public function deleteService(int $id): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         ServicesService::deleteService($id);
         App::redirect('/admin/components/services', [
             'success' => 'Service permanently deleted.'
@@ -242,7 +242,7 @@ class ComponentsController
      */
     public function reorderServices(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $ids = $_POST['service_ids'] ?? [];
             $orders = $_POST['display_orders'] ?? [];
@@ -271,7 +271,7 @@ class ComponentsController
      */
     public function saveServiceIntro(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $home = CmsService::getHomePageData();
 
         if (isset($_POST['component_id'])) {
@@ -301,7 +301,7 @@ class ComponentsController
      */
     public function about(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $home = CmsService::getHomePageData();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -347,7 +347,7 @@ class ComponentsController
         App::render('admin/components/about', [
             'home' => $home,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'Common Component — About & Clinic Photos',
+            'pageTitle' => 'Common Component â€” About & Clinic Photos',
             'activeNav' => 'comp-about',
         ]);
     }
@@ -357,7 +357,7 @@ class ComponentsController
      */
     public function doctors(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $home = CmsService::getHomePageData();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -402,7 +402,7 @@ class ComponentsController
         App::render('admin/components/doctors', [
             'home' => $home,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'Common Component — Doctors & Avatars',
+            'pageTitle' => 'Common Component â€” Doctors & Avatars',
             'activeNav' => 'comp-doctors',
         ]);
     }
@@ -412,7 +412,7 @@ class ComponentsController
      */
     public function testimonials(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $home = CmsService::getHomePageData();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -462,7 +462,7 @@ class ComponentsController
         App::render('admin/components/testimonials', [
             'home' => $home,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'Common Component — Patient Testimonials',
+            'pageTitle' => 'Common Component â€” Patient Testimonials',
             'activeNav' => 'comp-testimonials',
         ]);
     }
@@ -472,7 +472,7 @@ class ComponentsController
      */
     public function charter(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $home = CmsService::getHomePageData();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -495,7 +495,7 @@ class ComponentsController
         App::render('admin/components/charter', [
             'home' => $home,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'Common Component — NHS Safety Charter',
+            'pageTitle' => 'Common Component â€” NHS Safety Charter',
             'activeNav' => 'comp-charter',
         ]);
     }
@@ -505,7 +505,7 @@ class ComponentsController
      */
     public function contact(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_components');
         $home = CmsService::getHomePageData();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -546,8 +546,9 @@ class ComponentsController
         App::render('admin/components/contact', [
             'home' => $home,
             'theme' => ThemeService::getTheme(),
-            'pageTitle' => 'Common Component — Hours & Map',
+            'pageTitle' => 'Common Component â€” Hours & Map',
             'activeNav' => 'comp-contact',
         ]);
     }
 }
+

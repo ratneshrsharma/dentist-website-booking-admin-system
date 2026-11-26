@@ -14,7 +14,7 @@ class PagesController
 {
     public function index(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
 
         $pages = CmsService::getPages();
         $theme = ThemeService::getTheme();
@@ -29,7 +29,7 @@ class PagesController
 
     public function editHome(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
 
         $homeData = CmsService::getHomePageData();
         $theme = ThemeService::getTheme();
@@ -46,7 +46,7 @@ class PagesController
 
     public function updateHome(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
 
         $home = CmsService::getHomePageData();
 
@@ -319,7 +319,7 @@ class PagesController
 
     public function editAbout(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
 
         $aboutData = CmsService::getAboutPageData();
         $theme = ThemeService::getTheme();
@@ -336,7 +336,7 @@ class PagesController
 
     public function updateAbout(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
 
         $about = CmsService::getAboutPageData();
 
@@ -612,7 +612,7 @@ class PagesController
 
     public function create(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         $title = trim($_POST['title'] ?? '');
         $slug = trim($_POST['slug'] ?? '');
         $template = trim($_POST['template'] ?? 'standard');
@@ -633,7 +633,7 @@ class PagesController
 
     public function toggleStatus(string $slug): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         $newStatus = CmsService::togglePageStatus($slug);
         if ($newStatus === null) {
             App::redirect('/admin/pages', ['error' => 'Page not found.']);
@@ -646,7 +646,7 @@ class PagesController
 
     public function setPrimary(string $slug): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         if (CmsService::setPrimaryPage($slug)) {
             App::redirect('/admin/pages', [
                 'success' => "Page '{$slug}' is now set as your Primary Homepage!",
@@ -657,7 +657,7 @@ class PagesController
 
     public function delete(string $slug): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         if (CmsService::deletePage($slug)) {
             App::redirect('/admin/pages', [
                 'success' => "Page '{$slug}' deleted permanently.",
@@ -668,7 +668,7 @@ class PagesController
 
     public function editCustomPage(string $slug): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         $pageData = CmsService::getCustomPageData($slug);
         $theme = ThemeService::getTheme();
         $allPages = CmsService::getPages();
@@ -678,14 +678,14 @@ class PagesController
             'slug' => $slug,
             'theme' => $theme,
             'allPages' => $allPages,
-            'pageTitle' => ($pageData['title'] ?? ucfirst($slug)) . ' — Page Editor',
+            'pageTitle' => ($pageData['title'] ?? ucfirst($slug)) . ' â€” Page Editor',
             'activeNav' => 'pages',
         ]);
     }
 
     public function updateCustomPage(string $slug): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         $data = CmsService::getCustomPageData($slug);
 
         if (isset($_POST['hero_eyebrow'])) $data['hero']['eyebrow'] = trim($_POST['hero_eyebrow']);
@@ -749,7 +749,7 @@ class PagesController
 
     public function editTreatments(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         $treatmentsData = CmsService::getTreatmentsPageData();
         $theme = ThemeService::getTheme();
 
@@ -763,7 +763,7 @@ class PagesController
 
     public function updateTreatments(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         $data = CmsService::getTreatmentsPageData();
 
         if (isset($_POST['hero_eyebrow'])) $data['hero']['eyebrow'] = trim($_POST['hero_eyebrow']);
@@ -834,7 +834,7 @@ class PagesController
 
     public function editContact(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         $contact = CmsService::getContactPageData();
         $entriesCount = count(\App\Services\ContactService::getAllSubmissions());
 
@@ -848,7 +848,7 @@ class PagesController
 
     public function updateContact(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('cms_pages');
         $data = CmsService::getContactPageData();
 
         if (isset($_POST['hero_eyebrow'])) $data['hero']['eyebrow'] = trim($_POST['hero_eyebrow']);
@@ -906,3 +906,4 @@ class PagesController
         ]);
     }
 }
+

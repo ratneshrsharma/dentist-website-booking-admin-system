@@ -15,7 +15,7 @@ class ChatLogsController
 {
     public function index(): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('chat_logs');
 
         $logs = ChatLogService::getAllLogs();
         $activeId = trim((string) ($_GET['session'] ?? ''));
@@ -42,9 +42,10 @@ class ChatLogsController
 
     public function delete(string $sessionId): void
     {
-        Auth::requireAuth();
+        Auth::requirePermission('chat_logs');
         ChatLogService::deleteSession($sessionId);
         App::flash('success', 'Chat session deleted.');
         App::redirect('/admin/chat-logs');
     }
 }
+
