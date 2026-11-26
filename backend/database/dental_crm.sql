@@ -38,6 +38,9 @@ CREATE TABLE IF NOT EXISTS `users` (
   `password` VARCHAR(255) NOT NULL,
   `role_key` VARCHAR(60) NOT NULL DEFAULT 'receptionist',
   `role` VARCHAR(80) NOT NULL DEFAULT 'Receptionist',
+  `doctor_id` INT DEFAULT NULL,
+  `use_custom_permissions` TINYINT(1) NOT NULL DEFAULT 0,
+  `custom_permissions_json` LONGTEXT DEFAULT NULL,
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -49,8 +52,26 @@ INSERT INTO `users` (`user_key`, `clinic_id`, `name`, `email`, `mobile`, `passwo
 INSERT INTO `users` (`user_key`, `clinic_id`, `name`, `email`, `mobile`, `password`, `role_key`, `role`, `is_active`) VALUES ('USR_ADMIN_002', 1, 'Practice Admin (Demo)', 'admin.test@example.com', '+44 7700 900101', '$2y$10$Wo5jD0oS3SVaBwbsPdpHy./5u.hRkwMX1pYdARTyvj7OcOyH4viU.', 'admin', 'Admin', 1) ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `email`=VALUES(`email`), `role_key`=VALUES(`role_key`), `role`=VALUES(`role`);
 INSERT INTO `users` (`user_key`, `clinic_id`, `name`, `email`, `mobile`, `password`, `role_key`, `role`, `is_active`) VALUES ('USR_WEBMGR_003', 1, 'Website Manager (Demo)', 'webmanager.test@example.com', '+44 7700 900102', '$2y$10$Wo5jD0oS3SVaBwbsPdpHy./5u.hRkwMX1pYdARTyvj7OcOyH4viU.', 'website_manager', 'Website Manager', 1) ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `email`=VALUES(`email`), `role_key`=VALUES(`role_key`), `role`=VALUES(`role`);
 INSERT INTO `users` (`user_key`, `clinic_id`, `name`, `email`, `mobile`, `password`, `role_key`, `role`, `is_active`) VALUES ('USR_RECEPT_004', 1, 'Receptionist (Demo)', 'receptionist.test@example.com', '+44 7700 900103', '$2y$10$Wo5jD0oS3SVaBwbsPdpHy./5u.hRkwMX1pYdARTyvj7OcOyH4viU.', 'receptionist', 'Receptionist', 1) ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `email`=VALUES(`email`), `role_key`=VALUES(`role_key`), `role`=VALUES(`role`);
-INSERT INTO `users` (`user_key`, `clinic_id`, `name`, `email`, `mobile`, `password`, `role_key`, `role`, `is_active`) VALUES ('USR_DOCTOR_005', 1, 'Dr. Atandrilla Das (Demo)', 'doctor.test@example.com', '+44 7700 900104', '$2y$10$Wo5jD0oS3SVaBwbsPdpHy./5u.hRkwMX1pYdARTyvj7OcOyH4viU.', 'doctor', 'Doctor', 1) ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `email`=VALUES(`email`), `role_key`=VALUES(`role_key`), `role`=VALUES(`role`);
+INSERT INTO `users` (`user_key`, `clinic_id`, `name`, `email`, `mobile`, `password`, `role_key`, `role`, `doctor_id`, `is_active`) VALUES ('USR_DOCTOR_005', 1, 'Dr. Atandrilla Das (Demo)', 'doctor.test@example.com', '+44 7700 900104', '$2y$10$Wo5jD0oS3SVaBwbsPdpHy./5u.hRkwMX1pYdARTyvj7OcOyH4viU.', 'doctor', 'Doctor', 1, 1) ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `email`=VALUES(`email`), `role_key`=VALUES(`role_key`), `role`=VALUES(`role`), `doctor_id`=VALUES(`doctor_id`);
 INSERT INTO `users` (`user_key`, `clinic_id`, `name`, `email`, `mobile`, `password`, `role_key`, `role`, `is_active`) VALUES ('USR_ACCOUNT_006', 1, 'Clinic Accountant (Demo)', 'accountant.test@example.com', '+44 7700 900105', '$2y$10$Wo5jD0oS3SVaBwbsPdpHy./5u.hRkwMX1pYdARTyvj7OcOyH4viU.', 'accountant', 'Accountant', 1) ON DUPLICATE KEY UPDATE `name`=VALUES(`name`), `email`=VALUES(`email`), `role_key`=VALUES(`role_key`), `role`=VALUES(`role`);
+
+CREATE TABLE IF NOT EXISTS `roles` (
+  `role_key` VARCHAR(60) NOT NULL,
+  `label` VARCHAR(100) NOT NULL,
+  `is_system` TINYINT(1) NOT NULL DEFAULT 0,
+  `permissions_json` LONGTEXT NOT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`role_key`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+INSERT INTO `roles` (`role_key`, `label`, `is_system`, `permissions_json`) VALUES
+('super_admin', 'Super Admin', 1, '{"bookings":{"view":true,"add":true,"edit":true,"delete":true},"doctors_availability":{"view":true,"add":true,"edit":true,"delete":true},"patients":{"view":true,"add":true,"edit":true,"delete":true},"accounts":{"view":true,"add":true,"edit":true,"delete":true},"cms_pages":{"view":true,"add":true,"edit":true,"delete":true},"cms_components":{"view":true,"add":true,"edit":true,"delete":true},"blog":{"view":true,"add":true,"edit":true,"delete":true},"contact_submissions":{"view":true,"add":true,"edit":true,"delete":true},"chat_logs":{"view":true,"add":true,"edit":true,"delete":true},"theme":{"view":true,"add":true,"edit":true,"delete":true},"settings":{"view":true,"add":true,"edit":true,"delete":true},"users":{"view":true,"add":true,"edit":true,"delete":true},"roles":{"view":true,"add":true,"edit":true,"delete":true}}'),
+('admin', 'Admin', 1, '{"bookings":{"view":true,"add":true,"edit":true,"delete":true},"doctors_availability":{"view":true,"add":true,"edit":true,"delete":true},"patients":{"view":true,"add":true,"edit":true,"delete":true},"accounts":{"view":true,"add":true,"edit":true,"delete":true},"cms_pages":{"view":true,"add":true,"edit":true,"delete":true},"cms_components":{"view":true,"add":true,"edit":true,"delete":true},"blog":{"view":true,"add":true,"edit":true,"delete":true},"contact_submissions":{"view":true,"add":true,"edit":true,"delete":true},"chat_logs":{"view":true,"add":true,"edit":true,"delete":true},"theme":{"view":true,"add":true,"edit":true,"delete":true},"settings":{"view":true,"add":true,"edit":true,"delete":true},"users":{"view":true,"add":true,"edit":true,"delete":true},"roles":{"view":true,"add":false,"edit":true,"delete":false}}'),
+('website_manager', 'Website Manager', 1, '{"cms_pages":{"view":true,"add":true,"edit":true,"delete":true},"cms_components":{"view":true,"add":true,"edit":true,"delete":true},"blog":{"view":true,"add":true,"edit":true,"delete":true},"contact_submissions":{"view":true,"add":false,"edit":true,"delete":true},"theme":{"view":true,"add":false,"edit":true,"delete":false}}'),
+('receptionist', 'Receptionist', 1, '{"bookings":{"view":true,"add":true,"edit":true,"delete":false},"doctors_availability":{"view":true,"add":false,"edit":true,"delete":false},"patients":{"view":true,"add":true,"edit":true,"delete":false},"contact_submissions":{"view":true,"add":false,"edit":true,"delete":false},"chat_logs":{"view":true,"add":false,"edit":false,"delete":false}}'),
+('doctor', 'Doctor', 1, '{"bookings":{"view":true,"add":false,"edit":true,"delete":false},"doctors_availability":{"view":true,"add":false,"edit":true,"delete":false}}'),
+('accountant', 'Accountant', 1, '{"accounts":{"view":true,"add":true,"edit":true,"delete":true},"settings":{"view":true,"add":false,"edit":false,"delete":false}}')
+ON DUPLICATE KEY UPDATE `label`=VALUES(`label`), `permissions_json`=VALUES(`permissions_json`);
 
 CREATE TABLE IF NOT EXISTS `services` (
   `id` BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
